@@ -12,7 +12,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Vector;
 
-import org.ggll.syntax.command.Command;
+import org.ggll.core.syntax.command.Command;
 
 public class VolatileStateManager implements PropertyChangeListener
 {

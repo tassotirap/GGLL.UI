@@ -12,7 +12,7 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 import org.ggll.canvas.Canvas;
-import org.ggll.syntax.grammar.Controller;
+import org.ggll.core.syntax.grammar.Controller;
 import org.ggll.util.LangHelper;
 
 import com.jidesoft.icons.ColorFilter;

@@ -6,7 +6,7 @@ import java.beans.PropertyChangeSupport;
 import org.ggll.canvas.Canvas;
 import org.ggll.canvas.CanvasData;
 import org.ggll.canvas.CanvasFactory;
-import org.ggll.syntax.command.CommandFactory;
+import org.ggll.core.syntax.command.CommandFactory;
 import org.netbeans.api.visual.action.WidgetAction;
 import org.netbeans.api.visual.widget.Widget;
 

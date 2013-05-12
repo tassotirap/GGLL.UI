@@ -17,16 +17,16 @@ import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 
 import org.ggll.actions.Mode;
+import org.ggll.core.lexical.YyFactory;
+import org.ggll.core.lexical.Yylex;
+import org.ggll.core.syntax.SyntacticLoader;
+import org.ggll.core.syntax.analyzer.gsll1.Analyzer;
 import org.ggll.editor.StandaloneTextArea;
 import org.ggll.editor.TextArea;
 import org.ggll.editor.buffer.BufferListener;
 import org.ggll.editor.buffer.JEditBuffer;
-import org.ggll.lexical.YyFactory;
-import org.ggll.lexical.Yylex;
 import org.ggll.output.Output;
 import org.ggll.output.HtmlViewer.TOPIC;
-import org.ggll.syntax.SyntacticLoader;
-import org.ggll.syntax.analyzer.gsll1.Analyzer;
 import org.ggll.util.Log;
 
 public class ParsingEditor implements BufferListener, CaretListener

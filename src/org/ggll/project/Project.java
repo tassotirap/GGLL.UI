@@ -8,12 +8,12 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.ggll.core.semantics.SemanticRoutinesIvoker;
 import org.ggll.file.GrammarFile;
 import org.ggll.file.LexicalFile;
 import org.ggll.file.MetaFile;
 import org.ggll.file.SemanticFile;
 import org.ggll.model.FileNames;
-import org.ggll.semantics.SemanticRoutinesIvoker;
 import org.ggll.ui.ThemeManager.Theme;
 import org.ggll.util.Log;
 

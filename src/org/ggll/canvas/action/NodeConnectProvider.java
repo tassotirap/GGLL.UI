@@ -7,7 +7,7 @@ import java.util.Collection;
 import org.ggll.canvas.Canvas;
 import org.ggll.canvas.CanvasData;
 import org.ggll.canvas.CanvasFactory;
-import org.ggll.syntax.command.CommandFactory;
+import org.ggll.core.syntax.command.CommandFactory;
 import org.netbeans.api.visual.action.ConnectProvider;
 import org.netbeans.api.visual.action.ConnectorState;
 import org.netbeans.api.visual.widget.Scene;

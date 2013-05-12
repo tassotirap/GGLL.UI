@@ -55,7 +55,7 @@ public class CanvasBeanShellAction extends AbstractEditAction<Canvas>
 			global.importClass("org.ggll.canvas.CanvasFactory");
 			global.importClass("org.ggll.canvas.state.VolatileStateManager");
 			global.importClass("org.ggll.canvas.state.StaticStateManager");
-			global.importClass("org.ggll.syntax.grammar.Controller");
+			global.importClass("org.ggll.syntax.core.grammar.Controller");
 			global.importClass("org.ggll.canvas.action.WidgetCopyPasteProvider");
 			global.importClass("org.ggll.canvas.action.WidgetDeleteProvider");
 			global.importClass("org.ggll.project.ProjectManager");

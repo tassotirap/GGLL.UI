@@ -7,8 +7,8 @@ import java.util.Map;
 
 import org.ggll.canvas.Canvas;
 import org.ggll.canvas.CanvasFactory;
-import org.ggll.syntax.command.CommandFactory;
-import org.ggll.syntax.grammar.model.SyntaxDefinitions;
+import org.ggll.core.syntax.command.CommandFactory;
+import org.ggll.core.syntax.grammar.model.SyntaxDefinitions;
 import org.netbeans.api.visual.action.MoveProvider;
 import org.netbeans.api.visual.widget.Widget;
 

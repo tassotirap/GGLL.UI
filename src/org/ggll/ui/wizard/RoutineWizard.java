@@ -7,8 +7,8 @@ import java.beans.PropertyChangeSupport;
 import javax.swing.WindowConstants;
 
 import org.ggll.canvas.widget.MarkedWidget;
+import org.ggll.core.semantics.SemFileManager;
 import org.ggll.project.GGLLManager;
-import org.ggll.semantics.SemFileManager;
 import org.ggll.util.Log;
 
 public class RoutineWizard

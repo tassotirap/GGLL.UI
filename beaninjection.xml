@@ -8,7 +8,7 @@
         customizer-ref="customizer">
     </lang:groovy>
     
-    <bean id="customizer" class="org.ggll.semantics.RoutinesCustomizer">
+    <bean id="customizer" class="org.ggll.core.semantics.RoutinesCustomizer">
     </bean>
     
 	

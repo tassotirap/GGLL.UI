@@ -5,7 +5,7 @@ import java.beans.PropertyChangeSupport;
 import java.util.List;
 
 import org.ggll.canvas.CanvasFactory;
-import org.ggll.syntax.command.CommandFactory;
+import org.ggll.core.syntax.command.CommandFactory;
 import org.netbeans.api.visual.action.MoveControlPointProvider;
 import org.netbeans.api.visual.widget.ConnectionWidget;
 

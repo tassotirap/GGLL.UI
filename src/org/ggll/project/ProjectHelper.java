@@ -5,12 +5,12 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 
+import org.ggll.core.lexical.YyFactory;
 import org.ggll.exceptions.WarningException;
 import org.ggll.file.GrammarFile;
 import org.ggll.file.LexicalFile;
 import org.ggll.file.MetaFile;
 import org.ggll.file.SemanticFile;
-import org.ggll.lexical.YyFactory;
 import org.ggll.model.FileNames;
 
 public class ProjectHelper

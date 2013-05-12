@@ -7,7 +7,7 @@ import java.util.Set;
 
 import org.ggll.canvas.Canvas;
 import org.ggll.canvas.CanvasFactory;
-import org.ggll.syntax.command.CommandFactory;
+import org.ggll.core.syntax.command.CommandFactory;
 import org.netbeans.api.visual.widget.Widget;
 
 public class WidgetDeleteProvider
