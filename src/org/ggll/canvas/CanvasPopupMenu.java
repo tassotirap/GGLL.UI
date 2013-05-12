@@ -51,23 +51,6 @@ public class CanvasPopupMenu extends WidgetAction.Adapter implements PopupMenuPr
 		monitor.addPropertyChangeListener(CanvasFactory.getVolatileStateManager());
 	}
 
-	private JMenuItem createBuildAndExport()
-	{
-		JMenuItem grammarMenu = new JMenuItem("Build and Export");
-		grammarMenu.addActionListener(new ActionListener()
-		{
-			@Override
-			public void actionPerformed(ActionEvent e)
-			{
-				Cursor oldCursor = canvas.getView().getCursor();
-				canvas.getView().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-				Controller.generateAndParseCurrentGrammar(true);
-				canvas.getView().setCursor(oldCursor);
-			}
-		});
-		return grammarMenu;
-	}
-
 	private JMenuItem createBuildAndParseMenu()
 	{
 		JMenuItem grammarMenu = new JMenuItem("Build and Parse");
@@ -78,7 +61,7 @@ public class CanvasPopupMenu extends WidgetAction.Adapter implements PopupMenuPr
 			{
 				Cursor oldCursor = canvas.getView().getCursor();
 				canvas.getView().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-				Controller.generateAndParseCurrentGrammar(false);
+				Controller.generateAndParseCurrentGrammar();
 				canvas.getView().setCursor(oldCursor);
 			}
 		});
@@ -597,7 +580,6 @@ public class CanvasPopupMenu extends WidgetAction.Adapter implements PopupMenuPr
 		popup.add(createPasteMenu(localLocation));
 		popup.add(new JSeparator());
 		popup.add(createBuildAndParseMenu());
-		popup.add(createBuildAndExport());
 		popup.add(new JSeparator());
 		popup.add(createShowMenu());
 		popup.add(createRoutingMenu());

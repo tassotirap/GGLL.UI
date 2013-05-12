@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -17,14 +18,18 @@ import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 
 import org.ggll.actions.Mode;
+import org.ggll.core.CoreManager;
 import org.ggll.core.lexical.YyFactory;
 import org.ggll.core.lexical.Yylex;
 import org.ggll.core.syntax.SyntacticLoader;
-import org.ggll.core.syntax.analyzer.gsll1.Analyzer;
+import org.ggll.core.syntax.analyzer.Analyzer;
+import org.ggll.core.syntax.model.ParseNode;
+import org.ggll.core.syntax.model.ParseStack;
 import org.ggll.editor.StandaloneTextArea;
 import org.ggll.editor.TextArea;
 import org.ggll.editor.buffer.BufferListener;
 import org.ggll.editor.buffer.JEditBuffer;
+import org.ggll.output.AppOutput;
 import org.ggll.output.Output;
 import org.ggll.output.HtmlViewer.TOPIC;
 import org.ggll.util.Log;
@@ -39,9 +44,8 @@ public class ParsingEditor implements BufferListener, CaretListener
 	private Yylex yylex;
 	private StringBuffer textToParse;
 	private ArrayList<JButton> parsingButtons;
-	private Thread parsingThread;
 	private String rootPath;
-
+	private Analyzer analyzer;
 	private StandaloneTextArea standaloneTextArea;
 
 	public ParsingEditor(SyntacticLoader syntacticLoader, Mode mode, String rootPath)
@@ -278,69 +282,72 @@ public class ParsingEditor implements BufferListener, CaretListener
 	{
 
 	}
-	
-	
 
 	public void run(boolean stepping)
 	{
-		if ((parsingThread != null && !parsingThread.isAlive()) || parsingThread == null)
+		if (syntacticLoader != null)
 		{
-			if (syntacticLoader != null)
+			if (textToParse.toString().equals(""))
 			{
-				if (textToParse.toString().equals(""))
+				JOptionPane.showMessageDialog(null, "There is nothing to parse", "Can not parse", JOptionPane.WARNING_MESSAGE);
+			}
+			else
+			{
+				Output.getInstance().displayTextExt("<< " + textToParse.toString(), TOPIC.Parser);
+				stringReader = new StringReader(textToParse.toString());
+				try
 				{
-					JOptionPane.showMessageDialog(null, "There is nothing to parse", "Can not parse", JOptionPane.WARNING_MESSAGE);
+					yylex.yyreset(stringReader);
 				}
-				else
+				catch (IOException e1)
 				{
-					Output.getInstance().displayTextExt("<< " + textToParse.toString(), TOPIC.Parser);
-					stringReader = new StringReader(textToParse.toString());
-					try
-					{
-						yylex.yyreset(stringReader);
-					}
-					catch (IOException e1)
-					{
-						Log.log(Log.ERROR, this, "An internal error has occurred!", e1);
-					}
-					
+					Log.log(Log.ERROR, this, "An internal error has occurred!", e1);
+				}
 
-					
-					Analyzer asin = new Analyzer(syntacticLoader.tabGraph(), syntacticLoader.tabT(), syntacticLoader.tabNt(), null, yylex);
-					
-					synchronized (asin)
+				analyzer = new Analyzer(syntacticLoader.tabGraph(), syntacticLoader.tabT(), syntacticLoader.tabNt(), null, yylex, true);
+				
+				if(!stepping)
+				{
+					AppOutput.clearStacks();
+					analyzer.run();
+					while(analyzer.next())
 					{
-						asin.setStepping(stepping);
+						printStack(analyzer.getAnalyzerStacks().getParseStack());
 					}
-					parsingThread = asin;
-					parsingThread.start();
-					clearBufferAndGoToNextLine(true);
-					Thread buttonThread = new Thread(new Runnable()
+					if (CoreManager.isSucess())
 					{
-
-						@Override
-						public void run()
+						AppOutput.displayText("<font color='green'>Expression Successfully recognized.</font>", TOPIC.Output);
+					}
+					else
+					{
+						AppOutput.displayText("<font color='red'>Expression can't be recognized.</font>", TOPIC.Output);
+						for (String error : CoreManager.getErrorList())
 						{
-							try
-							{
-								while (parsingThread.isAlive())
-									Thread.sleep(200);
-								updateParsingButtons();
-							}
-							catch (Exception e)
-							{
-								Log.log(Log.ERROR, this, "An internal error has occurred!", e);
-							}
+							AppOutput.displayText("<font color='red'>" + error + "</font>", TOPIC.Output);
 						}
-					});
-					buttonThread.start();
-				}
+					}
+				}				
+				clearBufferAndGoToNextLine(true);
 			}
 		}
-		else if (parsingThread.isAlive())
+	}
+	
+	public void printStack(ParseStack parseStackNode)
+	{	
+		Iterator<ParseNode> iterator = parseStackNode.iterator();
+		ParseNode parseStackNodeTemp = null;
+		String lineSyntax = "";
+		String lineSemantic = "";
+		while (iterator.hasNext())
 		{
-			parsingThread.notify();
+			parseStackNodeTemp = iterator.next();
+			lineSyntax += "<a style=\"color: #000000; font-weight: bold;\" href=\"" + parseStackNodeTemp.getFlag() + "\">" + parseStackNodeTemp.getType() + "</a>&nbsp;";
+			lineSemantic += parseStackNodeTemp.getSemanticSymbol() + "&nbsp;";
 		}
+		
+		AppOutput.showAndSelectNode((parseStackNode.peek()).getFlag());
+		AppOutput.printlnSyntaxStack(lineSyntax, true);
+		AppOutput.printlnSemanticStack(lineSemantic, true);
 	}
 
 	public void save()
@@ -392,17 +399,7 @@ public class ParsingEditor implements BufferListener, CaretListener
 
 	public void stepRun()
 	{
-		if (parsingThread != null && parsingThread.isAlive())
-		{
-			synchronized (parsingThread)
-			{
-				parsingThread.notify();
-			}
-		}
-		else
-		{
-			run(true);
-		}
+		analyzer.next();
 	}
 
 	@Override

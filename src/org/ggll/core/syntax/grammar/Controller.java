@@ -1,8 +1,7 @@
 package org.ggll.core.syntax.grammar;
 
-import java.io.FileNotFoundException;
+import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.ObjectOutputStream;
 
 import javax.swing.DefaultListModel;
@@ -11,7 +10,6 @@ import org.ggll.core.lexical.YyFactory;
 import org.ggll.core.semantics.SemanticRoutinesIvoker;
 import org.ggll.core.syntax.SyntacticLoader;
 import org.ggll.core.syntax.TableCreate;
-import org.ggll.core.syntax.analyzer.gsll1.exportable.Exporter;
 import org.ggll.core.syntax.model.TableGraphNode;
 import org.ggll.core.syntax.model.TableNode;
 import org.ggll.core.syntax.validation.GSLL1Rules;
@@ -20,8 +18,8 @@ import org.ggll.core.syntax.validation.InvalidGrammarException;
 import org.ggll.output.AppOutput;
 import org.ggll.parser.ParsingEditor;
 import org.ggll.project.GGLLManager;
-import org.ggll.project.tree.FileTree;
 import org.ggll.ui.debug.ErrorDialog;
+import org.ggll.util.IOUtilities;
 
 public class Controller
 {
@@ -36,7 +34,7 @@ public class Controller
 		AppOutput.clearGeneratedGrammar();
 	}
 
-	public static void generateAndParseCurrentGrammar(boolean export)
+	public static void generateAndParseCurrentGrammar()
 	{
 		YyFactory.createYylex(GGLLManager.getProject().getLexicalFile().getParent(), "generated_code", GGLLManager.getProject().getLexicalFile().getPath());
 		AppOutput.clearOutputBuffer();
@@ -70,34 +68,25 @@ public class Controller
 		}
 		if (validated)
 		{
-
 			TableCreate tableCreate = new TableCreate(grammar, false);
 			SyntacticLoader syntacticLoader = new SyntacticLoader(tableCreate);
 			ParsingEditor parsingEditor = ParsingEditor.getInstance().build();
 			SemanticRoutinesIvoker.getLastInstance().configureAndLoad();
-			if (export)
+			File dir = new File(GGLLManager.getProject().getProjectDir().getAbsolutePath(), "export");
+			if (!dir.exists())
 			{
-				try
-				{
-					new Exporter(syntacticLoader, parsingEditor.getRootPath()).export();
-					FileTree.reload(parsingEditor.getRootPath());
-				}
-				catch (FileNotFoundException e)
-				{
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				catch (IOException e)
-				{
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				dir.mkdir();
 			}
-			parsingEditor.setSyntacticLoader(syntacticLoader);
-			
+			parsingEditor.setSyntacticLoader(syntacticLoader);			
 			toFileTerminalTab(syntacticLoader.tabT());
 			toFileTnTerminalTab(syntacticLoader.tabNt());
 			toFileTabGraphNodes(syntacticLoader.tabGraph());
+			
+			File semantic = new File(GGLLManager.getProject().getProjectDir().getAbsolutePath() + "\\" + GGLLManager.getProject().getProjectDir().getName() + ".sem");
+			File lex = new File(GGLLManager.getProject().getProjectDir().getAbsolutePath() + "\\generated_code\\Yylex.java");
+			
+			IOUtilities.copyFile(semantic, new File(GGLLManager.getProject().getProjectDir().getAbsolutePath() + "\\export\\"+GGLLManager.getProject().getProjectDir().getName()+".sem"));
+			IOUtilities.copyFile(lex, new File(GGLLManager.getProject().getProjectDir().getAbsolutePath() + "\\export\\Yylex.java"));
 		}
 	}
 	
@@ -105,7 +94,7 @@ public class Controller
 	{
 		try
 		{
-			FileOutputStream fout = new FileOutputStream(GGLLManager.getProject().getProjectDir().getAbsolutePath() + "\\termialTab.dat");
+			FileOutputStream fout = new FileOutputStream(GGLLManager.getProject().getProjectDir().getAbsolutePath() + "\\export\\termialTab.dat");
 			ObjectOutputStream oos = new ObjectOutputStream(fout);
 			oos.writeObject(termialTab);
 			oos.close();
@@ -121,7 +110,7 @@ public class Controller
 	{
 		try
 		{
-			FileOutputStream fout = new FileOutputStream(GGLLManager.getProject().getProjectDir().getAbsolutePath() + "\\nTerminalTab.dat");
+			FileOutputStream fout = new FileOutputStream(GGLLManager.getProject().getProjectDir().getAbsolutePath() + "\\export\\nTerminalTab.dat");
 			ObjectOutputStream oos = new ObjectOutputStream(fout);
 			oos.writeObject(nTerminalTab);
 			oos.close();
@@ -137,7 +126,7 @@ public class Controller
 	{
 		try
 		{
-			FileOutputStream fout = new FileOutputStream(GGLLManager.getProject().getProjectDir().getAbsolutePath() + "\\tabGraphNodes.dat");
+			FileOutputStream fout = new FileOutputStream(GGLLManager.getProject().getProjectDir().getAbsolutePath() + "\\export\\tabGraphNodes.dat");
 			ObjectOutputStream oos = new ObjectOutputStream(fout);
 			oos.writeObject(tabGraphNodes);
 			oos.close();
@@ -146,6 +135,5 @@ public class Controller
 		{
 			e.printStackTrace();
 		}
-
 	}
 }

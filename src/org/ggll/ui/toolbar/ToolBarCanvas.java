@@ -85,7 +85,7 @@ public class ToolBarCanvas extends BaseToolBar
 			@Override
 			public void actionPerformed(ActionEvent evt)
 			{
-				Controller.generateAndParseCurrentGrammar(false);
+				Controller.generateAndParseCurrentGrammar();
 			}
 
 		});
