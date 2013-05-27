@@ -34,11 +34,11 @@ public class SemFileManager
 			while (line != null)
 			{
 				currentFile += line + "\n";
-				if (line.equals(SemanticRoutinesRepo.BEGIN_SEMANTIC_ROUTINES))
+				if (line.equals(SemanticRoutinesHelper.BEGIN_SEMANTIC_ROUTINES))
 				{
-					currentFile += SemanticRoutinesRepo.BEGIN_ROUTINE + name + " */ \n";
+					currentFile += SemanticRoutinesHelper.BEGIN_ROUTINE + name + " */ \n";
 					currentFile += code + "\n";
-					currentFile += SemanticRoutinesRepo.END_ROUTINE + name + " */ \n";
+					currentFile += SemanticRoutinesHelper.END_ROUTINE + name + " */ \n";
 				}
 				line = bufferedReader.readLine();
 			}
@@ -60,10 +60,10 @@ public class SemFileManager
 
 	private String getFormatedCode(String name, String code)
 	{
-		if (!code.trim().startsWith("void " + "name"))
+		if (!code.trim().startsWith("public void " + "name"))
 		{
 			String[] codeLines = code.split("\n");
-			code = "void " + name + "() {\n";
+			code = "public void " + name + "() {\n";
 			for (String line : codeLines)
 			{
 				code += "\t" + line + "\n";
@@ -75,7 +75,7 @@ public class SemFileManager
 
 	public boolean canInsert(String routine)
 	{
-		return SemanticRoutinesRepo.getCode(routine) == null;
+		return SemanticRoutinesHelper.getCode(routine) == null;
 	}
 
 	public void editRouine(String name, String code)
@@ -92,7 +92,7 @@ public class SemFileManager
 			while (line != null)
 			{
 				currentFile += line + "\n";
-				if (line.equals(SemanticRoutinesRepo.BEGIN_SEMANTIC_ROUTINES))
+				if (line.equals(SemanticRoutinesHelper.BEGIN_SEMANTIC_ROUTINES))
 				{
 					line = bufferedReader.readLine();
 					break;
@@ -104,13 +104,13 @@ public class SemFileManager
 			while (line != null)
 			{
 				currentFile += line + "\n";
-				if (line.contains(SemanticRoutinesRepo.BEGIN_ROUTINE + name))
+				if (line.contains(SemanticRoutinesHelper.BEGIN_ROUTINE + name))
 				{
 					currentFile += code + "\n";
 					line = bufferedReader.readLine();
 					while (line != null)
 					{
-						if (line.contains(SemanticRoutinesRepo.END_ROUTINE + name))
+						if (line.contains(SemanticRoutinesHelper.END_ROUTINE + name))
 						{
 							currentFile += line + "\n";
 							break;
@@ -140,13 +140,13 @@ public class SemFileManager
 	{
 		if (code == null)
 		{
-			code = SemanticRoutinesRepo.getCode(routine);
+			code = SemanticRoutinesHelper.getCode(routine);
 			if (code == null)
 			{
 				return null;
 			}
 		}
-		code = code.replaceFirst("(\\s*\\t*)*void(\\s*\\t*)*" + routine + "(\\s*\\t*)*\\(\\)(\\s*\\t*)*\\{", "");
+		code = code.replaceFirst("(\\s*\\t*)*public void(\\s*\\t*)*" + routine + "(\\s*\\t*)*\\(\\)(\\s*\\t*)*\\{", "");
 		code = code.replaceFirst("(\\s*\\t*)*\\n", "");
 		if (code.lastIndexOf("}") >= 0)
 			code = code.substring(0, code.lastIndexOf("}"));

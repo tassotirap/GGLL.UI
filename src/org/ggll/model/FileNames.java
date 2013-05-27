@@ -9,7 +9,7 @@ public class FileNames
 	public final static String LEX_EXTENSION = ".lex";
 	public final static String METADATA_FILENAME = ".METADATA";
 	public final static String OUT_EXTENSION = ".out";
-	public final static String SEM_EXTENSION = ".sem";
+	public final static String SEM_EXTENSION = ".java";
 
 	public final static String TXT_EXTENSION = ".txt";
 	public final static String XML_EXTENSION = ".xml";

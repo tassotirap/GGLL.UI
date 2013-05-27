@@ -1,5 +1,5 @@
-import org.ggll.core.syntax.model.ParseNode
-
+public class PROJECT_NAME extends SemanticRoutine
+{
 /*-------------- SEMANTIC ROUTINES ESPECIFICATION ------------*/
 /* you can modify the lines bellow */
 /* BEGIN SEMANTIC ROUTINES */
@@ -7,4 +7,4 @@ import org.ggll.core.syntax.model.ParseNode
 /* END SEMANTIC ROUTINES */
 /* do not modify the lines bellow */
 /*-------------- SELF GENERATED METHODS -------------*/
-this
+}

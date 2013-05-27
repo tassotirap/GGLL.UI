@@ -32,6 +32,8 @@ import org.ggll.editor.buffer.JEditBuffer;
 import org.ggll.output.AppOutput;
 import org.ggll.output.Output;
 import org.ggll.output.HtmlViewer.TOPIC;
+import org.ggll.project.GGLLManager;
+import org.ggll.project.Project;
 import org.ggll.util.Log;
 
 public class ParsingEditor implements BufferListener, CaretListener
@@ -304,7 +306,7 @@ public class ParsingEditor implements BufferListener, CaretListener
 					Log.log(Log.ERROR, this, "An internal error has occurred!", e1);
 				}
 
-				analyzer = new Analyzer(syntacticLoader.tabGraph(), syntacticLoader.tabT(), syntacticLoader.tabNt(), null, yylex, true);
+				analyzer = new Analyzer(syntacticLoader.tabGraph(), syntacticLoader.tabT(), syntacticLoader.tabNt(), null, yylex, GGLLManager.getProject().getSemanticFile(), true);
 				
 				if(!stepping)
 				{

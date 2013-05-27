@@ -8,7 +8,7 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.ggll.core.semantics.SemanticRoutinesIvoker;
+import org.ggll.core.CoreManager;
 import org.ggll.file.GrammarFile;
 import org.ggll.file.LexicalFile;
 import org.ggll.file.MetaFile;
@@ -63,18 +63,6 @@ public class Project implements Serializable
 	public Project(String projectsRootPath)
 	{
 		this(projectsRootPath, null);
-	}
-
-	public void init()
-	{
-		try
-		{
-			new SemanticRoutinesIvoker(this.getSemanticFile());
-		}
-		catch (MalformedURLException e)
-		{
-			Log.log(Log.ERROR, this, "Could not find path to semantic file!", e);
-		}
 	}
 
 	public GrammarFile getGrammarFile()

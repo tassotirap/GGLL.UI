@@ -60,7 +60,6 @@ public class ProjectHelper
 				if (object instanceof Project)
 				{
 					Project result = (Project) object;
-					result.init();
 					objectInputStream.close();
 					return result;
 				}
