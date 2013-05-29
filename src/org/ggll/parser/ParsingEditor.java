@@ -23,6 +23,7 @@ import org.ggll.core.lexical.YyFactory;
 import org.ggll.core.lexical.Yylex;
 import org.ggll.core.syntax.SyntacticLoader;
 import org.ggll.core.syntax.analyzer.Analyzer;
+import org.ggll.core.syntax.analyzer.AnalyzerTable;
 import org.ggll.core.syntax.model.ParseNode;
 import org.ggll.core.syntax.model.ParseStack;
 import org.ggll.editor.StandaloneTextArea;
@@ -30,10 +31,9 @@ import org.ggll.editor.TextArea;
 import org.ggll.editor.buffer.BufferListener;
 import org.ggll.editor.buffer.JEditBuffer;
 import org.ggll.output.AppOutput;
-import org.ggll.output.Output;
 import org.ggll.output.HtmlViewer.TOPIC;
+import org.ggll.output.Output;
 import org.ggll.project.GGLLManager;
-import org.ggll.project.Project;
 import org.ggll.util.Log;
 
 public class ParsingEditor implements BufferListener, CaretListener
@@ -306,7 +306,7 @@ public class ParsingEditor implements BufferListener, CaretListener
 					Log.log(Log.ERROR, this, "An internal error has occurred!", e1);
 				}
 
-				analyzer = new Analyzer(syntacticLoader.tabGraph(), syntacticLoader.tabT(), syntacticLoader.tabNt(), null, yylex, GGLLManager.getProject().getSemanticFile(), true);
+				analyzer = new Analyzer(new AnalyzerTable(syntacticLoader.tabGraph(), syntacticLoader.tabNt(), syntacticLoader.tabT()), null, yylex, GGLLManager.getProject().getSemanticFile(), true);
 				
 				if(!stepping)
 				{

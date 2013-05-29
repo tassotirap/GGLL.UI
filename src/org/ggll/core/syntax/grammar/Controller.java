@@ -1,7 +1,9 @@
 package org.ggll.core.syntax.grammar;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.ObjectOutputStream;
 
 import javax.swing.DefaultListModel;
@@ -9,6 +11,7 @@ import javax.swing.DefaultListModel;
 import org.ggll.core.lexical.YyFactory;
 import org.ggll.core.syntax.SyntacticLoader;
 import org.ggll.core.syntax.TableCreate;
+import org.ggll.core.syntax.analyzer.AnalyzerTable;
 import org.ggll.core.syntax.model.TableGraphNode;
 import org.ggll.core.syntax.model.TableNode;
 import org.ggll.core.syntax.validation.GSLL1Rules;
@@ -20,6 +23,8 @@ import org.ggll.parser.ParsingEditor;
 import org.ggll.project.GGLLManager;
 import org.ggll.ui.debug.ErrorDialog;
 import org.ggll.util.IOUtilities;
+
+import com.thoughtworks.xstream.XStream;
 
 public class Controller
 {
@@ -76,63 +81,16 @@ public class Controller
 			{
 				dir.mkdir();
 			}
-			parsingEditor.setSyntacticLoader(syntacticLoader);			
-			toFileTerminalTab(syntacticLoader.tabT());
-			toFileTnTerminalTab(syntacticLoader.tabNt());
-			toFileTabGraphNodes(syntacticLoader.tabGraph());
-			
+			parsingEditor.setSyntacticLoader(syntacticLoader);
+
+			AnalyzerTable analyzer = new AnalyzerTable(syntacticLoader.tabGraph(), syntacticLoader.tabNt(), syntacticLoader.tabT());
+			analyzer.serialize(GGLLManager.getProject().getProjectDir().getAbsolutePath() + "\\export\\data.ggll");
+
 			File semantic = new File(GGLLManager.getProject().getProjectDir().getAbsolutePath() + "\\" + GGLLManager.getProject().getProjectDir().getName() + FileNames.SEM_EXTENSION);
 			File lex = new File(GGLLManager.getProject().getProjectDir().getAbsolutePath() + "\\generated_code\\Yylex.java");
-			
-			IOUtilities.copyFile(semantic, new File(GGLLManager.getProject().getProjectDir().getAbsolutePath() + "\\export\\"+GGLLManager.getProject().getProjectDir().getName()+FileNames.SEM_EXTENSION));
+
+			IOUtilities.copyFile(semantic, new File(GGLLManager.getProject().getProjectDir().getAbsolutePath() + "\\export\\" + GGLLManager.getProject().getProjectDir().getName() + FileNames.SEM_EXTENSION));
 			IOUtilities.copyFile(lex, new File(GGLLManager.getProject().getProjectDir().getAbsolutePath() + "\\export\\Yylex.java"));
-		}
-	}
-	
-	private static void toFileTerminalTab(TableNode termialTab[])
-	{
-		try
-		{
-			FileOutputStream fout = new FileOutputStream(GGLLManager.getProject().getProjectDir().getAbsolutePath() + "\\export\\termialTab.dat");
-			ObjectOutputStream oos = new ObjectOutputStream(fout);
-			oos.writeObject(termialTab);
-			oos.close();
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-
-	}
-
-	private static void toFileTnTerminalTab(TableNode nTerminalTab[])
-	{
-		try
-		{
-			FileOutputStream fout = new FileOutputStream(GGLLManager.getProject().getProjectDir().getAbsolutePath() + "\\export\\nTerminalTab.dat");
-			ObjectOutputStream oos = new ObjectOutputStream(fout);
-			oos.writeObject(nTerminalTab);
-			oos.close();
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-
-	}
-
-	private static void toFileTabGraphNodes(TableGraphNode tabGraphNodes[])
-	{
-		try
-		{
-			FileOutputStream fout = new FileOutputStream(GGLLManager.getProject().getProjectDir().getAbsolutePath() + "\\export\\tabGraphNodes.dat");
-			ObjectOutputStream oos = new ObjectOutputStream(fout);
-			oos.writeObject(tabGraphNodes);
-			oos.close();
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
 		}
 	}
 }

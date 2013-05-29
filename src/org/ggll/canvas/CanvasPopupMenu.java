@@ -23,7 +23,7 @@ import org.ggll.canvas.action.WidgetDeleteProvider;
 import org.ggll.canvas.state.VolatileStateManager;
 import org.ggll.canvas.widget.MarkedWidget;
 import org.ggll.core.CoreManager;
-import org.ggll.core.semantics.SemanticRoutinesHelper;
+import org.ggll.core.semantics.SemanticRoutines;
 import org.ggll.core.syntax.command.CommandFactory;
 import org.ggll.core.syntax.grammar.Controller;
 import org.ggll.project.GGLLManager;
@@ -338,8 +338,7 @@ public class CanvasPopupMenu extends WidgetAction.Adapter implements PopupMenuPr
 		semanticRoutinesMenu.add(editSemanticRoutine);
 		semanticRoutinesMenu.add(new JSeparator());
 
-		CoreManager.setSemanticFile(GGLLManager.getProject().getSemanticFile());
-		Set<String> semanticRoutinesNames = SemanticRoutinesHelper.getRegRoutines();
+		Set<String> semanticRoutinesNames = GGLLManager.getProject().getSemanticFile().getRegRoutines();
 		for (final String semanticRoutineName : semanticRoutinesNames)
 		{
 			JMenuItem semanticRoutinesNamesMenuItem = new JMenuItem("Use " + semanticRoutineName);

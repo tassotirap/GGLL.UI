@@ -2,22 +2,22 @@ package org.ggll.core.semantics;
 
 import java.beans.PropertyChangeSupport;
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 
 import org.ggll.core.syntax.command.CommandFactory;
+import org.ggll.file.SemanticFile;
 import org.ggll.util.Log;
 
 public class SemFileManager
 {
 
-	private File file;
+	private SemanticFile file;
 	private PropertyChangeSupport monitor;
 
-	public SemFileManager(File file, PropertyChangeSupport monitor)
+	public SemFileManager(SemanticFile file, PropertyChangeSupport monitor)
 	{
 		this.file = file;
 		this.monitor = monitor;
@@ -34,11 +34,11 @@ public class SemFileManager
 			while (line != null)
 			{
 				currentFile += line + "\n";
-				if (line.equals(SemanticRoutinesHelper.BEGIN_SEMANTIC_ROUTINES))
+				if (line.equals(SemanticFile.BEGIN_SEMANTIC_ROUTINES))
 				{
-					currentFile += SemanticRoutinesHelper.BEGIN_ROUTINE + name + " */ \n";
+					currentFile += SemanticFile.BEGIN_ROUTINE + name + " */ \n";
 					currentFile += code + "\n";
-					currentFile += SemanticRoutinesHelper.END_ROUTINE + name + " */ \n";
+					currentFile += SemanticFile.END_ROUTINE + name + " */ \n";
 				}
 				line = bufferedReader.readLine();
 			}
@@ -75,7 +75,7 @@ public class SemFileManager
 
 	public boolean canInsert(String routine)
 	{
-		return SemanticRoutinesHelper.getCode(routine) == null;
+		return file.getCode(routine) == null;
 	}
 
 	public void editRouine(String name, String code)
@@ -92,7 +92,7 @@ public class SemFileManager
 			while (line != null)
 			{
 				currentFile += line + "\n";
-				if (line.equals(SemanticRoutinesHelper.BEGIN_SEMANTIC_ROUTINES))
+				if (line.equals(SemanticFile.BEGIN_SEMANTIC_ROUTINES))
 				{
 					line = bufferedReader.readLine();
 					break;
@@ -104,13 +104,13 @@ public class SemFileManager
 			while (line != null)
 			{
 				currentFile += line + "\n";
-				if (line.contains(SemanticRoutinesHelper.BEGIN_ROUTINE + name))
+				if (line.contains(SemanticFile.BEGIN_ROUTINE + name))
 				{
 					currentFile += code + "\n";
 					line = bufferedReader.readLine();
 					while (line != null)
 					{
-						if (line.contains(SemanticRoutinesHelper.END_ROUTINE + name))
+						if (line.contains(SemanticFile.END_ROUTINE + name))
 						{
 							currentFile += line + "\n";
 							break;
@@ -140,7 +140,7 @@ public class SemFileManager
 	{
 		if (code == null)
 		{
-			code = SemanticRoutinesHelper.getCode(routine);
+			code = file.getCode(routine);
 			if (code == null)
 			{
 				return null;

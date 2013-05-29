@@ -4,18 +4,15 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.ggll.core.CoreManager;
 import org.ggll.file.GrammarFile;
 import org.ggll.file.LexicalFile;
 import org.ggll.file.MetaFile;
 import org.ggll.file.SemanticFile;
 import org.ggll.model.FileNames;
 import org.ggll.ui.ThemeManager.Theme;
-import org.ggll.util.Log;
 
 /**
  * This class represents a projects and deals with the management of a project.
@@ -100,7 +97,7 @@ public class Project implements Serializable
 		return projectDir.getAbsolutePath();
 	}
 
-	public File getSemanticFile()
+	public SemanticFile getSemanticFile()
 	{
 		return semanticFile;
 	}
