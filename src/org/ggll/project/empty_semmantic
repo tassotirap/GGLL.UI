@@ -1,4 +1,6 @@
-public class PROJECT_NAME extends SemanticRoutine
+import org.ggll.core.semantics.SemanticRoutineClass;
+
+public class PROJECT_NAME extends SemanticRoutineClass
 {
 /*-------------- SEMANTIC ROUTINES ESPECIFICATION ------------*/
 /* you can modify the lines bellow */

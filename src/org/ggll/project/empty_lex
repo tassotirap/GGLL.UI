@@ -4,6 +4,7 @@ import org.ggll.core.syntax.model.*;
 
 %%
 
+%public
 %implements org.ggll.core.lexical.Yylex
 
 %{

@@ -1,19 +1,13 @@
 package org.ggll.core.syntax.grammar;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.ObjectOutputStream;
 
 import javax.swing.DefaultListModel;
 
 import org.ggll.core.lexical.YyFactory;
 import org.ggll.core.syntax.SyntacticLoader;
 import org.ggll.core.syntax.TableCreate;
-import org.ggll.core.syntax.analyzer.AnalyzerTable;
-import org.ggll.core.syntax.model.TableGraphNode;
-import org.ggll.core.syntax.model.TableNode;
+import org.ggll.core.syntax.parser.ParserTable;
 import org.ggll.core.syntax.validation.GSLL1Rules;
 import org.ggll.core.syntax.validation.GrammarRule;
 import org.ggll.core.syntax.validation.InvalidGrammarException;
@@ -23,8 +17,6 @@ import org.ggll.parser.ParsingEditor;
 import org.ggll.project.GGLLManager;
 import org.ggll.ui.debug.ErrorDialog;
 import org.ggll.util.IOUtilities;
-
-import com.thoughtworks.xstream.XStream;
 
 public class Controller
 {
@@ -83,7 +75,7 @@ public class Controller
 			}
 			parsingEditor.setSyntacticLoader(syntacticLoader);
 
-			AnalyzerTable analyzer = new AnalyzerTable(syntacticLoader.tabGraph(), syntacticLoader.tabNt(), syntacticLoader.tabT());
+			ParserTable analyzer = new ParserTable(syntacticLoader.tabGraph(), syntacticLoader.tabNt(), syntacticLoader.tabT());
 			analyzer.serialize(GGLLManager.getProject().getProjectDir().getAbsolutePath() + "\\export\\data.ggll");
 
 			File semantic = new File(GGLLManager.getProject().getProjectDir().getAbsolutePath() + "\\" + GGLLManager.getProject().getProjectDir().getName() + FileNames.SEM_EXTENSION);

@@ -22,8 +22,6 @@ import org.ggll.canvas.action.WidgetCopyPasteProvider;
 import org.ggll.canvas.action.WidgetDeleteProvider;
 import org.ggll.canvas.state.VolatileStateManager;
 import org.ggll.canvas.widget.MarkedWidget;
-import org.ggll.core.CoreManager;
-import org.ggll.core.semantics.SemanticRoutines;
 import org.ggll.core.syntax.command.CommandFactory;
 import org.ggll.core.syntax.grammar.Controller;
 import org.ggll.project.GGLLManager;

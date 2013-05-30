@@ -18,14 +18,13 @@ import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 
 import org.ggll.actions.Mode;
-import org.ggll.core.CoreManager;
 import org.ggll.core.lexical.YyFactory;
 import org.ggll.core.lexical.Yylex;
 import org.ggll.core.syntax.SyntacticLoader;
-import org.ggll.core.syntax.analyzer.Analyzer;
-import org.ggll.core.syntax.analyzer.AnalyzerTable;
 import org.ggll.core.syntax.model.ParseNode;
 import org.ggll.core.syntax.model.ParseStack;
+import org.ggll.core.syntax.parser.Parser;
+import org.ggll.core.syntax.parser.ParserTable;
 import org.ggll.editor.StandaloneTextArea;
 import org.ggll.editor.TextArea;
 import org.ggll.editor.buffer.BufferListener;
@@ -47,7 +46,7 @@ public class ParsingEditor implements BufferListener, CaretListener
 	private StringBuffer textToParse;
 	private ArrayList<JButton> parsingButtons;
 	private String rootPath;
-	private Analyzer analyzer;
+	private Parser analyzer;
 	private StandaloneTextArea standaloneTextArea;
 
 	public ParsingEditor(SyntacticLoader syntacticLoader, Mode mode, String rootPath)
@@ -130,8 +129,16 @@ public class ParsingEditor implements BufferListener, CaretListener
 
 	public ParsingEditor build()
 	{
-		yylex = YyFactory.getYylex(rootPath + "/generated_code", null, stringReader);
-		return instance;
+		try
+		{
+			yylex = YyFactory.getYylex(new File(rootPath + "/generated_code/Yylex.java"));
+			return instance;
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	/* #################### CARET LISTENER ######################### */
@@ -306,36 +313,43 @@ public class ParsingEditor implements BufferListener, CaretListener
 					Log.log(Log.ERROR, this, "An internal error has occurred!", e1);
 				}
 
-				analyzer = new Analyzer(new AnalyzerTable(syntacticLoader.tabGraph(), syntacticLoader.tabNt(), syntacticLoader.tabT()), null, yylex, GGLLManager.getProject().getSemanticFile(), true);
-				
-				if(!stepping)
+				analyzer = new Parser(new ParserTable(syntacticLoader.tabGraph(), syntacticLoader.tabNt(), syntacticLoader.tabT()), yylex, GGLLManager.getProject().getSemanticFile(), true);
+
+				if (!stepping)
 				{
-					AppOutput.clearStacks();
-					analyzer.run();
-					while(analyzer.next())
+					try
 					{
-						printStack(analyzer.getAnalyzerStacks().getParseStack());
-					}
-					if (CoreManager.isSucess())
-					{
-						AppOutput.displayText("<font color='green'>Expression Successfully recognized.</font>", TOPIC.Output);
-					}
-					else
-					{
-						AppOutput.displayText("<font color='red'>Expression can't be recognized.</font>", TOPIC.Output);
-						for (String error : CoreManager.getErrorList())
+						AppOutput.clearStacks();
+						analyzer.run();
+						while (analyzer.next())
 						{
-							AppOutput.displayText("<font color='red'>" + error + "</font>", TOPIC.Output);
+							printStack(analyzer.getParseStacks().getParseStack());
+						}
+						if (analyzer.isSucess())
+						{
+							AppOutput.displayText("<font color='green'>Expression Successfully recognized.</font>", TOPIC.Output);
+						}
+						else
+						{
+							AppOutput.displayText("<font color='red'>Expression can't be recognized.</font>", TOPIC.Output);
+							for (String error : analyzer.getErrorList())
+							{
+								AppOutput.displayText("<font color='red'>" + error + "</font>", TOPIC.Output);
+							}
 						}
 					}
-				}				
+					catch (Exception e)
+					{
+						e.printStackTrace();
+					}
+				}
 				clearBufferAndGoToNextLine(true);
 			}
 		}
 	}
-	
+
 	public void printStack(ParseStack parseStackNode)
-	{	
+	{
 		Iterator<ParseNode> iterator = parseStackNode.iterator();
 		ParseNode parseStackNodeTemp = null;
 		String lineSyntax = "";
@@ -346,7 +360,7 @@ public class ParsingEditor implements BufferListener, CaretListener
 			lineSyntax += "<a style=\"color: #000000; font-weight: bold;\" href=\"" + parseStackNodeTemp.getFlag() + "\">" + parseStackNodeTemp.getType() + "</a>&nbsp;";
 			lineSemantic += parseStackNodeTemp.getSemanticSymbol() + "&nbsp;";
 		}
-		
+
 		AppOutput.showAndSelectNode((parseStackNode.peek()).getFlag());
 		AppOutput.printlnSyntaxStack(lineSyntax, true);
 		AppOutput.printlnSemanticStack(lineSemantic, true);
@@ -401,7 +415,15 @@ public class ParsingEditor implements BufferListener, CaretListener
 
 	public void stepRun()
 	{
-		analyzer.next();
+		try
+		{
+			analyzer.next();
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+
 	}
 
 	@Override
