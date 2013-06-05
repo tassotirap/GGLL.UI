@@ -1,5 +1,15 @@
 package org.ggll.parser;
 
+import ggll.core.compile.ClassLoader;
+import ggll.core.lexical.YyFactory;
+import ggll.core.lexical.Yylex;
+import ggll.core.semantics.SemanticRoutineClass;
+import ggll.core.syntax.model.ParseNode;
+import ggll.core.syntax.model.ParseStack;
+import ggll.core.syntax.parser.Parser;
+import ggll.core.syntax.parser.GGLLTable;
+import ggll.core.syntax.parser.ParserOutput;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -18,13 +28,7 @@ import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 
 import org.ggll.actions.Mode;
-import org.ggll.core.lexical.YyFactory;
-import org.ggll.core.lexical.Yylex;
 import org.ggll.core.syntax.SyntacticLoader;
-import org.ggll.core.syntax.model.ParseNode;
-import org.ggll.core.syntax.model.ParseStack;
-import org.ggll.core.syntax.parser.Parser;
-import org.ggll.core.syntax.parser.ParserTable;
 import org.ggll.editor.StandaloneTextArea;
 import org.ggll.editor.TextArea;
 import org.ggll.editor.buffer.BufferListener;
@@ -131,7 +135,7 @@ public class ParsingEditor implements BufferListener, CaretListener
 	{
 		try
 		{
-			yylex = YyFactory.getYylex(new File(rootPath + "/generated_code/Yylex.java"));
+			yylex = YyFactory.getYylex(new File(rootPath + "/export/Yylex.java"));
 			return instance;
 		}
 		catch (Exception e)
@@ -292,60 +296,83 @@ public class ParsingEditor implements BufferListener, CaretListener
 
 	}
 
+	private void startParse(boolean stepping)
+	{
+		Output.getInstance().displayTextExt("<< " + textToParse.toString(), TOPIC.Parser);
+		stringReader = new StringReader(textToParse.toString());
+		try
+		{
+			yylex.yyreset(stringReader);
+		}
+		catch (IOException e1)
+		{
+			Log.log(Log.ERROR, this, "An internal error has occurred!", e1);
+		}
+
+		ClassLoader<SemanticRoutineClass> classLoader = new ClassLoader<SemanticRoutineClass>(GGLLManager.getProject().getSemanticFile());
+		analyzer = new Parser(new GGLLTable(syntacticLoader.tabGraph(), syntacticLoader.tabNt(), syntacticLoader.tabT()), yylex, classLoader.getInstance(), stepping);
+		analyzer.setParserOutput(new ParserOutput()
+		{
+			@Override
+			public void Output()
+			{
+				printStack(analyzer.getParseStacks().getParseStack());
+
+			}
+		});
+	}
+
+	private void endParser()
+	{
+		if (analyzer.isSucess())
+		{
+			AppOutput.displayText("<font color='green'>Expression Successfully recognized.</font>", TOPIC.Output);
+		}
+		else
+		{
+			AppOutput.displayText("<font color='red'>Expression can't be recognized.</font>", TOPIC.Output);
+			for (String error : analyzer.getErrorList())
+			{
+				AppOutput.displayText("<font color='red'>" + error + "</font>", TOPIC.Output);
+			}
+		}
+		analyzer = null;
+	}
+
 	public void run(boolean stepping)
 	{
-		if (syntacticLoader != null)
+		try
 		{
+			if (analyzer != null)
+			{
+				analyzer.nextToEnd();
+				endParser();
+				return;
+			}
+			if (syntacticLoader == null)
+			{
+				return;
+			}
 			if (textToParse.toString().equals(""))
 			{
 				JOptionPane.showMessageDialog(null, "There is nothing to parse", "Can not parse", JOptionPane.WARNING_MESSAGE);
+				return;
 			}
-			else
+
+			startParse(stepping);
+
+			AppOutput.clearStacks();
+			analyzer.run();
+			if (!stepping)
 			{
-				Output.getInstance().displayTextExt("<< " + textToParse.toString(), TOPIC.Parser);
-				stringReader = new StringReader(textToParse.toString());
-				try
-				{
-					yylex.yyreset(stringReader);
-				}
-				catch (IOException e1)
-				{
-					Log.log(Log.ERROR, this, "An internal error has occurred!", e1);
-				}
-
-				analyzer = new Parser(new ParserTable(syntacticLoader.tabGraph(), syntacticLoader.tabNt(), syntacticLoader.tabT()), yylex, GGLLManager.getProject().getSemanticFile(), true);
-
-				if (!stepping)
-				{
-					try
-					{
-						AppOutput.clearStacks();
-						analyzer.run();
-						while (analyzer.next())
-						{
-							printStack(analyzer.getParseStacks().getParseStack());
-						}
-						if (analyzer.isSucess())
-						{
-							AppOutput.displayText("<font color='green'>Expression Successfully recognized.</font>", TOPIC.Output);
-						}
-						else
-						{
-							AppOutput.displayText("<font color='red'>Expression can't be recognized.</font>", TOPIC.Output);
-							for (String error : analyzer.getErrorList())
-							{
-								AppOutput.displayText("<font color='red'>" + error + "</font>", TOPIC.Output);
-							}
-						}
-					}
-					catch (Exception e)
-					{
-						e.printStackTrace();
-					}
-				}
-				clearBufferAndGoToNextLine(true);
+				endParser();
 			}
 		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+		clearBufferAndGoToNextLine(true);
 	}
 
 	public void printStack(ParseStack parseStackNode)
@@ -417,7 +444,18 @@ public class ParsingEditor implements BufferListener, CaretListener
 	{
 		try
 		{
-			analyzer.next();
+			if (analyzer == null)
+			{
+				run(true);
+			}
+			if (analyzer == null)
+			{
+				return;
+			}
+			if (!analyzer.next())
+			{
+				endParser();
+			}
 		}
 		catch (Exception e)
 		{

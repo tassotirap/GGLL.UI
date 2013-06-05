@@ -1,6 +1,6 @@
 package org.ggll.ui.component;
 
-import org.ggll.core.lexical.YyFactory;
+import ggll.core.lexical.YyFactory;
 
 public class LexComponent extends AdvancedTextAreaComponent
 {

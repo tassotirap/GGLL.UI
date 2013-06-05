@@ -1,11 +1,12 @@
 package org.ggll.project;
 
+import ggll.core.lexical.YyFactory;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 
-import org.ggll.core.lexical.YyFactory;
 import org.ggll.exceptions.WarningException;
 import org.ggll.file.GrammarFile;
 import org.ggll.file.LexicalFile;
@@ -36,10 +37,6 @@ public class ProjectHelper
 		project.setLexicalFile(lexFile);
 		project.setMetadataFile(metadataFile);
 		project.getOpenedFiles().add(gramFile);
-
-		YyFactory.createYylex(projectRoot.getAbsolutePath(), "generated_code", lexFile.getAbsolutePath());
-		project.setYyLexFile(new File(projectRoot.getAbsoluteFile() + "/generated_code", "Yylex.java"));
-
 		project.save();
 	}
 

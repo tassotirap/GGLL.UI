@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.Set;
 
 import org.ggll.project.Project;
+import org.ggll.util.IOUtilities;
 
 public class SemanticFile extends File
 {
@@ -115,14 +116,15 @@ public class SemanticFile extends File
 		if (!this.exists() && !this.createNewFile())
 			throw new IOException("Could not create SemanticFile");
 		
-		String conteudo = readFile(Project.class.getResource(ORG_GRVIEW_PROJECT_EMPTY_SEMMANTIC).getFile());
+		IOUtilities.copyFileFromInputSteam(Project.class.getResourceAsStream(ORG_GRVIEW_PROJECT_EMPTY_SEMMANTIC), this);		
+		String conteudo = readFile(getPath());
 		conteudo = conteudo.replace("PROJECT_NAME", this.getName().replace(".java", ""));
 		FileWriter output = new FileWriter(this);
 		output.write(conteudo);
 		output.close();
 	}
 	
-	public String readFile(String filename)
+	private String readFile(String filename)
 	{
 	   String content = null;
 	   File file = new File(filename); //for ex foo.txt

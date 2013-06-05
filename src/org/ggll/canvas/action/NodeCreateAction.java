@@ -7,6 +7,8 @@ import org.ggll.canvas.Canvas;
 import org.ggll.canvas.CanvasData;
 import org.ggll.canvas.CanvasFactory;
 import org.ggll.core.syntax.command.CommandFactory;
+import org.ggll.project.GGLLManager;
+import org.ggll.project.ProjectHelper;
 import org.netbeans.api.visual.action.WidgetAction;
 import org.netbeans.api.visual.widget.Widget;
 
@@ -27,25 +29,31 @@ public class NodeCreateAction extends WidgetAction.Adapter
 		Canvas canvas = CanvasFactory.getCanvas();
 		if (canvas.getCanvasActiveTool().equals(CanvasData.TERMINAL))
 		{
-			return String.format("Terminal%d", (canvas.getTerminals().size() + 1));
+			GGLLManager.getProject().getGrammarFile().incLastTerminalId();
+			return String.format("Terminal%d", GGLLManager.getProject().getGrammarFile().getLastTerminalId());
 		}
 		if (canvas.getCanvasActiveTool().equals(CanvasData.N_TERMINAL))
 		{
-			return String.format("NTerminal%d", (canvas.getNterminals().size() + 1));
+			GGLLManager.getProject().getGrammarFile().incLastNTerminalId();
+			return String.format("NTerminal%d", GGLLManager.getProject().getGrammarFile().getLastNTerminalId());
 		}
 		if (canvas.getCanvasActiveTool().equals(CanvasData.LEFT_SIDE))
 		{
-			return String.format("LeftSide%d", (canvas.getLeftSides().size() + 1));
+			GGLLManager.getProject().getGrammarFile().incLastLeftSides();
+			return String.format("LeftSide%d", GGLLManager.getProject().getGrammarFile().getLastLeftSides());
 		}
 		if (canvas.getCanvasActiveTool().equals(CanvasData.LAMBDA))
 		{
-			return String.format("Lambda%d", (canvas.getLambdas().size() + 1));
+			GGLLManager.getProject().getGrammarFile().incLastLAMBDA();
+			return String.format("Lambda%d", GGLLManager.getProject().getGrammarFile().getLastLAMBDA());
 		}
 		if (canvas.getCanvasActiveTool().equals(CanvasData.START))
 		{
-			return String.format("S%d", (canvas.getStart().size() + 1));
+			GGLLManager.getProject().getGrammarFile().incLastSTART();
+			return String.format("S%d", GGLLManager.getProject().getGrammarFile().getLastSTART());
 		}
-		return String.format("node%d", (canvas.getCustomNodes().size() + 1));
+		GGLLManager.getProject().getGrammarFile().incLastCustomNode();
+		return String.format("node%d", GGLLManager.getProject().getGrammarFile().getLastCustomNode());
 	}
 
 	private boolean isNode(Canvas canvas)

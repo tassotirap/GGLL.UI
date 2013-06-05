@@ -1,11 +1,11 @@
 /*The line below can not be removed, otherwise the plugin do not works */
-import org.ggll.core.lexical.*;
-import org.ggll.core.syntax.model.*;
+import ggll.core.lexical.*;
+import ggll.core.syntax.model.*;
 
 %%
 
 %public
-%implements org.ggll.core.lexical.Yylex
+%implements ggll.core.lexical.Yylex
 
 %{
   private int comment_count = 0;

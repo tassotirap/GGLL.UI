@@ -1,8 +1,9 @@
 package org.ggll.core.syntax;
 
+import ggll.core.syntax.model.TableGraphNode;
+import ggll.core.syntax.model.TableNode;
+
 import org.ggll.core.syntax.grammar.model.SyntaxDefinitions;
-import org.ggll.core.syntax.model.TableGraphNode;
-import org.ggll.core.syntax.model.TableNode;
 
 /*
  * Created on 11/08/2003

@@ -1,13 +1,14 @@
 package org.ggll.core.syntax.grammar;
 
+import ggll.core.lexical.YyFactory;
+import ggll.core.syntax.parser.GGLLTable;
+
 import java.io.File;
 
 import javax.swing.DefaultListModel;
 
-import org.ggll.core.lexical.YyFactory;
 import org.ggll.core.syntax.SyntacticLoader;
 import org.ggll.core.syntax.TableCreate;
-import org.ggll.core.syntax.parser.ParserTable;
 import org.ggll.core.syntax.validation.GSLL1Rules;
 import org.ggll.core.syntax.validation.GrammarRule;
 import org.ggll.core.syntax.validation.InvalidGrammarException;
@@ -33,7 +34,7 @@ public class Controller
 
 	public static void generateAndParseCurrentGrammar()
 	{
-		YyFactory.createYylex(GGLLManager.getProject().getLexicalFile().getParent(), "generated_code", GGLLManager.getProject().getLexicalFile().getPath());
+		YyFactory.createYylex(GGLLManager.getProject().getLexicalFile().getParent(), "export", GGLLManager.getProject().getLexicalFile().getPath());
 		AppOutput.clearOutputBuffer();
 		AppOutput.clearStacks();
 		GrammarFactory grammarFactory = new GrammarFactory();
@@ -75,14 +76,11 @@ public class Controller
 			}
 			parsingEditor.setSyntacticLoader(syntacticLoader);
 
-			ParserTable analyzer = new ParserTable(syntacticLoader.tabGraph(), syntacticLoader.tabNt(), syntacticLoader.tabT());
+			GGLLTable analyzer = new GGLLTable(syntacticLoader.tabGraph(), syntacticLoader.tabNt(), syntacticLoader.tabT());
 			analyzer.serialize(GGLLManager.getProject().getProjectDir().getAbsolutePath() + "\\export\\data.ggll");
 
 			File semantic = new File(GGLLManager.getProject().getProjectDir().getAbsolutePath() + "\\" + GGLLManager.getProject().getProjectDir().getName() + FileNames.SEM_EXTENSION);
-			File lex = new File(GGLLManager.getProject().getProjectDir().getAbsolutePath() + "\\generated_code\\Yylex.java");
-
 			IOUtilities.copyFile(semantic, new File(GGLLManager.getProject().getProjectDir().getAbsolutePath() + "\\export\\" + GGLLManager.getProject().getProjectDir().getName() + FileNames.SEM_EXTENSION));
-			IOUtilities.copyFile(lex, new File(GGLLManager.getProject().getProjectDir().getAbsolutePath() + "\\export\\Yylex.java"));
 		}
 	}
 }

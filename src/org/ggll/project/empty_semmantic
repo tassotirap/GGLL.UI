@@ -1,4 +1,4 @@
-import org.ggll.core.semantics.SemanticRoutineClass;
+import ggll.core.semantics.SemanticRoutineClass;
 
 public class PROJECT_NAME extends SemanticRoutineClass
 {
