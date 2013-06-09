@@ -1,13 +1,14 @@
 package org.ggll.parser;
 
 import ggll.core.compile.ClassLoader;
+import ggll.core.compile.Compiler;
 import ggll.core.lexical.YyFactory;
 import ggll.core.lexical.Yylex;
 import ggll.core.semantics.SemanticRoutineClass;
 import ggll.core.syntax.model.ParseNode;
 import ggll.core.syntax.model.ParseStack;
-import ggll.core.syntax.parser.Parser;
 import ggll.core.syntax.parser.GGLLTable;
+import ggll.core.syntax.parser.Parser;
 import ggll.core.syntax.parser.ParserOutput;
 
 import java.io.BufferedReader;
@@ -308,18 +309,29 @@ public class ParsingEditor implements BufferListener, CaretListener
 		{
 			Log.log(Log.ERROR, this, "An internal error has occurred!", e1);
 		}
-
-		ClassLoader<SemanticRoutineClass> classLoader = new ClassLoader<SemanticRoutineClass>(GGLLManager.getProject().getSemanticFile());
-		analyzer = new Parser(new GGLLTable(syntacticLoader.tabGraph(), syntacticLoader.tabNt(), syntacticLoader.tabT()), yylex, classLoader.getInstance(), stepping);
-		analyzer.setParserOutput(new ParserOutput()
+		
+		try
 		{
-			@Override
-			public void Output()
+			Compiler compiler = new Compiler();
+			compiler.compile(GGLLManager.getProject().getSemanticFile().getPath());
+			ClassLoader<SemanticRoutineClass> classLoader = new ClassLoader<SemanticRoutineClass>(GGLLManager.getProject().getSemanticFile());
+			analyzer = new Parser(new GGLLTable(syntacticLoader.tabGraph(), syntacticLoader.tabNt(), syntacticLoader.tabT()), yylex, classLoader.getInstance(), stepping);
+			analyzer.setParserOutput(new ParserOutput()
 			{
-				printStack(analyzer.getParseStacks().getParseStack());
+				@Override
+				public void Output()
+				{
+					printStack(analyzer.getParseStacks().getParseStack());
 
-			}
-		});
+				}
+			});
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+		
+		
 	}
 
 	private void endParser()

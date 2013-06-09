@@ -105,7 +105,7 @@ public class TableCreate
 		 * caracteres em branco seguidos...
 		 */
 		boolean firstTime = false;
-		tab = new String[nlines][7];
+		tab = new String[nlines][20];
 		lin = col = 0;
 		try
 		{
