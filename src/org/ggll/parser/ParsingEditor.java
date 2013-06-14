@@ -299,7 +299,7 @@ public class ParsingEditor implements BufferListener, CaretListener
 
 	private void startParse(boolean stepping)
 	{
-		Output.getInstance().displayTextExt("<< " + textToParse.toString(), TOPIC.Parser);
+		Output.getInstance().displayTextExt("<< " + textToParse.toString().replace(">", "&gt;").replace("<", "&lt;"), TOPIC.Parser);
 		stringReader = new StringReader(textToParse.toString());
 		try
 		{
@@ -309,7 +309,7 @@ public class ParsingEditor implements BufferListener, CaretListener
 		{
 			Log.log(Log.ERROR, this, "An internal error has occurred!", e1);
 		}
-		
+
 		try
 		{
 			Compiler compiler = new Compiler();
@@ -330,8 +330,7 @@ public class ParsingEditor implements BufferListener, CaretListener
 		{
 			e.printStackTrace();
 		}
-		
-		
+
 	}
 
 	private void endParser()

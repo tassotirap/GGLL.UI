@@ -15,7 +15,7 @@ public class UnidirectionalAnchor extends Anchor
 
 	public static enum UnidirectionalAnchorKind
 	{
-		BOTTOM, LEFT, RIGHT, TOP
+		BOTTOM, LEFT, RIGHT, TOP, LEFT_BOTTOM
 	}
 
 	private static final int PREFERRED_GAP_INC = 30;
@@ -24,25 +24,21 @@ public class UnidirectionalAnchor extends Anchor
 	private static HashMap<String, Widget> refWidgetByConn = new HashMap<String, Widget>();
 
 	private String connection;
-	private boolean directConnection;
-	private int gap;
 	private UnidirectionalAnchorKind kind;
 
 	private Direction preferredDirection;;
 
-	public UnidirectionalAnchor(Widget widget, String connection, boolean directConnection, UnidirectionalAnchorKind kind)
+	public UnidirectionalAnchor(Widget widget, String connection, UnidirectionalAnchorKind kind)
 	{
-		this(widget, connection, kind, 0, directConnection, null);
+		this(widget, connection, kind, null);
 	}
 
-	public UnidirectionalAnchor(Widget widget, String connection, UnidirectionalAnchorKind kind, int gap, boolean directConnection, Direction preferredDirection)
+	public UnidirectionalAnchor(Widget widget, String connection, UnidirectionalAnchorKind kind, Direction preferredDirection)
 	{
 		super(widget);
-		this.gap = gap;
 		this.kind = kind;
 		this.preferredDirection = preferredDirection;
 		this.connection = connection;
-		this.directConnection = directConnection;
 	}
 
 	@Override
@@ -58,7 +54,6 @@ public class UnidirectionalAnchor extends Anchor
 		Point center;
 		Direction direction;
 		Direction thisPreferredDirection;
-		int pointsGap = 0;
 		int gap_inc = 0;
 		ConnectionWidget refConnection = null;
 		GraphScene gs = (GraphScene) widget.getScene();
@@ -68,16 +63,7 @@ public class UnidirectionalAnchor extends Anchor
 		{
 			if (!refWidgetByConn.containsKey(connection) || refWidgetByConn.get(connection) != widget)
 			{
-				priorConnByConn.put(connection, refConnectionByWidget.containsKey(widget));// bad
-																							// on
-																							// loading
-																							// time
-																							// ->
-																							// gs.findNodeEdges(gs.findObject(widget),
-																							// false,
-																							// true).size()
-																							// >
-																							// 1;
+				priorConnByConn.put(connection, refConnectionByWidget.containsKey(widget));
 				refWidgetByConn.put(connection, widget);
 			}
 			if (priorConnByConn.containsKey(connection) && priorConnByConn.get(connection))
@@ -126,22 +112,7 @@ public class UnidirectionalAnchor extends Anchor
 		}
 		if (refConnection != null)
 		{
-			if (refConnection.getControlPoints() != null && refConnection.getLastControlPoint() != null)
-			{
-				pointsGap = Math.abs(refConnection.getLastControlPoint().x - refConnection.getControlPoints().get(refConnection.getControlPoints().size() - 2).x) / 2; // you
-																																										// should
-																																										// parameterize
-																																										// this
-																																										// value
-			}
-			else
-			{
-				pointsGap = PREFERRED_GAP_INC;
-			}
-			if (!directConnection)
-			{
-				gap_inc = PREFERRED_GAP_INC > pointsGap ? pointsGap : PREFERRED_GAP_INC;
-			}
+			gap_inc = PREFERRED_GAP_INC;
 			thisPreferredDirection = preferredDirection;
 		}
 		else
@@ -152,16 +123,18 @@ public class UnidirectionalAnchor extends Anchor
 		{
 			case LEFT:
 				direction = thisPreferredDirection == null ? Direction.LEFT : thisPreferredDirection;
-				return new Anchor.Result(new Point(bounds.x - (gap + gap_inc), center.y), direction);
+				return new Anchor.Result(new Point(bounds.x - (gap_inc), center.y), direction);
 			case RIGHT:
 				direction = thisPreferredDirection == null ? Direction.RIGHT : thisPreferredDirection;
-				return new Anchor.Result(new Point(bounds.x + bounds.width + (gap + gap_inc), center.y), direction);
+				return new Anchor.Result(new Point(bounds.x + bounds.width + (gap_inc), center.y), direction);
 			case TOP:
 				direction = thisPreferredDirection == null ? Direction.TOP : thisPreferredDirection;
-				return new Anchor.Result(new Point(center.x, bounds.y - (gap + gap_inc)), direction);
+				return new Anchor.Result(new Point(center.x, bounds.y - (gap_inc)), direction);
 			case BOTTOM:
 				direction = thisPreferredDirection == null ? Direction.BOTTOM : thisPreferredDirection;
-				return new Anchor.Result(new Point(center.x, bounds.y + bounds.height + (gap + gap_inc)), direction);
+				return new Anchor.Result(new Point(center.x, bounds.y + bounds.height + (gap_inc)), direction);
+			case LEFT_BOTTOM:
+				return new Anchor.Result(new Point(bounds.x - (PREFERRED_GAP_INC + gap_inc), center.y), Direction.BOTTOM);
 		}
 		return null;
 	}

@@ -32,20 +32,6 @@ import java.util.List;
 import java.util.Vector;
 
 import org.ggll.util.StandardUtilities;
-
-/**
- * Manages a collection of action sets. There are two instances of this class in
- * jEdit:
- * <ul>
- * <li>{@link org.grview.actions.jEdit#getActionContext()} - editor actions
- * <li>{@link org.grview.actions.browser.VFSBrowser#getActionContext()} -
- * browser actions
- * </ul>
- * 
- * @since jEdit 4.3pre13
- * @author Slava Pestov
- * @version $Id: AsinActionContext.java 6884 2006-09-06 02:38:55Z ezust $
- */
 public abstract class AsinActionContext<F extends AbstractEditAction, E extends AsinActionSet<F>>
 {
 	/**

@@ -8,7 +8,6 @@ import org.ggll.canvas.CanvasData;
 import org.ggll.canvas.CanvasFactory;
 import org.ggll.core.syntax.command.CommandFactory;
 import org.ggll.project.GGLLManager;
-import org.ggll.project.ProjectHelper;
 import org.netbeans.api.visual.action.WidgetAction;
 import org.netbeans.api.visual.widget.Widget;
 
@@ -19,7 +18,6 @@ public class NodeCreateAction extends WidgetAction.Adapter
 
 	public NodeCreateAction(Canvas canvas)
 	{
-
 		monitor = new PropertyChangeSupport(this);
 		monitor.addPropertyChangeListener(CanvasFactory.getVolatileStateManager());
 	}
@@ -66,12 +64,14 @@ public class NodeCreateAction extends WidgetAction.Adapter
 	{
 		Canvas canvas = CanvasFactory.getCanvas();
 		if (event.getClickCount() == 1)
+		{
 			if (event.getButton() == MouseEvent.BUTTON1 && isNode(canvas))
 			{
 				String name = createDefaultName();
 				canvas.addNode(name).setPreferredLocation(widget.convertLocalToScene(event.getPoint()));
 				monitor.firePropertyChange("undoable", null, CommandFactory.createAddCommand());
 			}
+		}
 		return State.REJECTED;
 	}
 

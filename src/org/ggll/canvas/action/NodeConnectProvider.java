@@ -7,6 +7,8 @@ import java.util.Collection;
 import org.ggll.canvas.Canvas;
 import org.ggll.canvas.CanvasData;
 import org.ggll.canvas.CanvasFactory;
+import org.ggll.canvas.widget.IconNodeWidgetExt;
+import org.ggll.canvas.widget.LabelWidgetExt;
 import org.ggll.core.syntax.command.CommandFactory;
 import org.netbeans.api.visual.action.ConnectProvider;
 import org.netbeans.api.visual.action.ConnectorState;
@@ -38,7 +40,7 @@ public class NodeConnectProvider implements ConnectProvider
 		{
 			numEdges = edges.size();
 		}
-		
+
 		int i = numEdges;
 		do
 		{
@@ -55,7 +57,8 @@ public class NodeConnectProvider implements ConnectProvider
 				edge = "edge" + i;
 			}
 			i++;
-		} while(edges.contains(edge));
+		}
+		while (edges.contains(edge));
 
 		canvas.addEdge(edge);
 		canvas.setEdgeSource(edge, source);
@@ -78,6 +81,15 @@ public class NodeConnectProvider implements ConnectProvider
 		source = canvas.isNode(object) ? (String) object : null;
 		if (source != null)
 		{
+			if (canvas.getCanvasActiveTool().equals(CanvasData.ALTERNATIVE) && sourceWidget instanceof LabelWidgetExt)
+			{
+				LabelWidgetExt labelWidgetExt = (LabelWidgetExt) sourceWidget;
+				if (labelWidgetExt.getType().equals(CanvasData.LEFT_SIDE) || labelWidgetExt.getType().equals(CanvasData.START))
+				{
+					return false;
+				}
+			}		
+			
 			Collection<String> edges = canvas.findNodeEdges(source, true, false);
 			if (edges.size() >= 2)
 			{
@@ -107,7 +119,22 @@ public class NodeConnectProvider implements ConnectProvider
 		target = canvas.isNode(object) ? (String) object : null;
 		if (target != null)
 		{
-			return source.equals(target) ? ConnectorState.REJECT_AND_STOP : ConnectorState.ACCEPT;
+			if (targetWidget instanceof LabelWidgetExt)
+			{
+				LabelWidgetExt labelWidgetExt = (LabelWidgetExt) targetWidget;
+				if (labelWidgetExt.getType().equals(CanvasData.TERMINAL) || labelWidgetExt.getType().equals(CanvasData.N_TERMINAL))
+				{
+					return ConnectorState.ACCEPT;
+				}
+			}
+			else if(targetWidget.getParentWidget() != null && targetWidget.getParentWidget() instanceof IconNodeWidgetExt)
+			{
+				IconNodeWidgetExt iconNodeWidgetExt = (IconNodeWidgetExt) targetWidget.getParentWidget();
+				if (iconNodeWidgetExt.getType().equals(CanvasData.LAMBDA))
+				{
+					return ConnectorState.ACCEPT;
+				}
+			}
 		}
 		return object != null ? ConnectorState.REJECT_AND_STOP : ConnectorState.REJECT;
 	}

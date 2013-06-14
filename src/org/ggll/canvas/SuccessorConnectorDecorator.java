@@ -8,6 +8,7 @@ import org.netbeans.api.visual.action.ConnectDecorator;
 import org.netbeans.api.visual.anchor.Anchor;
 import org.netbeans.api.visual.anchor.AnchorFactory;
 import org.netbeans.api.visual.anchor.AnchorShape;
+import org.netbeans.api.visual.anchor.Anchor.Direction;
 import org.netbeans.api.visual.graph.GraphScene;
 import org.netbeans.api.visual.widget.ConnectionWidget;
 import org.netbeans.api.visual.widget.Scene;
@@ -41,13 +42,13 @@ public class SuccessorConnectorDecorator implements ConnectDecorator
 	public Anchor createSourceAnchor(Widget sourceWidget)
 	{
 		String edge = (String) scene.findObject(thisConnection);
-		return new UnidirectionalAnchor(sourceWidget, edge, true, UnidirectionalAnchorKind.RIGHT);
+		return new UnidirectionalAnchor(sourceWidget, edge, UnidirectionalAnchorKind.RIGHT);
 	}
 
 	@Override
 	public Anchor createTargetAnchor(Widget targetWidget)
 	{
 		String edge = (String) scene.findObject(thisConnection);
-		return new UnidirectionalAnchor(targetWidget, edge, true, UnidirectionalAnchorKind.LEFT);
+		return new UnidirectionalAnchor(targetWidget, edge, UnidirectionalAnchorKind.LEFT, Direction.TOP);
 	}
 }

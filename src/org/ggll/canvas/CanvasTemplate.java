@@ -65,11 +65,11 @@ public class CanvasTemplate extends Canvas
 		if (isSuccessor(edge))
 		{
 
-			conn.setSourceAnchor(new UnidirectionalAnchor(w, edge, true, UnidirectionalAnchorKind.RIGHT));
+			conn.setSourceAnchor(new UnidirectionalAnchor(w, edge, UnidirectionalAnchorKind.RIGHT));
 		}
 		else if (isAlternative(edge))
 		{
-			conn.setSourceAnchor(new UnidirectionalAnchor(w, edge, true, UnidirectionalAnchorKind.BOTTOM));
+			conn.setSourceAnchor(new UnidirectionalAnchor(w, edge, UnidirectionalAnchorKind.LEFT_BOTTOM));
 		}
 		else
 		{
@@ -84,11 +84,11 @@ public class CanvasTemplate extends Canvas
 		ConnectionWidget conn = ((ConnectionWidget) findWidget(edge));
 		if (isSuccessor(edge))
 		{
-			conn.setTargetAnchor(new UnidirectionalAnchor(w, edge, UnidirectionalAnchorKind.LEFT, 0, false, Direction.TOP));
+			conn.setTargetAnchor(new UnidirectionalAnchor(w, edge, UnidirectionalAnchorKind.LEFT, Direction.TOP));
 		}
 		else if (isAlternative(edge))
 		{
-			conn.setTargetAnchor(new UnidirectionalAnchor(w, edge, true, UnidirectionalAnchorKind.TOP));
+			conn.setTargetAnchor(new UnidirectionalAnchor(w, edge, UnidirectionalAnchorKind.LEFT, Direction.BOTTOM));
 		}
 		else
 		{

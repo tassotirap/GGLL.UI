@@ -11,7 +11,6 @@ import org.ggll.editor.TextArea;
 import org.ggll.model.FileNames;
 import org.ggll.model.ui.IconFactory;
 import org.ggll.model.ui.IconFactory.IconType;
-import org.ggll.project.tree.FileTree;
 import org.ggll.ui.MainWindow;
 import org.ggll.ui.TabWindowList.TabPlace;
 import org.ggll.ui.component.AbstractComponent;
@@ -114,7 +113,6 @@ public class FileManager
 				JOptionPane.showMessageDialog(null, "Could not create file. Probably you do not have permission to write on disk.", "Could not create file", JOptionPane.INFORMATION_MESSAGE);
 				Log.log(Log.WARNING, mainWindow, "A security exception was thrown while trying to create a new file.", e);
 			}
-			FileTree.reload(baseDir.getAbsolutePath());
 		}
 	}
 
@@ -251,7 +249,6 @@ public class FileManager
 				mainWindow.setSaved(path);
 			}
 			project.save();
-			FileTree.reload(project.getProjectsRootPath());
 		}
 	}
 

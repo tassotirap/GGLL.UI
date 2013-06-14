@@ -4,7 +4,7 @@ import javax.swing.JComponent;
 import javax.swing.JScrollPane;
 
 import org.ggll.project.Project;
-import org.ggll.project.tree.FileTree;
+import org.ggll.project.tree.Tree;
 
 public class ProjectsComponent extends AbstractComponent
 {
@@ -14,8 +14,8 @@ public class ProjectsComponent extends AbstractComponent
 	{
 		if (param instanceof Project)
 		{
-			FileTree fileTree = new FileTree();
-			JScrollPane jScrollPane = new JScrollPane(fileTree.getView());
+			Tree fileTree = new Tree();
+			JScrollPane jScrollPane = new JScrollPane(fileTree);
 			return jScrollPane;
 		}
 		else

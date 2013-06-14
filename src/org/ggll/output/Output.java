@@ -60,11 +60,11 @@ public class Output extends HtmlViewer
 	}
 
 	@Override
-	public void displayTextExt(String st, String font, String size, String cssClass, TOPIC topic)
+	public void displayTextExt(String input, String font, String size, String cssClass, TOPIC topic)
 	{
 		EditorKit eKit = getEditorPane().getEditorKit();
 		Document doc = getEditorPane().getDocument();
-		String html = st;
+		String html = input;
 		String text = "";
 		String tag1 = "";
 		String tag2 = "";
@@ -75,25 +75,24 @@ public class Output extends HtmlViewer
 		}
 		else if (cssClass != null)
 		{
-			// TODO should verify whether the class exists or not
 			tag1 = "<span class=\"" + cssClass + "\">";
 			tag2 = "</span>";
 		}
 		int offset = 0;
 		try
 		{
-			Parser p = new Parser();
-			p.setInputHTML(new String(st));
-			StringFilter sf = new StringFilter();
-			NodeList nl = p.parse(sf);
-			SimpleNodeIterator ni = nl.elements();
-			while (ni.hasMoreNodes())
+			Parser parser = new Parser();
+			parser.setInputHTML(new String(input));
+			StringFilter stringFilter = new StringFilter();
+			NodeList nodeList = parser.parse(stringFilter);
+			SimpleNodeIterator simpleNodeIterator = nodeList.elements();
+			while (simpleNodeIterator.hasMoreNodes())
 			{
-				Node n = ni.nextNode();
-				if (n.toHtml().length() > 0)
+				Node node = simpleNodeIterator.nextNode();
+				if (node.toHtml().length() > 0)
 				{
-					text = tag1 + n.toHtml() + tag2;
-					html = html.substring(0, n.getStartPosition() + offset) + text + html.substring(n.getEndPosition() + offset);
+					text = tag1 + node.toHtml() + tag2;
+					html = html.substring(0, node.getStartPosition() + offset) + text + html.substring(node.getEndPosition() + offset);
 					offset += tag1.length() + tag2.length();
 				}
 			}
