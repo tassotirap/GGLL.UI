@@ -41,7 +41,6 @@ public class ParsingEditor
 	private static ParsingEditor instance;
 	private SyntacticLoader syntacticLoader;
 	private StringReader stringReader;
-	private int lastLine;
 	private Yylex yylex;
 	private StringBuffer textToParse;
 	private ArrayList<JButton> parsingButtons;

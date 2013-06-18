@@ -3,7 +3,6 @@ package org.ggll.ioadapter;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
@@ -21,7 +20,6 @@ import org.ggll.ui.component.TextAreaRepo;
 import org.ggll.ui.interfaces.IMainWindow;
 import org.ggll.util.JarFileLoader;
 import org.ggll.util.Log;
-import org.ggll.util.dynacode.DynaCode;
 
 public class InputAdapter extends IOAdapter
 {
@@ -106,27 +104,6 @@ public class InputAdapter extends IOAdapter
 	/** Generates a java file with the input adapter **/
 	public boolean generate()
 	{
-		String filePath = new File(codeAdvTextArea.getPath()).getParentFile().getAbsolutePath() + "/generated_code/" + "Input" + adapterClass.getSimpleName() + ".java";
-		File file = new File(filePath);
-		try
-		{
-			String text = codeTextArea.getText();
-			FileWriter fw = new FileWriter(file);
-			fw.write(text);
-			fw.close();
-			DynaCode dynacode = new DynaCode(jarLoader);
-			dynacode.addSourceDir(file.getParentFile(), new File("dynacode"));
-			InputAdapterImpl iaImpl = (InputAdapterImpl) dynacode.newProxyInstance(jarLoader, InputAdapterImpl.class, "Input" + adapterClass.getSimpleName());
-			iaImpl.setObject(adapterInstance);
-			iaImpl.setInput(ParserProxyFactory.create(this));
-			iaImpl.init();
-			frameView = new InputAdapterFrame(objectJFrame);
-		}
-		catch (IOException e)
-		{
-			Log.log(Log.ERROR, this, "Could not generate a java file! See the console for details.", e);
-			return false;
-		}
 		return true;
 	}
 
