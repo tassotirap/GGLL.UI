@@ -13,12 +13,10 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-import org.ggll.actions.Mode;
-import org.ggll.editor.StandaloneTextArea;
-import org.ggll.editor.TextArea;
-import org.ggll.editor.syntax.ModeProvider;
+import org.ggll.ui.component.NewTextArea;
 
 public class RoutineWizardWindow extends JFrame
 {
@@ -27,7 +25,7 @@ public class RoutineWizardWindow extends JFrame
 	private static final long serialVersionUID = 1L;
 	private JPanel buttonsPanel = null;
 	private JButton cancelButton = null; // @jve:decl-index=0:visual-constraint="512,525"
-	private TextArea codeTextArea = null;
+	private NewTextArea codeTextArea = null;
 	private JButton insertButton = null; // @jve:decl-index=0:visual-constraint="371,512"
 	private JPanel jContentPane = null;
 	private JLabel nameLabel = null;
@@ -41,6 +39,8 @@ public class RoutineWizardWindow extends JFrame
 		super();
 		initialize();
 	}
+	
+
 
 	/**
 	 * This method initializes buttonsPanel
@@ -136,25 +136,21 @@ public class RoutineWizardWindow extends JFrame
 	 * 
 	 * @return javax.swing.JTextArea
 	 */
-	protected TextArea getCodeTextArea()
+	protected JTextArea getCodeTextArea()
 	{
 		if (codeTextArea == null)
 		{
-			codeTextArea = StandaloneTextArea.createTextArea();
-			Mode mode = new Mode("groovy");
-			mode.setProperty("file", "modes/groovy.xml");
-			ModeProvider.instance.addMode(mode);
-			codeTextArea.getBuffer().setMode(mode);
-			codeTextArea.setText(INSERT_CODE_HERE);
+			codeTextArea = new NewTextArea();
+			codeTextArea.setText(INSERT_CODE_HERE, false);
 
-			codeTextArea.addFocusListener(new FocusListener()
+			codeTextArea.getTextArea().addFocusListener(new FocusListener()
 			{
 				@Override
 				public void focusGained(FocusEvent arg0)
 				{
 					if (codeTextArea.getText().equals(INSERT_CODE_HERE))
 					{
-						codeTextArea.setText("");
+						codeTextArea.setText("", false);
 					}
 				}
 
@@ -163,12 +159,12 @@ public class RoutineWizardWindow extends JFrame
 				{
 					if (codeTextArea.getText().equals(""))
 					{
-						codeTextArea.setText(INSERT_CODE_HERE);
+						codeTextArea.setText(INSERT_CODE_HERE, false);
 					}
 				}
 			});
 		}
-		return codeTextArea;
+		return codeTextArea.getTextArea();
 	}
 
 	/**

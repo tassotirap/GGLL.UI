@@ -15,6 +15,7 @@ import javax.swing.Icon;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
+import javax.swing.JTextArea;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.WindowConstants;
@@ -34,7 +35,6 @@ import net.infonode.docking.util.ViewMap;
 import net.infonode.util.Direction;
 
 import org.ggll.canvas.CanvasFactory;
-import org.ggll.editor.TextArea;
 import org.ggll.model.FileNames;
 import org.ggll.model.ui.IconFactory;
 import org.ggll.model.ui.IconFactory.IconType;
@@ -123,7 +123,7 @@ public class MainWindow implements ComponentListener, IMainWindow
 		MenuModel model = new MenuModel();
 		if (((GGLLView) view).getTitle().equals("Parser"))
 		{
-			TextArea textArea = ParsingEditor.getInstance().getTextArea();
+			JTextArea textArea = ParsingEditor.getInstance().getTextArea();
 			addToolBar(toolBarFactory.createToolBar(textArea, true, false), true, true);
 			addMenuBar(menuBarFactory.createMenuBar(textArea, model), true, true);
 		}
@@ -440,7 +440,7 @@ public class MainWindow implements ComponentListener, IMainWindow
 			model.undo = true;
 			model.redo = true;
 			model.find = true;
-			TextArea textArea = TextAreaRepo.getTextArea(component);
+			JTextArea textArea = TextAreaRepo.getTextArea(component);
 			if (textArea != null)
 			{
 				addToolBar(toolBarFactory.createToolBar(textArea, true, false), true, true);

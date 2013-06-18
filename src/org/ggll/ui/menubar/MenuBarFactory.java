@@ -4,7 +4,6 @@ import java.util.HashMap;
 
 import javax.swing.JMenuBar;
 
-import org.ggll.actions.ActionContextHolder;
 import org.ggll.project.GGLLManager;
 import org.ggll.ui.Menu;
 import org.ggll.ui.Menu.MenuModel;
@@ -22,7 +21,7 @@ public class MenuBarFactory
 	}
 	
 	@SuppressWarnings("rawtypes")
-	public JMenuBar createMenuBarExt(ActionContextHolder context, MenuModel model)
+	public JMenuBar createMenuBarExt(Object context, MenuModel model)
 	{
 		Menu menu = new Menu(new String[]{ Menu.FILE, Menu.EDIT, Menu.OPTIONS, Menu.PROJECT, Menu.WINDOW, Menu.HELP }, window, context, model);
 		menu.build();
@@ -30,7 +29,7 @@ public class MenuBarFactory
 	}
 	
 	@SuppressWarnings("rawtypes")
-	public JMenuBar createMenuBar(final ActionContextHolder context, MenuModel model)
+	public JMenuBar createMenuBar(final Object context, MenuModel model)
 	{
 		if (context == null)
 		{

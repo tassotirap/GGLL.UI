@@ -9,10 +9,10 @@ import javax.swing.JOptionPane;
 
 import org.ggll.canvas.Canvas;
 import org.ggll.canvas.state.StaticStateManager;
-import org.ggll.editor.StandaloneTextArea;
 import org.ggll.model.FileNames;
 import org.ggll.ui.MainWindow;
 import org.ggll.ui.component.GrammarComponent;
+import org.ggll.ui.component.NewTextArea;
 import org.ggll.ui.interfaces.IMainWindow;
 import org.ggll.util.ComponentPrinter;
 import org.ggll.util.Log;
@@ -95,9 +95,9 @@ public final class GGLLManager
 
 	public static void print(Object object)
 	{
-		if (object instanceof StandaloneTextArea)
+		if (object instanceof NewTextArea)
 		{
-			TextPrinter.printText(((StandaloneTextArea) object).getText());
+			TextPrinter.printText(((NewTextArea) object).getText());
 		}
 		else if (object instanceof Canvas)
 		{

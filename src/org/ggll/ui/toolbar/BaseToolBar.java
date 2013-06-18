@@ -2,17 +2,15 @@ package org.ggll.ui.toolbar;
 
 import javax.swing.JToolBar;
 
-import org.ggll.actions.ActionContextHolder;
-
 public abstract class BaseToolBar extends JToolBar
 {
 	private static final long serialVersionUID = 1L;
 
-	protected ActionContextHolder context;
+	protected Object context;
 
 	protected final String imgPath = "/org/ggll/images/";
 
-	public BaseToolBar(ActionContextHolder context)
+	public BaseToolBar(Object context)
 	{
 		this.context = context;
 		initComponets();

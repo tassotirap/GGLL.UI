@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.InvalidPropertiesFormatException;
 import java.util.Properties;
 
-import org.ggll.editor.TextArea;
+import javax.swing.JTextArea;
 
 public class PropertiesUtils
 {
@@ -43,7 +43,7 @@ public class PropertiesUtils
 		}
 		catch (IOException e)
 		{
-			Log.log(Log.ERROR, TextArea.class, e);
+			Log.log(Log.ERROR, JTextArea.class, e);
 		}
 		finally
 		{
@@ -82,7 +82,7 @@ public class PropertiesUtils
 		}
 		catch (IOException e)
 		{
-			Log.log(Log.ERROR, TextArea.class, e);
+			Log.log(Log.ERROR, JTextArea.class, e);
 		}
 		catch (Exception e)
 		{

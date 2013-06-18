@@ -20,8 +20,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import org.ggll.actions.Mode;
-import org.ggll.editor.syntax.ModeProvider;
 import org.ggll.parser.ParsingEditor;
 
 import com.jidesoft.icons.ColorFilter;
@@ -78,8 +76,7 @@ public class ParserComponent extends AbstractComponent
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				Mode mode = loadDefaultMode();
-				parser.setMode(mode);
+
 			}
 		});
 		save.addActionListener(new ActionListener()
@@ -190,15 +187,6 @@ public class ParserComponent extends AbstractComponent
 		return modes.toArray(new String[modes.size()]);
 	}
 
-	private Mode loadDefaultMode()
-	{
-		String modeDef = (String) modes.getSelectedItem();
-		Mode mode = new Mode(modeDef);
-		mode.setProperty("file", "modes/" + modeDef + ".xml");
-		ModeProvider.instance.addMode(mode);
-		return mode;
-	}
-
 	@Override
 	public JComponent create(Object param) throws BadParameterException
 	{
@@ -217,11 +205,10 @@ public class ParserComponent extends AbstractComponent
 		createSaveButton();
 		createParseButton();
 		createNextStepButton();
-		Mode mode = loadDefaultMode();
 
 		if (ParsingEditor.getInstance() == null)
 		{
-			parser = new ParsingEditor(null, mode, rootPath);
+			parser = new ParsingEditor(null, rootPath);
 		}
 		else
 		{

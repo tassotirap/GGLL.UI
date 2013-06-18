@@ -34,7 +34,6 @@ import java.util.regex.Pattern;
 
 import javax.swing.text.Segment;
 
-import org.ggll.actions.TextUtilities;
 import org.ggll.util.SegmentCharSequence;
 import org.ggll.util.StandardUtilities;
 
@@ -240,10 +239,10 @@ public class TokenMarker
 						String s = match.group(digit - '0');
 						if (s.length() == 1)
 						{
-							char b = TextUtilities.getComplementaryBracket(s.charAt(0), null);
-							if (b == '\0')
-								b = s.charAt(0);
-							buf.append(b);
+//							char b = TextUtilities.getComplementaryBracket(s.charAt(0), null);
+//							if (b == '\0')
+//								b = s.charAt(0);
+//							buf.append(b);
 						}
 						else
 							buf.append(ch);

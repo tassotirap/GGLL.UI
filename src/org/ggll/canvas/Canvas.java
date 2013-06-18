@@ -19,20 +19,11 @@ import java.io.IOException;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.EventObject;
 import java.util.HashMap;
 import java.util.List;
 
 import javax.swing.JComponent;
 
-import org.ggll.actions.ActionContextHolder;
-import org.ggll.actions.AsinActionContext;
-import org.ggll.actions.AsinActionSet;
-import org.ggll.bsh.input.AbstractInputHandler;
-import org.ggll.bsh.input.CanvasInputHandler;
-import org.ggll.bsh.input.DefaultInputHandlerProvider;
-import org.ggll.bsh.input.InputHandlerProvider;
-import org.ggll.canvas.action.CanvasBeanShellAction;
 import org.ggll.canvas.action.WidgetActionRepository;
 import org.ggll.canvas.state.CanvasState;
 import org.ggll.canvas.state.StaticStateManager;
@@ -42,18 +33,14 @@ import org.netbeans.api.visual.model.ObjectSceneEventType;
 import org.netbeans.api.visual.router.Router;
 import org.netbeans.api.visual.widget.LayerWidget;
 
-public abstract class Canvas extends GraphScene.StringGraph implements PropertyChangeListener, ActionContextHolder<CanvasBeanShellAction, AsinActionSet<CanvasBeanShellAction>>
-{
+public abstract class Canvas extends GraphScene.StringGraph implements PropertyChangeListener
+{ 
 
 	private static final double MIN_ZOOM = 0.5;
 
 	private static final double MAX_ZOOM = 1.5;
-
-	private AsinActionContext<CanvasBeanShellAction, AsinActionSet<CanvasBeanShellAction>> actionContext;
-	
-
 	private AbstractMap<String, Cursor> cursors = new HashMap<String, Cursor>();
-	private InputHandlerProvider inputHandlerProvider;
+	//private InputHandlerProvider inputHandlerProvider;
 	private PropertyChangeSupport monitor;
 
 	private List<PropertyChangeSupport> monitors = new ArrayList<PropertyChangeSupport>();
@@ -83,16 +70,16 @@ public abstract class Canvas extends GraphScene.StringGraph implements PropertyC
 		monitor = new PropertyChangeSupport(this);
 	}
 
-	/**
-	 * Adds a new action set to the canvas's list of ActionSets.
-	 * 
-	 * @param actionSet
-	 *            the actionSet to add
-	 */
-	public void addActionSet(AsinActionSet<CanvasBeanShellAction> actionSet)
-	{
-		actionContext.addActionSet(actionSet);
-	}
+//	/**
+//	 * Adds a new action set to the canvas's list of ActionSets.
+//	 * 
+//	 * @param actionSet
+//	 *            the actionSet to add
+//	 */
+//	public void addActionSet(AsinActionSet<CanvasBeanShellAction> actionSet)
+//	{
+//		actionContext.addActionSet(actionSet);
+//	}
 
 	public boolean canZoomIn()
 	{
@@ -137,8 +124,8 @@ public abstract class Canvas extends GraphScene.StringGraph implements PropertyC
 	public JComponent createView()
 	{
 		JComponent component = super.createView();
-		component.addKeyListener(inputHandlerProvider.getInputHandler().getKeyEventInterceptor());
-		component.addMouseListener(inputHandlerProvider.getInputHandler().getMouseEventInterceptor());
+		//component.addKeyListener(inputHandlerProvider.getInputHandler().getKeyEventInterceptor());
+		//component.addMouseListener(inputHandlerProvider.getInputHandler().getMouseEventInterceptor());
 		return component;
 	}
 
@@ -159,11 +146,11 @@ public abstract class Canvas extends GraphScene.StringGraph implements PropertyC
 	}
 
 	// returns the current action set
-	@Override
-	public AsinActionContext<CanvasBeanShellAction, AsinActionSet<CanvasBeanShellAction>> getActionContext()
-	{
-		return actionContext;
-	}
+//	@Override
+//	public AsinActionContext<CanvasBeanShellAction, AsinActionSet<CanvasBeanShellAction>> getActionContext()
+//	{
+//		return actionContext;
+//	}
 
 	public abstract Router getActiveRouter();
 
@@ -198,10 +185,10 @@ public abstract class Canvas extends GraphScene.StringGraph implements PropertyC
 		return customNodes;
 	}
 
-	public AbstractInputHandler<?> getInputHandler()
-	{
-		return inputHandlerProvider.getInputHandler();
-	}
+//	public AbstractInputHandler<?> getInputHandler()
+//	{
+//		return inputHandlerProvider.getInputHandler();
+//	}
 
 	public abstract LayerWidget getInterractionLayer();
 
@@ -292,38 +279,38 @@ public abstract class Canvas extends GraphScene.StringGraph implements PropertyC
 	{
 		addObjectSceneListener(state, ObjectSceneEventType.OBJECT_ADDED);
 		addObjectSceneListener(state, ObjectSceneEventType.OBJECT_REMOVED);
-		initInputHandler();
+		//initInputHandler();
 		createCursors();
 	}
 
-	/**
-	 * Creates an actionContext and initializes the input handler for this
-	 * canvas. When compared to TextArea, Canvas has an mixed approach to input
-	 * event handling, for it can deal with input through invocation of action
-	 * beans or through direct , usual, invocation, mainly when the input comes
-	 * from some widget.
-	 */
-	public void initInputHandler()
-	{
-		actionContext = new AsinActionContext<CanvasBeanShellAction, AsinActionSet<CanvasBeanShellAction>>()
-		{
-			@Override
-			public void invokeAction(EventObject evt, CanvasBeanShellAction action)
-			{
-				action.invoke(Canvas.this);
-			}
-		};
-
-		// setMouseHandler(new CanvasMouseHandler(this));
-		inputHandlerProvider = new DefaultInputHandlerProvider(new CanvasInputHandler(this)
-		{
-			@Override
-			protected CanvasBeanShellAction getAction(String action)
-			{
-				return actionContext.getAction(action);
-			}
-		});
-	}
+//	/**
+//	 * Creates an actionContext and initializes the input handler for this
+//	 * canvas. When compared to TextArea, Canvas has an mixed approach to input
+//	 * event handling, for it can deal with input through invocation of action
+//	 * beans or through direct , usual, invocation, mainly when the input comes
+//	 * from some widget.
+//	 */
+//	public void initInputHandler()
+//	{
+//		actionContext = new AsinActionContext<CanvasBeanShellAction, AsinActionSet<CanvasBeanShellAction>>()
+//		{
+//			@Override
+//			public void invokeAction(EventObject evt, CanvasBeanShellAction action)
+//			{
+//				action.invoke(Canvas.this);
+//			}
+//		};
+//
+//		// setMouseHandler(new CanvasMouseHandler(this));
+//		inputHandlerProvider = new DefaultInputHandlerProvider(new CanvasInputHandler(this)
+//		{
+//			@Override
+//			protected CanvasBeanShellAction getAction(String action)
+//			{
+//				return actionContext.getAction(action);
+//			}
+//		});
+//	}
 
 	public boolean isAlternative(String edge)
 	{

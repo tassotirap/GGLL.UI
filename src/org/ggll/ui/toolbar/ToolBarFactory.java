@@ -6,7 +6,6 @@ import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
-import org.ggll.actions.ActionContextHolder;
 import org.ggll.canvas.Canvas;
 import org.ggll.ui.component.AdapterComponent;
 
@@ -27,7 +26,7 @@ public class ToolBarFactory
 	}
 
 	@SuppressWarnings("rawtypes")
-	private JComponent createToolBarExt(final ActionContextHolder acContextHolder, boolean enableToolBarFile, boolean enableToolBarCanvas)
+	private JComponent createToolBarExt(final Object acContextHolder, boolean enableToolBarFile, boolean enableToolBarCanvas)
 	{
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.LINE_AXIS));
@@ -47,9 +46,9 @@ public class ToolBarFactory
 
 	}
 
-	private ToolBarDefault<ActionContextHolder> createToolBarFile(final ActionContextHolder ref)
+	private ToolBarDefault createToolBarFile(final Object ref)
 	{
-		ToolBarDefault<ActionContextHolder> toolBarFile = new ToolBarDefault<ActionContextHolder>(ref);
+		ToolBarDefault toolBarFile = new ToolBarDefault(ref);
 		toolBarFile.setLayout(new BoxLayout(toolBarFile, BoxLayout.LINE_AXIS));
 		return toolBarFile;
 	}
@@ -62,7 +61,7 @@ public class ToolBarFactory
 	}
 
 	@SuppressWarnings("rawtypes")
-	public JComponent createToolBar(final ActionContextHolder reference, boolean enableToolBarFile, boolean enableToolBarCanvas)
+	public JComponent createToolBar(final Object reference, boolean enableToolBarFile, boolean enableToolBarCanvas)
 	{
 		ToolBarFactory toolBarFactory = new ToolBarFactory();
 		if (reference == null)

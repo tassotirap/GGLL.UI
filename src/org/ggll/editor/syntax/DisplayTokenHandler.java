@@ -30,8 +30,6 @@ import java.util.List;
 import javax.swing.text.Segment;
 import javax.swing.text.TabExpander;
 
-import org.ggll.editor.buffer.JEditBuffer;
-
 //}}}
 
 /**

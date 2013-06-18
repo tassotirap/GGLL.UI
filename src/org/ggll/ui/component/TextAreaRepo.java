@@ -2,14 +2,14 @@ package org.ggll.ui.component;
 
 import java.util.HashMap;
 
-import org.ggll.editor.TextArea;
+import javax.swing.JTextArea;
 
 public class TextAreaRepo
 {
-	private static HashMap<TextArea, FileComponent> componentByTextArea = new HashMap<TextArea, FileComponent>();
-	private static HashMap<AbstractComponent, TextArea> textAreaByComponent = new HashMap<AbstractComponent, TextArea>();
+	private static HashMap<JTextArea, FileComponent> componentByTextArea = new HashMap<JTextArea, FileComponent>();
+	private static HashMap<AbstractComponent, JTextArea> textAreaByComponent = new HashMap<AbstractComponent, JTextArea>();
 
-	public static FileComponent getComponent(TextArea ta)
+	public static FileComponent getComponent(JTextArea ta)
 	{
 		if (componentByTextArea.containsKey(ta))
 		{
@@ -18,7 +18,7 @@ public class TextAreaRepo
 		return null;
 	}
 
-	public static TextArea getTextArea(AbstractComponent comp)
+	public static JTextArea getTextArea(AbstractComponent comp)
 	{
 		if (textAreaByComponent.containsKey(comp))
 		{
@@ -27,7 +27,7 @@ public class TextAreaRepo
 		return null;
 	}
 
-	public static void register(AbstractComponent component, TextArea textArea)
+	public static void register(AbstractComponent component, JTextArea textArea)
 	{
 		textAreaByComponent.put(component, textArea);
 		if (component instanceof FileComponent)
@@ -40,13 +40,13 @@ public class TextAreaRepo
 	{
 		if (textAreaByComponent.containsKey(comp))
 		{
-			TextArea ta = textAreaByComponent.get(comp);
+			JTextArea ta = textAreaByComponent.get(comp);
 			textAreaByComponent.remove(comp);
 			componentByTextArea.remove(ta);
 		}
 	}
 
-	public static void remove(TextArea ta)
+	public static void remove(JTextArea ta)
 	{
 		if (componentByTextArea.containsKey(ta))
 		{

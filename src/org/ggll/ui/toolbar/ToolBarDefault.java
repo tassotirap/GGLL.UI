@@ -13,21 +13,18 @@ import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
-import org.ggll.actions.ActionContextHolder;
-import org.ggll.actions.Registers;
 import org.ggll.canvas.Canvas;
 import org.ggll.canvas.CanvasFactory;
 import org.ggll.canvas.action.WidgetCopyPasteProvider;
 import org.ggll.canvas.action.WidgetDeleteProvider;
 import org.ggll.canvas.state.VolatileStateManager;
-import org.ggll.editor.StandaloneTextArea;
-import org.ggll.editor.buffer.JEditBuffer;
 import org.ggll.project.GGLLManager;
+import org.ggll.ui.component.NewTextArea;
 import org.ggll.util.LangHelper;
 
 import com.jidesoft.icons.ColorFilter;
 
-public class ToolBarDefault<E> extends BaseToolBar implements PropertyChangeListener
+public class ToolBarDefault extends BaseToolBar implements PropertyChangeListener
 {
 	private static final long serialVersionUID = 1L;
 
@@ -37,7 +34,7 @@ public class ToolBarDefault<E> extends BaseToolBar implements PropertyChangeList
 	private JButton btnCut, btnPaste, btnUndo, btnRedo;
 	private JButton btnSave, btnSaveAll, btnPrint, btnCopy;
 
-	public ToolBarDefault(ActionContextHolder context)
+	public ToolBarDefault(Object context)
 	{
 		super(context);
 		if (context instanceof Canvas)
@@ -159,14 +156,14 @@ public class ToolBarDefault<E> extends BaseToolBar implements PropertyChangeList
 		});
 	}
 
-	private void setTextActions(final StandaloneTextArea textArea)
+	private void setTextActions(final NewTextArea textArea)
 	{
 		btnCopy.addActionListener(new ActionListener()
 		{
 			@Override
 			public void actionPerformed(ActionEvent evt)
 			{
-				Registers.copy(textArea, '$');
+				//Registers.copy(textArea, '$');
 			}
 
 		});
@@ -175,7 +172,7 @@ public class ToolBarDefault<E> extends BaseToolBar implements PropertyChangeList
 			@Override
 			public void actionPerformed(ActionEvent evt)
 			{
-				Registers.cut(textArea, '$');
+				//Registers.cut(textArea, '$');
 			}
 
 		});
@@ -184,7 +181,7 @@ public class ToolBarDefault<E> extends BaseToolBar implements PropertyChangeList
 			@Override
 			public void actionPerformed(ActionEvent evt)
 			{
-				Registers.paste(textArea, '$', false);
+				//Registers.paste(textArea, '$', false);
 			}
 
 		});
@@ -193,8 +190,8 @@ public class ToolBarDefault<E> extends BaseToolBar implements PropertyChangeList
 			@Override
 			public void actionPerformed(ActionEvent evt)
 			{
-				JEditBuffer buffer = textArea.getBuffer();
-				buffer.undo(textArea);
+				//JEditBuffer buffer = textArea.getBuffer();
+				//buffer.undo(textArea);
 			}
 
 		});
@@ -203,8 +200,8 @@ public class ToolBarDefault<E> extends BaseToolBar implements PropertyChangeList
 			@Override
 			public void actionPerformed(ActionEvent evt)
 			{
-				JEditBuffer buffer = textArea.getBuffer();
-				buffer.redo(textArea);
+				//JEditBuffer buffer = textArea.getBuffer();
+				//buffer.redo(textArea);
 			}
 
 		});
@@ -219,9 +216,9 @@ public class ToolBarDefault<E> extends BaseToolBar implements PropertyChangeList
 		{
 			setCanvasActions((Canvas) context);
 		}
-		else if (context instanceof StandaloneTextArea)
+		else if (context instanceof NewTextArea)
 		{
-			setTextActions((StandaloneTextArea) context);
+			setTextActions((NewTextArea) context);
 		}
 	}
 

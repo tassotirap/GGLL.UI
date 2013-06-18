@@ -10,13 +10,13 @@ import java.net.URL;
 
 import javax.swing.JComponent;
 import javax.swing.JFrame;
+import javax.swing.JTextArea;
 
-import org.ggll.editor.TextArea;
 import org.ggll.parser.ParserProxy;
 import org.ggll.parser.ParserProxyFactory;
-import org.ggll.ui.component.AdvancedTextAreaComponent;
 import org.ggll.ui.component.BadParameterException;
 import org.ggll.ui.component.InputAdapterComponent;
+import org.ggll.ui.component.NewTextArea;
 import org.ggll.ui.component.TextAreaRepo;
 import org.ggll.ui.interfaces.IMainWindow;
 import org.ggll.util.JarFileLoader;
@@ -40,8 +40,8 @@ public class InputAdapter extends IOAdapter
 
 	private boolean built;
 
-	private AdvancedTextAreaComponent codeAdvTextArea;
-	private TextArea codeTextArea;
+	private NewTextArea codeAdvTextArea;
+	private JTextArea codeTextArea;
 	private JComponent codeView;
 
 	private JComponent formView;
@@ -63,7 +63,7 @@ public class InputAdapter extends IOAdapter
 	public InputAdapter(InputAdapterComponent iaComponent)
 	{
 		this.iaComponent = iaComponent;
-		codeAdvTextArea = new AdvancedTextAreaComponent("java");
+		codeAdvTextArea = new NewTextArea();
 		codeAdvTextArea.addComponentListener(iaComponent);
 		codeTextArea = codeAdvTextArea.getTextArea();
 		TextAreaRepo.remove(codeAdvTextArea);
@@ -110,7 +110,7 @@ public class InputAdapter extends IOAdapter
 		File file = new File(filePath);
 		try
 		{
-			String text = codeTextArea.getBuffer().getText(0, codeTextArea.getBuffer().getLength());
+			String text = codeTextArea.getText();
 			FileWriter fw = new FileWriter(file);
 			fw.write(text);
 			fw.close();
@@ -140,7 +140,7 @@ public class InputAdapter extends IOAdapter
 		return adapterInstance;
 	}
 
-	public TextArea getCodeTextArea()
+	public JTextArea getCodeTextArea()
 	{
 		return codeTextArea;
 	}

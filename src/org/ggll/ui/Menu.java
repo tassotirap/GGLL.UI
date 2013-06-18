@@ -9,11 +9,10 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JSeparator;
+import javax.swing.JTextArea;
 import javax.swing.KeyStroke;
 
-import org.ggll.actions.ActionContextHolder;
 import org.ggll.canvas.Canvas;
-import org.ggll.editor.TextArea;
 import org.ggll.project.GGLLManager;
 import org.ggll.ui.ThemeManager.Theme;
 import org.ggll.ui.interfaces.IMainWindow;
@@ -54,14 +53,14 @@ public class Menu extends JMenuBar
 	public final static int TEXTAREA_CONTEXT = 2;
 
 	public final static String WINDOW = "Window";
-	ActionContextHolder context;
+	Object context;
 	int contextDesc;
 	ArrayList<String> menus;
 	MenuModel model;
 
 	IMainWindow window;
 
-	public Menu(String[] menus, IMainWindow window, ActionContextHolder context, MenuModel model)
+	public Menu(String[] menus, IMainWindow window, Object context, MenuModel model)
 	{
 		this.window = window;
 		this.menus = new ArrayList<String>();
@@ -71,7 +70,7 @@ public class Menu extends JMenuBar
 		{
 			contextDesc = CANVAS_CONTEXT;
 		}
-		else if (context instanceof TextArea)
+		else if (context instanceof JTextArea)
 		{
 			contextDesc = TEXTAREA_CONTEXT;
 		}

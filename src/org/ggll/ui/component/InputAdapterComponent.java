@@ -224,12 +224,12 @@ public class InputAdapterComponent extends AdapterComponent
 						}
 						methodChain2 += "\t\t});\n\n";
 					}
-					inputAdapter.getCodeTextArea().getBuffer().insert(inputAdapter.getStubInitPosition(), methodChain2);
+					//inputAdapter.getCodeTextArea().getBuffer().insert(inputAdapter.getStubInitPosition(), methodChain2);
 				}
 				else if (methodsComboBox.getSelectedIndex() > 0)
 				{
 					methodChain1 += ((methodChain1.equals("")) ? "" : ".") + methodMap.get(methodsComboBox.getSelectedItem()).getName() + "()\n\n";
-					inputAdapter.getCodeTextArea().getBuffer().insert(inputAdapter.getCodeTextArea().getCaretPosition(), methodChain1);
+					//inputAdapter.getCodeTextArea().getBuffer().insert(inputAdapter.getCodeTextArea().getCaretPosition(), methodChain1);
 				}
 				methodChain2 = "";
 				methodChain1 = "";
@@ -416,14 +416,14 @@ public class InputAdapterComponent extends AdapterComponent
 			listComboBox.setEnabled(true);
 			populateListenersCombo();
 			addButton.setEnabled(true);
-			if (inputAdapter.getCodeTextArea().getBufferLength() > 0)
-			{
-				generateButton.setEnabled(true);
-			}
-			else
-			{
-				generateButton.setEnabled(false);
-			}
+//			if (inputAdapter.getCodeTextArea().getBufferLength() > 0)
+//			{
+//				generateButton.setEnabled(true);
+//			}
+//			else
+//			{
+//				generateButton.setEnabled(false);
+//			}
 		}
 		else
 		{
@@ -458,14 +458,14 @@ public class InputAdapterComponent extends AdapterComponent
 	public void ContentChanged(AbstractComponent source, Object oldValue, Object newValue)
 	{
 		fireContentChanged();
-		if (inputAdapter.getCodeTextArea().getBufferLength() > 0)
-		{
-			generateButton.setEnabled(true);
-		}
-		else
-		{
-			generateButton.setEnabled(false);
-		}
+//		if (inputAdapter.getCodeTextArea().getBufferLength() > 0)
+//		{
+//			generateButton.setEnabled(true);
+//		}
+//		else
+//		{
+//			generateButton.setEnabled(false);
+//		}
 
 	}
 

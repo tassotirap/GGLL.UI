@@ -25,22 +25,17 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import javax.swing.event.CaretEvent;
-import javax.swing.event.CaretListener;
+import javax.swing.JTextArea;
 
-import org.ggll.actions.Mode;
 import org.ggll.core.syntax.SyntacticLoader;
-import org.ggll.editor.StandaloneTextArea;
-import org.ggll.editor.TextArea;
-import org.ggll.editor.buffer.BufferListener;
-import org.ggll.editor.buffer.JEditBuffer;
 import org.ggll.output.AppOutput;
 import org.ggll.output.HtmlViewer.TOPIC;
 import org.ggll.output.Output;
 import org.ggll.project.GGLLManager;
+import org.ggll.ui.component.NewTextArea;
 import org.ggll.util.Log;
 
-public class ParsingEditor implements BufferListener, CaretListener
+public class ParsingEditor
 {
 
 	private static ParsingEditor instance;
@@ -52,17 +47,17 @@ public class ParsingEditor implements BufferListener, CaretListener
 	private ArrayList<JButton> parsingButtons;
 	private String rootPath;
 	private Parser analyzer;
-	private StandaloneTextArea standaloneTextArea;
+	private NewTextArea standaloneTextArea;
 
-	public ParsingEditor(SyntacticLoader syntacticLoader, Mode mode, String rootPath)
+	public ParsingEditor(SyntacticLoader syntacticLoader, String rootPath)
 	{
 		instance = this;
 
-		this.standaloneTextArea = StandaloneTextArea.createTextArea();
-		this.standaloneTextArea.getBuffer().setMode(mode);
-		this.standaloneTextArea.getBuffer().addBufferListener(this);
-		this.standaloneTextArea.addCaretListener(this);
-		this.standaloneTextArea.setCaretBlinkEnabled(true);
+		this.standaloneTextArea = new NewTextArea();
+//		this.standaloneTextArea.getBuffer().setMode(mode);
+//		this.standaloneTextArea.getBuffer().addBufferListener(this);
+//		this.standaloneTextArea.addCaretListener(this);
+//		this.standaloneTextArea.setCaretBlinkEnabled(true);
 
 		this.parsingButtons = new ArrayList<JButton>();
 
@@ -88,14 +83,14 @@ public class ParsingEditor implements BufferListener, CaretListener
 	 */
 	private void clearBufferAndGoToNextLine(boolean insertNewLine)
 	{
-		standaloneTextArea.goToBufferEnd(false);
-		if (insertNewLine)
-		{
-			standaloneTextArea.insertEnterAndIndent();
-		}
-		standaloneTextArea.goToNextLine(false);
-		standaloneTextArea.scrollToCaret(true);
-		lastLine = standaloneTextArea.getLastPhysicalLine();
+//		standaloneTextArea.goToBufferEnd(false);
+//		if (insertNewLine)
+//		{
+//			standaloneTextArea.insertEnterAndIndent();
+//		}
+//		standaloneTextArea.goToNextLine(false);
+//		standaloneTextArea.scrollToCaret(true);
+//		lastLine = standaloneTextArea.getLastPhysicalLine();
 		textToParse = new StringBuffer();
 	}
 
@@ -125,13 +120,6 @@ public class ParsingEditor implements BufferListener, CaretListener
 		}
 	}
 
-	// ############### BUFFER LISTENER ###############################
-	@Override
-	public void bufferLoaded(JEditBuffer buffer)
-	{
-
-	}
-
 	public ParsingEditor build()
 	{
 		try
@@ -146,84 +134,27 @@ public class ParsingEditor implements BufferListener, CaretListener
 		}
 	}
 
-	/* #################### CARET LISTENER ######################### */
-	@Override
-	public void caretUpdate(CaretEvent e)
-	{
-		if (standaloneTextArea.getLineOfOffset(e.getDot()) < lastLine)
-		{
-			if (standaloneTextArea.getLastPhysicalLine() == standaloneTextArea.getLineOfOffset(e.getDot()))
-			{
-				standaloneTextArea.insertEnterAndIndent();
-			}
-			else
-			{
-				standaloneTextArea.getBuffer().setReadOnly(true);
-			}
-		}
-		else
-		{
-			standaloneTextArea.getBuffer().setReadOnly(false);
-		}
-	}
-
-	@Override
-	public void contentInserted(JEditBuffer buffer, int startLine, int offset, int numLines, int length)
-	{
-		if (startLine >= lastLine)
-		{
-			textToParse.append(buffer.getText(offset, length));
-			updateParsingButtons();
-		}
-
-	}
-
-	@Override
-	public void contentRemoved(JEditBuffer buffer, int startLine, int offset, int numLines, int length)
-	{
-		if (startLine >= lastLine)
-		{
-			textToParse = new StringBuffer();
-			textToParse.append(buffer.getText(buffer.getLineStartOffset(lastLine), buffer.getLength() - buffer.getLineStartOffset(lastLine)));
-		}
-	}
 
 	public void displayInputTextNewLine(String str)
 	{
-		standaloneTextArea.goToBufferEnd(false);
-		standaloneTextArea.getBuffer().insert(standaloneTextArea.getText().length(), "\n" + str);
+//		standaloneTextArea.goToBufferEnd(false);
+//		standaloneTextArea.getBuffer().insert(standaloneTextArea.getText().length(), "\n" + str);
 	}
 
 	public void displayInputTextNoLine(String str)
 	{
-		standaloneTextArea.goToBufferEnd(false);
-		standaloneTextArea.getBuffer().insert(standaloneTextArea.getText().length(), str);
+//		standaloneTextArea.goToBufferEnd(false);
+//		standaloneTextArea.getBuffer().insert(standaloneTextArea.getText().length(), str);
 	}
 
 	public void displayOutputText(String str)
 	{
-		clearBufferAndGoToNextLine(false);
-		standaloneTextArea.getBuffer().insert(standaloneTextArea.getText().length(), str);
-		clearBufferAndGoToNextLine(true);
-		Output.getInstance().displayTextExt("** Result: " + str, TOPIC.Parser);
+//		clearBufferAndGoToNextLine(false);
+//		standaloneTextArea.getBuffer().insert(standaloneTextArea.getText().length(), str);
+//		clearBufferAndGoToNextLine(true);
+//		Output.getInstance().displayTextExt("** Result: " + str, TOPIC.Parser);
 	}
 
-	@Override
-	public void foldHandlerChanged(JEditBuffer buffer)
-	{
-
-	}
-
-	@Override
-	public void foldLevelChanged(JEditBuffer buffer, int startLine, int endLine)
-	{
-
-	}
-
-	public Mode getMode()
-	{
-		return standaloneTextArea.getBuffer().getMode();
-	}
 
 	/**
 	 * @return the rootPath
@@ -233,14 +164,14 @@ public class ParsingEditor implements BufferListener, CaretListener
 		return rootPath;
 	}
 
-	public TextArea getTextArea()
+	public JTextArea getTextArea()
 	{
-		return standaloneTextArea;
+		return standaloneTextArea.getTextArea();
 	}
 
 	public JComponent getView()
 	{
-		return standaloneTextArea;
+		return standaloneTextArea.getComponent();
 	}
 
 	public void open()
@@ -266,11 +197,11 @@ public class ParsingEditor implements BufferListener, CaretListener
 						text.append("\n");
 					}
 				}
-				standaloneTextArea.getBuffer().beginCompoundEdit();
-				standaloneTextArea.setText(text.toString());
-				standaloneTextArea.setCaretPosition(text.length());
-				standaloneTextArea.scrollToCaret(true);
-				standaloneTextArea.getBuffer().endCompoundEdit();
+//				standaloneTextArea.getBuffer().beginCompoundEdit();
+//				standaloneTextArea.setText(text.toString());
+//				standaloneTextArea.setCaretPosition(text.length());
+//				standaloneTextArea.scrollToCaret(true);
+//				standaloneTextArea.getBuffer().endCompoundEdit();
 				br.close();
 				fis.close();
 			}
@@ -285,17 +216,6 @@ public class ParsingEditor implements BufferListener, CaretListener
 		}
 	}
 
-	@Override
-	public void preContentInserted(JEditBuffer buffer, int startLine, int offset, int numLines, int length)
-	{
-
-	}
-
-	@Override
-	public void preContentRemoved(JEditBuffer buffer, int startLine, int offset, int numLines, int length)
-	{
-
-	}
 
 	private void startParse(boolean stepping)
 	{
@@ -418,7 +338,7 @@ public class ParsingEditor implements BufferListener, CaretListener
 					if (file.createNewFile())
 					{
 						FileWriter fw = new FileWriter(file);
-						fw.write(standaloneTextArea.getText());
+						//fw.write(standaloneTextArea.getText());
 						fw.close();
 					}
 				}
@@ -434,17 +354,6 @@ public class ParsingEditor implements BufferListener, CaretListener
 		}
 	}
 
-	public void setMode(Mode mode)
-	{
-		standaloneTextArea.getBuffer().setMode(mode);
-		String text = standaloneTextArea.getText();
-		int carret = standaloneTextArea.getCaretPosition();
-		standaloneTextArea.setText("");
-		standaloneTextArea.setText(text);
-		standaloneTextArea.setCaretPosition(carret);
-		standaloneTextArea.scrollToCaret(true);
-
-	}
 
 	public void setSyntacticLoader(SyntacticLoader cs)
 	{
@@ -472,12 +381,6 @@ public class ParsingEditor implements BufferListener, CaretListener
 		{
 			e.printStackTrace();
 		}
-
-	}
-
-	@Override
-	public void transactionComplete(JEditBuffer buffer)
-	{
 
 	}
 
