@@ -17,8 +17,6 @@ public abstract class AbstractComponent
 		}
 	}
 
-	public abstract JComponent create(Object param) throws BadParameterException;
-
 	public abstract void fireContentChanged();
 
 	/**

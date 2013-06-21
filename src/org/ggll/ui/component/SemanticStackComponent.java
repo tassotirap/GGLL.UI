@@ -1,6 +1,5 @@
 package org.ggll.ui.component;
 
-import javax.swing.JComponent;
 import javax.swing.JScrollPane;
 
 import org.ggll.canvas.Canvas;
@@ -8,19 +7,9 @@ import org.ggll.output.SemanticStack;
 
 public class SemanticStackComponent extends AbstractComponent
 {
-
-	@Override
-	public JComponent create(Object param) throws BadParameterException
+	public SemanticStackComponent(Canvas canvas) throws BadParameterException
 	{
-		if (param instanceof Canvas)
-		{
-			JScrollPane jsp = new JScrollPane(SemanticStack.getInstance().getView((Canvas) param));
-			return jsp;
-		}
-		else
-		{
-			throw new BadParameterException("Was Expecting a canvas as parameter.");
-		}
+		jComponent = new JScrollPane(SemanticStack.getInstance().getView(canvas));
 	}
 
 	@Override

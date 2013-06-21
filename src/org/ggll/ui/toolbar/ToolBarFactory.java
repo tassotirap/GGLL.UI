@@ -30,7 +30,6 @@ public class ToolBarFactory
 	{
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.LINE_AXIS));
-		panel.add(createNewFileToolBar());
 
 		if (enableToolBarFile)
 		{
@@ -53,12 +52,6 @@ public class ToolBarFactory
 		return toolBarFile;
 	}
 
-	private BaseToolBar createNewFileToolBar()
-	{
-		ToolBarFile toolBarNewFile = new ToolBarFile();
-		toolBarNewFile.setLayout(new BoxLayout(toolBarNewFile, BoxLayout.LINE_AXIS));
-		return toolBarNewFile;
-	}
 
 	@SuppressWarnings("rawtypes")
 	public JComponent createToolBar(final Object reference, boolean enableToolBarFile, boolean enableToolBarCanvas)

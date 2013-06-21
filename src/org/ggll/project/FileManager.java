@@ -17,7 +17,6 @@ import org.ggll.ui.component.AbstractComponent;
 import org.ggll.ui.component.FileComponent;
 import org.ggll.ui.component.GrammarComponent;
 import org.ggll.ui.component.GrammarFactory;
-import org.ggll.ui.component.InputAdapterComponent;
 import org.ggll.ui.component.NewTextArea;
 import org.ggll.ui.component.TextAreaRepo;
 import org.ggll.util.Log;
@@ -132,43 +131,27 @@ public class FileManager
 			{
 				if (file.getName().toLowerCase().endsWith(FileNames.LEX_EXTENSION.toLowerCase()))
 				{
-					NewTextArea lexComponent = new NewTextArea();
-					mainWindow.addComponent(lexComponent.create(path), lexComponent, file.getName(), path, iconFactory.getIcon(IconType.LEX_ICON), TabPlace.CENTER_TABS);
+					mainWindow.addComponent(new NewTextArea(path), file.getName(), path, iconFactory.getIcon(IconType.LEX_ICON), TabPlace.CENTER_TABS);
 				}
-//				else if (file.getName().toLowerCase().endsWith(FileNames.SEM_EXTENSION.toLowerCase()))
-//				{
-//					SemComponent semComponent = new SemComponent();
-//					mainWindow.addComponent(semComponent.create(path), semComponent, file.getName(), path, iconFactory.getIcon(IconType.SEM_ICON), TabPlace.CENTER_TABS);
-//				}
 				else if (file.getName().toLowerCase().endsWith(FileNames.SEM_EXTENSION.toLowerCase()))
 				{
-					NewTextArea semComponent = new NewTextArea();
-					mainWindow.addComponent(semComponent.create(path), semComponent, file.getName(), path, iconFactory.getIcon(IconType.SEM_ICON), TabPlace.CENTER_TABS);
+					mainWindow.addComponent( new NewTextArea(path), file.getName(), path, iconFactory.getIcon(IconType.SEM_ICON), TabPlace.CENTER_TABS);
 				}
 				else if (file.getName().toLowerCase().endsWith(FileNames.GRAM_EXTENSION.toLowerCase()))
 				{
-					GrammarComponent gramComponent = new GrammarComponent();
-					mainWindow.addComponent(gramComponent.create(path), gramComponent, file.getName(), path, iconFactory.getIcon(IconType.GRAM_ICON), TabPlace.CENTER_TABS);
+					mainWindow.addComponent(new GrammarComponent(path), file.getName(), path, iconFactory.getIcon(IconType.GRAM_ICON), TabPlace.CENTER_TABS);
 				}
 				else if (file.getName().toLowerCase().endsWith(FileNames.XML_EXTENSION.toLowerCase()))
 				{
-					NewTextArea xMLComponent = new NewTextArea();
-					mainWindow.addComponent(xMLComponent.create(path), xMLComponent, file.getName(), path, iconFactory.getIcon(IconType.XML_ICON), TabPlace.CENTER_TABS);
+					mainWindow.addComponent( new NewTextArea(path), file.getName(), path, iconFactory.getIcon(IconType.XML_ICON), TabPlace.CENTER_TABS);
 				}
 				else if (file.getName().toLowerCase().endsWith(FileNames.JAVA_EXTENSION.toLowerCase()))
 				{
-					NewTextArea javaComponent = new NewTextArea();
-					mainWindow.addComponent(javaComponent.create(path), javaComponent, file.getName(), path, iconFactory.getIcon(IconType.JAVA_ICON), TabPlace.CENTER_TABS);
-				}
-				else if (file.getName().toLowerCase().endsWith(FileNames.IN_EXTENSION.toLowerCase()))
-				{
-					InputAdapterComponent inputAdapterComponent = new InputAdapterComponent();
-					mainWindow.addComponent(inputAdapterComponent.create(path), inputAdapterComponent, file.getName(), path, iconFactory.getIcon(IconType.IN_ICON), TabPlace.CENTER_TABS);
+					mainWindow.addComponent( new NewTextArea(path), file.getName(), path, iconFactory.getIcon(IconType.JAVA_ICON), TabPlace.CENTER_TABS);
 				}
 				else
 				{
-					NewTextArea advancedTextAreaComponent = new NewTextArea();
-					mainWindow.addComponent(advancedTextAreaComponent.create(path), advancedTextAreaComponent, file.getName(), path, iconFactory.getIcon(IconType.TXT_ICON), TabPlace.CENTER_TABS);
+					mainWindow.addComponent(new NewTextArea(path), file.getName(), path, iconFactory.getIcon(IconType.TXT_ICON), TabPlace.CENTER_TABS);
 				}
 				project.getOpenedFiles().add(new File(path));
 
@@ -256,8 +239,12 @@ public class FileManager
 	private String saveFile(JTextArea object)
 	{
 		FileComponent fileComponent = TextAreaRepo.getComponent((JTextArea) object);
-		saveFile(fileComponent);
-		return fileComponent.getPath();
+		if (fileComponent != null)
+		{
+			saveFile(fileComponent);
+			return fileComponent.getPath();
+		}
+		return null;
 	}
 
 	private String saveFile(FileComponent fileComponent)

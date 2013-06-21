@@ -120,11 +120,6 @@ public final class GGLLManager
 		return GGLLManager.project.save();
 	}
 
-	public static void renameFile(String oldName, String newName)
-	{
-		GGLLManager.project.renameFile(oldName, newName);
-	}
-
 	public static void openFile(String path)
 	{
 		GGLLManager.fileManager.openFile(path);

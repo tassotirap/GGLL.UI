@@ -11,61 +11,34 @@ import ggll.core.syntax.parser.GGLLTable;
 import ggll.core.syntax.parser.Parser;
 import ggll.core.syntax.parser.ParserOutput;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.StringReader;
-import java.util.ArrayList;
 import java.util.Iterator;
 
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import javax.swing.JTextArea;
 
 import org.ggll.core.syntax.SyntacticLoader;
 import org.ggll.output.AppOutput;
 import org.ggll.output.HtmlViewer.TOPIC;
 import org.ggll.output.Output;
 import org.ggll.project.GGLLManager;
-import org.ggll.ui.component.NewTextArea;
 import org.ggll.util.Log;
 
 public class ParsingEditor
 {
-
 	private static ParsingEditor instance;
 	private SyntacticLoader syntacticLoader;
-	private StringReader stringReader;
 	private Yylex yylex;
-	private StringBuffer textToParse;
-	private ArrayList<JButton> parsingButtons;
-	private String rootPath;
 	private Parser analyzer;
-	private NewTextArea standaloneTextArea;
+	
+	private String rootPath;
 
 	public ParsingEditor(SyntacticLoader syntacticLoader, String rootPath)
 	{
 		instance = this;
-
-		this.standaloneTextArea = new NewTextArea();
-//		this.standaloneTextArea.getBuffer().setMode(mode);
-//		this.standaloneTextArea.getBuffer().addBufferListener(this);
-//		this.standaloneTextArea.addCaretListener(this);
-//		this.standaloneTextArea.setCaretBlinkEnabled(true);
-
-		this.parsingButtons = new ArrayList<JButton>();
-
-		this.syntacticLoader = syntacticLoader;
 		this.rootPath = rootPath;
-
-		this.textToParse = new StringBuffer();
-
-		this.stringReader = new StringReader("");
+		this.syntacticLoader = syntacticLoader;
 	}
 
 	public static ParsingEditor getInstance()
@@ -73,51 +46,6 @@ public class ParsingEditor
 		return instance;
 	}
 
-	/**
-	 * clear the local buffer, inserts a new line, and moves the caret to the
-	 * new line
-	 * 
-	 * @param insertNewLine
-	 *            , whether a new line will be inserted or not
-	 */
-	private void clearBufferAndGoToNextLine(boolean insertNewLine)
-	{
-//		standaloneTextArea.goToBufferEnd(false);
-//		if (insertNewLine)
-//		{
-//			standaloneTextArea.insertEnterAndIndent();
-//		}
-//		standaloneTextArea.goToNextLine(false);
-//		standaloneTextArea.scrollToCaret(true);
-//		lastLine = standaloneTextArea.getLastPhysicalLine();
-		textToParse = new StringBuffer();
-	}
-
-	private void updateParsingButtons()
-	{
-		if (textToParse.toString().equals(""))
-		{
-			for (JButton button : parsingButtons)
-			{
-				button.setEnabled(false);
-			}
-		}
-		else
-		{
-			for (JButton button : parsingButtons)
-			{
-				button.setEnabled(true);
-			}
-		}
-	}
-
-	public void addParsingButtons(JButton... buttons)
-	{
-		for (JButton button : buttons)
-		{
-			parsingButtons.add(button);
-		}
-	}
 
 	public ParsingEditor build()
 	{
@@ -134,92 +62,13 @@ public class ParsingEditor
 	}
 
 
-	public void displayInputTextNewLine(String str)
+
+
+	private void startParse(boolean stepping, String text)
 	{
-//		standaloneTextArea.goToBufferEnd(false);
-//		standaloneTextArea.getBuffer().insert(standaloneTextArea.getText().length(), "\n" + str);
-	}
-
-	public void displayInputTextNoLine(String str)
-	{
-//		standaloneTextArea.goToBufferEnd(false);
-//		standaloneTextArea.getBuffer().insert(standaloneTextArea.getText().length(), str);
-	}
-
-	public void displayOutputText(String str)
-	{
-//		clearBufferAndGoToNextLine(false);
-//		standaloneTextArea.getBuffer().insert(standaloneTextArea.getText().length(), str);
-//		clearBufferAndGoToNextLine(true);
-//		Output.getInstance().displayTextExt("** Result: " + str, TOPIC.Parser);
-	}
-
-
-	/**
-	 * @return the rootPath
-	 */
-	public String getRootPath()
-	{
-		return rootPath;
-	}
-
-	public JTextArea getTextArea()
-	{
-		return standaloneTextArea.getTextArea();
-	}
-
-	public JComponent getView()
-	{
-		return standaloneTextArea.getComponent();
-	}
-
-	public void open()
-	{
-		JFileChooser c = new JFileChooser();
-		int rVal = c.showOpenDialog(getView());
-		if (rVal == JFileChooser.APPROVE_OPTION)
-		{
-			File file = c.getSelectedFile();
-			try
-			{
-				FileInputStream fis = new FileInputStream(file);
-				BufferedReader br = new BufferedReader(new InputStreamReader(fis));
-				String line = "";
-				StringBuffer text = new StringBuffer();
-				line = br.readLine();
-				while (line != null)
-				{
-					text.append(line);
-					line = br.readLine();
-					if (line != null)
-					{
-						text.append("\n");
-					}
-				}
-//				standaloneTextArea.getBuffer().beginCompoundEdit();
-//				standaloneTextArea.setText(text.toString());
-//				standaloneTextArea.setCaretPosition(text.length());
-//				standaloneTextArea.scrollToCaret(true);
-//				standaloneTextArea.getBuffer().endCompoundEdit();
-				br.close();
-				fis.close();
-			}
-			catch (Exception e)
-			{
-				Log.log(Log.ERROR, this, "Could not open file: " + file.getName(), e);
-			}
-		}
-		if (rVal == JFileChooser.CANCEL_OPTION)
-		{
-			c.setVisible(false);
-		}
-	}
-
-
-	private void startParse(boolean stepping)
-	{
-		Output.getInstance().displayTextExt("<< " + textToParse.toString().replace(">", "&gt;").replace("<", "&lt;"), TOPIC.Parser);
-		stringReader = new StringReader(textToParse.toString());
+		
+		Output.getInstance().displayTextExt("<< " + text.replace(">", "&gt;").replace("<", "&lt;"), TOPIC.Parser);
+		StringReader stringReader = new StringReader(text);
 		try
 		{
 			yylex.yyreset(stringReader);
@@ -269,7 +118,7 @@ public class ParsingEditor
 		analyzer = null;
 	}
 
-	public void run(boolean stepping)
+	public void run(boolean stepping, String text)
 	{
 		try
 		{
@@ -283,13 +132,13 @@ public class ParsingEditor
 			{
 				return;
 			}
-			if (textToParse.toString().equals(""))
+			if (text.equals(""))
 			{
 				JOptionPane.showMessageDialog(null, "There is nothing to parse", "Can not parse", JOptionPane.WARNING_MESSAGE);
 				return;
 			}
 
-			startParse(stepping);
+			startParse(stepping, text);
 
 			AppOutput.clearStacks();
 			analyzer.run();
@@ -302,7 +151,6 @@ public class ParsingEditor
 		{
 			e.printStackTrace();
 		}
-		clearBufferAndGoToNextLine(true);
 	}
 
 	public void printStack(ParseStack parseStackNode)
@@ -323,49 +171,19 @@ public class ParsingEditor
 		AppOutput.printlnSemanticStack(lineSemantic, true);
 	}
 
-	public void save()
-	{
-		JFileChooser c = new JFileChooser();
-		int rVal = c.showSaveDialog(getView());
-		if (rVal == JFileChooser.APPROVE_OPTION)
-		{
-			File file = c.getSelectedFile();
-			try
-			{
-				if (!file.exists())
-				{
-					if (file.createNewFile())
-					{
-						FileWriter fw = new FileWriter(file);
-						//fw.write(standaloneTextArea.getText());
-						fw.close();
-					}
-				}
-			}
-			catch (Exception e)
-			{
-				Log.log(Log.ERROR, this, "Could not save file: " + file.getName(), e);
-			}
-		}
-		if (rVal == JFileChooser.CANCEL_OPTION)
-		{
-			c.setVisible(false);
-		}
-	}
-
 
 	public void setSyntacticLoader(SyntacticLoader cs)
 	{
 		this.syntacticLoader = cs;
 	}
 
-	public void stepRun()
+	public void stepRun(String text)
 	{
 		try
 		{
 			if (analyzer == null)
 			{
-				run(true);
+				run(true, text);
 			}
 			if (analyzer == null)
 			{

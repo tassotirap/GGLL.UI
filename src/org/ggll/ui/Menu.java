@@ -384,6 +384,20 @@ public class Menu extends JMenuBar
 		theme.add(themeSoftBlueIce);
 
 		windowMenu.add(theme);
+		
+		
+		JMenuItem parser = new JMenuItem("Parser");
+		parser.addActionListener(new ActionListener()
+		{
+
+			@Override
+			public void actionPerformed(ActionEvent arg0)
+			{
+				//GGLLManager.getMainWindow().showParser();
+			}
+		});
+		windowMenu.add(parser);
+		
 		return windowMenu;
 	}
 

@@ -9,7 +9,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 
-import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 import javax.swing.UIManager;
@@ -25,7 +24,6 @@ import org.ggll.util.Log;
 public class NewTextArea extends AbstractComponent implements HyperlinkListener, SyntaxConstants, FileComponent
 {
 	private RSyntaxTextArea textArea;
-	private RTextScrollPane scrollPane;
 	private String path;
 
 	public NewTextArea()
@@ -33,7 +31,13 @@ public class NewTextArea extends AbstractComponent implements HyperlinkListener,
 		textArea = createTextArea();
 		textArea.setSyntaxEditingStyle(SYNTAX_STYLE_JAVA);
 		SetTheme();
-		scrollPane = new RTextScrollPane(textArea, true);
+		jComponent = new RTextScrollPane(textArea, true);
+	}
+	
+	public NewTextArea(String fileName)
+	{
+		this();
+		setText(fileName, true);
 	}
 
 	private void SetTheme()
@@ -48,11 +52,6 @@ public class NewTextArea extends AbstractComponent implements HyperlinkListener,
 		{
 			ioe.printStackTrace();
 		}
-	}
-
-	public JComponent getComponent()
-	{
-		return scrollPane;
 	}
 
 	public String getText()
@@ -70,8 +69,6 @@ public class NewTextArea extends AbstractComponent implements HyperlinkListener,
 		textArea.setMarkOccurrences(true);
 		textArea.setCodeFoldingEnabled(true);
 		textArea.setClearWhitespaceLinesEnabled(false);
-		// textArea.setWhitespaceVisible(true);
-		// textArea.setPaintMatchedBracketPair(true);
 		return textArea;
 	}
 
@@ -126,21 +123,8 @@ public class NewTextArea extends AbstractComponent implements HyperlinkListener,
 	}
 
 	@Override
-	public JComponent create(Object param) throws BadParameterException
-	{
-		if (param != null)
-		{
-			path = (String) param;
-			setText(path, true);
-		}
-		return scrollPane;
-	}
-
-	@Override
 	public void fireContentChanged()
 	{
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override

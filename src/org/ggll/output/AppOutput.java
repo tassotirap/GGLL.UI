@@ -98,11 +98,6 @@ public abstract class AppOutput
 		TokenOutput.getInstance().displayTextExt(str, TOPIC.Tokens);
 	}
 
-	static public void semanticRoutinesOutput(String str)
-	{
-		SemanticRoutinesOutput.getInstance().println(str);
-	}
-
 	public static void showAndSelectNode(String flag)
 	{
 		// TODO selecting, but not really showing

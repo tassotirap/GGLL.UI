@@ -11,13 +11,11 @@ import org.ggll.file.GrammarFile;
 import org.ggll.file.LexicalFile;
 import org.ggll.file.MetaFile;
 import org.ggll.file.SemanticFile;
-import org.ggll.model.FileNames;
 import org.ggll.ui.ThemeManager.Theme;
 
 /**
  * This class represents a projects and deals with the management of a project.
  * 
- * @author Gustavo H. Braga
  * @author Tasso Tirapani Silva Pinto
  */
 public class Project implements Serializable
@@ -153,23 +151,6 @@ public class Project implements Serializable
 	}
 
 
-	public void renameFile(String oldName, String newName)
-	{
-		if (oldName.endsWith(FileNames.GRAM_EXTENSION))
-		{
-			setGrammarFile(new GrammarFile(newName));
-		}
-		else if (oldName.endsWith(FileNames.SEM_EXTENSION))
-		{
-			setSemamticFile(new SemanticFile(newName));
-		}
-		else if (oldName.endsWith(FileNames.LEX_EXTENSION))
-		{
-			setLexicalFile(new LexicalFile(newName));
-		}
-		save();
-	}
-	
 	public boolean save()
 	{
 		try

@@ -7,9 +7,18 @@ import net.infonode.docking.DockingWindow;
 import net.infonode.docking.View;
 import net.infonode.docking.util.ViewMap;
 
-import org.ggll.ui.TabItem;
+import org.ggll.model.ui.IconFactory;
+import org.ggll.model.ui.IconFactory.IconType;
+import org.ggll.project.GGLLManager;
+import org.ggll.ui.TabWindowList.TabPlace;
 import org.ggll.ui.component.AbstractComponent;
-import org.ggll.view.ViewList;
+import org.ggll.ui.component.GeneratedGrammarComponent;
+import org.ggll.ui.component.OutlineComponent;
+import org.ggll.ui.component.OutputComponent;
+import org.ggll.ui.component.ParserComponent;
+import org.ggll.ui.component.ProjectsComponent;
+import org.ggll.ui.component.SemanticStackComponent;
+import org.ggll.ui.component.SyntaxStackComponent;
 
 public class ViewRepository
 {
@@ -18,6 +27,14 @@ public class ViewRepository
 	private HashMap<AbstractComponent, GGLLView> dynamicViewsByComponent = new HashMap<AbstractComponent, GGLLView>();
 	private HashMap<Integer, GGLLView> dynamicViewsById = new HashMap<Integer, GGLLView>();
 	private HashMap<String, GGLLView> dynamicViewsByPath = new HashMap<String, GGLLView>();
+	
+	public GGLLView projectsView;
+	public GGLLView outlineView;
+	public GGLLView grammarView;
+	public GGLLView syntaxStackView;
+	public GGLLView semStackView;
+	public GGLLView outputView;
+	public GGLLView parserView;
 
 	public ViewRepository()
 	{
@@ -67,22 +84,46 @@ public class ViewRepository
 		return dynamicViewsByPath.containsKey(path);
 	}
 
-	public void createDefaultViews(ArrayList<TabItem> tabItems, ViewMap perspectiveMap)
+	public void createDefaultViews(ViewMap perspectiveMap)
 	{
 		try
 		{
+			IconFactory iconFactory = new IconFactory();
+		
 			for (int i = 0; i < DEFAULT_LAYOUT; i++)
 				defaultLayout.add(new ViewList());
-
-			for (int i = 0; i < tabItems.size(); i++)
-			{
-				int nextId = getDynamicViewId();
-				GGLLView view = new GGLLView(tabItems.get(i).getTitle(), tabItems.get(i).getViewIcon(), tabItems.get(i).getComponent(), null, null, nextId);
-				defaultLayout.get(tabItems.get(i).getLayoutOrder()).add(view);
-				perspectiveMap.addView(i, view);
-				updateViews(view, true);
-			}
-
+			
+			projectsView = new GGLLView("Project", iconFactory.getIcon(IconType.PROJECT_ICON),new ProjectsComponent(GGLLManager.getProject()), getDynamicViewId());
+			outlineView = new GGLLView("Outline", iconFactory.getIcon(IconType.OVERVIEW_CON),new OutlineComponent(GGLLManager.getActiveScene()), getDynamicViewId());
+			grammarView = new GGLLView("Grammar", iconFactory.getIcon(IconType.GRAMMAR_ICON),new GeneratedGrammarComponent(GGLLManager.getActiveScene()), getDynamicViewId());
+			syntaxStackView = new GGLLView("Syntax Stack", iconFactory.getIcon(IconType.SYNTACTIC_STACK_ICON),new SyntaxStackComponent(GGLLManager.getActiveScene()), getDynamicViewId());
+			semStackView = new GGLLView("Sem. Stack", iconFactory.getIcon(IconType.SEMANTIC_STACK_ICON),new SemanticStackComponent(GGLLManager.getActiveScene()), getDynamicViewId());
+			outputView = new GGLLView("Output", iconFactory.getIcon(IconType.ACTIVE_OUTPUT_ICON),new OutputComponent(GGLLManager.getActiveScene()), getDynamicViewId());
+			parserView = new GGLLView("Parser", iconFactory.getIcon(IconType.PARSER_ICON),new ParserComponent(GGLLManager.getProject().getProjectsRootPath()), getDynamicViewId());
+			
+			defaultLayout.get(TabPlace.RIGHT_BOTTOM_TABS.ordinal()).add(projectsView);
+			defaultLayout.get(TabPlace.RIGHT_TOP_TABS.ordinal()).add(outlineView);
+			defaultLayout.get(TabPlace.BOTTOM_LEFT_TABS.ordinal()).add(grammarView);
+			defaultLayout.get(TabPlace.BOTTOM_LEFT_TABS.ordinal()).add(syntaxStackView);
+			defaultLayout.get(TabPlace.BOTTOM_LEFT_TABS.ordinal()).add(semStackView);
+			defaultLayout.get(TabPlace.BOTTOM_LEFT_TABS.ordinal()).add(outputView);
+			defaultLayout.get(TabPlace.BOTTOM_RIGHT_TABS.ordinal()).add(parserView);
+			
+			perspectiveMap.addView(0, projectsView);
+			perspectiveMap.addView(1, outlineView);
+			perspectiveMap.addView(2, grammarView);
+			perspectiveMap.addView(3, syntaxStackView);
+			perspectiveMap.addView(4, semStackView);
+			perspectiveMap.addView(5, outputView);
+			perspectiveMap.addView(6, parserView);
+			
+			updateViews(projectsView, true);
+			updateViews(outlineView, true);
+			updateViews(grammarView, true);
+			updateViews(syntaxStackView, true);
+			updateViews(semStackView, true);
+			updateViews(parserView, true);
+			updateViews(parserView, true);
 		}
 		catch (Exception e)
 		{

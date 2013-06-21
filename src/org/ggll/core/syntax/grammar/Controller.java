@@ -81,6 +81,9 @@ public class Controller
 
 			File semantic = new File(GGLLManager.getProject().getProjectDir().getAbsolutePath() + "\\" + GGLLManager.getProject().getProjectDir().getName() + FileNames.SEM_EXTENSION);
 			IOUtilities.copyFile(semantic, new File(GGLLManager.getProject().getProjectDir().getAbsolutePath() + "\\export\\" + GGLLManager.getProject().getProjectDir().getName() + FileNames.SEM_EXTENSION));
+			
+			
+			//GGLLManager.getMainWindow().getTabs().getRightTopTab().set
 		}
 	}
 }

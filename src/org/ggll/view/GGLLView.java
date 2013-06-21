@@ -1,7 +1,5 @@
 package org.ggll.view;
 
-import java.awt.Component;
-
 import javax.swing.Icon;
 
 import net.infonode.docking.View;
@@ -15,12 +13,19 @@ public class GGLLView extends View
 	private String fileName;
 	private int id;
 
-	public GGLLView(String title, Icon icon, Component component, AbstractComponent componentModel, String fileName, int id)
+	public GGLLView(String title, Icon icon, AbstractComponent componentModel, String fileName, int id)
 	{
-		super(title, icon, component);
+		super(title, icon, componentModel.getJComponent());
 		this.id = id;
 		this.componentModel = componentModel;
 		this.fileName = fileName;
+	}
+	
+	public GGLLView(String title, Icon icon, AbstractComponent componentModel, int id)
+	{
+		super(title, icon, componentModel.getJComponent());
+		this.id = id;
+		this.componentModel = componentModel;
 	}
 
 	public AbstractComponent getComponentModel()

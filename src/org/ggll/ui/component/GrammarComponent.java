@@ -23,41 +23,28 @@ public class GrammarComponent extends AbstractComponent implements FileComponent
 	String path;
 	private Canvas canvas;
 
-	@Override
-	public JComponent create(Object param) throws BadParameterException
+	public GrammarComponent(String fileName)
 	{
-		final Canvas canvas;
-		if (param instanceof Canvas || param instanceof String)
-		{
-			if (param instanceof Canvas)
-			{
-				canvas = (Canvas) param;
-				path = CanvasFactory.getCanvasPath();
-			}
-			else
-			{
-				canvas = CanvasFactory.getCanvasFromFile((String) param);
-				path = (String) param;
-			}
-			this.canvas = canvas;
-			JScrollPane jsp = new JScrollPane();
-			JComponent view = canvas.createView();
-			ToolBarGrammar toolBarGrammar = new ToolBarGrammar(canvas);
-			toolBarGrammar.setLayout(new BoxLayout(toolBarGrammar, BoxLayout.PAGE_AXIS));
-			JPanel canvasPanel = new JPanel();
-			canvasPanel.setLayout(new BorderLayout());
-			canvasPanel.add(toolBarGrammar, BorderLayout.WEST);
-			jsp.setViewportView(view);
-			canvasPanel.add(jsp, BorderLayout.CENTER);
-			canvas.setPreferredSize(new Dimension(jsp.getWidth(), jsp.getHeight()));
-			CanvasFactory.getVolatileStateManager().getMonitor().addPropertyChangeListener("writing", this);
-			GrammarFactory.addGramComponent(this);
-			return canvasPanel;
-		}
-		else
-		{
-			throw new BadParameterException("A reference to a Canvas was expected.");
-		}
+		this(CanvasFactory.getCanvasFromFile(fileName));
+	}
+
+	public GrammarComponent(Canvas canvas)
+	{
+		path = CanvasFactory.getCanvasPath();
+		this.canvas = canvas;
+		JScrollPane jsp = new JScrollPane();
+		JComponent view = canvas.createView();
+		ToolBarGrammar toolBarGrammar = new ToolBarGrammar(canvas);
+		toolBarGrammar.setLayout(new BoxLayout(toolBarGrammar, BoxLayout.PAGE_AXIS));
+		JPanel canvasPanel = new JPanel();
+		canvasPanel.setLayout(new BorderLayout());
+		canvasPanel.add(toolBarGrammar, BorderLayout.WEST);
+		jsp.setViewportView(view);
+		canvasPanel.add(jsp, BorderLayout.CENTER);
+		canvas.setPreferredSize(new Dimension(jsp.getWidth(), jsp.getHeight()));
+		CanvasFactory.getVolatileStateManager().getMonitor().addPropertyChangeListener("writing", this);
+		GrammarFactory.addGramComponent(this);
+		jComponent = canvasPanel;
 	}
 
 	@Override

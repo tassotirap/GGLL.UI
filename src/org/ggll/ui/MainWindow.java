@@ -1,14 +1,12 @@
 package org.ggll.ui;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.Icon;
@@ -37,8 +35,6 @@ import net.infonode.util.Direction;
 import org.ggll.canvas.CanvasFactory;
 import org.ggll.model.FileNames;
 import org.ggll.model.ui.IconFactory;
-import org.ggll.model.ui.IconFactory.IconType;
-import org.ggll.parser.ParsingEditor;
 import org.ggll.project.GGLLManager;
 import org.ggll.ui.Menu.MenuModel;
 import org.ggll.ui.TabWindowList.TabPlace;
@@ -49,14 +45,8 @@ import org.ggll.ui.component.ComponentListener;
 import org.ggll.ui.component.ComponetFactory;
 import org.ggll.ui.component.EmptyComponent;
 import org.ggll.ui.component.FileComponent;
-import org.ggll.ui.component.GeneratedGrammarComponent;
 import org.ggll.ui.component.GrammarComponent;
-import org.ggll.ui.component.OutlineComponent;
-import org.ggll.ui.component.OutputComponent;
 import org.ggll.ui.component.ParserComponent;
-import org.ggll.ui.component.ProjectsComponent;
-import org.ggll.ui.component.SemanticStackComponent;
-import org.ggll.ui.component.SyntaxStackComponent;
 import org.ggll.ui.component.TextAreaRepo;
 import org.ggll.ui.interfaces.IMainWindow;
 import org.ggll.ui.menubar.MenuBarFactory;
@@ -66,8 +56,7 @@ import org.ggll.view.ViewRepository;
 
 /***
  * 
- * @author Tasso Tirapani Silva Pinto
- * Refactory Pending
+ * @author Tasso Tirapani Silva Pinto Refactory Pending
  */
 public class MainWindow implements ComponentListener, IMainWindow
 {
@@ -80,7 +69,7 @@ public class MainWindow implements ComponentListener, IMainWindow
 	private TabWindowList tabWindow;
 
 	private JFrame frame;
-	
+
 	private RootWindow rootWindow;
 	private MenuBarFactory menuBarFactory;
 	private ToolBarFactory toolBarFactory;
@@ -90,32 +79,10 @@ public class MainWindow implements ComponentListener, IMainWindow
 	{
 	}
 
-	private ArrayList<TabItem> createDefaultTabs() throws BadParameterException
-	{
-		IconFactory iconFactory = new IconFactory();
-		ArrayList<TabItem> tabItems = new ArrayList<TabItem>();
-		tabItems.add(new TabItem("Project", new ProjectsComponent().create(GGLLManager.getProject()), TabPlace.RIGHT_BOTTOM_TABS, iconFactory.getIcon(IconType.PROJECT_ICON)));
-		tabItems.add(new TabItem("Outline", new OutlineComponent().create(GGLLManager.getActiveScene()), TabPlace.RIGHT_TOP_TABS, iconFactory.getIcon(IconType.OVERVIEW_CON)));
-		tabItems.add(new TabItem("Grammar", new GeneratedGrammarComponent().create(GGLLManager.getActiveScene()), TabPlace.BOTTOM_LEFT_TABS, iconFactory.getIcon(IconType.GRAMMAR_ICON)));
-		tabItems.add(new TabItem("Syntax Stack", new SyntaxStackComponent().create(GGLLManager.getActiveScene()), TabPlace.BOTTOM_LEFT_TABS, iconFactory.getIcon(IconType.SYNTACTIC_STACK_ICON)));
-		tabItems.add(new TabItem("Sem. Stack", new SemanticStackComponent().create(GGLLManager.getActiveScene()), TabPlace.BOTTOM_LEFT_TABS, iconFactory.getIcon(IconType.SEMANTIC_STACK_ICON)));
-		tabItems.add(new TabItem("Output", new OutputComponent().create(GGLLManager.getActiveScene()), TabPlace.BOTTOM_LEFT_TABS, iconFactory.getIcon(IconType.ACTIVE_OUTPUT_ICON)));
-		tabItems.add(new TabItem("Parser", new ParserComponent().create(GGLLManager.getProject().getProjectsRootPath()), TabPlace.BOTTOM_RIGHT_TABS, iconFactory.getIcon(IconType.PARSER_ICON)));
-		return tabItems;
-	}
-
 	private void createDefaultViews()
 	{
-		try
-		{
-			GGLLManager.setActiveScene(CanvasFactory.createCanvas(GGLLManager.getProject().getGrammarFile()));
-			ArrayList<TabItem> tabItems = createDefaultTabs();
-			dynamicaViewRepository.createDefaultViews(tabItems, perspectiveMap);
-		}
-		catch (BadParameterException e)
-		{
-			e.printStackTrace();
-		}
+		GGLLManager.setActiveScene(CanvasFactory.createCanvas(GGLLManager.getProject().getGrammarFile()));
+		dynamicaViewRepository.createDefaultViews(perspectiveMap);
 	}
 
 	private void createDynamicViewMenu(View view)
@@ -123,9 +90,9 @@ public class MainWindow implements ComponentListener, IMainWindow
 		MenuModel model = new MenuModel();
 		if (((GGLLView) view).getTitle().equals("Parser"))
 		{
-			JTextArea textArea = ParsingEditor.getInstance().getTextArea();
-			addToolBar(toolBarFactory.createToolBar(textArea, true, false), true, true);
-			addMenuBar(menuBarFactory.createMenuBar(textArea, model), true, true);
+			ParserComponent parserComponent = (ParserComponent) dynamicaViewRepository.parserView.getComponentModel();
+			addToolBar(toolBarFactory.createToolBar(parserComponent.getTextArea(), true, false), true, true);
+			addMenuBar(menuBarFactory.createMenuBar(parserComponent.getTextArea(), model), true, true);
 		}
 		else
 		{
@@ -209,14 +176,14 @@ public class MainWindow implements ComponentListener, IMainWindow
 		for (int i = 0; i < filesToOpen.size(); i++)
 		{
 			String name = filesToOpen.get(i).getName();
-			AbstractComponent component = ComponetFactory.createFileComponent(name.substring(name.lastIndexOf(".")));
+			AbstractComponent component = ComponetFactory.createFileComponent(name.substring(name.lastIndexOf(".")), filesToOpen.get(i).getAbsolutePath());
 
 			if (component != null)
 			{
 				component.addComponentListener(this);
 				IconFactory iconFactory = new IconFactory();
 				Icon icon = iconFactory.getIcon(name);
-				addComponent(component.create(filesToOpen.get(i).getAbsolutePath()), component, name, filesToOpen.get(i).getAbsolutePath(), icon, TabPlace.CENTER_TABS);
+				addComponent(component, name, filesToOpen.get(i).getAbsolutePath(), icon, TabPlace.CENTER_TABS);
 				if (i == filesToOpen.size() - 1)
 				{
 					createMenuModel(name, component);
@@ -305,7 +272,7 @@ public class MainWindow implements ComponentListener, IMainWindow
 		{
 			e.printStackTrace();
 		}
-		
+
 		frame.getContentPane().add(rootWindow, BorderLayout.CENTER);
 		frame.setSize(900, 700);
 		Dimension screenDim = Toolkit.getDefaultToolkit().getScreenSize();
@@ -314,11 +281,11 @@ public class MainWindow implements ComponentListener, IMainWindow
 		frame.addWindowListener(new FrameAdapter());
 	}
 
-	public GGLLView addComponent(Component component, AbstractComponent componentModel, String title, String fileName, Icon icon, TabPlace place)
+	public GGLLView addComponent(AbstractComponent componentModel, String title, String fileName, Icon icon, TabPlace place)
 	{
 		if (componentModel != null)
 		{
-			GGLLView view = new GGLLView(title, icon, component, componentModel, fileName, dynamicaViewRepository.getDynamicViewId());
+			GGLLView view = new GGLLView(title, icon, componentModel, fileName, dynamicaViewRepository.getDynamicViewId());
 			if (componentModel instanceof GrammarComponent)
 			{
 				GGLLManager.setActiveScene(CanvasFactory.getCanvasFromFile(fileName));
@@ -337,7 +304,7 @@ public class MainWindow implements ComponentListener, IMainWindow
 	public void addEmptyDynamicView() throws BadParameterException
 	{
 		EmptyComponent emptyComponent = new EmptyComponent();
-		emptyDynamicView = addComponent(emptyComponent.create(null), emptyComponent, "Empty Page", null, VIEW_ICON, TabPlace.CENTER_TABS);
+		emptyDynamicView = addComponent(emptyComponent, "Empty Page", null, VIEW_ICON, TabPlace.CENTER_TABS);
 	}
 
 	@Override
