@@ -20,8 +20,6 @@ public abstract class AbstractComponent
 	public abstract void fireContentChanged();
 
 	/**
-	 * Gets the current component, It can be NULL!!, even if this component was
-	 * created already
 	 * 
 	 * @return the current component
 	 */

@@ -26,7 +26,7 @@ public class ParserComponent extends AbstractComponent
 	private JButton open;
 	private JButton parse;
 	private JButton parseNextStep;
-	private NewTextArea textArea;
+	private TextAreaComponent textArea;
 
 	public ParserComponent(String rootPath)
 	{
@@ -73,7 +73,7 @@ public class ParserComponent extends AbstractComponent
 		jComponent = new JPanel(new BorderLayout());
 		jComponent.add(btBar, BorderLayout.NORTH);
 
-		textArea = new NewTextArea();
+		textArea = new TextAreaComponent();
 		jComponent.add(textArea.getJComponent(), BorderLayout.CENTER);
 	}
 
@@ -149,7 +149,7 @@ public class ParserComponent extends AbstractComponent
 	{
 	}
 
-	public NewTextArea getTextArea()
+	public TextAreaComponent getTextArea()
 	{
 		return textArea;
 	}

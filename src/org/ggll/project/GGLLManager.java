@@ -12,7 +12,7 @@ import org.ggll.canvas.state.StaticStateManager;
 import org.ggll.model.FileNames;
 import org.ggll.ui.MainWindow;
 import org.ggll.ui.component.GrammarComponent;
-import org.ggll.ui.component.NewTextArea;
+import org.ggll.ui.component.TextAreaComponent;
 import org.ggll.ui.interfaces.IMainWindow;
 import org.ggll.util.ComponentPrinter;
 import org.ggll.util.Log;
@@ -95,9 +95,9 @@ public final class GGLLManager
 
 	public static void print(Object object)
 	{
-		if (object instanceof NewTextArea)
+		if (object instanceof TextAreaComponent)
 		{
-			TextPrinter.printText(((NewTextArea) object).getText());
+			TextPrinter.printText(((TextAreaComponent) object).getText());
 		}
 		else if (object instanceof Canvas)
 		{

@@ -16,7 +16,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-import org.ggll.ui.component.NewTextArea;
+import org.ggll.ui.component.TextAreaComponent;
 
 public class RoutineWizardWindow extends JFrame
 {
@@ -25,7 +25,7 @@ public class RoutineWizardWindow extends JFrame
 	private static final long serialVersionUID = 1L;
 	private JPanel buttonsPanel = null;
 	private JButton cancelButton = null; // @jve:decl-index=0:visual-constraint="512,525"
-	private NewTextArea codeTextArea = null;
+	private TextAreaComponent codeTextArea = null;
 	private JButton insertButton = null; // @jve:decl-index=0:visual-constraint="371,512"
 	private JPanel jContentPane = null;
 	private JLabel nameLabel = null;
@@ -140,7 +140,7 @@ public class RoutineWizardWindow extends JFrame
 	{
 		if (codeTextArea == null)
 		{
-			codeTextArea = new NewTextArea();
+			codeTextArea = new TextAreaComponent();
 			codeTextArea.setText(INSERT_CODE_HERE, false);
 
 			codeTextArea.getTextArea().addFocusListener(new FocusListener()

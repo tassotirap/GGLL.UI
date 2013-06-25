@@ -10,6 +10,7 @@ import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -124,8 +125,7 @@ public abstract class Canvas extends GraphScene.StringGraph implements PropertyC
 	public JComponent createView()
 	{
 		JComponent component = super.createView();
-		//component.addKeyListener(inputHandlerProvider.getInputHandler().getKeyEventInterceptor());
-		//component.addMouseListener(inputHandlerProvider.getInputHandler().getMouseEventInterceptor());
+		component.addMouseListener(new CanvasMouseHandler(this));
 		return component;
 	}
 
@@ -144,13 +144,6 @@ public abstract class Canvas extends GraphScene.StringGraph implements PropertyC
 		}
 		this.getMonitor().firePropertyChange(property, oldObj, newObj);
 	}
-
-	// returns the current action set
-//	@Override
-//	public AsinActionContext<CanvasBeanShellAction, AsinActionSet<CanvasBeanShellAction>> getActionContext()
-//	{
-//		return actionContext;
-//	}
 
 	public abstract Router getActiveRouter();
 
@@ -185,10 +178,6 @@ public abstract class Canvas extends GraphScene.StringGraph implements PropertyC
 		return customNodes;
 	}
 
-//	public AbstractInputHandler<?> getInputHandler()
-//	{
-//		return inputHandlerProvider.getInputHandler();
-//	}
 
 	public abstract LayerWidget getInterractionLayer();
 
@@ -279,38 +268,8 @@ public abstract class Canvas extends GraphScene.StringGraph implements PropertyC
 	{
 		addObjectSceneListener(state, ObjectSceneEventType.OBJECT_ADDED);
 		addObjectSceneListener(state, ObjectSceneEventType.OBJECT_REMOVED);
-		//initInputHandler();
 		createCursors();
 	}
-
-//	/**
-//	 * Creates an actionContext and initializes the input handler for this
-//	 * canvas. When compared to TextArea, Canvas has an mixed approach to input
-//	 * event handling, for it can deal with input through invocation of action
-//	 * beans or through direct , usual, invocation, mainly when the input comes
-//	 * from some widget.
-//	 */
-//	public void initInputHandler()
-//	{
-//		actionContext = new AsinActionContext<CanvasBeanShellAction, AsinActionSet<CanvasBeanShellAction>>()
-//		{
-//			@Override
-//			public void invokeAction(EventObject evt, CanvasBeanShellAction action)
-//			{
-//				action.invoke(Canvas.this);
-//			}
-//		};
-//
-//		// setMouseHandler(new CanvasMouseHandler(this));
-//		inputHandlerProvider = new DefaultInputHandlerProvider(new CanvasInputHandler(this)
-//		{
-//			@Override
-//			protected CanvasBeanShellAction getAction(String action)
-//			{
-//				return actionContext.getAction(action);
-//			}
-//		});
-//	}
 
 	public boolean isAlternative(String edge)
 	{

@@ -9,7 +9,6 @@ import org.ggll.model.ui.IconView;
 import org.ggll.ui.TabWindowList;
 import org.ggll.ui.ThemeManager.Theme;
 import org.ggll.ui.component.AbstractComponent;
-import org.ggll.ui.component.BadParameterException;
 
 public interface IMainWindow
 {
@@ -18,7 +17,7 @@ public interface IMainWindow
 	public final static String UNSAVED_PREFIX = "* ";
 	public final static Icon VIEW_ICON = new IconView();
 
-	public abstract void addEmptyDynamicView() throws BadParameterException;
+	public abstract void addEmptyDynamicView();
 
 	public abstract void changeTheme(Theme theme);
 

@@ -19,7 +19,7 @@ import org.ggll.canvas.action.WidgetCopyPasteProvider;
 import org.ggll.canvas.action.WidgetDeleteProvider;
 import org.ggll.canvas.state.VolatileStateManager;
 import org.ggll.project.GGLLManager;
-import org.ggll.ui.component.NewTextArea;
+import org.ggll.ui.component.TextAreaComponent;
 import org.ggll.util.LangHelper;
 
 import com.jidesoft.icons.ColorFilter;
@@ -156,7 +156,7 @@ public class ToolBarDefault extends BaseToolBar implements PropertyChangeListene
 		});
 	}
 
-	private void setTextActions(final NewTextArea textArea)
+	private void setTextActions(final TextAreaComponent textArea)
 	{
 		btnCopy.addActionListener(new ActionListener()
 		{
@@ -216,9 +216,9 @@ public class ToolBarDefault extends BaseToolBar implements PropertyChangeListene
 		{
 			setCanvasActions((Canvas) context);
 		}
-		else if (context instanceof NewTextArea)
+		else if (context instanceof TextAreaComponent)
 		{
-			setTextActions((NewTextArea) context);
+			setTextActions((TextAreaComponent) context);
 		}
 	}
 

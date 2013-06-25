@@ -1,7 +1,5 @@
 package org.ggll.ui.component;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -25,12 +23,12 @@ import org.fife.ui.rsyntaxtextarea.Theme;
 import org.fife.ui.rtextarea.RTextScrollPane;
 import org.ggll.util.Log;
 
-public class NewTextArea extends AbstractComponent implements HyperlinkListener, SyntaxConstants, FileComponent
+public class TextAreaComponent extends AbstractComponent implements HyperlinkListener, SyntaxConstants, FileComponent
 {
 	private RSyntaxTextArea textArea;
 	private String path;
 
-	public NewTextArea()
+	public TextAreaComponent()
 	{
 		textArea = createTextArea();
 		textArea.setSyntaxEditingStyle(SYNTAX_STYLE_JAVA);
@@ -38,7 +36,7 @@ public class NewTextArea extends AbstractComponent implements HyperlinkListener,
 		jComponent = new RTextScrollPane(textArea, true);
 	}
 
-	public NewTextArea(String path)
+	public TextAreaComponent(String path)
 	{
 		this();
 		this.path = path;
@@ -84,7 +82,7 @@ public class NewTextArea extends AbstractComponent implements HyperlinkListener,
 	{
 		for (ComponentListener listener : listeners)
 		{
-			listener.ContentChanged(this, null, null);
+			listener.ContentChanged(this);
 		}
 	}
 

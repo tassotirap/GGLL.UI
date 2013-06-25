@@ -57,7 +57,7 @@ public class GrammarComponent extends AbstractComponent implements FileComponent
 	{
 		for (ComponentListener listener : listeners)
 		{
-			listener.ContentChanged(this, null, null);
+			listener.ContentChanged(this);
 		}
 	}
 

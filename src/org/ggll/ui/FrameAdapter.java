@@ -7,11 +7,9 @@ import org.ggll.project.GGLLManager;
 
 public class FrameAdapter extends WindowAdapter
 {
-
 	@Override
 	public void windowClosing(WindowEvent arg0)
 	{
 		GGLLManager.exit();
 	}
-
 }

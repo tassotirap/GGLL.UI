@@ -13,7 +13,6 @@ import javax.swing.Icon;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
-import javax.swing.JTextArea;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.WindowConstants;
@@ -39,15 +38,13 @@ import org.ggll.ui.Menu.MenuModel;
 import org.ggll.ui.TabWindowList.TabPlace;
 import org.ggll.ui.ThemeManager.Theme;
 import org.ggll.ui.component.AbstractComponent;
-import org.ggll.ui.component.BadParameterException;
 import org.ggll.ui.component.ComponentListener;
 import org.ggll.ui.component.ComponetFactory;
 import org.ggll.ui.component.EmptyComponent;
 import org.ggll.ui.component.FileComponent;
 import org.ggll.ui.component.GrammarComponent;
-import org.ggll.ui.component.NewTextArea;
 import org.ggll.ui.component.ParserComponent;
-import org.ggll.ui.component.TextAreaRepo;
+import org.ggll.ui.component.TextAreaComponent;
 import org.ggll.ui.interfaces.IMainWindow;
 import org.ggll.ui.menubar.MenuBarFactory;
 import org.ggll.ui.toolbar.ToolBarFactory;
@@ -169,7 +166,7 @@ public class MainWindow implements ComponentListener, IMainWindow
 		this.viewRepository = new ViewRepository();
 	}
 
-	private void openFiles() throws BadParameterException
+	private void openFiles()
 	{
 		List<File> filesToOpen = GGLLManager.getOpenedFiles();
 
@@ -256,14 +253,8 @@ public class MainWindow implements ComponentListener, IMainWindow
 		createRootWindow();
 		createDefaultViews();
 		setDefaultLayout();
-		try
-		{
-			openFiles();
-		}
-		catch (BadParameterException e)
-		{
-			e.printStackTrace();
-		}
+		openFiles();
+
 
 		frame.getContentPane().add(rootWindow, BorderLayout.CENTER);
 		frame.setSize(900, 700);
@@ -277,7 +268,7 @@ public class MainWindow implements ComponentListener, IMainWindow
 	{
 		if (componentModel != null)
 		{
-			GGLLView view = new GGLLView(title, icon, componentModel, fileName, 2);// viewRepository.getDynamicViewId());
+			GGLLView view = new GGLLView(title, icon, componentModel, fileName, 2);
 			if (componentModel instanceof GrammarComponent)
 			{
 				GGLLManager.setActiveScene(CanvasFactory.getCanvasFromFile(fileName));
@@ -293,7 +284,7 @@ public class MainWindow implements ComponentListener, IMainWindow
 	}
 
 	@Override
-	public void addEmptyDynamicView() throws BadParameterException
+	public void addEmptyDynamicView()
 	{
 		EmptyComponent emptyComponent = new EmptyComponent();
 		emptyDynamicView = addComponent(emptyComponent, "Empty Page", null, VIEW_ICON, TabPlace.CENTER_TABS);
@@ -306,7 +297,7 @@ public class MainWindow implements ComponentListener, IMainWindow
 	}
 
 	@Override
-	public void ContentChanged(AbstractComponent source, Object oldValue, Object newValue)
+	public void ContentChanged(AbstractComponent source)
 	{
 		if (viewRepository.containsDynamicView(source))
 		{
@@ -399,9 +390,9 @@ public class MainWindow implements ComponentListener, IMainWindow
 			model.undo = true;
 			model.redo = true;
 			model.find = true;
-			JTextArea textArea = TextAreaRepo.getTextArea(component);
-			if (textArea != null)
+			if (component instanceof TextAreaComponent)
 			{
+				TextAreaComponent textArea = (TextAreaComponent) component;
 				addToolBar(toolBarFactory.createToolBar(textArea, true, false), true, true);
 				addMenuBar(menuBarFactory.createMenuBar(textArea, model), true, true);
 			}

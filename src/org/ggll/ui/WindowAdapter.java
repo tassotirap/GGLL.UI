@@ -9,7 +9,6 @@ import net.infonode.docking.View;
 
 import org.ggll.project.GGLLManager;
 import org.ggll.ui.component.AbstractComponent;
-import org.ggll.ui.component.BadParameterException;
 import org.ggll.ui.component.EmptyComponent;
 import org.ggll.ui.component.FileComponent;
 import org.ggll.ui.interfaces.IMainWindow;
@@ -23,9 +22,8 @@ public class WindowAdapter extends DockingWindowAdapter
 
 	public WindowAdapter()
 	{
-		this.window = GGLLManager.getMainWindow();		
+		this.window = GGLLManager.getMainWindow();
 	}
-	
 
 	@Override
 	public void viewFocusChanged(View ov, View nv)
@@ -87,14 +85,7 @@ public class WindowAdapter extends DockingWindowAdapter
 		}
 		if (window.getTabs().getCenterTab().getChildWindowIndex(dWindow) >= 0 && window.getTabs().getCenterTab().getChildWindowCount() == 1)
 		{
-			try
-			{
-				window.addEmptyDynamicView();
-			}
-			catch (BadParameterException e)
-			{
-				e.printStackTrace();
-			}
+			window.addEmptyDynamicView();
 		}
 	}
 

@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
-import javax.swing.JTextArea;
 
 import org.ggll.canvas.Canvas;
 import org.ggll.model.FileNames;
@@ -17,8 +16,7 @@ import org.ggll.ui.component.AbstractComponent;
 import org.ggll.ui.component.FileComponent;
 import org.ggll.ui.component.GrammarComponent;
 import org.ggll.ui.component.GrammarFactory;
-import org.ggll.ui.component.NewTextArea;
-import org.ggll.ui.component.TextAreaRepo;
+import org.ggll.ui.component.TextAreaComponent;
 import org.ggll.util.Log;
 import org.ggll.view.GGLLView;
 import org.ggll.view.UnsavedViewManager;
@@ -131,11 +129,11 @@ public class FileManager
 			{
 				if (file.getName().toLowerCase().endsWith(FileNames.LEX_EXTENSION.toLowerCase()))
 				{
-					mainWindow.addComponent(new NewTextArea(path), file.getName(), path, iconFactory.getIcon(IconType.LEX_ICON), TabPlace.CENTER_TABS);
+					mainWindow.addComponent(new TextAreaComponent(path), file.getName(), path, iconFactory.getIcon(IconType.LEX_ICON), TabPlace.CENTER_TABS);
 				}
 				else if (file.getName().toLowerCase().endsWith(FileNames.SEM_EXTENSION.toLowerCase()))
 				{
-					mainWindow.addComponent( new NewTextArea(path), file.getName(), path, iconFactory.getIcon(IconType.SEM_ICON), TabPlace.CENTER_TABS);
+					mainWindow.addComponent(new TextAreaComponent(path), file.getName(), path, iconFactory.getIcon(IconType.SEM_ICON), TabPlace.CENTER_TABS);
 				}
 				else if (file.getName().toLowerCase().endsWith(FileNames.GRAM_EXTENSION.toLowerCase()))
 				{
@@ -143,15 +141,15 @@ public class FileManager
 				}
 				else if (file.getName().toLowerCase().endsWith(FileNames.XML_EXTENSION.toLowerCase()))
 				{
-					mainWindow.addComponent( new NewTextArea(path), file.getName(), path, iconFactory.getIcon(IconType.XML_ICON), TabPlace.CENTER_TABS);
+					mainWindow.addComponent(new TextAreaComponent(path), file.getName(), path, iconFactory.getIcon(IconType.XML_ICON), TabPlace.CENTER_TABS);
 				}
 				else if (file.getName().toLowerCase().endsWith(FileNames.JAVA_EXTENSION.toLowerCase()))
 				{
-					mainWindow.addComponent( new NewTextArea(path), file.getName(), path, iconFactory.getIcon(IconType.JAVA_ICON), TabPlace.CENTER_TABS);
+					mainWindow.addComponent(new TextAreaComponent(path), file.getName(), path, iconFactory.getIcon(IconType.JAVA_ICON), TabPlace.CENTER_TABS);
 				}
 				else
 				{
-					mainWindow.addComponent(new NewTextArea(path), file.getName(), path, iconFactory.getIcon(IconType.TXT_ICON), TabPlace.CENTER_TABS);
+					mainWindow.addComponent(new TextAreaComponent(path), file.getName(), path, iconFactory.getIcon(IconType.TXT_ICON), TabPlace.CENTER_TABS);
 				}
 				project.getOpenedFiles().add(new File(path));
 
@@ -169,15 +167,7 @@ public class FileManager
 		for (GGLLView dynamicView : views)
 		{
 			AbstractComponent abstractComponent = dynamicView.getComponentModel();
-			if (abstractComponent instanceof NewTextArea)
-			{
-				NewTextArea advancedTextAreaComponent = (NewTextArea) abstractComponent;
-				saveFileObject(TextAreaRepo.getComponent(advancedTextAreaComponent.getTextArea()));
-			}
-			if (abstractComponent instanceof GrammarComponent)
-			{
-				saveFileObject(abstractComponent);
-			}
+			saveFileObject(abstractComponent);
 		}
 	}
 
@@ -187,9 +177,9 @@ public class FileManager
 		boolean componentSaved = false;
 		if (object != null)
 		{
-			if (object instanceof NewTextArea)
+			if (object instanceof TextAreaComponent)
 			{
-				path = saveFile((NewTextArea) object);
+				path = saveFile((TextAreaComponent) object);
 				componentSaved = true;
 			}
 			else if (object instanceof FileComponent)
@@ -236,7 +226,7 @@ public class FileManager
 		}
 	}
 
-	private String saveFile(NewTextArea object)
+	private String saveFile(TextAreaComponent object)
 	{
 		if (object != null)
 		{
