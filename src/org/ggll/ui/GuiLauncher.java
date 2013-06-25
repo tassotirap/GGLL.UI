@@ -56,10 +56,8 @@ public class GuiLauncher
 
 	private IMainWindow startMainWindow(WorkspaceChooser workspaceChooser)
 	{	
-		MainWindow mainWindow = new MainWindow();
-		
-		GGLLManager.Start(mainWindow, workspaceChooser.getWorkspaceDir());
-		
+		MainWindow mainWindow = new MainWindow();		
+		GGLLManager.Start(mainWindow, workspaceChooser.getWorkspaceDir());		
 		showFrame(mainWindow);
 		return mainWindow;		
 	}

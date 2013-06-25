@@ -19,6 +19,7 @@ public class GGLLView extends View
 		this.id = id;
 		this.componentModel = componentModel;
 		this.fileName = fileName;
+		
 	}
 	
 	public GGLLView(String title, Icon icon, AbstractComponent componentModel, int id)
@@ -26,6 +27,7 @@ public class GGLLView extends View
 		super(title, icon, componentModel.getJComponent());
 		this.id = id;
 		this.componentModel = componentModel;
+		this.getWindowProperties().setCloseEnabled(false);
 	}
 
 	public AbstractComponent getComponentModel()

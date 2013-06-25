@@ -1,7 +1,6 @@
 package org.ggll.view;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import net.infonode.docking.DockingWindow;
 import net.infonode.docking.View;
@@ -24,111 +23,117 @@ public class ViewRepository
 {
 	private ArrayList<ViewList> defaultLayout;
 	private static int DEFAULT_LAYOUT = 6;
-	private HashMap<AbstractComponent, GGLLView> dynamicViewsByComponent = new HashMap<AbstractComponent, GGLLView>();
-	private HashMap<Integer, GGLLView> dynamicViewsById = new HashMap<Integer, GGLLView>();
-	private HashMap<String, GGLLView> dynamicViewsByPath = new HashMap<String, GGLLView>();
-	
-	public GGLLView projectsView;
-	public GGLLView outlineView;
-	public GGLLView grammarView;
-	public GGLLView syntaxStackView;
-	public GGLLView semStackView;
-	public GGLLView outputView;
-	public GGLLView parserView;
+	private ArrayList<GGLLView> ggllViews = new ArrayList<GGLLView>();
 
 	public ViewRepository()
 	{
 		this.defaultLayout = new ArrayList<ViewList>();
 	}
 
-	private void addDynamicView(GGLLView dynamicView)
+	private void addDynamicView(GGLLView ggllView)
 	{
-		dynamicViewsById.put(new Integer(dynamicView.getId()), dynamicView);
-		dynamicViewsByComponent.put(dynamicView.getComponentModel(), dynamicView);
-		if (dynamicView.getFileName() != null)
-		{
-			dynamicViewsByPath.put(dynamicView.getFileName(), dynamicView);
-		}
-	}
-
-	private void removeDynamicView(GGLLView dynamicView)
-	{
-		dynamicViewsById.remove(new Integer(dynamicView.getId()));
-		dynamicViewsByComponent.remove(dynamicView.getComponentModel());
-		if (dynamicViewsByPath.containsKey(dynamicView.getFileName()))
-		{
-			dynamicViewsByPath.remove(dynamicView.getFileName());
-		}
-	}
-
-	private void updateChildDynamicViews(DockingWindow window, boolean added)
-	{
-		for (int i = 0; i < window.getChildWindowCount(); i++)
-		{
-			updateViews(window.getChildWindow(i), added);
-		}
+		ggllViews.add(ggllView);
 	}
 
 	public boolean containsDynamicView(AbstractComponent component)
 	{
-		return dynamicViewsByComponent.containsKey(component);
+		for (GGLLView ggllView : ggllViews)
+		{
+			if (ggllView.getComponentModel().equals(component))
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public boolean containsDynamicView(int id)
 	{
-		return dynamicViewsById.containsKey(id);
+		for (GGLLView ggllView : ggllViews)
+		{
+			if (ggllView.getId() == id)
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public boolean containsDynamicView(String path)
 	{
-		return dynamicViewsByPath.containsKey(path);
+		for (GGLLView ggllView : ggllViews)
+		{
+			if (ggllView.getFileName().equals(path))
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public void createDefaultViews(ViewMap perspectiveMap)
 	{
-		try
-		{
-			IconFactory iconFactory = new IconFactory();
-		
-			for (int i = 0; i < DEFAULT_LAYOUT; i++)
-				defaultLayout.add(new ViewList());
-			
-			projectsView = new GGLLView("Project", iconFactory.getIcon(IconType.PROJECT_ICON),new ProjectsComponent(GGLLManager.getProject()), getDynamicViewId());
-			outlineView = new GGLLView("Outline", iconFactory.getIcon(IconType.OVERVIEW_CON),new OutlineComponent(GGLLManager.getActiveScene()), getDynamicViewId());
-			grammarView = new GGLLView("Grammar", iconFactory.getIcon(IconType.GRAMMAR_ICON),new GeneratedGrammarComponent(GGLLManager.getActiveScene()), getDynamicViewId());
-			syntaxStackView = new GGLLView("Syntax Stack", iconFactory.getIcon(IconType.SYNTACTIC_STACK_ICON),new SyntaxStackComponent(GGLLManager.getActiveScene()), getDynamicViewId());
-			semStackView = new GGLLView("Sem. Stack", iconFactory.getIcon(IconType.SEMANTIC_STACK_ICON),new SemanticStackComponent(GGLLManager.getActiveScene()), getDynamicViewId());
-			outputView = new GGLLView("Output", iconFactory.getIcon(IconType.ACTIVE_OUTPUT_ICON),new OutputComponent(GGLLManager.getActiveScene()), getDynamicViewId());
-			parserView = new GGLLView("Parser", iconFactory.getIcon(IconType.PARSER_ICON),new ParserComponent(GGLLManager.getProject().getProjectsRootPath()), getDynamicViewId());
-			
-			defaultLayout.get(TabPlace.RIGHT_BOTTOM_TABS.ordinal()).add(projectsView);
-			defaultLayout.get(TabPlace.RIGHT_TOP_TABS.ordinal()).add(outlineView);
-			defaultLayout.get(TabPlace.BOTTOM_LEFT_TABS.ordinal()).add(grammarView);
-			defaultLayout.get(TabPlace.BOTTOM_LEFT_TABS.ordinal()).add(syntaxStackView);
-			defaultLayout.get(TabPlace.BOTTOM_LEFT_TABS.ordinal()).add(semStackView);
-			defaultLayout.get(TabPlace.BOTTOM_LEFT_TABS.ordinal()).add(outputView);
-			defaultLayout.get(TabPlace.BOTTOM_RIGHT_TABS.ordinal()).add(parserView);
-			
-			perspectiveMap.addView(0, projectsView);
-			perspectiveMap.addView(1, outlineView);
-			perspectiveMap.addView(2, grammarView);
-			perspectiveMap.addView(3, syntaxStackView);
-			perspectiveMap.addView(4, semStackView);
-			perspectiveMap.addView(5, outputView);
-			perspectiveMap.addView(6, parserView);
-			
-			updateViews(projectsView, true);
-			updateViews(outlineView, true);
-			updateViews(grammarView, true);
-			updateViews(syntaxStackView, true);
-			updateViews(semStackView, true);
-			updateViews(parserView, true);
-			updateViews(parserView, true);
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
+		IconFactory iconFactory = new IconFactory();
+
+		for (int i = 0; i < DEFAULT_LAYOUT; i++)
+			defaultLayout.add(new ViewList());
+
+		createProjectView(iconFactory, perspectiveMap);
+		createOutlineView(iconFactory, perspectiveMap);
+		createGrammarView(iconFactory, perspectiveMap);
+		createSyntaxStackView(iconFactory, perspectiveMap);
+		createSemanticStackView(iconFactory, perspectiveMap);
+		createOutputView(iconFactory, perspectiveMap);
+		createParserView(iconFactory, perspectiveMap);
+	}
+
+	private void createGrammarView(IconFactory iconFactory, ViewMap perspectiveMap)
+	{
+		GGLLView gglView = new GGLLView("Grammar", iconFactory.getIcon(IconType.GRAMMAR_ICON), new GeneratedGrammarComponent(GGLLManager.getActiveScene()), getDynamicViewId());
+		defaultLayout.get(TabPlace.BOTTOM_LEFT_TABS.ordinal()).add(gglView);
+		perspectiveMap.addView(2, gglView);
+	}
+
+	private void createOutlineView(IconFactory iconFactory, ViewMap perspectiveMap)
+	{
+		GGLLView gglView = new GGLLView("Outline", iconFactory.getIcon(IconType.OVERVIEW_CON), new OutlineComponent(GGLLManager.getActiveScene()), getDynamicViewId());
+		defaultLayout.get(TabPlace.RIGHT_TOP_TABS.ordinal()).add(gglView);
+		perspectiveMap.addView(1, gglView);
+	}
+
+	private void createOutputView(IconFactory iconFactory, ViewMap perspectiveMap)
+	{
+		GGLLView gglView = new GGLLView("Output", iconFactory.getIcon(IconType.ACTIVE_OUTPUT_ICON), new OutputComponent(GGLLManager.getActiveScene()), getDynamicViewId());
+		defaultLayout.get(TabPlace.BOTTOM_LEFT_TABS.ordinal()).add(gglView);
+		perspectiveMap.addView(5, gglView);
+	}
+
+	private void createParserView(IconFactory iconFactory, ViewMap perspectiveMap)
+	{
+		GGLLView gglView = new GGLLView("Parser", iconFactory.getIcon(IconType.PARSER_ICON), new ParserComponent(GGLLManager.getProject().getProjectsRootPath()), getDynamicViewId());
+		defaultLayout.get(TabPlace.BOTTOM_RIGHT_TABS.ordinal()).add(gglView);
+		perspectiveMap.addView(6, gglView);
+	}
+
+	private void createProjectView(IconFactory iconFactory, ViewMap perspectiveMap)
+	{
+		GGLLView gglView = new GGLLView("Project", iconFactory.getIcon(IconType.PROJECT_ICON), new ProjectsComponent(GGLLManager.getProject()), getDynamicViewId());
+		defaultLayout.get(TabPlace.RIGHT_BOTTOM_TABS.ordinal()).add(gglView);
+		perspectiveMap.addView(0, gglView);
+	}
+
+	private void createSemanticStackView(IconFactory iconFactory, ViewMap perspectiveMap)
+	{
+		GGLLView gglView = new GGLLView("Sem. Stack", iconFactory.getIcon(IconType.SEMANTIC_STACK_ICON), new SemanticStackComponent(GGLLManager.getActiveScene()), getDynamicViewId());
+		defaultLayout.get(TabPlace.BOTTOM_LEFT_TABS.ordinal()).add(gglView);
+		perspectiveMap.addView(4, gglView);
+	}
+
+	private void createSyntaxStackView(IconFactory iconFactory, ViewMap perspectiveMap)
+	{
+		GGLLView gglView = new GGLLView("Syntax Stack", iconFactory.getIcon(IconType.SYNTACTIC_STACK_ICON), new SyntaxStackComponent(GGLLManager.getActiveScene()), getDynamicViewId());
+		defaultLayout.get(TabPlace.BOTTOM_LEFT_TABS.ordinal()).add(gglView);
+		perspectiveMap.addView(3, gglView);
 	}
 
 	public ArrayList<ViewList> getDefaultLayout()
@@ -138,27 +143,64 @@ public class ViewRepository
 
 	public GGLLView getDynamicView(AbstractComponent component)
 	{
-		return dynamicViewsByComponent.get(component);
+		for (GGLLView ggllView : ggllViews)
+		{
+			if (ggllView.getComponentModel().equals(component))
+			{
+				return ggllView;
+			}
+		}
+		return null;
 	}
 
 	public GGLLView getDynamicView(int id)
 	{
-		return dynamicViewsById.get(id);
+		for (GGLLView ggllView : ggllViews)
+		{
+			if (ggllView.getId() == id)
+			{
+				return ggllView;
+			}
+		}
+		return null;
 	}
 
 	public GGLLView getDynamicView(String path)
 	{
-		return dynamicViewsByPath.get(path);
+		for (GGLLView ggllView : ggllViews)
+		{
+			if (ggllView.getFileName().equals(path))
+			{
+				return ggllView;
+			}
+		}
+		return null;
 	}
 
 	public int getDynamicViewId()
 	{
-		int id = 0;
+		int max = 0;
+		for (GGLLView ggllView : ggllViews)
+		{
+			if (ggllView.getId() > max)
+			{
+				max = ggllView.getId();
+			}
+		}
+		return max + 1;
+	}
 
-		while (dynamicViewsById.containsKey(new Integer(id)))
-			id++;
+	private void removeDynamicView(GGLLView ggllView)
+	{
+		ggllViews.remove(ggllView);
+	}
 
-		return id;
+	private void updateChildDynamicViews(DockingWindow window, boolean added)
+	{
+		for (int i = 0; i < window.getChildWindowCount(); i++)
+		{
+			updateViews(window.getChildWindow(i), added);
+		}
 	}
 
 	public void updateViews(DockingWindow window, boolean added)

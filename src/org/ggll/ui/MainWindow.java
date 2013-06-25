@@ -24,7 +24,6 @@ import net.infonode.docking.SplitWindow;
 import net.infonode.docking.TabWindow;
 import net.infonode.docking.View;
 import net.infonode.docking.ViewSerializer;
-import net.infonode.docking.WindowBar;
 import net.infonode.docking.mouse.DockingWindowActionMouseButtonListener;
 import net.infonode.docking.properties.RootWindowProperties;
 import net.infonode.docking.util.DockingUtil;
@@ -46,6 +45,7 @@ import org.ggll.ui.component.ComponetFactory;
 import org.ggll.ui.component.EmptyComponent;
 import org.ggll.ui.component.FileComponent;
 import org.ggll.ui.component.GrammarComponent;
+import org.ggll.ui.component.NewTextArea;
 import org.ggll.ui.component.ParserComponent;
 import org.ggll.ui.component.TextAreaRepo;
 import org.ggll.ui.interfaces.IMainWindow;
@@ -73,7 +73,7 @@ public class MainWindow implements ComponentListener, IMainWindow
 	private RootWindow rootWindow;
 	private MenuBarFactory menuBarFactory;
 	private ToolBarFactory toolBarFactory;
-	private ViewRepository dynamicaViewRepository;
+	private ViewRepository viewRepository;
 
 	public MainWindow()
 	{
@@ -82,7 +82,7 @@ public class MainWindow implements ComponentListener, IMainWindow
 	private void createDefaultViews()
 	{
 		GGLLManager.setActiveScene(CanvasFactory.createCanvas(GGLLManager.getProject().getGrammarFile()));
-		dynamicaViewRepository.createDefaultViews(perspectiveMap);
+		viewRepository.createDefaultViews(perspectiveMap);
 	}
 
 	private void createDynamicViewMenu(View view)
@@ -90,7 +90,7 @@ public class MainWindow implements ComponentListener, IMainWindow
 		MenuModel model = new MenuModel();
 		if (((GGLLView) view).getTitle().equals("Parser"))
 		{
-			ParserComponent parserComponent = (ParserComponent) dynamicaViewRepository.parserView.getComponentModel();
+			ParserComponent parserComponent = (ParserComponent) ((GGLLView) view).getComponentModel();
 			addToolBar(toolBarFactory.createToolBar(parserComponent.getTextArea(), true, false), true, true);
 			addMenuBar(menuBarFactory.createMenuBar(parserComponent.getTextArea(), model), true, true);
 		}
@@ -123,8 +123,8 @@ public class MainWindow implements ComponentListener, IMainWindow
 		}
 		else
 		{
-			addToolBar(toolBarFactory.createToolBar(TextAreaRepo.getTextArea(component), true, false), false, false);
-			addMenuBar(menuBarFactory.createMenuBar(TextAreaRepo.getTextArea(component), model), false, false);
+			addToolBar(toolBarFactory.createToolBar(component, true, false), false, false);
+			addMenuBar(menuBarFactory.createMenuBar(component, model), false, false);
 		}
 	}
 
@@ -136,7 +136,7 @@ public class MainWindow implements ComponentListener, IMainWindow
 			@Override
 			public View readView(ObjectInputStream in) throws IOException
 			{
-				return dynamicaViewRepository.getDynamicView(in.readInt());
+				return viewRepository.getDynamicView(in.readInt());
 			}
 
 			@Override
@@ -147,7 +147,6 @@ public class MainWindow implements ComponentListener, IMainWindow
 		});
 
 		rootWindowProperties.addSuperObject(ThemeManager.getCurrentTheme().getRootWindowProperties());
-
 		rootWindow = DockingUtil.createRootWindow(perspectiveMap, handler, true);
 		rootWindow.getRootWindowProperties().addSuperObject(rootWindowProperties);
 		rootWindow.getWindowBar(Direction.DOWN).setEnabled(true);
@@ -165,8 +164,9 @@ public class MainWindow implements ComponentListener, IMainWindow
 		frame = new JFrame(title);
 		frame.setName(DEFAULT_NAME);
 		frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+
 		this.tabWindow = new TabWindowList();
-		this.dynamicaViewRepository = new ViewRepository();
+		this.viewRepository = new ViewRepository();
 	}
 
 	private void openFiles() throws BadParameterException
@@ -196,19 +196,11 @@ public class MainWindow implements ComponentListener, IMainWindow
 	{
 		for (int i = 0; i < TabWindowList.TAB_SIZE; i++)
 		{
-			if (dynamicaViewRepository.getDefaultLayout().size() > i)
-			{
-				TabWindow tabWindow = new TabWindow(dynamicaViewRepository.getDefaultLayout().get(i).toArray());
-				getTabWindowList().add(tabWindow);
-				getTabWindowList().getTabWindow(i).getTabWindowProperties().getCloseButtonProperties().setVisible(false);
-			}
+			TabWindow tabWindow = new TabWindow(viewRepository.getDefaultLayout().get(i).toArray());
+			getTabWindowList().add(tabWindow);
+			tabWindow.getTabWindowProperties().getCloseButtonProperties().setVisible(false);
 		}
 		rootWindow.setWindow(new SplitWindow(false, 0.75f, new SplitWindow(true, 0.8f, getTabWindowList().getCenterTab(), new SplitWindow(false, 0.5f, getTabWindowList().getRightTopTab(), getTabWindowList().getRightBottonTab())), new SplitWindow(true, 0.7f, getTabWindowList().getBottonLeftTab(), getTabWindowList().getBottonRightTab())));
-
-		WindowBar windowBar = rootWindow.getWindowBar(Direction.DOWN);
-
-		while (windowBar.getChildWindowCount() > 0)
-			windowBar.getChildWindow(0).close();
 	}
 
 	private void setLookAndFeel()
@@ -285,7 +277,7 @@ public class MainWindow implements ComponentListener, IMainWindow
 	{
 		if (componentModel != null)
 		{
-			GGLLView view = new GGLLView(title, icon, componentModel, fileName, dynamicaViewRepository.getDynamicViewId());
+			GGLLView view = new GGLLView(title, icon, componentModel, fileName, 2);// viewRepository.getDynamicViewId());
 			if (componentModel instanceof GrammarComponent)
 			{
 				GGLLManager.setActiveScene(CanvasFactory.getCanvasFromFile(fileName));
@@ -316,9 +308,9 @@ public class MainWindow implements ComponentListener, IMainWindow
 	@Override
 	public void ContentChanged(AbstractComponent source, Object oldValue, Object newValue)
 	{
-		if (dynamicaViewRepository.containsDynamicView(source))
+		if (viewRepository.containsDynamicView(source))
 		{
-			GGLLView view = dynamicaViewRepository.getDynamicView(source);
+			GGLLView view = viewRepository.getDynamicView(source);
 			if (!view.getTitle().startsWith(UNSAVED_PREFIX))
 				view.getViewProperties().setTitle(UNSAVED_PREFIX + view.getTitle());
 			GGLLManager.setUnsavedView(((FileComponent) source).getPath(), view);
@@ -357,9 +349,9 @@ public class MainWindow implements ComponentListener, IMainWindow
 	@Override
 	public void setSaved(String path)
 	{
-		if (dynamicaViewRepository.containsDynamicView(path))
+		if (viewRepository.containsDynamicView(path))
 		{
-			GGLLView dynamicView = dynamicaViewRepository.getDynamicView(path);
+			GGLLView dynamicView = viewRepository.getDynamicView(path);
 
 			if (GGLLManager.hasUnsavedView(dynamicView))
 			{
@@ -429,6 +421,6 @@ public class MainWindow implements ComponentListener, IMainWindow
 	@Override
 	public void updateWindow(DockingWindow window, boolean added)
 	{
-		dynamicaViewRepository.updateViews(window, added);
+		viewRepository.updateViews(window, added);
 	}
 }

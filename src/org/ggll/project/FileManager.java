@@ -187,9 +187,9 @@ public class FileManager
 		boolean componentSaved = false;
 		if (object != null)
 		{
-			if (object instanceof JTextArea)
+			if (object instanceof NewTextArea)
 			{
-				path = saveFile((JTextArea) object);
+				path = saveFile((NewTextArea) object);
 				componentSaved = true;
 			}
 			else if (object instanceof FileComponent)
@@ -236,13 +236,12 @@ public class FileManager
 		}
 	}
 
-	private String saveFile(JTextArea object)
+	private String saveFile(NewTextArea object)
 	{
-		FileComponent fileComponent = TextAreaRepo.getComponent((JTextArea) object);
-		if (fileComponent != null)
+		if (object != null)
 		{
-			saveFile(fileComponent);
-			return fileComponent.getPath();
+			object.saveFile();
+			return object.getPath();
 		}
 		return null;
 	}

@@ -1,5 +1,7 @@
 package org.ggll.ui.component;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -12,6 +14,8 @@ import java.net.URL;
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 import javax.swing.UIManager;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 
@@ -33,30 +37,33 @@ public class NewTextArea extends AbstractComponent implements HyperlinkListener,
 		SetTheme();
 		jComponent = new RTextScrollPane(textArea, true);
 	}
-	
-	public NewTextArea(String fileName)
+
+	public NewTextArea(String path)
 	{
 		this();
-		setText(fileName, true);
-	}
-
-	private void SetTheme()
-	{
-		InputStream in = getClass().getResourceAsStream("/eclipse.xml");
-		try
+		this.path = path;
+		setText(path, true);
+		textArea.getDocument().addDocumentListener(new DocumentListener()
 		{
-			Theme theme = Theme.load(in);
-			theme.apply(textArea);
-		}
-		catch (IOException ioe)
-		{
-			ioe.printStackTrace();
-		}
-	}
+			@Override
+			public void removeUpdate(DocumentEvent arg0)
+			{
+				fireContentChanged();
+			}
 
-	public String getText()
-	{
-		return textArea.getText();
+			@Override
+			public void insertUpdate(DocumentEvent arg0)
+			{
+				fireContentChanged();
+			}
+
+			@Override
+			public void changedUpdate(DocumentEvent arg0)
+			{
+				fireContentChanged();
+
+			}
+		});
 	}
 
 	private RSyntaxTextArea createTextArea()
@@ -70,6 +77,26 @@ public class NewTextArea extends AbstractComponent implements HyperlinkListener,
 		textArea.setCodeFoldingEnabled(true);
 		textArea.setClearWhitespaceLinesEnabled(false);
 		return textArea;
+	}
+
+	@Override
+	public void fireContentChanged()
+	{
+		for (ComponentListener listener : listeners)
+		{
+			listener.ContentChanged(this, null, null);
+		}
+	}
+
+	@Override
+	public String getPath()
+	{
+		return path;
+	}
+
+	public String getText()
+	{
+		return textArea.getText();
 	}
 
 	public JTextArea getTextArea()
@@ -94,6 +121,22 @@ public class NewTextArea extends AbstractComponent implements HyperlinkListener,
 		}
 	}
 
+	@Override
+	public void saveFile()
+	{
+		File file = new File(path);
+		try
+		{
+			FileWriter fw = new FileWriter(file);
+			fw.write(textArea.getText());
+			fw.close();
+		}
+		catch (IOException e)
+		{
+			Log.log(Log.ERROR, null, "Could not save file!", e);
+		}
+	}
+
 	public void setText(String resource, boolean file)
 	{
 		if (file)
@@ -109,10 +152,10 @@ public class NewTextArea extends AbstractComponent implements HyperlinkListener,
 			}
 			catch (RuntimeException re)
 			{
-				throw re; // FindBugs
+				throw re;
 			}
 			catch (Exception e)
-			{ // Never happens
+			{
 				textArea.setText("Type here to see syntax highlighting");
 			}
 		}
@@ -122,30 +165,17 @@ public class NewTextArea extends AbstractComponent implements HyperlinkListener,
 		}
 	}
 
-	@Override
-	public void fireContentChanged()
+	private void SetTheme()
 	{
-	}
-
-	@Override
-	public String getPath()
-	{
-		return path;
-	}
-
-	@Override
-	public void saveFile()
-	{
-		File file = new File(path);
+		InputStream in = getClass().getResourceAsStream("/eclipse.xml");
 		try
 		{
-			FileWriter fw = new FileWriter(file);
-			fw.write(textArea.getText());
-			fw.close();
+			Theme theme = Theme.load(in);
+			theme.apply(textArea);
 		}
-		catch (IOException e)
+		catch (IOException ioe)
 		{
-			Log.log(Log.ERROR, null, "Could not save file!", e);
+			ioe.printStackTrace();
 		}
 	}
 }

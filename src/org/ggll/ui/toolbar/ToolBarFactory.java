@@ -7,7 +7,6 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 
 import org.ggll.canvas.Canvas;
-import org.ggll.ui.component.AdapterComponent;
 
 public class ToolBarFactory
 {
@@ -65,7 +64,7 @@ public class ToolBarFactory
 				return defaultToolBar;
 			}
 		}
-		if (!toolBars.containsKey(reference) || reference instanceof AdapterComponent)
+		if (!toolBars.containsKey(reference))
 		{
 			toolBars.put(reference, toolBarFactory.createToolBarExt(reference, enableToolBarFile, enableToolBarCanvas));
 		}

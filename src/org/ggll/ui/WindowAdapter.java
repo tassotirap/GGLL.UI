@@ -63,8 +63,7 @@ public class WindowAdapter extends DockingWindowAdapter
 			GGLLView view = (GGLLView) dWindow;
 			if (view.getComponentModel() instanceof FileComponent)
 			{
-				String path = ((FileComponent) view.getComponentModel()).getPath();
-				GGLLManager.closeFile(path);
+				GGLLManager.closeFile(view.getFileName());
 			}
 		}
 	}

@@ -19,7 +19,6 @@ import org.ggll.util.Log;
 
 public class GrammarComponent extends AbstractComponent implements FileComponent, PropertyChangeListener
 {
-
 	String path;
 	private Canvas canvas;
 
@@ -31,15 +30,21 @@ public class GrammarComponent extends AbstractComponent implements FileComponent
 	public GrammarComponent(Canvas canvas)
 	{
 		path = CanvasFactory.getCanvasPath();
+		
 		this.canvas = canvas;
-		JScrollPane jsp = new JScrollPane();
 		JComponent view = canvas.createView();
+		
+		JScrollPane jsp = new JScrollPane();
+		jsp.setViewportView(view);
+		
+		JPanel canvasPanel = new JPanel();		
+		
 		ToolBarGrammar toolBarGrammar = new ToolBarGrammar(canvas);
 		toolBarGrammar.setLayout(new BoxLayout(toolBarGrammar, BoxLayout.PAGE_AXIS));
-		JPanel canvasPanel = new JPanel();
+		
 		canvasPanel.setLayout(new BorderLayout());
 		canvasPanel.add(toolBarGrammar, BorderLayout.WEST);
-		jsp.setViewportView(view);
+		
 		canvasPanel.add(jsp, BorderLayout.CENTER);
 		canvas.setPreferredSize(new Dimension(jsp.getWidth(), jsp.getHeight()));
 		CanvasFactory.getVolatileStateManager().getMonitor().addPropertyChangeListener("writing", this);

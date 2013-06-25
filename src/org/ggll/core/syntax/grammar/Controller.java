@@ -16,19 +16,14 @@ import org.ggll.model.FileNames;
 import org.ggll.output.AppOutput;
 import org.ggll.parser.ParsingEditor;
 import org.ggll.project.GGLLManager;
-import org.ggll.ui.debug.ErrorDialog;
 import org.ggll.util.IOUtilities;
 
 public class Controller
 {
 	private static void errorFound(Exception ex)
 	{
-		ErrorDialog ed = new ErrorDialog(null);
 		DefaultListModel model = new DefaultListModel();
 		model.addElement(ex.getMessage());
-		ed.getErrorList().setModel(model);
-		ed.getTaErrorDescription().setText("No description available");
-		ed.setVisible(true);
 		AppOutput.clearGeneratedGrammar();
 	}
 
