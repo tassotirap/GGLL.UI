@@ -1,6 +1,5 @@
 package org.ggll.core.syntax.grammar;
 
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,8 +20,6 @@ import org.ggll.project.GGLLManager;
 /** Compiles a grammar textual representation from the designed graph **/
 public class GrammarFactory
 {
-
-	PrintWriter printWriter;
 	private Grammar grammar;
 
 	private int cont;
@@ -117,13 +114,8 @@ public class GrammarFactory
 		return grammar;
 	}
 
-	public String run(boolean isFile) throws Exception
+	public String run() throws Exception
 	{
-
-		AppOutput.clearGeneratedGrammar();
-		AppOutput.displayHorizontalLine(TOPIC.Output);
-		AppOutput.displayText("<a>Run grammar generate...</a><br>", TOPIC.Output);
-
 		StringBuffer returnString = new StringBuffer();
 
 		Canvas canvas = GGLLManager.getActiveScene();
@@ -133,8 +125,7 @@ public class GrammarFactory
 
 		for (int i = 0; i < startNodes.size(); i++)
 		{
-			cont = 0;
-			
+			cont = 0;			
 			SyntaxModel startSyntaxModel = ((SyntaxModel) startNodes.get(i));
 			if (startSyntaxModel == null)
 			{
@@ -191,14 +182,10 @@ public class GrammarFactory
 				grammar.setCurrent(grammarLeftside);
 			}
 			String stringOut = startSyntaxModel.getID() + " H " + label.getLabelContents() + " -1 -1 " + successorSyntaxSubpart.getNumber() + " -1\n";
-			if (isFile && printWriter != null)
-			{
-				printWriter.write(stringOut);
-				printWriter.flush();
-			}
 			returnString.append(stringOut);
 			GrammarData successorGrammarData = getNameAndSematicRouting(successorSyntaxSubpart);
 			GrammarComponent successorGammarComponent = new GrammarComponent(successorGrammarData.name, successorGrammarData.id);
+			
 			if (successorNode.getType().equals(AbstractNode.NTERMINAL))
 			{
 				successorGammarComponent.setNonterminal(true);
@@ -211,8 +198,9 @@ public class GrammarFactory
 			{
 				successorGammarComponent.setLambda(true);
 			}
+			
 			grammar.addSuccessor(successorGammarComponent);
-			returnString.append(subpartString(isFile, successorSyntaxSubpart));
+			returnString.append(subpartString(successorSyntaxSubpart));
 			htmlOutput += "</table>";
 			AppOutput.displayGeneratedGrammar(htmlOutput);
 		}
@@ -221,7 +209,7 @@ public class GrammarFactory
 	}
 
 
-	public String subpartString(boolean isFile, SyntaxSubpart syntaxSubpart)
+	public String subpartString(SyntaxSubpart syntaxSubpart)
 	{
 		StringBuffer returnString = new StringBuffer();
 		GrammarComponent grammarComponent = null;
@@ -305,11 +293,6 @@ public class GrammarFactory
 			stringOut = stringOut + " " + grammarData.semanticRoutine + "\n";
 			htmlOutput = htmlOutput + "<td align=\"center\">" + ((grammarData.semanticRoutine.equals("-1")) ? "-" : "<a href=\"name_smRoutine[1]\">" + grammarData.semanticRoutine + "</a>") + "</td>";
 
-			if (printWriter != null && isFile)
-			{
-				printWriter.write(stringOut);
-				printWriter.flush();
-			}
 			returnString.append(stringOut);
 
 			htmlOutput += "</tr>";
@@ -332,7 +315,7 @@ public class GrammarFactory
 					nextGrammarComponent.setLambda(true);
 				}
 				grammar.addSuccessor(nextGrammarComponent);
-				returnString.append(subpartString(isFile, successor));
+				returnString.append(subpartString(successor));
 			}
 
 			if (alternative != null && alternative.getFlag() == false)
@@ -352,7 +335,7 @@ public class GrammarFactory
 					nextGuy.setLambda(true);
 				}
 				grammar.addAlternative(nextGuy);
-				returnString.append(subpartString(isFile, alternative));
+				returnString.append(subpartString(alternative));
 			}
 		}
 		return returnString.toString();

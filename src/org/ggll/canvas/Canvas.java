@@ -10,7 +10,6 @@ import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -41,7 +40,6 @@ public abstract class Canvas extends GraphScene.StringGraph implements PropertyC
 
 	private static final double MAX_ZOOM = 1.5;
 	private AbstractMap<String, Cursor> cursors = new HashMap<String, Cursor>();
-	//private InputHandlerProvider inputHandlerProvider;
 	private PropertyChangeSupport monitor;
 
 	private List<PropertyChangeSupport> monitors = new ArrayList<PropertyChangeSupport>();
@@ -70,17 +68,6 @@ public abstract class Canvas extends GraphScene.StringGraph implements PropertyC
 		this.decorator = decorator;
 		monitor = new PropertyChangeSupport(this);
 	}
-
-//	/**
-//	 * Adds a new action set to the canvas's list of ActionSets.
-//	 * 
-//	 * @param actionSet
-//	 *            the actionSet to add
-//	 */
-//	public void addActionSet(AsinActionSet<CanvasBeanShellAction> actionSet)
-//	{
-//		actionContext.addActionSet(actionSet);
-//	}
 
 	public boolean canZoomIn()
 	{

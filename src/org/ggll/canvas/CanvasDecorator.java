@@ -13,6 +13,7 @@ import org.ggll.canvas.widget.IconNodeWidgetExt.TextOrientation;
 import org.netbeans.api.visual.action.ConnectDecorator;
 import org.netbeans.api.visual.anchor.AnchorShape;
 import org.netbeans.api.visual.anchor.PointShape;
+import org.netbeans.api.visual.border.Border;
 import org.netbeans.api.visual.border.BorderFactory;
 import org.netbeans.api.visual.widget.ConnectionWidget;
 import org.netbeans.api.visual.widget.Widget;
@@ -66,7 +67,7 @@ public class CanvasDecorator
 			try
 			{
 				lwidget.setOpaque(true);
-				lwidget.setBorder(BorderFactory.createImageBorder(new Insets(6, (type.equals(CanvasData.START)) ? 18 : 8, 6, (type.equals(CanvasData.LEFT_SIDE) || type.equals(CanvasData.START)) ? 16 : 6), new ImageIcon(findIconPath(type)).getImage()));
+				lwidget.setBorder(getIconBorder(type));
 				lwidget.setMinimumSize(new Dimension(50, 0));
 				lwidget.setVerticalAlignment(LabelWidgetExt.VerticalAlignment.CENTER);
 				lwidget.repaint();
@@ -78,6 +79,25 @@ public class CanvasDecorator
 			}
 		}
 		return widget;
+	}
+	
+	public Border getIconBorder(String type)
+	{
+		Insets insets = null;		
+		if(type.equals(CanvasData.START))
+		{
+			insets = new Insets(6, 18, 6, 16);
+		}
+		else if(type.equals(CanvasData.LEFT_SIDE))
+		{
+			insets = new Insets(6, 8, 6, 16);
+		}
+		else
+		{
+			insets = new Insets(6, 20, 6, 8);
+		}
+		
+		return BorderFactory.createImageBorder(insets, new ImageIcon(findIconPath(type)).getImage());
 	}
 
 	public void drawSelected(Widget widget)

@@ -18,8 +18,8 @@ import javax.swing.JSeparator;
 
 import org.ggll.canvas.action.GridProvider;
 import org.ggll.canvas.action.LineProvider;
-import org.ggll.canvas.action.WidgetCopyPasteProvider;
-import org.ggll.canvas.action.WidgetDeleteProvider;
+import org.ggll.canvas.provider.WidgetCopyPasteProvider;
+import org.ggll.canvas.provider.WidgetDeleteProvider;
 import org.ggll.canvas.state.VolatileStateManager;
 import org.ggll.canvas.widget.MarkedWidget;
 import org.ggll.core.syntax.command.CommandFactory;

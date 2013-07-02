@@ -32,7 +32,6 @@ public class Grammar
 
 	private GrammarComponent addComp(GrammarComponent comp)
 	{
-		// is there a corresponding comp already?
 		for (GrammarComponent c : components)
 		{
 			if (c.getId().equals(comp.getId()))

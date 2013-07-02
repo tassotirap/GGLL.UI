@@ -12,6 +12,9 @@ import javax.swing.InputMap;
 import javax.swing.JComponent;
 
 import org.ggll.canvas.Canvas;
+import org.ggll.canvas.provider.AlignWithMultiMoveProvider;
+import org.ggll.canvas.provider.WidgetCopyPasteProvider;
+import org.ggll.canvas.provider.WidgetDeleteProvider;
 import org.ggll.canvas.strategy.SnapToLineMoveStrategy;
 import org.netbeans.api.visual.action.AcceptProvider;
 import org.netbeans.api.visual.action.AlignWithMoveDecorator;

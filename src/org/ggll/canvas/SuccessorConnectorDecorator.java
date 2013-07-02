@@ -3,12 +3,11 @@ package org.ggll.canvas;
 import java.awt.Color;
 import java.awt.Point;
 
-import org.ggll.canvas.UnidirectionalAnchor.UnidirectionalAnchorKind;
 import org.netbeans.api.visual.action.ConnectDecorator;
 import org.netbeans.api.visual.anchor.Anchor;
+import org.netbeans.api.visual.anchor.Anchor.Direction;
 import org.netbeans.api.visual.anchor.AnchorFactory;
 import org.netbeans.api.visual.anchor.AnchorShape;
-import org.netbeans.api.visual.anchor.Anchor.Direction;
 import org.netbeans.api.visual.graph.GraphScene;
 import org.netbeans.api.visual.widget.ConnectionWidget;
 import org.netbeans.api.visual.widget.Scene;
@@ -35,20 +34,20 @@ public class SuccessorConnectorDecorator implements ConnectDecorator
 	public Anchor createFloatAnchor(Point location)
 	{
 		return AnchorFactory.createFixedAnchor(location);
-		
+
 	}
 
 	@Override
 	public Anchor createSourceAnchor(Widget sourceWidget)
 	{
-		String edge = (String) scene.findObject(thisConnection);
-		return new UnidirectionalAnchor(sourceWidget, edge, UnidirectionalAnchorKind.RIGHT);
+		return new UnidirectionalAnchor(sourceWidget, Direction.RIGHT);
 	}
 
 	@Override
 	public Anchor createTargetAnchor(Widget targetWidget)
 	{
-		String edge = (String) scene.findObject(thisConnection);
-		return new UnidirectionalAnchor(targetWidget, edge, UnidirectionalAnchorKind.LEFT, Direction.TOP);
+		String connection = (String) scene.findObject(thisConnection);
+		String target = (String) scene.findObject(targetWidget);
+		return new UnidirectionalAnchor(targetWidget, Direction.LEFT, connection, target, Direction.TOP);
 	}
 }

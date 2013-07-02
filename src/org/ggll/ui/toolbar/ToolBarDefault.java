@@ -15,8 +15,8 @@ import javax.swing.border.EmptyBorder;
 
 import org.ggll.canvas.Canvas;
 import org.ggll.canvas.CanvasFactory;
-import org.ggll.canvas.action.WidgetCopyPasteProvider;
-import org.ggll.canvas.action.WidgetDeleteProvider;
+import org.ggll.canvas.provider.WidgetCopyPasteProvider;
+import org.ggll.canvas.provider.WidgetDeleteProvider;
 import org.ggll.canvas.state.VolatileStateManager;
 import org.ggll.project.GGLLManager;
 import org.ggll.ui.component.TextAreaComponent;

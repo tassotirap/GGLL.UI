@@ -7,23 +7,15 @@ import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.util.Properties;
 
-/**Any syntax element that has a state, and properties, of course**/
-/** @author Gustavo H. Braga **/
 abstract public class SyntaxElement extends Properties implements Serializable, Cloneable
 {
 
 	static final long serialVersionUID = 1;
 	public final static String CHILDREN = "Children";
-
-	/*
-	 * the types of probable syntax elements, used primarily for identify
-	 * property changes *
-	 */
 	public final static String INPUTS = "Inputs";
 	public final static String OUTPUTS = "Outputs";
 	transient protected PropertyChangeSupport listeners = new PropertyChangeSupport(this);
 
-	/* for Serializable support */
 	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
 	{
 		in.defaultReadObject();
@@ -45,8 +37,6 @@ abstract public class SyntaxElement extends Properties implements Serializable, 
 		listeners.addPropertyChangeListener(l);
 	}
 
-	/* ******************************************************************** */
-
 	public abstract String getID();
 
 	public void removePropertyChangeListener(PropertyChangeListener l)
@@ -56,10 +46,6 @@ abstract public class SyntaxElement extends Properties implements Serializable, 
 
 	public abstract void setID(String s);
 
-	/**
-	 * You may want to override this method for creating update the state of an
-	 * element after some change.
-	 */
 	public void update()
 	{
 	}

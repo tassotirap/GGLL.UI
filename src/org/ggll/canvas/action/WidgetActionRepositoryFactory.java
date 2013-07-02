@@ -6,6 +6,17 @@ import java.util.Observable;
 import org.ggll.canvas.Canvas;
 import org.ggll.canvas.CanvasData;
 import org.ggll.canvas.CanvasPopupMenu;
+import org.ggll.canvas.provider.CanvasRectangularSelectProvider;
+import org.ggll.canvas.provider.LabelHoverProvider;
+import org.ggll.canvas.provider.LabelSelectProvider;
+import org.ggll.canvas.provider.MultiMoveProvider;
+import org.ggll.canvas.provider.NodeConnectProvider;
+import org.ggll.canvas.provider.NodeHoverProvider;
+import org.ggll.canvas.provider.NodeMultiSelectProvider;
+import org.ggll.canvas.provider.NodeReconnectProvider;
+import org.ggll.canvas.provider.NodeSelectProvider;
+import org.ggll.canvas.provider.WidgetCopyPasteProvider;
+import org.ggll.canvas.provider.WidgetDeleteProvider;
 import org.ggll.canvas.strategy.MoveStrategy;
 import org.ggll.canvas.widget.GridWidget;
 import org.netbeans.api.visual.action.WidgetAction;
@@ -86,8 +97,6 @@ public class WidgetActionRepositoryFactory
 				}
 				if (actions.get(MOVE) == null)
 				{
-					// in case no move strategy is defined, free move is used by
-					// default
 					actions.put(MOVE, getAction(MOVE_FREE, canvas));
 				}
 				return actions.get(MOVE);

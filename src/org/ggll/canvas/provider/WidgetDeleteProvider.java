@@ -1,4 +1,4 @@
-package org.ggll.canvas.action;
+package org.ggll.canvas.provider;
 
 import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
@@ -72,8 +72,6 @@ public class WidgetDeleteProvider
 		{
 			if (canvas.isNode(objs[i]) || canvas.isLabel(objs[i]))
 			{
-				// if there is edges attached to this node, I must remove them
-				// first
 				Collection<String> edges = canvas.findNodeEdges(objs[i].toString(), true, true);
 				deleteThese(edges);
 				canvas.removeNodeSafely((String) objs[i]);
@@ -94,7 +92,6 @@ public class WidgetDeleteProvider
 
 	public boolean isDeletionAllowed(Object... widgets)
 	{
-		// TODO could be a little better
 		return (widgets != null && widgets.length >= 1);
 	}
 }

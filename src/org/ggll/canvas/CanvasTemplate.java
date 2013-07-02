@@ -5,11 +5,10 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
-import org.ggll.canvas.UnidirectionalAnchor.UnidirectionalAnchorKind;
 import org.ggll.canvas.action.GridProvider;
 import org.ggll.canvas.action.LineProvider;
-import org.ggll.canvas.action.NodeSelectProvider;
 import org.ggll.canvas.action.WidgetActionRepository;
+import org.ggll.canvas.provider.NodeSelectProvider;
 import org.ggll.canvas.state.CanvasState;
 import org.ggll.canvas.state.Connection;
 import org.ggll.canvas.state.Node;
@@ -64,12 +63,11 @@ public class CanvasTemplate extends Canvas
 		ConnectionWidget conn = ((ConnectionWidget) findWidget(edge));
 		if (isSuccessor(edge))
 		{
-
-			conn.setSourceAnchor(new UnidirectionalAnchor(w, edge, UnidirectionalAnchorKind.RIGHT));
+			conn.setSourceAnchor(new UnidirectionalAnchor(w, Direction.RIGHT));
 		}
 		else if (isAlternative(edge))
 		{
-			conn.setSourceAnchor(new UnidirectionalAnchor(w, edge, UnidirectionalAnchorKind.LEFT_BOTTOM));
+			conn.setSourceAnchor(new UnidirectionalAnchor(w, Direction.BOTTOM));
 		}
 		else
 		{
@@ -84,11 +82,11 @@ public class CanvasTemplate extends Canvas
 		ConnectionWidget conn = ((ConnectionWidget) findWidget(edge));
 		if (isSuccessor(edge))
 		{
-			conn.setTargetAnchor(new UnidirectionalAnchor(w, edge, UnidirectionalAnchorKind.LEFT, Direction.TOP));
+			conn.setTargetAnchor(new UnidirectionalAnchor(w, Direction.LEFT, edge, targetNode, Direction.TOP));
 		}
 		else if (isAlternative(edge))
 		{
-			conn.setTargetAnchor(new UnidirectionalAnchor(w, edge, UnidirectionalAnchorKind.LEFT, Direction.BOTTOM));
+			conn.setTargetAnchor(new UnidirectionalAnchor(w, Direction.TOP, edge, targetNode, Direction.LEFT));
 		}
 		else
 		{
@@ -108,7 +106,7 @@ public class CanvasTemplate extends Canvas
 			connection.setRouter(getActiveRouter());
 			connection.createActions(CanvasData.SELECT).addAction(actions.getAction("ConnSelect", this));
 			connection.getActions(CanvasData.SELECT).addAction(actions.getAction("Reconnect", this));
-			
+
 			connection.getActions(CanvasData.SELECT).addAction(actions.getAction("FreeMoveCP", this));
 			connection.getActions(CanvasData.SELECT).addAction(actions.getAction("AddRemoveCP", this));
 			connectionLayer.addChild(connection);
@@ -515,7 +513,7 @@ public class CanvasTemplate extends Canvas
 	{
 		setConnStrategy(state.getPreferences().getConnectionStrategy());
 		setMoveStrategy(state.getPreferences().getMoveStrategy());
-		
+
 		// update the nodes
 		Set<String> nodes = state.getNodes();
 		// remove nodes
@@ -565,7 +563,7 @@ public class CanvasTemplate extends Canvas
 				if (w1 instanceof LabelWidgetExt)
 				{
 					((LabelWidgetExt) w1).setLabel(n1.getTitle());
-					
+
 				}
 				if (w1 instanceof MarkedWidget)
 				{
@@ -615,13 +613,13 @@ public class CanvasTemplate extends Canvas
 				{
 					String oldTool = getCanvasActiveTool();
 					setActiveTool(state.getType(e));
-					ConnectionWidget cnn = (ConnectionWidget)addEdge(e);
-					
+					ConnectionWidget cnn = (ConnectionWidget) addEdge(e);
+
 					setEdgeSource(e, c1.getSource());
-					setEdgeTarget(e, c1.getTarget());	
-					
+					setEdgeTarget(e, c1.getTarget());
+
 					cnn.setRoutingPolicy(RoutingPolicy.DISABLE_ROUTING_UNTIL_END_POINT_IS_MOVED);
-					cnn.setControlPoints(c1.getPoints(), true);				
+					cnn.setControlPoints(c1.getPoints(), true);
 					setActiveTool(oldTool);
 				}
 			}
@@ -645,8 +643,8 @@ public class CanvasTemplate extends Canvas
 					addEdge(e);
 					setEdgeSource(e, c1.getSource());
 					setEdgeTarget(e, c1.getTarget());
-					
-					ConnectionWidget cnn =  (ConnectionWidget)findWidget(e);
+
+					ConnectionWidget cnn = (ConnectionWidget) findWidget(e);
 					cnn.setRoutingPolicy(RoutingPolicy.DISABLE_ROUTING_UNTIL_END_POINT_IS_MOVED);
 					cnn.setControlPoints(c1.getPoints(), true);
 					setActiveTool(oldTool);

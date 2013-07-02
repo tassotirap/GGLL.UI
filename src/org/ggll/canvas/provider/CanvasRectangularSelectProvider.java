@@ -38,7 +38,7 @@
  * Version 2 license, then the option applies only if the new code is
  * made subject to such option by the copyright holder.
  */
-package org.ggll.canvas.action;
+package org.ggll.canvas.provider;
 
 import java.awt.Color;
 import java.awt.Point;

@@ -43,7 +43,6 @@ public class Connection extends SyntaxElement
 		{
 			return;
 		}
-		// putting target as successor of the source
 		Object e = this.getTarget();
 		if (e instanceof SimpleNode)
 		{
@@ -76,7 +75,7 @@ public class Connection extends SyntaxElement
 	{
 		if (getTarget() == null)
 			return;
-		// Removing target as source's successor
+
 		SyntaxSubpart e = this.getTarget();
 		if (e instanceof SimpleNode)
 		{

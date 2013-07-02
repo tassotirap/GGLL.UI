@@ -2,6 +2,7 @@ package org.ggll.canvas.action;
 
 import java.awt.event.KeyEvent;
 
+import org.ggll.canvas.provider.WidgetCopyPasteProvider;
 import org.netbeans.api.visual.action.WidgetAction.Adapter;
 import org.netbeans.api.visual.widget.Widget;
 

@@ -1,4 +1,4 @@
-package org.ggll.canvas.action;
+package org.ggll.canvas.provider;
 
 import java.awt.MouseInfo;
 import java.awt.Point;
@@ -11,6 +11,7 @@ import java.util.Set;
 import org.ggll.canvas.Canvas;
 import org.ggll.canvas.CanvasData;
 import org.ggll.canvas.CanvasFactory;
+import org.ggll.canvas.action.WidgetSelection;
 import org.ggll.canvas.state.Connection;
 import org.ggll.canvas.state.Node;
 import org.ggll.core.syntax.command.CommandFactory;

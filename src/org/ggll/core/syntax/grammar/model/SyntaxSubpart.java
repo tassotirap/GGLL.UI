@@ -8,35 +8,20 @@ import java.util.Vector;
  **/
 abstract public class SyntaxSubpart extends SyntaxElement
 {
-
 	static final long serialVersionUID = 1;
 	private String id;
-	/**
-	 * The next alternative subpart, observe that for now there's only support
-	 * for one alternative only
-	 **/
 	protected SyntaxSubpart Alternative;
-	/** used during search for mark this subpart for depth first search **/
 	protected boolean flag;
 	protected Vector<Connection> inputs = new Vector<Connection>(4, 4);
-	/**
-	 * the number used to indicate this subpart, an alternative representation
-	 * necessary when compiling this grammar
-	 **/
 	protected int number;
 	protected Vector<Connection> outputs = new Vector<Connection>(4, 4);
-	/**
-	 * The next subpart, observe that for now there's only support for one
-	 * successor only
-	 **/
+
 	protected SyntaxSubpart Sucessor;
 
 	public SyntaxSubpart(String id)
 	{
 		this.id = id;
 	}
-
-	/*------------------CONNECTION DISCONNECTION METHODS ------------------------*/
 
 	public void connectInput(Connection w)
 	{
@@ -65,8 +50,6 @@ abstract public class SyntaxSubpart extends SyntaxElement
 		update();
 		fireStructureChange(OUTPUTS, w);
 	}
-
-	/*------------------- GETTERS AND SETTES FROM HERE ON --------------------------*/
 
 	public SyntaxSubpart getAlternative()
 	{

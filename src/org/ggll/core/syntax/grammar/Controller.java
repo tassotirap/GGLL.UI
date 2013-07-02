@@ -14,6 +14,7 @@ import org.ggll.core.syntax.validation.GrammarRule;
 import org.ggll.core.syntax.validation.InvalidGrammarException;
 import org.ggll.model.FileNames;
 import org.ggll.output.AppOutput;
+import org.ggll.output.HtmlViewer.TOPIC;
 import org.ggll.parser.ParsingEditor;
 import org.ggll.project.GGLLManager;
 import org.ggll.util.IOUtilities;
@@ -37,7 +38,11 @@ public class Controller
 		boolean validated = false;
 		try
 		{
-			grammar = grammarFactory.run(false);
+			AppOutput.clearGeneratedGrammar();
+			AppOutput.displayHorizontalLine(TOPIC.Output);
+			AppOutput.displayText("<a>Run grammar generate...</a><br>", TOPIC.Output);
+			
+			grammar = grammarFactory.run();
 			validated = (grammar != null && !grammar.equals(""));
 		}
 		catch (Exception ex)
@@ -76,9 +81,6 @@ public class Controller
 
 			File semantic = new File(GGLLManager.getProject().getProjectDir().getAbsolutePath() + "\\" + GGLLManager.getProject().getProjectDir().getName() + FileNames.SEM_EXTENSION);
 			IOUtilities.copyFile(semantic, new File(GGLLManager.getProject().getProjectDir().getAbsolutePath() + "\\export\\" + GGLLManager.getProject().getProjectDir().getName() + FileNames.SEM_EXTENSION));
-			
-			
-			//GGLLManager.getMainWindow().getTabs().getRightTopTab().set
 		}
 	}
 }

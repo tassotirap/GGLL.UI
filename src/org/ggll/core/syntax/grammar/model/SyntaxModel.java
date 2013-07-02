@@ -5,9 +5,6 @@ import java.util.List;
 
 /**
  * This class is a container to all essential elements of a grammar.
- * 
- * @author Gustavo H. Braga
- * 
  */
 public class SyntaxModel extends SyntaxSubpart
 {

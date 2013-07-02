@@ -1,4 +1,4 @@
-package org.ggll.canvas.action;
+package org.ggll.canvas.provider;
 
 import java.awt.Point;
 import java.beans.PropertyChangeSupport;

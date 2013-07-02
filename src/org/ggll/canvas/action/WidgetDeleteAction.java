@@ -2,17 +2,16 @@ package org.ggll.canvas.action;
 
 import java.awt.event.KeyEvent;
 
+import org.ggll.canvas.provider.WidgetDeleteProvider;
 import org.netbeans.api.visual.action.WidgetAction.Adapter;
 import org.netbeans.api.visual.widget.Widget;
 
 public class WidgetDeleteAction extends Adapter
 {
-
-	WidgetDeleteProvider wdp;
-
-	public WidgetDeleteAction(WidgetDeleteProvider wdp)
+	WidgetDeleteProvider widgetDeleteProvider;
+	public WidgetDeleteAction(WidgetDeleteProvider widgetDeleteProvider)
 	{
-		this.wdp = wdp;
+		this.widgetDeleteProvider = widgetDeleteProvider;
 	}
 
 	@Override
@@ -20,9 +19,9 @@ public class WidgetDeleteAction extends Adapter
 	{
 		if (event.getKeyCode() == KeyEvent.VK_DELETE)
 		{
-			if (wdp.isDeletionAllowed())
+			if (widgetDeleteProvider.isDeletionAllowed())
 			{
-				wdp.deleteSelected();
+				widgetDeleteProvider.deleteSelected();
 			}
 		}
 		return State.REJECTED;
