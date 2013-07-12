@@ -1,13 +1,13 @@
 package ggll.ui.component;
 
-import ggll.canvas.Canvas;
+import ggll.canvas.AbstractCanvas;
 import ggll.output.GeneratedGrammar;
 
 import javax.swing.JScrollPane;
 
 public class GeneratedGrammarComponent extends AbstractComponent
 {
-	public GeneratedGrammarComponent(Canvas canvas)
+	public GeneratedGrammarComponent(AbstractCanvas canvas)
 	{
 		GeneratedGrammar gg = GeneratedGrammar.getInstance();
 		jComponent = new JScrollPane(gg.getView(canvas));

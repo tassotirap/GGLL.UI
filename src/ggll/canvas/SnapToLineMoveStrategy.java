@@ -1,6 +1,6 @@
-package ggll.canvas.strategy;
+package ggll.canvas;
 
-import ggll.canvas.action.LineProvider;
+import ggll.canvas.provider.LineProvider;
 import ggll.canvas.widget.LineWidget;
 
 import java.awt.Point;
@@ -23,9 +23,6 @@ public class SnapToLineMoveStrategy implements MoveStrategy
 	{
 		int borderIncTop = (widget.getBorder() == null) ? 0 : widget.getBorder().getInsets().top;
 		int borderIncLeft = (widget.getBorder() == null) ? 0 : widget.getBorder().getInsets().left;
-		// int sizeInc = (LineWidget.DEFAULT_HEIGHT >
-		// widget.getPreferredBounds().height)?(LineWidget.DEFAULT_HEIGHT -
-		// widget.getPreferredBounds().height)/2:0;
 		if (suggestedLocation.x < 0)
 		{
 			suggestedLocation.x = 0 + borderIncLeft;

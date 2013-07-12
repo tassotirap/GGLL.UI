@@ -1,11 +1,11 @@
 package ggll.ui.component;
 
-import ggll.canvas.Canvas;
+import ggll.canvas.AbstractCanvas;
 import ggll.canvas.OutlineTopComponent;
 
 public class OutlineComponent extends AbstractComponent
 {
-	public OutlineComponent(Canvas canvas)
+	public OutlineComponent(AbstractCanvas canvas)
 	{
 		jComponent = new OutlineTopComponent(canvas);
 	}

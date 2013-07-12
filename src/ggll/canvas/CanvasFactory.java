@@ -1,7 +1,6 @@
 package ggll.canvas;
 
-import ggll.canvas.action.WidgetActionRepository;
-import ggll.canvas.action.WidgetActionRepositoryFactory;
+import ggll.canvas.action.WidgetActionFactory;
 import ggll.canvas.state.CanvasState;
 import ggll.canvas.state.StaticStateManager;
 import ggll.canvas.state.VolatileStateManager;
@@ -12,17 +11,16 @@ import java.io.File;
 
 public class CanvasFactory implements PropertyChangeListener
 {
-	private static String connStrategy = CanvasData.R_ORTHOGONAL;
+	private static String connStrategy = CanvasStrings.R_ORTHOGONAL;
 
 	private static int defaultBufferCapacity = 20;
-	private static String defaultCursor = CanvasData.SELECT;
+	private static String defaultCursor = CanvasStrings.SELECT;
 	private static CanvasFactory instance;
 
-	private static String moveStrategy = CanvasData.M_FREE;
+	private static String moveStrategy = CanvasStrings.M_FREE;
 
 	private static String projectPath = "";
-	private WidgetActionRepository actions;
-	private Canvas canvas;
+	private AbstractCanvas canvas;
 	private CanvasDecorator decorator;
 	private String path;
 
@@ -35,7 +33,6 @@ public class CanvasFactory implements PropertyChangeListener
 	private CanvasFactory()
 	{
 		decorator = new CanvasDecorator();
-		actions = WidgetActionRepositoryFactory.getDefaultRepository();
 	}
 
 	private static CanvasFactory getInstance()
@@ -47,17 +44,17 @@ public class CanvasFactory implements PropertyChangeListener
 		return instance;
 	}
 
-	public static Canvas createCanvas(File file)
+	public static AbstractCanvas createCanvas(File file)
 	{
 		CanvasFactory canvasFactory = getInstance();
 		canvasFactory.resetActions();
-		Canvas canvas = null;
+		AbstractCanvas canvas = null;
 		StaticStateManager staticStateManager = new StaticStateManager();
 		canvasFactory.staticStateManager = staticStateManager;
 		staticStateManager.setFile(file);
 		try
 		{
-			canvas = new CanvasTemplate(defaultCursor, connStrategy, moveStrategy, canvasFactory.actions, canvasFactory.decorator);
+			canvas = new Canvas(defaultCursor, connStrategy, moveStrategy, canvasFactory.decorator);
 			canvasFactory.canvas = canvas;
 			Object state = staticStateManager.read();
 			if (state == null || !(state instanceof CanvasState))
@@ -96,13 +93,13 @@ public class CanvasFactory implements PropertyChangeListener
 	 *            identifies the existing canvas
 	 * @return the existing canvas with id, or null if there isn't one
 	 */
-	public static Canvas getCanvas()
+	public static AbstractCanvas getCanvas()
 	{
 		CanvasFactory canvasFactory = getInstance();
 		return canvasFactory.canvas;
 	}
 
-	public static Canvas getCanvasFromFile(String path)
+	public static AbstractCanvas getCanvasFromFile(String path)
 	{
 		if (path != null)
 		{
@@ -165,8 +162,7 @@ public class CanvasFactory implements PropertyChangeListener
 
 	private void resetActions()
 	{
-		WidgetActionRepositoryFactory.createRepository();
-		actions = WidgetActionRepositoryFactory.getDefaultRepository();
+		WidgetActionFactory.dispose();
 	}
 
 	@Override

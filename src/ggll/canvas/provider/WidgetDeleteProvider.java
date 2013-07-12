@@ -1,6 +1,6 @@
 package ggll.canvas.provider;
 
-import ggll.canvas.Canvas;
+import ggll.canvas.AbstractCanvas;
 import ggll.canvas.CanvasFactory;
 import ggll.core.syntax.command.CommandFactory;
 
@@ -15,9 +15,9 @@ public class WidgetDeleteProvider
 {
 
 	PropertyChangeSupport monitor;
-	private Canvas canvas;
+	private AbstractCanvas canvas;
 
-	public WidgetDeleteProvider(Canvas canvas)
+	public WidgetDeleteProvider(AbstractCanvas canvas)
 	{
 		this.canvas = canvas;
 		monitor = new PropertyChangeSupport(this);

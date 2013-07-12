@@ -1,476 +1,596 @@
 package ggll.canvas;
 
-import ggll.canvas.action.WidgetActionRepository;
+import ggll.canvas.action.GridProvider;
+import ggll.canvas.action.WidgetActionFactory;
+import ggll.canvas.provider.LineProvider;
+import ggll.canvas.provider.NodeSelectProvider;
 import ggll.canvas.state.CanvasState;
-import ggll.canvas.state.StaticStateManager;
-import ggll.canvas.state.VolatileStateManager;
-import ggll.images.GGLLImages;
+import ggll.canvas.state.Connection;
+import ggll.canvas.state.Node;
+import ggll.canvas.widget.GridWidget;
+import ggll.canvas.widget.GuideLineWidget;
+import ggll.canvas.widget.LabelWidgetExt;
+import ggll.canvas.widget.LineWidget;
+import ggll.canvas.widget.MarkedWidget;
+import ggll.canvas.widget.TypedWidget;
+import ggll.util.Log;
 
-import java.awt.Component;
-import java.awt.Cursor;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.KeyboardFocusManager;
-import java.awt.Point;
-import java.awt.RenderingHints;
-import java.awt.Toolkit;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.image.BufferedImage;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
-import java.io.File;
-import java.io.IOException;
-import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 
-import javax.swing.JComponent;
-
-import org.netbeans.api.visual.graph.GraphScene;
+import org.netbeans.api.visual.anchor.Anchor.Direction;
+import org.netbeans.api.visual.anchor.AnchorFactory;
 import org.netbeans.api.visual.model.ObjectSceneEventType;
 import org.netbeans.api.visual.router.Router;
+import org.netbeans.api.visual.router.RouterFactory;
+import org.netbeans.api.visual.widget.ConnectionWidget;
+import org.netbeans.api.visual.widget.ConnectionWidget.RoutingPolicy;
 import org.netbeans.api.visual.widget.LayerWidget;
+import org.netbeans.api.visual.widget.Widget;
 
-public abstract class Canvas extends GraphScene.StringGraph implements PropertyChangeListener
+public class Canvas extends AbstractCanvas
 {
 
-	private static final double MIN_ZOOM = 0.5;
+	private Router activeRouter;
+	private LayerWidget backgroundLayer = new LayerWidget(this);
+	private LayerWidget connectionLayer = new LayerWidget(this);
 
-	private static final double MAX_ZOOM = 1.5;
-	private AbstractMap<String, Cursor> cursors = new HashMap<String, Cursor>();
-	private PropertyChangeSupport monitor;
+	private String connStrategy;
+	private String cursor;
+	private LayerWidget interractionLayer = new LayerWidget(this);
 
-	private List<PropertyChangeSupport> monitors = new ArrayList<PropertyChangeSupport>();
-	private boolean showingGrid;
-	private boolean showingGuide;
-	private boolean showingLines;
+	private LayerWidget mainLayer = new LayerWidget(this);
 
-	protected WidgetActionRepository actions;
+	private String moveStrategy;
 
-	private List<String> customNodes = new ArrayList<String>();
+	private CanvasState state;
+	
+	private WidgetActionFactory actions;
 
-	protected CanvasDecorator decorator;
-
-	protected List<String> alternatives = new ArrayList<String>();
-	protected List<String> labels = new ArrayList<String>();
-	protected List<String> lambdas = new ArrayList<String>();
-	protected List<String> leftSides = new ArrayList<String>();
-	protected List<String> nterminals = new ArrayList<String>();
-	protected List<String> start = new ArrayList<String>();
-	protected List<String> successors = new ArrayList<String>();
-	protected List<String> terminals = new ArrayList<String>();
-
-	public Canvas(String cursor, String connectionStrategy, String movementStrategy, WidgetActionRepository actions, CanvasDecorator decorator)
+	public Canvas(String cursor, String connectionStrategy, String movementStrategy, CanvasDecorator decorator)
 	{
-		this.actions = actions;
-		this.decorator = decorator;
-		monitor = new PropertyChangeSupport(this);
-	}
-
-	public boolean canZoomIn()
-	{
-		return getZoomFactor() < MAX_ZOOM;
-	}
-
-	public boolean canZoomOut()
-	{
-		return getZoomFactor() > MIN_ZOOM;
-	}
-
-	public void createCursors()
-	{
-		Toolkit toolkit = Toolkit.getDefaultToolkit();
-
-		Image image = toolkit.getImage(Canvas.class.getResource(GGLLImages.CURSOS_LEFT_SIDE_ENABLED));
-		cursors.put(CanvasData.LEFT_SIDE, toolkit.createCustomCursor(image, new Point(0, 0), "Left Side"));
-
-		image = toolkit.getImage(Canvas.class.getResource(GGLLImages.CURSOS_TERMINAL_ENABLED));
-		cursors.put(CanvasData.TERMINAL, toolkit.createCustomCursor(image, new Point(0, 0), "Terminal"));
-
-		image = toolkit.getImage(Canvas.class.getResource(GGLLImages.CURSOS_N_TERMINAL_ENABLED));
-		cursors.put(CanvasData.N_TERMINAL, toolkit.createCustomCursor(image, new Point(0, 0), "Non-Terminal"));
-
-		image = toolkit.getImage(Canvas.class.getResource(GGLLImages.CURSOS_LAMBDA_ENABLED));
-		cursors.put(CanvasData.LAMBDA, toolkit.createCustomCursor(image, new Point(0, 0), "Lambda Alternative"));
-
-		image = toolkit.getImage(Canvas.class.getResource(GGLLImages.CURSOS_SUCCESSOR_ENABLED));
-		cursors.put(CanvasData.SUCCESSOR, toolkit.createCustomCursor(image, new Point(0, 0), "Successor"));
-
-		image = toolkit.getImage(Canvas.class.getResource(GGLLImages.CURSOS_ALTERNATIVE_ENABLED));
-		cursors.put(CanvasData.ALTERNATIVE, toolkit.createCustomCursor(image, new Point(0, 0), "Alternative"));
-
-		image = toolkit.getImage(Canvas.class.getResource(GGLLImages.CURSOS_LABEL_ENABLED));
-		cursors.put(CanvasData.LABEL, toolkit.createCustomCursor(image, new Point(0, 0), "Label"));
-
-		image = toolkit.getImage(Canvas.class.getResource(GGLLImages.CURSOS_START_ENABLED));
-		cursors.put(CanvasData.START, toolkit.createCustomCursor(image, new Point(0, 0), "Start"));
+		super(cursor, connectionStrategy, movementStrategy, decorator);
+		this.connStrategy = connectionStrategy;
+		this.moveStrategy = movementStrategy;
+		this.cursor = cursor;
+		this.actions = WidgetActionFactory.getInstance();
 	}
 
 	@Override
-	public JComponent createView()
+	protected void attachEdgeSourceAnchor(String edge, String oldSourceNode, String sourceNode)
 	{
-		JComponent component = super.createView();
-		component.addMouseListener(new CanvasMouseHandler(this));
-		return component;
-	}
-
-	/**
-	 * Fires a property change to all registered monitors
-	 * 
-	 * @param property
-	 * @param oldObj
-	 * @param newObj
-	 */
-	public void firePropertyChange(String property, Object oldObj, Object newObj)
-	{
-		for (PropertyChangeSupport monitor : monitors)
+		Widget w = sourceNode != null ? findWidget(sourceNode) : null;
+		ConnectionWidget conn = ((ConnectionWidget) findWidget(edge));
+		if (isSuccessor(edge))
 		{
-			monitor.firePropertyChange(property, oldObj, newObj);
+			conn.setSourceAnchor(new UnidirectionalAnchor(w, Direction.RIGHT));
 		}
-		this.getMonitor().firePropertyChange(property, oldObj, newObj);
-	}
-
-	public abstract Router getActiveRouter();
-
-	public List<String> getAlternatives()
-	{
-		return alternatives;
-	}
-
-	public abstract LayerWidget getBackgroundLayer();
-
-	public String getCanvasActiveTool()
-	{
-		String tool = super.getActiveTool();
-		if (tool == null)
+		else if (isAlternative(edge))
 		{
-			tool = CanvasData.SELECT;
-		}
-		return tool;
-	}
-
-	public abstract CanvasDecorator getCanvasDecorator();
-
-	public abstract CanvasState getCanvasState();
-
-	public abstract LayerWidget getConnectionLayer();
-
-	public abstract String getConnStrategy();
-
-	public List<String> getCustomNodes()
-	{
-		return customNodes;
-	}
-
-	public abstract LayerWidget getInterractionLayer();
-
-	public abstract Collection<?> getLabels();
-
-	public List<String> getLambdas()
-	{
-		return lambdas;
-	}
-
-	public List<String> getLeftSides()
-	{
-		return leftSides;
-	}
-
-	public abstract LayerWidget getMainLayer();
-
-	/**
-	 * @return the main monitor, all events of interest to canvas should be
-	 *         registered through this monitor
-	 */
-	public PropertyChangeSupport getMonitor()
-	{
-		return this.monitor;
-	}
-
-	public abstract String getMoveStrategy();
-
-	public abstract String getNodeType(Object node);
-
-	public List<String> getNterminals()
-	{
-		return nterminals;
-	}
-
-	public BufferedImage getScreenshot()
-	{
-		BufferedImage bi = new BufferedImage(this.getPreferredSize().width, this.getPreferredSize().height, BufferedImage.TYPE_4BYTE_ABGR);
-		Graphics2D graphics = bi.createGraphics();
-		getScene().paint(graphics);
-		graphics.dispose();
-		return bi;
-	}
-
-	public List<String> getStart()
-	{
-		return start;
-	}
-
-	/**
-	 * This method is here for a mere convenience, is really essential for the
-	 * canvas itself
-	 * 
-	 * @return the static state manager of this canvas
-	 */
-	public StaticStateManager getStaticStateManager()
-	{
-		return CanvasFactory.getStaticStateManager();
-	}
-
-	public List<String> getSuccessors()
-	{
-		return successors;
-	}
-
-	public List<String> getTerminals()
-	{
-		return terminals;
-	}
-
-	/**
-	 * This method is here for a mere convenience, is really essential for the
-	 * canvas itself
-	 * 
-	 * @return the volatile state manager of this canvas
-	 */
-	public VolatileStateManager getVolatileStateManager()
-	{
-		return CanvasFactory.getVolatileStateManager();
-	}
-
-	/**
-	 * Must initialize canvas with the given state
-	 * 
-	 * @param state
-	 */
-	public void init(CanvasState state)
-	{
-		addObjectSceneListener(state, ObjectSceneEventType.OBJECT_ADDED);
-		addObjectSceneListener(state, ObjectSceneEventType.OBJECT_REMOVED);
-		createCursors();
-	}
-
-	public boolean isAlternative(String edge)
-	{
-		return alternatives.contains(edge);
-	}
-
-	public abstract boolean isLabel(Object o);
-
-	/**
-	 * @return the showingGrid
-	 */
-	public boolean isShowingGrid()
-	{
-		return showingGrid;
-	}
-
-	/**
-	 * @return the showingGuide
-	 */
-	public boolean isShowingGuide()
-	{
-		return showingGuide;
-	}
-
-	/**
-	 * @return the showingLines
-	 */
-	public boolean isShowingLines()
-	{
-		return showingLines;
-	}
-
-	public boolean isSuccessor(String edge)
-	{
-		return successors.contains(edge);
-	}
-
-	/**
-	 * painting with antialias
-	 */
-	@Override
-	public void paintChildren()
-	{
-		Object anti = getGraphics().getRenderingHint(RenderingHints.KEY_ANTIALIASING);
-		Object textAnti = getGraphics().getRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING);
-
-		getGraphics().setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		getGraphics().setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-
-		super.paintChildren();
-
-		getGraphics().setRenderingHint(RenderingHints.KEY_ANTIALIASING, anti);
-		getGraphics().setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, textAnti);
-	}
-
-	@Override
-	public void propertyChange(PropertyChangeEvent event)
-	{
-		for (PropertyChangeSupport monitor : monitors)
-		{
-			event.setPropagationId("canvas");
-			monitor.firePropertyChange(event);
-		}
-		this.getMonitor().firePropertyChange(event);
-	}
-
-	/**
-	 * Register a new monitor to events in canvas
-	 * 
-	 * @param monitor
-	 *            a property change support instance that may contain the
-	 *            interested listeners
-	 */
-	public void registerMonitor(PropertyChangeSupport monitor)
-	{
-		if (!monitors.contains(monitor))
-		{
-			monitors.add(monitor);
-		}
-	}
-
-	public abstract void removeEdgeSafely(String edge);
-
-	public abstract void removeNodeSafely(String node);
-
-	public void saveToFile(File file) throws IOException
-	{
-		StaticStateManager ssm = new StaticStateManager();
-		ssm.setFile(file);
-		ssm.setObject(this.getCanvasState());
-		ssm.write();
-	}
-
-	public abstract void select(Object object);
-
-	public abstract void select(Object object, boolean invertSelection);
-
-	@Override
-	public void setActiveTool(String activeTool)
-	{
-		super.setActiveTool(activeTool);
-		if (activeTool.equals(CanvasData.SELECT))
-		{
-			this.setCursor(Cursor.getDefaultCursor());
+			conn.setSourceAnchor(new UnidirectionalAnchor(w, Direction.BOTTOM));
 		}
 		else
 		{
-			this.setCursor(cursors.get(activeTool));
+			conn.setSourceAnchor(AnchorFactory.createRectangularAnchor(w));
 		}
 	}
 
-	public abstract void setConnStrategy(String policy);
+	@Override
+	protected void attachEdgeTargetAnchor(String edge, String oldTargetNode, String targetNode)
+	{
+		Widget w = targetNode != null ? findWidget(targetNode) : null;
+		ConnectionWidget conn = ((ConnectionWidget) findWidget(edge));
+		if (isSuccessor(edge))
+		{
+			conn.setTargetAnchor(new UnidirectionalAnchor(w, Direction.LEFT, edge, targetNode, Direction.TOP));
+		}
+		else if (isAlternative(edge))
+		{
+			conn.setTargetAnchor(new UnidirectionalAnchor(w, Direction.TOP, edge, targetNode, Direction.LEFT));
+		}
+		else
+		{
+			conn.setTargetAnchor(AnchorFactory.createRectangularAnchor(w));
+		}
+	}
+
+	@Override
+	protected Widget attachEdgeWidget(String edge)
+	{
+		ConnectionWidget connection = null;
+		String activeTool = getCanvasActiveTool();
+
+		if (activeTool.equals(CanvasStrings.SUCCESSOR) || activeTool.equals(CanvasStrings.ALTERNATIVE))
+		{
+			connection = decorator.drawConnection(activeTool, this, edge);
+			connection.setRouter(getActiveRouter());
+			connection.createActions(CanvasStrings.SELECT).addAction(actions.getAction("ConnSelect", this));
+			connection.getActions(CanvasStrings.SELECT).addAction(actions.getAction("Reconnect", this));
+
+			connection.getActions(CanvasStrings.SELECT).addAction(actions.getAction("FreeMoveCP", this));
+			connection.getActions(CanvasStrings.SELECT).addAction(actions.getAction("AddRemoveCP", this));
+			connectionLayer.addChild(connection);
+			if (activeTool.equals(CanvasStrings.SUCCESSOR))
+			{
+				if (!isSuccessor(edge))
+				{
+					getSuccessors().add(edge);
+				}
+			}
+			else if (activeTool.equals(CanvasStrings.ALTERNATIVE))
+			{
+				if (!isAlternative(edge))
+				{
+					getAlternatives().add(edge);
+				}
+			}
+		}
+		return connection;
+	}
+
+	@Override
+	protected Widget attachNodeWidget(String node)
+	{
+		Widget widget = null;
+		String activeTool = getCanvasActiveTool();
+
+		if (node.startsWith(LineWidget.class.getCanonicalName()))
+		{
+			LineWidget lWidget = new LineWidget(this);
+			backgroundLayer.addChild(lWidget);
+			widget = lWidget;
+			setShowingLines(true);
+			state.getPreferences().setShowLines(true);
+		}
+		else if (node.startsWith(GuideLineWidget.class.getCanonicalName()))
+		{
+			GuideLineWidget glWidget = new GuideLineWidget(this);
+			backgroundLayer.addChild(glWidget);
+			widget = glWidget;
+			setShowingGuide(true);
+			state.getPreferences().setShowGuide(true);
+		}
+		else if (node.startsWith(GridWidget.class.getCanonicalName()))
+		{
+			GridWidget gWidget = new GridWidget(this);
+			backgroundLayer.addChild(gWidget);
+			widget = gWidget;
+			setShowingGrid(true);
+			state.getPreferences().setShowGrid(true);
+		}
+		else if (!activeTool.equals(CanvasStrings.SELECT))
+		{
+			String tool = activeTool;
+			if (tool.equals(CanvasStrings.N_TERMINAL) || tool.equals(CanvasStrings.TERMINAL) || tool.equals(CanvasStrings.LEFT_SIDE) || tool.equals(CanvasStrings.LAMBDA) || tool.equals(CanvasStrings.START))
+			{
+				try
+				{
+					widget = decorator.drawIcon(activeTool, this, node);
+				}
+				catch (Exception e)
+				{
+					Log.log(Log.ERROR, this, "Could not create widget!", e);
+					widget = new LabelWidgetExt(mainLayer.getScene(), node);
+				}
+				widget.createActions(CanvasStrings.SELECT);
+				if (!tool.equals(CanvasStrings.LAMBDA))
+				{
+					widget.getActions(CanvasStrings.SELECT).addAction(actions.getAction("NodeHover", this));
+				}
+				widget.getActions(CanvasStrings.SELECT).addAction(actions.getAction("Select", this));
+				if (!tool.equals(CanvasStrings.LAMBDA))
+				{
+					widget.getActions(CanvasStrings.SELECT).addAction(actions.getAction("Editor", this));
+				}
+				widget.getActions(CanvasStrings.SELECT).addAction(actions.getAction("Move", this));
+				if (!tool.equals(CanvasStrings.LAMBDA))
+				{
+					widget.createActions(CanvasStrings.SUCCESSOR).addAction(actions.getAction("Successor", this));
+				}
+				if (!tool.equals(CanvasStrings.LAMBDA))
+				{
+					widget.createActions(CanvasStrings.ALTERNATIVE).addAction(actions.getAction("Alternative", this));
+				}
+				mainLayer.addChild(widget);
+				if (tool.equals(CanvasStrings.LEFT_SIDE))
+				{
+					leftSides.add(node);
+				}
+				else if (tool.equals(CanvasStrings.TERMINAL))
+				{
+					terminals.add(node);
+				}
+				else if (tool.equals(CanvasStrings.N_TERMINAL))
+				{
+					nterminals.add(node);
+				}
+				else if (tool.equals(CanvasStrings.LAMBDA))
+				{
+					lambdas.add(node);
+				}
+				else if (tool.equals(CanvasStrings.START))
+				{
+					start.add(node);
+				}
+			}
+			else if (tool.equals(CanvasStrings.LABEL))
+			{
+				widget = new LabelWidgetExt(mainLayer.getScene(), "Double Click Here to Edit");
+				widget.createActions(CanvasStrings.SELECT).addAction(actions.getAction("LabelHover", this));
+				widget.getActions(CanvasStrings.SELECT).addAction(actions.getAction("SelectLabel", this));
+				widget.getActions(CanvasStrings.SELECT).addAction(actions.getAction("Editor", this));
+				widget.getActions(CanvasStrings.SELECT).addAction(actions.getAction("Move", this));
+				labels.add(node);
+				mainLayer.addChild(widget);
+			}
+			if (widget != null)
+			{
+				if (widget instanceof TypedWidget)
+				{
+					((TypedWidget) widget).setType(tool);
+				}
+			}
+		}
+		return widget;
+	}
+
+	@Override
+	public Router getActiveRouter()
+	{
+		return activeRouter;
+	}
+
+	@Override
+	public LayerWidget getBackgroundLayer()
+	{
+		return backgroundLayer;
+	}
+
+	@Override
+	public CanvasDecorator getCanvasDecorator()
+	{
+		return decorator;
+	}
+
+	@Override
+	public CanvasState getCanvasState()
+	{
+		return state;
+	}
+
+	@Override
+	public LayerWidget getConnectionLayer()
+	{
+		return connectionLayer;
+	}
+
+	@Override
+	public String getConnStrategy()
+	{
+		return this.connStrategy;
+	}
+
+	@Override
+	public LayerWidget getInterractionLayer()
+	{
+		return interractionLayer;
+	}
+
+	@Override
+	public Collection<?> getLabels()
+	{
+		return labels;
+	}
+
+	@Override
+	public LayerWidget getMainLayer()
+	{
+		return mainLayer;
+	}
+
+	@Override
+	public String getMoveStrategy()
+	{
+		return moveStrategy;
+	}
+
+	@Override
+	public String getNodeType(Object node)
+	{
+		Widget w = findWidget(node);
+		if (w != null)
+		{
+			if (w instanceof LabelWidgetExt)
+			{
+				return ((LabelWidgetExt) w).getType();
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public void init(CanvasState state)
+	{
+		super.init(state);
+		this.state = state;
+
+		addChild(backgroundLayer);
+		addChild(mainLayer);
+		addChild(connectionLayer);
+		addChild(interractionLayer);
+
+		createActions(CanvasStrings.SELECT).addAction(actions.getAction(WidgetActionFactory.SELECT, this));
+		getActions().addAction(actions.getAction(WidgetActionFactory.SELECT_LABEL, this));
+		getActions().addAction(actions.getAction(WidgetActionFactory.CREATE, this));
+		getActions().addAction(actions.getAction(WidgetActionFactory.POPUP_MENU_MAIN, this));
+		getActions().addAction(actions.getAction(WidgetActionFactory.NODE_HOVER, this));
+		getActions().addAction(actions.getAction(WidgetActionFactory.LABEL_HOVER, this));
+		getActions().addAction(actions.getAction(WidgetActionFactory.MOUSE_CENTERED_ZOOM, this));
+		getActions().addAction(actions.getAction(WidgetActionFactory.PAN, this));
+		getActions().addAction(actions.getAction(WidgetActionFactory.RECTANGULAR_SELECT, this));
+		getActions().addAction(actions.getAction(WidgetActionFactory.DELETE, this));
+		getActions().addAction(actions.getAction(WidgetActionFactory.COPY_PASTE, this));
+		setActiveTool(cursor);
+
+		if (state.getPreferences().getConnectionStrategy() != null)
+		{
+			setConnStrategy(state.getPreferences().getConnectionStrategy());
+		}
+		else
+		{
+			setConnStrategy(connStrategy);
+		}
+		if (state.getPreferences().getMoveStrategy() != null)
+		{
+			setMoveStrategy(state.getPreferences().getMoveStrategy());
+		}
+		else
+		{
+			setMoveStrategy(moveStrategy);
+		}
+	}
+
+	@Override
+	public boolean isLabel(Object o)
+	{
+		return labels.contains(o);
+	}
+
+	public boolean isLambda(Object o)
+	{
+		return this.lambdas.contains(o);
+	}
+
+	public boolean isLeftSide(Object o)
+	{
+		return this.leftSides.contains(o);
+	}
+
+	@Override
+	public boolean isNode(Object o)
+	{
+		if (!isLabel(o) && (isTerminal(o) || isNonTerminal(o) || isLambda(o) || isLeftSide(o) || isStart(o)))
+		{
+			return super.isNode(o);
+		}
+		return false;
+	}
+
+	public boolean isNonTerminal(Object o)
+	{
+		return this.nterminals.contains(o);
+	}
+
+	public boolean isStart(Object o)
+	{
+		return this.start.contains(o);
+	}
+
+	public boolean isTerminal(Object o)
+	{
+		return this.terminals.contains(o);
+	}
+
+	@Override
+	public void removeEdgeSafely(String edge)
+	{
+		if (isEdge(edge))
+		{
+			if (getSuccessors().contains(edge))
+			{
+				getSuccessors().remove(edge);
+			}
+			if (getAlternatives().contains(edge))
+			{
+				getAlternatives().remove(edge);
+			}
+			TargetDirections.removeConnection(edge, (ConnectionWidget) findWidget(edge));
+			super.removeEdge(edge);
+		}
+	}
+
+	@Override
+	public void removeNodeSafely(String node)
+	{
+		if (isLabel(node))
+		{
+			labels.remove(node);
+		}
+		super.removeNode(node);
+		if (node.startsWith(GridWidget.class.getCanonicalName()))
+		{
+			setShowingGrid(false);
+		}
+		else if (node.startsWith(LineWidget.class.getCanonicalName()))
+		{
+			setShowingLines(false);
+		}
+		else if (node.startsWith(GuideLineWidget.class.getCanonicalName()))
+		{
+			setShowingGuide(false);
+		}
+	}
 
 	/**
-	 * Called to give properly give focus to this canvas
+	 * Direct select method, not to be called after direct user action
 	 */
-	public void setFocused()
+	@Override
+	public void select(Object object)
 	{
-		getView().grabFocus();
-		Component component = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
-		if (component != null)
+		select(object, false);
+	}
+
+	@Override
+	public void select(Object object, boolean invertSelection)
+	{
+		Widget w;
+		if ((w = findWidget(object)) != null)
 		{
-			if (component.getKeyListeners().length == 0)
+			NodeSelectProvider nsp = new NodeSelectProvider(this);
+			if (!getSelectedObjects().contains(w))
 			{
-				component.addKeyListener(new KeyListener()
-				{
-
-					@Override
-					public void keyPressed(KeyEvent e)
-					{
-						for (KeyListener keyListener : getView().getKeyListeners())
-						{
-							keyListener.keyPressed(e);
-						}
-					}
-
-					@Override
-					public void keyReleased(KeyEvent e)
-					{
-						for (KeyListener keyListener : getView().getKeyListeners())
-						{
-							keyListener.keyReleased(e);
-						}
-					}
-
-					@Override
-					public void keyTyped(KeyEvent e)
-					{
-						for (KeyListener keyListener : getView().getKeyListeners())
-						{
-							keyListener.keyTyped(e);
-						}
-					}
-				});
+				if (nsp.isSelectionAllowed(w, null, invertSelection))
+					nsp.select(w, null, invertSelection);
+				validate();
 			}
 		}
 	}
 
-	/**
-	 * 
-	 * @param labels
-	 */
-	public void setLabels(List<String> labels)
+	@Override
+	public void setConnStrategy(String policy)
 	{
-		this.labels = labels;
-	}
-
-	public abstract void setMoveStrategy(String strategy);
-
-	/**
-	 * @param showingGrid
-	 *            the showingGrid to set
-	 */
-	public void setShowingGrid(boolean showingGrid)
-	{
-		this.showingGrid = showingGrid;
-		getCanvasState().getPreferences().setShowGrid(showingGrid);
-	}
-
-	/**
-	 * @param showingGuide
-	 *            the showingGuide to set
-	 */
-	public void setShowingGuide(boolean showingGuide)
-	{
-		this.showingGuide = showingGuide;
-		getCanvasState().getPreferences().setShowGuide(showingGuide);
-	}
-
-	// //INNER CLASSES////////
-
-	/**
-	 * @param showingLines
-	 *            the showingLines to set
-	 */
-	public void setShowingLines(boolean showingLines)
-	{
-		this.showingLines = showingLines;
-		getCanvasState().getPreferences().setShowLines(showingLines);
-	}
-
-	/**
-	 * Unregister a monitor of events
-	 * 
-	 * @param monitor
-	 *            a Property change support previously registered in canvas
-	 */
-	public void unregisterMonitor(PropertyChangeSupport monitor)
-	{
-		if (monitors.contains(monitor))
+		if (policy != null)
 		{
-			monitors.remove(monitor);
+			state.getPreferences().setConnectionStrategy(policy);
+			if (policy.equals(CanvasStrings.R_ORTHOGONAL) || policy.equals(CanvasStrings.R_FREE) || policy.equals(CanvasStrings.R_DIRECT))
+			{
+				if (!policy.equals(connStrategy) || activeRouter == null)
+				{
+					connStrategy = policy;
+					if (policy.equals(CanvasStrings.R_ORTHOGONAL))
+					{
+						activeRouter = RouterFactory.createOrthogonalSearchRouter(mainLayer);
+					}
+					else if (policy.equals(CanvasStrings.R_DIRECT))
+					{
+						activeRouter = RouterFactory.createDirectRouter();
+					}
+					else if (policy.equals(CanvasStrings.R_FREE))
+					{
+						activeRouter = RouterFactory.createFreeRouter();
+					}
+					for (String edge : getEdges())
+					{
+						ConnectionWidget cw = (ConnectionWidget) findWidget(edge);
+						if (cw != null)
+						{
+							cw.setRouter(activeRouter);
+							cw.calculateRouting();
+						}
+					}
+					repaint();
+				}
+			}
 		}
 	}
 
-	public abstract void updateState(CanvasState state);
+	@Override
+	public void setMoveStrategy(String strategy)
+	{
+		MoveTracker mt = new MoveTracker(this);
+		if (strategy != null)
+		{
+			state.getPreferences().setMoveStrategy(strategy);
+			if (strategy.equals(CanvasStrings.M_ALIGN) || strategy.equals(CanvasStrings.M_SNAP) || strategy.equals(CanvasStrings.M_FREE) || strategy.equals(CanvasStrings.M_LINES))
+			{
+				if (moveStrategy == null || !moveStrategy.equals(strategy))
+				{
+					moveStrategy = strategy;
+					mt.notifyObservers(strategy);
+				}
+			}
+		}
+	}
+
+	// /* ### PRIVATE NESTED CLASSES ############################ */
+
+	@Override
+	public void updateState(CanvasState state)
+	{
+		setConnStrategy(state.getPreferences().getConnectionStrategy());
+		setMoveStrategy(state.getPreferences().getMoveStrategy());
+
+		ArrayList<String> nodes = new ArrayList<String>();
+		nodes.addAll(state.getNodes());
+		for (String n : nodes)
+		{
+			if (!this.getNodes().contains(n))
+			{
+				Node n1 = state.findNode(n);
+				String oldTool = getCanvasActiveTool();
+				setActiveTool(state.getType(n));
+				Widget w1 = addNode(n);
+				if (n1.getLocation() != null)
+					w1.setPreferredLocation(mainLayer.convertLocalToScene(n1.getLocation()));
+				if (w1 instanceof LabelWidgetExt)
+				{
+					((LabelWidgetExt) w1).setLabel(n1.getTitle());
+
+				}
+				if (w1 instanceof MarkedWidget)
+				{
+					((MarkedWidget) w1).setMark(n1.getMark());
+				}
+				if (w1 instanceof TypedWidget)
+				{
+					((TypedWidget) w1).setType(n1.getType());
+				}
+				setActiveTool(oldTool);
+			}
+		}
+
+		List<String> conn = state.getConnections();
+		for (String e : conn)
+		{
+			if (!this.getEdges().contains(e))
+			{
+				Connection c1 = state.findConnection(e);
+				String oldTool = getCanvasActiveTool();
+				setActiveTool(state.getType(e));
+				ConnectionWidget cnn = (ConnectionWidget) addEdge(e);
+
+				setEdgeSource(e, c1.getSource());
+				setEdgeTarget(e, c1.getTarget());
+
+				cnn.setRoutingPolicy(RoutingPolicy.DISABLE_ROUTING_UNTIL_END_POINT_IS_MOVED);
+				cnn.setControlPoints(c1.getPoints(), true);
+				setActiveTool(oldTool);
+
+			}
+		}
+
+		if (state.getPreferences().isShowGrid())
+		{
+			GridProvider.getInstance(this).setVisible(true);
+		}
+		if (state.getPreferences().isShowGuide())
+		{
+			LineProvider.getInstance(this).setGuideVisible(true);
+		}
+		if (state.getPreferences().isShowLines())
+		{
+			LineProvider.getInstance(this).populateCanvas();
+		}
+
+		removeObjectSceneListener(this.state, ObjectSceneEventType.OBJECT_ADDED);
+		removeObjectSceneListener(this.state, ObjectSceneEventType.OBJECT_REMOVED);
+		addObjectSceneListener(state, ObjectSceneEventType.OBJECT_ADDED);
+		addObjectSceneListener(state, ObjectSceneEventType.OBJECT_REMOVED);
+		this.state = state;
+
+		state.update(this);
+
+		validate();
+	}
 }

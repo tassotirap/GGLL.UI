@@ -1,6 +1,6 @@
 package ggll.ui.toolbar;
 
-import ggll.canvas.Canvas;
+import ggll.canvas.AbstractCanvas;
 import ggll.canvas.CanvasFactory;
 import ggll.canvas.provider.WidgetCopyPasteProvider;
 import ggll.canvas.provider.WidgetDeleteProvider;
@@ -37,10 +37,10 @@ public class ToolBarDefault extends BaseToolBar implements PropertyChangeListene
 	public ToolBarDefault(Object context)
 	{
 		super(context);
-		if (context instanceof Canvas)
+		if (context instanceof AbstractCanvas)
 		{
-			((Canvas) context).getMonitor().addPropertyChangeListener("undoable", this);
-			((Canvas) context).getMonitor().addPropertyChangeListener("object_state", this);
+			((AbstractCanvas) context).getMonitor().addPropertyChangeListener("undoable", this);
+			((AbstractCanvas) context).getMonitor().addPropertyChangeListener("object_state", this);
 		}
 		for (int i = 0; i < buttons.length; i++)
 		{
@@ -95,7 +95,7 @@ public class ToolBarDefault extends BaseToolBar implements PropertyChangeListene
 		});
 	}
 
-	private void setCanvasActions(final Canvas canvas)
+	private void setCanvasActions(final AbstractCanvas canvas)
 	{
 		btnCopy.addActionListener(new ActionListener()
 		{
@@ -212,9 +212,9 @@ public class ToolBarDefault extends BaseToolBar implements PropertyChangeListene
 	{
 		setBaseActions();
 
-		if (context instanceof Canvas)
+		if (context instanceof AbstractCanvas)
 		{
-			setCanvasActions((Canvas) context);
+			setCanvasActions((AbstractCanvas) context);
 		}
 		else if (context instanceof TextAreaComponent)
 		{
@@ -257,7 +257,7 @@ public class ToolBarDefault extends BaseToolBar implements PropertyChangeListene
 	@Override
 	public void propertyChange(PropertyChangeEvent event)
 	{
-		if (event.getSource() instanceof Canvas)
+		if (event.getSource() instanceof AbstractCanvas)
 		{
 			VolatileStateManager vsm = CanvasFactory.getVolatileStateManager();
 			if (event.getPropertyName().equals("undoable"))

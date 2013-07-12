@@ -1,6 +1,6 @@
 package ggll.canvas.action;
 
-import ggll.canvas.Canvas;
+import ggll.canvas.AbstractCanvas;
 import ggll.canvas.widget.GridWidget;
 
 import java.util.HashMap;
@@ -8,16 +8,16 @@ import java.util.HashMap;
 public class GridProvider
 {
 
-	private static HashMap<Canvas, GridProvider> gridProviders = new HashMap<Canvas, GridProvider>();
-	private Canvas canvas;
+	private static HashMap<AbstractCanvas, GridProvider> gridProviders = new HashMap<AbstractCanvas, GridProvider>();
+	private AbstractCanvas canvas;
 	private GridWidget grid;
 
-	private GridProvider(Canvas canvas)
+	private GridProvider(AbstractCanvas canvas)
 	{
 		this.canvas = canvas;
 	}
 
-	public static GridProvider getInstance(Canvas canvas)
+	public static GridProvider getInstance(AbstractCanvas canvas)
 	{
 		if (!gridProviders.containsKey(canvas))
 		{

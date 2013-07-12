@@ -1,6 +1,6 @@
 package ggll.ui;
 
-import ggll.canvas.Canvas;
+import ggll.canvas.AbstractCanvas;
 import ggll.project.GGLLManager;
 import ggll.ui.ThemeManager.Theme;
 import ggll.ui.interfaces.IMainWindow;
@@ -65,7 +65,7 @@ public class Menu extends JMenuBar
 		this.menus = new ArrayList<String>();
 		this.context = context;
 		this.model = model;
-		if (context instanceof Canvas)
+		if (context instanceof AbstractCanvas)
 		{
 			contextDesc = CANVAS_CONTEXT;
 		}

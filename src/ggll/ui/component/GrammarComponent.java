@@ -1,6 +1,6 @@
 package ggll.ui.component;
 
-import ggll.canvas.Canvas;
+import ggll.canvas.AbstractCanvas;
 import ggll.canvas.CanvasFactory;
 import ggll.canvas.state.StaticStateManager;
 import ggll.ui.toolbar.ToolBarGrammar;
@@ -20,9 +20,9 @@ import javax.swing.JScrollPane;
 public class GrammarComponent extends AbstractComponent implements FileComponent, PropertyChangeListener
 {
 	String path;
-	private Canvas canvas;
+	private AbstractCanvas canvas;
 
-	public GrammarComponent(Canvas canvas)
+	public GrammarComponent(AbstractCanvas canvas)
 	{
 		path = CanvasFactory.getCanvasPath();
 

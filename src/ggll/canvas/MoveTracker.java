@@ -1,33 +1,27 @@
 package ggll.canvas;
 
-import ggll.canvas.action.WidgetActionRepository;
-import ggll.canvas.strategy.MoveStrategy;
+import ggll.canvas.action.WidgetActionFactory;
 import ggll.canvas.widget.IconNodeWidgetExt;
 import ggll.canvas.widget.LabelWidgetExt;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
 
 import org.netbeans.api.visual.action.WidgetAction;
 import org.netbeans.api.visual.action.WidgetAction.Chain;
 import org.netbeans.api.visual.widget.Widget;
 import org.netbeans.modules.visual.action.MoveAction;
 
-class MoveTracker extends MoveStrategy
+public class MoveTracker extends Observable
 {
-	private Canvas canvas;
-
-	/**
-	 * Creates a new MoveTracker, this class is supposed to look after changes
-	 * in the policy of movement, and make the proper modifications on existing
-	 * nodes on canvas, and also notify the active action repository.
-	 * 
-	 * @param canvas
-	 */
-	public MoveTracker(Canvas canvas, WidgetActionRepository arepo)
+	private AbstractCanvas canvas;
+	private WidgetActionFactory widgetActionFactory;
+	public MoveTracker(AbstractCanvas canvas)
 	{
 		this.canvas = canvas;
-		addObserver(arepo);
+		this.widgetActionFactory = WidgetActionFactory.getInstance();
+		addObserver(widgetActionFactory);
 	}
 
 	private void removeAllMoveAction(Chain chainActions)
@@ -52,7 +46,7 @@ class MoveTracker extends MoveStrategy
 	{
 		setChanged();
 		super.notifyObservers(obj);
-		WidgetAction activeMovement = canvas.actions.getAction("Move", canvas);
+		WidgetAction activeMovement = widgetActionFactory.getAction("Move", canvas);
 		for (String nd : canvas.getNodes())
 		{
 			Object obecjtWidget = canvas.findWidget(nd);
@@ -61,8 +55,8 @@ class MoveTracker extends MoveStrategy
 				Widget widget = (Widget) obecjtWidget;
 				if (widget instanceof LabelWidgetExt || widget instanceof IconNodeWidgetExt)
 				{
-					removeAllMoveAction(widget.getActions(CanvasData.SELECT));
-					widget.getActions(CanvasData.SELECT).addAction(activeMovement);
+					removeAllMoveAction(widget.getActions(CanvasStrings.SELECT));
+					widget.getActions(CanvasStrings.SELECT).addAction(activeMovement);
 				}
 			}
 		}

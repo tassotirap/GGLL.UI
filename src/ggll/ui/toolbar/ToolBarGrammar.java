@@ -1,7 +1,7 @@
 package ggll.ui.toolbar;
 
-import ggll.canvas.Canvas;
-import ggll.canvas.CanvasData;
+import ggll.canvas.AbstractCanvas;
+import ggll.canvas.CanvasStrings;
 import ggll.util.LangHelper;
 
 import java.awt.Dimension;
@@ -23,11 +23,11 @@ public class ToolBarGrammar extends BaseToolBar
 
 	JButton[] buttons;
 	String[] names;
-	Canvas canvas;
+	AbstractCanvas canvas;
 	private JButton btnNTerminal, btnTerminal, btnLambdaAlternative, btnStart;
 	private JButton btnSelect, btnSucessor, btnAlternative, btnLeftHand, btnLabel;
 
-	public ToolBarGrammar(Canvas canvas)
+	public ToolBarGrammar(AbstractCanvas canvas)
 	{
 		super(canvas);
 		this.canvas = canvas;
@@ -65,7 +65,7 @@ public class ToolBarGrammar extends BaseToolBar
 			@Override
 			public void actionPerformed(ActionEvent evt)
 			{
-				canvas.setActiveTool(CanvasData.SELECT);
+				canvas.setActiveTool(CanvasStrings.SELECT);
 			}
 
 		});
@@ -74,7 +74,7 @@ public class ToolBarGrammar extends BaseToolBar
 			@Override
 			public void actionPerformed(ActionEvent evt)
 			{
-				canvas.setActiveTool(CanvasData.SUCCESSOR);
+				canvas.setActiveTool(CanvasStrings.SUCCESSOR);
 			}
 
 		});
@@ -83,7 +83,7 @@ public class ToolBarGrammar extends BaseToolBar
 			@Override
 			public void actionPerformed(ActionEvent evt)
 			{
-				canvas.setActiveTool(CanvasData.ALTERNATIVE);
+				canvas.setActiveTool(CanvasStrings.ALTERNATIVE);
 			}
 
 		});
@@ -92,7 +92,7 @@ public class ToolBarGrammar extends BaseToolBar
 			@Override
 			public void actionPerformed(ActionEvent evt)
 			{
-				canvas.setActiveTool(CanvasData.LEFT_SIDE);
+				canvas.setActiveTool(CanvasStrings.LEFT_SIDE);
 			}
 
 		});
@@ -101,7 +101,7 @@ public class ToolBarGrammar extends BaseToolBar
 			@Override
 			public void actionPerformed(ActionEvent evt)
 			{
-				canvas.setActiveTool(CanvasData.N_TERMINAL);
+				canvas.setActiveTool(CanvasStrings.N_TERMINAL);
 			}
 
 		});
@@ -110,7 +110,7 @@ public class ToolBarGrammar extends BaseToolBar
 			@Override
 			public void actionPerformed(ActionEvent evt)
 			{
-				canvas.setActiveTool(CanvasData.TERMINAL);
+				canvas.setActiveTool(CanvasStrings.TERMINAL);
 			}
 
 		});
@@ -119,7 +119,7 @@ public class ToolBarGrammar extends BaseToolBar
 			@Override
 			public void actionPerformed(ActionEvent evt)
 			{
-				canvas.setActiveTool(CanvasData.LAMBDA);
+				canvas.setActiveTool(CanvasStrings.LAMBDA);
 			}
 
 		});
@@ -128,7 +128,7 @@ public class ToolBarGrammar extends BaseToolBar
 			@Override
 			public void actionPerformed(ActionEvent evt)
 			{
-				canvas.setActiveTool(CanvasData.LABEL);
+				canvas.setActiveTool(CanvasStrings.LABEL);
 			}
 
 		});
@@ -137,7 +137,7 @@ public class ToolBarGrammar extends BaseToolBar
 			@Override
 			public void actionPerformed(ActionEvent evt)
 			{
-				canvas.setActiveTool(CanvasData.START);
+				canvas.setActiveTool(CanvasStrings.START);
 			}
 
 		});

@@ -1,10 +1,12 @@
 package ggll.canvas.action;
 
-import ggll.canvas.Canvas;
+import ggll.canvas.AbstractCanvas;
+import ggll.canvas.SnapToLineMoveStrategy;
 import ggll.canvas.provider.AlignWithMultiMoveProvider;
+import ggll.canvas.provider.FreeMoveControl;
+import ggll.canvas.provider.LineProvider;
 import ggll.canvas.provider.WidgetCopyPasteProvider;
 import ggll.canvas.provider.WidgetDeleteProvider;
-import ggll.canvas.strategy.SnapToLineMoveStrategy;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -410,7 +412,7 @@ public final class ActionFactory
 		return createAlignWithMoveAction(new SingleLayerAlignWithWidgetCollector(collectionLayer, outerBounds), interractionLayer, decorator != null ? decorator : ALIGN_WITH_MOVE_DECORATOR_DEFAULT, outerBounds);
 	}
 
-	public static WidgetAction createAlignWithMultiMoveAction(Canvas canvas, AlignWithWidgetCollector collector, LayerWidget interractionLayer, AlignWithMoveDecorator decorator, boolean outerBounds)
+	public static WidgetAction createAlignWithMultiMoveAction(AbstractCanvas canvas, AlignWithWidgetCollector collector, LayerWidget interractionLayer, AlignWithMoveDecorator decorator, boolean outerBounds)
 	{
 		assert collector != null && interractionLayer != null && decorator != null;
 		AlignWithMultiMoveProvider sp = new AlignWithMultiMoveProvider(canvas, collector, interractionLayer, decorator, outerBounds);
@@ -1154,7 +1156,7 @@ public final class ActionFactory
 		return new SnapToGridMoveStrategy(horizontalGridSize, verticalGridSize);
 	}
 
-	public static MoveStrategy createSnapToLineMoveStrategy(Canvas canvas)
+	public static MoveStrategy createSnapToLineMoveStrategy(AbstractCanvas canvas)
 	{
 		assert canvas != null;
 		return new SnapToLineMoveStrategy(LineProvider.getInstance(canvas));

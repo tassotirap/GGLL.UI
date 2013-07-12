@@ -1,6 +1,6 @@
 package ggll.canvas.provider;
 
-import ggll.canvas.Canvas;
+import ggll.canvas.AbstractCanvas;
 import ggll.canvas.CanvasFactory;
 import ggll.core.syntax.command.CommandFactory;
 
@@ -21,7 +21,7 @@ public class NodeReconnectProvider implements ReconnectProvider
 	private String originalNode;
 	private String replacementNode;
 
-	public NodeReconnectProvider(Canvas canvas)
+	public NodeReconnectProvider(AbstractCanvas canvas)
 	{
 		monitor = new PropertyChangeSupport(this);
 		monitor.addPropertyChangeListener(CanvasFactory.getVolatileStateManager());
@@ -36,7 +36,7 @@ public class NodeReconnectProvider implements ReconnectProvider
 	@Override
 	public ConnectorState isReplacementWidget(ConnectionWidget connectionWidget, Widget replacementWidget, boolean reconnectingSource)
 	{
-		Canvas canvas = CanvasFactory.getCanvas();
+		AbstractCanvas canvas = CanvasFactory.getCanvas();
 		Object object = canvas.findObject(replacementWidget);
 		replacementNode = canvas.isNode(object) ? (String) object : null;
 		if (replacementNode != null && edge != null)
@@ -62,7 +62,7 @@ public class NodeReconnectProvider implements ReconnectProvider
 	@Override
 	public boolean isTargetReconnectable(ConnectionWidget connectionWidget)
 	{
-		Canvas canvas = CanvasFactory.getCanvas();
+		AbstractCanvas canvas = CanvasFactory.getCanvas();
 		Object object = canvas.findObject(connectionWidget);
 		edge = canvas.isEdge(object) ? (String) object : null;
 		originalNode = edge != null ? canvas.getEdgeTarget(edge) : null;
@@ -72,7 +72,7 @@ public class NodeReconnectProvider implements ReconnectProvider
 	@Override
 	public void reconnect(ConnectionWidget connectionWidget, Widget replacementWidget, boolean reconnectingSource)
 	{
-		Canvas canvas = CanvasFactory.getCanvas();
+		AbstractCanvas canvas = CanvasFactory.getCanvas();
 		if (replacementWidget == null)
 		{
 			canvas.removeEdge(edge);

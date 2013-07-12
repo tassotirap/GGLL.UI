@@ -40,7 +40,7 @@
  */
 package ggll.canvas.provider;
 
-import ggll.canvas.Canvas;
+import ggll.canvas.AbstractCanvas;
 import ggll.canvas.CanvasFactory;
 
 import java.awt.Color;
@@ -60,14 +60,14 @@ import org.netbeans.api.visual.widget.Widget;
 public final class CanvasRectangularSelectProvider implements RectangularSelectProvider
 {
 
-	public CanvasRectangularSelectProvider(Canvas canvas)
+	public CanvasRectangularSelectProvider(AbstractCanvas canvas)
 	{
 	}
 
 	@Override
 	public void performSelection(Rectangle sceneSelection)
 	{
-		Canvas canvas = CanvasFactory.getCanvas();
+		AbstractCanvas canvas = CanvasFactory.getCanvas();
 		boolean entirely = sceneSelection.width > 0;
 		int w = sceneSelection.width;
 		int h = sceneSelection.height;

@@ -1,6 +1,6 @@
 package ggll.ui.component;
 
-import ggll.canvas.Canvas;
+import ggll.canvas.AbstractCanvas;
 import ggll.images.GGLLImages;
 import ggll.output.Output;
 import ggll.output.SyntaxErrorOutput;
@@ -20,7 +20,7 @@ import javax.swing.border.EmptyBorder;
 public class OutputComponent extends AbstractComponent
 {
 
-	public OutputComponent(final Canvas canvas)
+	public OutputComponent(final AbstractCanvas canvas)
 	{
 		final JScrollPane jsp = new JScrollPane();
 		final JPanel bar = new JPanel(new FlowLayout(FlowLayout.RIGHT));

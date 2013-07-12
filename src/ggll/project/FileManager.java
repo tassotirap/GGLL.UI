@@ -1,6 +1,6 @@
 package ggll.project;
 
-import ggll.canvas.Canvas;
+import ggll.canvas.AbstractCanvas;
 import ggll.file.FileNames;
 import ggll.ui.MainWindow;
 import ggll.ui.TabWindowList.TabPlace;
@@ -34,7 +34,7 @@ public class FileManager
 		this.viewManager = GGLLManager.getUnsavedViewManager();
 	}
 
-	private String saveFile(Canvas canvas)
+	private String saveFile(AbstractCanvas canvas)
 	{
 		GrammarComponent grammarComponent = GrammarFactory.getGrammarComponent();
 		if (viewManager.hasUnsavedView(grammarComponent.getPath()))
@@ -213,9 +213,9 @@ public class FileManager
 				path = saveFile((FileComponent) object);
 				componentSaved = true;
 			}
-			else if (object instanceof Canvas)
+			else if (object instanceof AbstractCanvas)
 			{
-				path = saveFile((Canvas) object);
+				path = saveFile((AbstractCanvas) object);
 				componentSaved = true;
 			}
 			else if (object instanceof GrammarComponent)

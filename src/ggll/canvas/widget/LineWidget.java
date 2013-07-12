@@ -1,6 +1,6 @@
 package ggll.canvas.widget;
 
-import ggll.canvas.Canvas;
+import ggll.canvas.AbstractCanvas;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -24,13 +24,13 @@ public class LineWidget extends Widget
 	public final static Color NUMBER_COLOR = new Color(100, 100, 100);
 
 	public final static Font NUMBER_FONT = new Font("Arial", Font.PLAIN, 12);
-	private Canvas canvas;
+	private AbstractCanvas canvas;
 	private PropertyChangeSupport monitor;
 	private Integer number;
 	protected int height;
 	protected int width;
 
-	public LineWidget(Canvas canvas)
+	public LineWidget(AbstractCanvas canvas)
 	{
 		super(canvas);
 		this.canvas = canvas;

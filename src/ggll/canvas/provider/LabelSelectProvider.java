@@ -1,6 +1,6 @@
 package ggll.canvas.provider;
 
-import ggll.canvas.Canvas;
+import ggll.canvas.AbstractCanvas;
 import ggll.canvas.CanvasFactory;
 
 import java.awt.Color;
@@ -13,7 +13,7 @@ import org.netbeans.api.visual.widget.Widget;
 
 public class LabelSelectProvider extends CanvasSelectProvider
 {
-	public LabelSelectProvider(Canvas canvas)
+	public LabelSelectProvider(AbstractCanvas canvas)
 	{
 		super(canvas);
 	}
@@ -27,14 +27,14 @@ public class LabelSelectProvider extends CanvasSelectProvider
 	@Override
 	public boolean isSelectionAllowed(Widget widget, Point arg1, boolean arg2)
 	{
-		Canvas canvas = CanvasFactory.getCanvas();
+		AbstractCanvas canvas = CanvasFactory.getCanvas();
 		return canvas.findObject(widget) != null;
 	}
 
 	@Override
 	public void select(Widget widget, Point localLocation, boolean invertSelection)
 	{
-		Canvas canvas = CanvasFactory.getCanvas();
+		AbstractCanvas canvas = CanvasFactory.getCanvas();
 		super.select(widget, localLocation, invertSelection);
 		Object object = canvas.findObject(widget);
 		canvas.setFocusedObject(object);

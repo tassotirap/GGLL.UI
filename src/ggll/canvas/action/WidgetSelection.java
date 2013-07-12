@@ -1,7 +1,7 @@
 package ggll.canvas.action;
 
-import ggll.canvas.Canvas;
-import ggll.canvas.CanvasData;
+import ggll.canvas.AbstractCanvas;
+import ggll.canvas.CanvasStrings;
 import ggll.canvas.state.CanvasSerializableElement;
 import ggll.canvas.state.Connection;
 import ggll.canvas.state.Node;
@@ -25,14 +25,14 @@ public class WidgetSelection implements ClipboardOwner, Transferable
 {
 
 	ArrayList<CanvasSerializableElement> elements = new ArrayList<CanvasSerializableElement>();
-	private Canvas canvas;
+	private AbstractCanvas canvas;
 
-	public WidgetSelection(Canvas canvas)
+	public WidgetSelection(AbstractCanvas canvas)
 	{
 		this.canvas = canvas;
 	}
 
-	public WidgetSelection(Widget[] widgets, Canvas canvas)
+	public WidgetSelection(Widget[] widgets, AbstractCanvas canvas)
 	{
 		this.canvas = canvas;
 		for (Widget w : widgets)
@@ -78,11 +78,11 @@ public class WidgetSelection implements ClipboardOwner, Transferable
 				c.setTarget(canvas.getEdgeTarget((String) object));
 				if (canvas.isAlternative((String) object))
 				{
-					c.setType(CanvasData.ALTERNATIVE);
+					c.setType(CanvasStrings.ALTERNATIVE);
 				}
 				else if (canvas.isSuccessor((String) object))
 				{
-					c.setType(CanvasData.SUCCESSOR);
+					c.setType(CanvasStrings.SUCCESSOR);
 				}
 				elements.add(c);
 			}

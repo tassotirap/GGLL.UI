@@ -1,4 +1,4 @@
-package ggll.canvas.action;
+package ggll.canvas.provider;
 
 import ggll.canvas.CanvasFactory;
 import ggll.core.syntax.command.CommandFactory;

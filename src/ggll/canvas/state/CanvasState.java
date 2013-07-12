@@ -1,6 +1,6 @@
 package ggll.canvas.state;
 
-import ggll.canvas.Canvas;
+import ggll.canvas.AbstractCanvas;
 import ggll.canvas.CanvasFactory;
 import ggll.canvas.widget.MarkedWidget;
 import ggll.canvas.widget.TypedWidget;
@@ -118,7 +118,7 @@ public class CanvasState implements Serializable, ObjectSceneListener, PropertyC
 	@Override
 	public void objectAdded(ObjectSceneEvent event, Object added)
 	{
-		Canvas canvas = (Canvas) event.getObjectScene();
+		AbstractCanvas canvas = (AbstractCanvas) event.getObjectScene();
 		Widget widget = canvas.findWidget(added);
 		String name = (String) added;
 
@@ -186,7 +186,7 @@ public class CanvasState implements Serializable, ObjectSceneListener, PropertyC
 	{
 		if (evt.getPropertyName().equals("writing"))
 		{
-			Canvas canvas = CanvasFactory.getCanvas();
+			AbstractCanvas canvas = CanvasFactory.getCanvas();
 			if (canvas != null)
 			{
 				update(canvas);
@@ -199,7 +199,7 @@ public class CanvasState implements Serializable, ObjectSceneListener, PropertyC
 	{
 	}
 
-	public void update(Canvas canvas)
+	public void update(AbstractCanvas canvas)
 	{
 		for (String node : nodes.keySet())
 		{

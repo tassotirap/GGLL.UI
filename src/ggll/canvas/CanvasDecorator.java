@@ -28,13 +28,13 @@ public class CanvasDecorator
 
 	protected static final ConnectDecorator CONNECT_DECORATOR_SUCCESSOR = new SuccessorConnectorDecorator();
 
-	private String[] iconName = new String[]{ CanvasData.N_TERMINAL, CanvasData.TERMINAL, CanvasData.LEFT_SIDE, CanvasData.LAMBDA, CanvasData.START };
+	private String[] iconName = new String[]{ CanvasStrings.N_TERMINAL, CanvasStrings.TERMINAL, CanvasStrings.LEFT_SIDE, CanvasStrings.LAMBDA, CanvasStrings.START };
 	private URL[] icons = new URL[]{ getClass().getResource(GGLLImages.ICON_N_TERMINAL), getClass().getResource(GGLLImages.ICON_TERMINAL), getClass().getResource(GGLLImages.ICON_LEFT_SIDE), getClass().getResource(GGLLImages.ICON_LAMBDA), getClass().getResource(GGLLImages.ICON_START) };
 
-	public ConnectionWidget drawConnection(String type, Canvas canvas, String label)
+	public ConnectionWidget drawConnection(String type, AbstractCanvas canvas, String label)
 	{
 		ConnectionWidget connection = null;
-		if (type.equals(CanvasData.SUCCESSOR))
+		if (type.equals(CanvasStrings.SUCCESSOR))
 		{
 			connection = CONNECT_DECORATOR_SUCCESSOR.createConnectionWidget(canvas.getMainLayer().getScene());
 		}
@@ -51,10 +51,10 @@ public class CanvasDecorator
 		return connection;
 	}
 
-	public Widget drawIcon(String type, Canvas canvas, String text) throws Exception
+	public Widget drawIcon(String type, AbstractCanvas canvas, String text) throws Exception
 	{
 		Widget widget;
-		if (type.equals(CanvasData.LAMBDA))
+		if (type.equals(CanvasStrings.LAMBDA))
 		{
 			IconNodeWidgetExt iwidget = new IconNodeWidgetExt(canvas.getMainLayer().getScene(), TextOrientation.RIGHT_CENTER);
 
@@ -121,11 +121,11 @@ public class CanvasDecorator
 	public Border getIconBorder(String type)
 	{
 		Insets insets = null;
-		if (type.equals(CanvasData.START))
+		if (type.equals(CanvasStrings.START))
 		{
 			insets = new Insets(6, 18, 6, 16);
 		}
-		else if (type.equals(CanvasData.LEFT_SIDE))
+		else if (type.equals(CanvasStrings.LEFT_SIDE))
 		{
 			insets = new Insets(6, 8, 6, 16);
 		}

@@ -1,6 +1,6 @@
 package ggll.canvas.provider;
 
-import ggll.canvas.Canvas;
+import ggll.canvas.AbstractCanvas;
 import ggll.canvas.CanvasFactory;
 import ggll.canvas.widget.MarkedWidget;
 
@@ -11,7 +11,7 @@ import org.netbeans.api.visual.widget.Widget;
 
 public class NodeHoverProvider implements TwoStateHoverProvider
 {
-	public NodeHoverProvider(Canvas canvas)
+	public NodeHoverProvider(AbstractCanvas canvas)
 	{
 	}
 
@@ -28,7 +28,7 @@ public class NodeHoverProvider implements TwoStateHoverProvider
 	@Override
 	public void unsetHovering(Widget widget)
 	{
-		Canvas canvas = CanvasFactory.getCanvas();
+		AbstractCanvas canvas = CanvasFactory.getCanvas();
 		Object object = canvas.findObject(widget);
 
 		if (object != null & widget != null && !canvas.getSelectedObjects().contains(object))

@@ -1,6 +1,6 @@
 package ggll.core.syntax.command;
 
-import ggll.canvas.Canvas;
+import ggll.canvas.AbstractCanvas;
 import ggll.canvas.state.CanvasState;
 import ggll.canvas.state.Node;
 import ggll.core.syntax.grammar.model.AbstractNode;
@@ -102,7 +102,7 @@ public class AsinEditor
 		}
 	}
 
-	private void recreateDiagram(Canvas canvas)
+	private void recreateDiagram(AbstractCanvas canvas)
 	{
 
 		CanvasState canvasState = canvas.getCanvasState();
@@ -171,7 +171,7 @@ public class AsinEditor
 		}
 	}
 
-	public SyntaxModel getLogicDiagram(Canvas canvas)
+	public SyntaxModel getLogicDiagram(AbstractCanvas canvas)
 	{
 		recreateDiagram(canvas);
 		return logicDiagram;

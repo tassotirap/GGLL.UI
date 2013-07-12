@@ -1,6 +1,6 @@
 package ggll.output;
 
-import ggll.canvas.Canvas;
+import ggll.canvas.AbstractCanvas;
 import ggll.util.ExtHTMLEditorKit;
 
 import java.awt.Cursor;
@@ -50,7 +50,7 @@ public abstract class HtmlViewer implements HyperlinkListener
 	public static final String SystemImagePathKey = "system.image.path.key";
 
 	public final static boolean USE_CSSFILE = false;
-	private Canvas activeScene;
+	private AbstractCanvas activeScene;
 	private StyleSheet cssSheet = new StyleSheet();
 
 	private JEditorPane editorPane = new JEditorPane();
@@ -110,7 +110,7 @@ public abstract class HtmlViewer implements HyperlinkListener
 	{
 	}
 
-	public Canvas getActiveScene()
+	public AbstractCanvas getActiveScene()
 	{
 		return activeScene;
 	}
@@ -139,7 +139,7 @@ public abstract class HtmlViewer implements HyperlinkListener
 		}
 	}
 
-	public void setActiveScene(Canvas canvas)
+	public void setActiveScene(AbstractCanvas canvas)
 	{
 		activeScene = canvas;
 	}

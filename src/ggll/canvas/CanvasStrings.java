@@ -1,6 +1,6 @@
 package ggll.canvas;
 
-public class CanvasData
+public class CanvasStrings
 {
 	public final static String ALT_LBL = "alternative";
 	public final static String ALTERNATIVE = "ALTERNATIVE";

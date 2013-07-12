@@ -1,7 +1,7 @@
 package ggll.canvas.action;
 
-import ggll.canvas.Canvas;
-import ggll.canvas.CanvasData;
+import ggll.canvas.AbstractCanvas;
+import ggll.canvas.CanvasStrings;
 import ggll.canvas.CanvasFactory;
 import ggll.core.syntax.command.CommandFactory;
 import ggll.core.syntax.command.RenameCommand;
@@ -15,10 +15,10 @@ import org.netbeans.api.visual.widget.Widget;
 public class LabelTextFieldEditor implements TextFieldInplaceEditor
 {
 
-	private Canvas canvas;
+	private AbstractCanvas canvas;
 	private PropertyChangeSupport monitor;
 
-	public LabelTextFieldEditor(Canvas canvas)
+	public LabelTextFieldEditor(AbstractCanvas canvas)
 	{
 		this.canvas = canvas;
 		monitor = new PropertyChangeSupport(this);
@@ -34,7 +34,7 @@ public class LabelTextFieldEditor implements TextFieldInplaceEditor
 	@Override
 	public boolean isEnabled(Widget widget)
 	{
-		if (canvas.getActiveTool().equals(CanvasData.SELECT))
+		if (canvas.getActiveTool().equals(CanvasStrings.SELECT))
 		{
 			return true;
 		}

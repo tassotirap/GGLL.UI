@@ -1,6 +1,6 @@
 package ggll.project;
 
-import ggll.canvas.Canvas;
+import ggll.canvas.AbstractCanvas;
 import ggll.canvas.state.StaticStateManager;
 import ggll.file.FileNames;
 import ggll.ui.MainWindow;
@@ -26,7 +26,7 @@ public final class GGLLManager
 	private static Project project;
 	private static FileManager fileManager;
 	private static UnsavedViewRepository unViewManager;
-	private static Canvas activeScene;
+	private static AbstractCanvas activeScene;
 
 	public static void closeFile(String fileName)
 	{
@@ -70,7 +70,7 @@ public final class GGLLManager
 		System.exit(0);
 	}
 
-	public static Canvas getActiveScene()
+	public static AbstractCanvas getActiveScene()
 	{
 		return activeScene;
 	}
@@ -131,9 +131,9 @@ public final class GGLLManager
 		{
 			TextPrinter.printText(((TextAreaComponent) object).getText());
 		}
-		else if (object instanceof Canvas)
+		else if (object instanceof AbstractCanvas)
 		{
-			ComponentPrinter.printWidget((Canvas) object);
+			ComponentPrinter.printWidget((AbstractCanvas) object);
 		}
 	}
 
@@ -157,7 +157,7 @@ public final class GGLLManager
 		return GGLLManager.project.save();
 	}
 
-	public static void setActiveScene(Canvas activeScene)
+	public static void setActiveScene(AbstractCanvas activeScene)
 	{
 		GGLLManager.activeScene = activeScene;
 	}

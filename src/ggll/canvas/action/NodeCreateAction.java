@@ -1,7 +1,7 @@
 package ggll.canvas.action;
 
-import ggll.canvas.Canvas;
-import ggll.canvas.CanvasData;
+import ggll.canvas.AbstractCanvas;
+import ggll.canvas.CanvasStrings;
 import ggll.canvas.CanvasFactory;
 import ggll.core.syntax.command.CommandFactory;
 import ggll.project.GGLLManager;
@@ -17,7 +17,7 @@ public class NodeCreateAction extends WidgetAction.Adapter
 
 	private PropertyChangeSupport monitor;
 
-	public NodeCreateAction(Canvas canvas)
+	public NodeCreateAction(AbstractCanvas canvas)
 	{
 		monitor = new PropertyChangeSupport(this);
 		monitor.addPropertyChangeListener(CanvasFactory.getVolatileStateManager());
@@ -25,28 +25,28 @@ public class NodeCreateAction extends WidgetAction.Adapter
 
 	private String createDefaultName()
 	{
-		Canvas canvas = CanvasFactory.getCanvas();
-		if (canvas.getCanvasActiveTool().equals(CanvasData.TERMINAL))
+		AbstractCanvas canvas = CanvasFactory.getCanvas();
+		if (canvas.getCanvasActiveTool().equals(CanvasStrings.TERMINAL))
 		{
 			GGLLManager.getProject().getGrammarFile().incLastTerminalId();
 			return String.format("Terminal%d", GGLLManager.getProject().getGrammarFile().getLastTerminalId());
 		}
-		if (canvas.getCanvasActiveTool().equals(CanvasData.N_TERMINAL))
+		if (canvas.getCanvasActiveTool().equals(CanvasStrings.N_TERMINAL))
 		{
 			GGLLManager.getProject().getGrammarFile().incLastNTerminalId();
 			return String.format("NTerminal%d", GGLLManager.getProject().getGrammarFile().getLastNTerminalId());
 		}
-		if (canvas.getCanvasActiveTool().equals(CanvasData.LEFT_SIDE))
+		if (canvas.getCanvasActiveTool().equals(CanvasStrings.LEFT_SIDE))
 		{
 			GGLLManager.getProject().getGrammarFile().incLastLeftSides();
 			return String.format("LeftSide%d", GGLLManager.getProject().getGrammarFile().getLastLeftSides());
 		}
-		if (canvas.getCanvasActiveTool().equals(CanvasData.LAMBDA))
+		if (canvas.getCanvasActiveTool().equals(CanvasStrings.LAMBDA))
 		{
 			GGLLManager.getProject().getGrammarFile().incLastLAMBDA();
 			return String.format("Lambda%d", GGLLManager.getProject().getGrammarFile().getLastLAMBDA());
 		}
-		if (canvas.getCanvasActiveTool().equals(CanvasData.START))
+		if (canvas.getCanvasActiveTool().equals(CanvasStrings.START))
 		{
 			GGLLManager.getProject().getGrammarFile().incLastSTART();
 			return String.format("S%d", GGLLManager.getProject().getGrammarFile().getLastSTART());
@@ -55,15 +55,15 @@ public class NodeCreateAction extends WidgetAction.Adapter
 		return String.format("node%d", GGLLManager.getProject().getGrammarFile().getLastCustomNode());
 	}
 
-	private boolean isNode(Canvas canvas)
+	private boolean isNode(AbstractCanvas canvas)
 	{
-		return canvas.getCanvasActiveTool().equals(CanvasData.LEFT_SIDE) || canvas.getCanvasActiveTool().equals(CanvasData.TERMINAL) || canvas.getCanvasActiveTool().equals(CanvasData.N_TERMINAL) || canvas.getCanvasActiveTool().equals(CanvasData.LAMBDA) || canvas.getCanvasActiveTool().equals(CanvasData.LABEL) || canvas.getCanvasActiveTool().equals(CanvasData.START);
+		return canvas.getCanvasActiveTool().equals(CanvasStrings.LEFT_SIDE) || canvas.getCanvasActiveTool().equals(CanvasStrings.TERMINAL) || canvas.getCanvasActiveTool().equals(CanvasStrings.N_TERMINAL) || canvas.getCanvasActiveTool().equals(CanvasStrings.LAMBDA) || canvas.getCanvasActiveTool().equals(CanvasStrings.LABEL) || canvas.getCanvasActiveTool().equals(CanvasStrings.START);
 	}
 
 	@Override
 	public State mousePressed(Widget widget, WidgetMouseEvent event)
 	{
-		Canvas canvas = CanvasFactory.getCanvas();
+		AbstractCanvas canvas = CanvasFactory.getCanvas();
 		if (event.getClickCount() == 1)
 		{
 			if (event.getButton() == MouseEvent.BUTTON1 && isNode(canvas))

@@ -1,6 +1,6 @@
 package ggll.canvas.provider;
 
-import ggll.canvas.Canvas;
+import ggll.canvas.AbstractCanvas;
 import ggll.canvas.CanvasFactory;
 import ggll.core.syntax.command.CommandFactory;
 import ggll.core.syntax.grammar.model.SyntaxDefinitions;
@@ -21,7 +21,7 @@ public class MultiMoveProvider implements MoveProvider
 
 	private HashMap<Widget, Point> originals = new HashMap<Widget, Point>();
 
-	public MultiMoveProvider(Canvas canvas)
+	public MultiMoveProvider(AbstractCanvas canvas)
 	{
 		monitor = new PropertyChangeSupport(this);
 		monitor.addPropertyChangeListener(CanvasFactory.getVolatileStateManager());
@@ -57,7 +57,7 @@ public class MultiMoveProvider implements MoveProvider
 	@Override
 	public void movementStarted(Widget widget)
 	{
-		Canvas canvas = CanvasFactory.getCanvas();
+		AbstractCanvas canvas = CanvasFactory.getCanvas();
 		Object object = canvas.findObject(widget);
 		if (canvas.isNode(object) || canvas.isLabel(object))
 		{

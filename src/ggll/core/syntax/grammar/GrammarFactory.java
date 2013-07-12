@@ -1,6 +1,6 @@
 package ggll.core.syntax.grammar;
 
-import ggll.canvas.Canvas;
+import ggll.canvas.AbstractCanvas;
 import ggll.core.syntax.command.AsinEditor;
 import ggll.core.syntax.grammar.model.AbstractNode;
 import ggll.core.syntax.grammar.model.LambdaAlternative;
@@ -118,7 +118,7 @@ public class GrammarFactory
 	{
 		StringBuffer returnString = new StringBuffer();
 
-		Canvas canvas = GGLLManager.getActiveScene();
+		AbstractCanvas canvas = GGLLManager.getActiveScene();
 
 		List<SyntaxElement> children = AsinEditor.getInstance().getLogicDiagram(canvas).getChildrenNodes();
 		List<AbstractNode> startNodes = clearAndSetStartNodes(children);

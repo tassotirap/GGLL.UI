@@ -1,6 +1,6 @@
 package ggll.output;
 
-import ggll.canvas.Canvas;
+import ggll.canvas.AbstractCanvas;
 import ggll.util.ExampleFileFilter;
 import ggll.util.IOUtilities;
 import ggll.util.Log;
@@ -141,7 +141,7 @@ public class Output extends HtmlViewer
 		return result.getContent();
 	}
 
-	public JComponent getView(Canvas canvas)
+	public JComponent getView(AbstractCanvas canvas)
 	{
 		setActiveScene(canvas);
 		return getEditorPane();

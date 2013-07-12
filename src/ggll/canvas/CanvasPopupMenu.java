@@ -1,7 +1,7 @@
 package ggll.canvas;
 
 import ggll.canvas.action.GridProvider;
-import ggll.canvas.action.LineProvider;
+import ggll.canvas.provider.LineProvider;
 import ggll.canvas.provider.WidgetCopyPasteProvider;
 import ggll.canvas.provider.WidgetDeleteProvider;
 import ggll.canvas.state.VolatileStateManager;
@@ -35,14 +35,14 @@ public class CanvasPopupMenu extends WidgetAction.Adapter implements PopupMenuPr
 {
 
 	final JPopupMenu popup = new JPopupMenu();
-	private Canvas canvas;
+	private AbstractCanvas canvas;
 	private GridProvider gridProvider;
 	private LineProvider lineProvider;
 	private PropertyChangeSupport monitor;
 
 	private Widget widget;
 
-	public CanvasPopupMenu(Canvas canvas)
+	public CanvasPopupMenu(AbstractCanvas canvas)
 	{
 		this.canvas = canvas;
 		gridProvider = GridProvider.getInstance(canvas);
@@ -146,10 +146,10 @@ public class CanvasPopupMenu extends WidgetAction.Adapter implements PopupMenuPr
 		JRadioButtonMenuItem alignMenuItem = new JRadioButtonMenuItem("Auto Align");
 		JRadioButtonMenuItem linesMenuItem = new JRadioButtonMenuItem("Snap To Lines");
 
-		freeMenuItem.setSelected(canvas.getCanvasState().getPreferences().getMoveStrategy().equals(CanvasData.M_FREE));
-		snapMenuItem.setSelected(canvas.getCanvasState().getPreferences().getMoveStrategy().equals(CanvasData.M_SNAP));
-		alignMenuItem.setSelected(canvas.getCanvasState().getPreferences().getMoveStrategy().equals(CanvasData.M_ALIGN));
-		linesMenuItem.setSelected(canvas.getCanvasState().getPreferences().getMoveStrategy().equals(CanvasData.M_LINES));
+		freeMenuItem.setSelected(canvas.getCanvasState().getPreferences().getMoveStrategy().equals(CanvasStrings.M_FREE));
+		snapMenuItem.setSelected(canvas.getCanvasState().getPreferences().getMoveStrategy().equals(CanvasStrings.M_SNAP));
+		alignMenuItem.setSelected(canvas.getCanvasState().getPreferences().getMoveStrategy().equals(CanvasStrings.M_ALIGN));
+		linesMenuItem.setSelected(canvas.getCanvasState().getPreferences().getMoveStrategy().equals(CanvasStrings.M_LINES));
 
 		movingMenu.add(freeMenuItem);
 		movingMenu.add(snapMenuItem);
@@ -163,7 +163,7 @@ public class CanvasPopupMenu extends WidgetAction.Adapter implements PopupMenuPr
 			{
 				gridProvider.setVisible(false);
 				lineProvider.removeAllLines();
-				canvas.setMoveStrategy(CanvasData.M_FREE);
+				canvas.setMoveStrategy(CanvasStrings.M_FREE);
 			}
 		});
 
@@ -174,7 +174,7 @@ public class CanvasPopupMenu extends WidgetAction.Adapter implements PopupMenuPr
 			{
 				gridProvider.setVisible(true);
 				lineProvider.removeAllLines();
-				canvas.setMoveStrategy(CanvasData.M_SNAP);
+				canvas.setMoveStrategy(CanvasStrings.M_SNAP);
 			}
 		});
 
@@ -185,7 +185,7 @@ public class CanvasPopupMenu extends WidgetAction.Adapter implements PopupMenuPr
 			{
 				gridProvider.setVisible(false);
 				lineProvider.removeAllLines();
-				canvas.setMoveStrategy(CanvasData.M_ALIGN);
+				canvas.setMoveStrategy(CanvasStrings.M_ALIGN);
 			}
 		});
 
@@ -196,7 +196,7 @@ public class CanvasPopupMenu extends WidgetAction.Adapter implements PopupMenuPr
 			{
 				gridProvider.setVisible(false);
 				lineProvider.populateCanvas();
-				canvas.setMoveStrategy(CanvasData.M_LINES);
+				canvas.setMoveStrategy(CanvasStrings.M_LINES);
 			}
 		});
 		return movingMenu;
@@ -253,9 +253,9 @@ public class CanvasPopupMenu extends WidgetAction.Adapter implements PopupMenuPr
 		JRadioButtonMenuItem directMenuItem = new JRadioButtonMenuItem("Direct");
 		JRadioButtonMenuItem freeMenuItem = new JRadioButtonMenuItem("Free");
 
-		ortoMenuItem.setSelected(canvas.getCanvasState().getPreferences().getConnectionStrategy().equals(CanvasData.R_ORTHOGONAL));
-		directMenuItem.setSelected(canvas.getCanvasState().getPreferences().getConnectionStrategy().equals(CanvasData.R_DIRECT));
-		freeMenuItem.setSelected(canvas.getCanvasState().getPreferences().getConnectionStrategy().equals(CanvasData.R_FREE));
+		ortoMenuItem.setSelected(canvas.getCanvasState().getPreferences().getConnectionStrategy().equals(CanvasStrings.R_ORTHOGONAL));
+		directMenuItem.setSelected(canvas.getCanvasState().getPreferences().getConnectionStrategy().equals(CanvasStrings.R_DIRECT));
+		freeMenuItem.setSelected(canvas.getCanvasState().getPreferences().getConnectionStrategy().equals(CanvasStrings.R_FREE));
 
 		routingMenu.add(ortoMenuItem);
 		routingMenu.add(directMenuItem);
@@ -266,7 +266,7 @@ public class CanvasPopupMenu extends WidgetAction.Adapter implements PopupMenuPr
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				canvas.setConnStrategy(CanvasData.R_ORTHOGONAL);
+				canvas.setConnStrategy(CanvasStrings.R_ORTHOGONAL);
 			}
 		});
 
@@ -275,7 +275,7 @@ public class CanvasPopupMenu extends WidgetAction.Adapter implements PopupMenuPr
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				canvas.setConnStrategy(CanvasData.R_DIRECT);
+				canvas.setConnStrategy(CanvasStrings.R_DIRECT);
 			}
 		});
 
@@ -284,7 +284,7 @@ public class CanvasPopupMenu extends WidgetAction.Adapter implements PopupMenuPr
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				canvas.setConnStrategy(CanvasData.R_FREE);
+				canvas.setConnStrategy(CanvasStrings.R_FREE);
 			}
 		});
 
@@ -445,9 +445,9 @@ public class CanvasPopupMenu extends WidgetAction.Adapter implements PopupMenuPr
 		JCheckBoxMenuItem guideMenuItem = new JCheckBoxMenuItem("Guide Line");
 
 		nothingMenuItem.setSelected((!canvas.isShowingGrid() && !canvas.isShowingGuide() && !canvas.isShowingLines()));
-		gridMenuItem.setEnabled(canvas.getCanvasState().getPreferences().getMoveStrategy().equals(CanvasData.M_FREE));
+		gridMenuItem.setEnabled(canvas.getCanvasState().getPreferences().getMoveStrategy().equals(CanvasStrings.M_FREE));
 		gridMenuItem.setSelected(canvas.isShowingGrid());
-		lineMenuItem.setEnabled(canvas.getCanvasState().getPreferences().getMoveStrategy().equals(CanvasData.M_FREE));
+		lineMenuItem.setEnabled(canvas.getCanvasState().getPreferences().getMoveStrategy().equals(CanvasStrings.M_FREE));
 		lineMenuItem.setSelected(canvas.isShowingLines());
 		guideMenuItem.setSelected(canvas.isShowingGuide());
 

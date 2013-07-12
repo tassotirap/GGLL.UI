@@ -1,7 +1,7 @@
 package ggll.canvas.provider;
 
-import ggll.canvas.Canvas;
-import ggll.canvas.CanvasData;
+import ggll.canvas.AbstractCanvas;
+import ggll.canvas.CanvasStrings;
 import ggll.canvas.CanvasFactory;
 import ggll.canvas.action.WidgetSelection;
 import ggll.canvas.state.Connection;
@@ -22,10 +22,10 @@ import org.netbeans.api.visual.widget.Widget;
 public class WidgetCopyPasteProvider
 {
 
-	private Canvas canvas;
+	private AbstractCanvas canvas;
 	private PropertyChangeSupport monitor;
 
-	public WidgetCopyPasteProvider(Canvas canvas)
+	public WidgetCopyPasteProvider(AbstractCanvas canvas)
 	{
 		this.canvas = canvas;
 		monitor = new PropertyChangeSupport(this);
@@ -150,7 +150,7 @@ public class WidgetCopyPasteProvider
 					n.setName(n.getName() + "_" + (i++));
 					newName = n.getName();
 					oldNewNames.put(oldName, newName);
-					if (n.getType().equals(CanvasData.LEFT_SIDE) || n.getType().equals(CanvasData.START))
+					if (n.getType().equals(CanvasStrings.LEFT_SIDE) || n.getType().equals(CanvasStrings.START))
 					{
 						if (n.getTitle().endsWith("_" + (i - 2)))
 							n.setTitle(n.getTitle().substring(0, n.getTitle().length() - ("_" + Math.abs(i - 2)).length()));

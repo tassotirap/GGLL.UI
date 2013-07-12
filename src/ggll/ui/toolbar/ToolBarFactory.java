@@ -1,6 +1,6 @@
 package ggll.ui.toolbar;
 
-import ggll.canvas.Canvas;
+import ggll.canvas.AbstractCanvas;
 
 import java.util.HashMap;
 
@@ -17,7 +17,7 @@ public class ToolBarFactory
 	{
 	}
 
-	private ToolBarCanvas createToolBarCanvas(final Canvas canvas)
+	private ToolBarCanvas createToolBarCanvas(final AbstractCanvas canvas)
 	{
 		ToolBarCanvas toolBarCanvas = new ToolBarCanvas(canvas);
 		toolBarCanvas.setLayout(new BoxLayout(toolBarCanvas, BoxLayout.LINE_AXIS));
@@ -37,7 +37,7 @@ public class ToolBarFactory
 		}
 		if (enableToolBarCanvas)
 		{
-			ToolBarCanvas toolBarCanvas = createToolBarCanvas((Canvas) acContextHolder);
+			ToolBarCanvas toolBarCanvas = createToolBarCanvas((AbstractCanvas) acContextHolder);
 			panel.add(toolBarCanvas);
 		}
 		return panel;
