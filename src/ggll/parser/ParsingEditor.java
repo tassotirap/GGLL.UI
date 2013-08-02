@@ -87,7 +87,7 @@ public class ParsingEditor
 				@Override
 				public void Output()
 				{
-					printStack(analyzer.getParseStacks().getParseStack());
+					printStack(analyzer.getParserStacks().getParseStack());
 
 				}
 			});

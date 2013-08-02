@@ -1,6 +1,6 @@
 package ggll.ui;
 
-import ggll.exceptions.WarningException;
+import ggll.core.exceptions.WarningException;
 import ggll.project.ProjectHelper;
 import ggll.util.Log;
 

@@ -1,6 +1,6 @@
 package ggll.project;
 
-import ggll.exceptions.WarningException;
+import ggll.core.exceptions.WarningException;
 import ggll.file.FileNames;
 import ggll.file.GrammarFile;
 import ggll.file.LexicalFile;
