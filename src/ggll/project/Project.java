@@ -2,13 +2,10 @@ package ggll.project;
 
 import ggll.file.GrammarFile;
 import ggll.file.LexicalFile;
-import ggll.file.MetaFile;
 import ggll.file.SemanticFile;
 import ggll.ui.ThemeManager.Theme;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,8 +23,6 @@ public class Project implements Serializable
 	private LexicalFile lexicalFile;
 	private SemanticFile semanticFile;
 
-	private MetaFile metadataFile;
-	private String name;
 	private List<File> openedFiles;
 
 	private File projectDir;
@@ -70,15 +65,6 @@ public class Project implements Serializable
 		return lexicalFile;
 	}
 
-	public MetaFile getMetadataFile()
-	{
-		return metadataFile;
-	}
-
-	public String getName()
-	{
-		return name;
-	}
 
 	public List<File> getOpenedFiles()
 	{
@@ -110,22 +96,6 @@ public class Project implements Serializable
 		return yyLexFile;
 	}
 
-	public boolean save()
-	{
-		try
-		{
-			FileOutputStream fileOutputStream = new FileOutputStream(getMetadataFile());
-			new ObjectOutputStream(fileOutputStream).writeObject(this);
-			fileOutputStream.close();
-			return true;
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-			return false;
-		}
-	}
-
 	public void setGrammarFile(GrammarFile grammarFile)
 	{
 		this.grammarFile = grammarFile;
@@ -134,16 +104,6 @@ public class Project implements Serializable
 	public void setLexicalFile(LexicalFile lexFile)
 	{
 		this.lexicalFile = lexFile;
-	}
-
-	public void setMetadataFile(MetaFile metadataFile)
-	{
-		this.metadataFile = metadataFile;
-	}
-
-	public void setName(String name)
-	{
-		this.name = name;
 	}
 
 	public void setOpenedFiles(List<File> openedFiles)

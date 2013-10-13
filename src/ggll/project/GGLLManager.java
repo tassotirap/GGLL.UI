@@ -66,7 +66,6 @@ public final class GGLLManager
 				saveFile(dynamicView.getComponentModel());
 			}
 		}
-		saveProject();
 		System.exit(0);
 	}
 
@@ -150,11 +149,6 @@ public final class GGLLManager
 	public static void saveFile(Object object)
 	{
 		GGLLManager.fileManager.saveFileObject(object);
-	}
-
-	public static boolean saveProject()
-	{
-		return GGLLManager.project.save();
 	}
 
 	public static void setActiveScene(AbstractCanvas activeScene)

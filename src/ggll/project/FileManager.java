@@ -77,7 +77,6 @@ public class FileManager
 				break;
 			}
 		}
-		project.save();
 	}
 
 	public void createFile(String name, FileNames extension) throws IOException
@@ -178,8 +177,6 @@ public class FileManager
 					mainWindow.addComponent(new TextAreaComponent(path), file.getName(), path, iconFactory.getIcon(IconType.TXT_ICON), TabPlace.CENTER_TABS);
 				}
 				project.getOpenedFiles().add(new File(path));
-
-				project.save();
 			}
 			catch (Exception ex)
 			{
@@ -248,7 +245,6 @@ public class FileManager
 			{
 				mainWindow.setSaved(path);
 			}
-			project.save();
 		}
 	}
 

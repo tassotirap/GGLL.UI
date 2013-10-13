@@ -4,13 +4,10 @@ import ggll.core.exceptions.WarningException;
 import ggll.file.FileNames;
 import ggll.file.GrammarFile;
 import ggll.file.LexicalFile;
-import ggll.file.MetaFile;
 import ggll.file.SemanticFile;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 
 public class ProjectHelper
 {
@@ -22,20 +19,16 @@ public class ProjectHelper
 		GrammarFile gramFile = new GrammarFile(basePath + name + FileNames.GRAM_EXTENSION);
 		SemanticFile semFile = new SemanticFile(basePath + name + FileNames.SEM_EXTENSION);
 		LexicalFile lexFile = new LexicalFile(basePath + name + FileNames.LEX_EXTENSION);
-		MetaFile metadataFile = new MetaFile(basePath + FileNames.METADATA_FILENAME);
 
 		gramFile.create();
 		semFile.create();
 		lexFile.create();
-		metadataFile.create();
 
 		Project project = new Project(projectRoot.getAbsolutePath());
 		project.setGrammarFile(gramFile);
 		project.setSemamticFile(semFile);
 		project.setLexicalFile(lexFile);
-		project.setMetadataFile(metadataFile);
 		project.getOpenedFiles().add(gramFile);
-		project.save();
 	}
 
 	public static boolean isProject(File projectRoot) throws WarningException
@@ -43,7 +36,6 @@ public class ProjectHelper
 		boolean hasGrammarFile = false;
 		boolean hasSemanticFile = false;
 		boolean hasLexicalFile = false;
-		boolean hasMetaFile = false;
 
 		for (File file : projectRoot.listFiles())
 		{
@@ -59,37 +51,50 @@ public class ProjectHelper
 			{
 				hasLexicalFile = true;
 			}
-			else if (file.getName().equals(FileNames.METADATA_FILENAME))
-			{
-				hasMetaFile = true;
-			}
 		}
-		return hasGrammarFile && hasSemanticFile && hasLexicalFile && hasMetaFile;
+		return hasGrammarFile && hasSemanticFile && hasLexicalFile;
 	}
 
 	public static Project openProject(String projectRootPath)
 	{
+		Project project = null;
+		GrammarFile gramFile = null;
+		SemanticFile semFile = null;
+		LexicalFile lexFile = null;
+		
+		if(!projectRootPath.endsWith("/"))
+		{
+			projectRootPath += "/";
+		}			
+		
 		try
 		{
-			if (!(projectRootPath.endsWith("/") || projectRootPath.endsWith("\\")))
+			File projectRoot = new File(projectRootPath);
+			for (File file : projectRoot.listFiles())
 			{
-				projectRootPath += "/";
-			}
-			File metaFile = new File(projectRootPath + FileNames.METADATA_FILENAME);
-			FileInputStream fileInputStream = new FileInputStream(metaFile);
-			if (metaFile.length() > 0)
-			{
-				ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
-				Object object = objectInputStream.readObject();
-				if (object instanceof Project)
+				if (file.getName().endsWith(FileNames.GRAM_EXTENSION))
 				{
-					Project result = (Project) object;
-					objectInputStream.close();
-					return result;
+					gramFile = new GrammarFile(file.getAbsolutePath());
 				}
-				objectInputStream.close();
+				else if (file.getName().endsWith(FileNames.SEM_EXTENSION))
+				{
+					semFile = new SemanticFile(file.getAbsolutePath());
+				}
+				else if (file.getName().endsWith(FileNames.LEX_EXTENSION))
+				{
+					lexFile = new LexicalFile(file.getAbsolutePath());
+				}
 			}
-			return null;
+
+			if (gramFile != null && semFile != null && lexFile != null)
+			{
+				project = new Project(projectRootPath);
+				project.setGrammarFile(gramFile);
+				project.setSemamticFile(semFile);
+				project.setLexicalFile(lexFile);
+				project.getOpenedFiles().add(gramFile);
+				return project;
+			}
 		}
 		catch (Exception e)
 		{
