@@ -1,10 +1,9 @@
 package ggll.canvas.action;
 
 import ggll.canvas.AbstractCanvas;
-import ggll.canvas.CanvasStrings;
 import ggll.canvas.CanvasFactory;
+import ggll.canvas.CanvasStrings;
 import ggll.core.syntax.command.CommandFactory;
-import ggll.project.GGLLManager;
 
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeSupport;
@@ -28,31 +27,31 @@ public class NodeCreateAction extends WidgetAction.Adapter
 		AbstractCanvas canvas = CanvasFactory.getCanvas();
 		if (canvas.getCanvasActiveTool().equals(CanvasStrings.TERMINAL))
 		{
-			GGLLManager.getProject().getGrammarFile().incLastTerminalId();
-			return String.format("Terminal%d", GGLLManager.getProject().getGrammarFile().getLastTerminalId());
+			canvas.getCanvasState().incLastTerminalId();
+			return String.format("Terminal%d", canvas.getCanvasState().getLastTerminalId());
 		}
 		if (canvas.getCanvasActiveTool().equals(CanvasStrings.N_TERMINAL))
 		{
-			GGLLManager.getProject().getGrammarFile().incLastNTerminalId();
-			return String.format("NTerminal%d", GGLLManager.getProject().getGrammarFile().getLastNTerminalId());
+			canvas.getCanvasState().incLastNTerminalId();
+			return String.format("NTerminal%d", canvas.getCanvasState().getLastNTerminalId());
 		}
 		if (canvas.getCanvasActiveTool().equals(CanvasStrings.LEFT_SIDE))
 		{
-			GGLLManager.getProject().getGrammarFile().incLastLeftSides();
-			return String.format("LeftSide%d", GGLLManager.getProject().getGrammarFile().getLastLeftSides());
+			canvas.getCanvasState().incLastLeftSides();
+			return String.format("LeftSide%d", canvas.getCanvasState().getLastLeftSides());
 		}
 		if (canvas.getCanvasActiveTool().equals(CanvasStrings.LAMBDA))
 		{
-			GGLLManager.getProject().getGrammarFile().incLastLAMBDA();
-			return String.format("Lambda%d", GGLLManager.getProject().getGrammarFile().getLastLAMBDA());
+			canvas.getCanvasState().incLastLAMBDA();
+			return String.format("Lambda%d", canvas.getCanvasState().getLastLAMBDA());
 		}
 		if (canvas.getCanvasActiveTool().equals(CanvasStrings.START))
 		{
-			GGLLManager.getProject().getGrammarFile().incLastSTART();
-			return String.format("S%d", GGLLManager.getProject().getGrammarFile().getLastSTART());
+			canvas.getCanvasState().incLastSTART();
+			return String.format("S%d", canvas.getCanvasState().getLastSTART());
 		}
-		GGLLManager.getProject().getGrammarFile().incLastCustomNode();
-		return String.format("node%d", GGLLManager.getProject().getGrammarFile().getLastCustomNode());
+		canvas.getCanvasState().incLastCustomNode();
+		return String.format("node%d", canvas.getCanvasState().getLastCustomNode());
 	}
 
 	private boolean isNode(AbstractCanvas canvas)

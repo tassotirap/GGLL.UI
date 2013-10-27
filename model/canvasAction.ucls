@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class-diagram version="1.1.4" icons="true" always-add-relationships="false" generalizations="true" realizations="true" 
+  associations="true" dependencies="false" nesting-relationships="true">  
+  <class id="1" language="java" name="ggll.canvas.action.NodeCreateAction" project="GGLL.UI" 
+    file="/GGLL.UI/src/ggll/canvas/action/NodeCreateAction.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="153" width="262" x="41" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="2" language="java" name="ggll.canvas.action.ActionFactory" project="GGLL.UI" 
+    file="/GGLL.UI/src/ggll/canvas/action/ActionFactory.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="1647" width="682" x="643" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="3" language="java" name="ggll.canvas.action.WidgetSelection" project="GGLL.UI" 
+    file="/GGLL.UI/src/ggll/canvas/action/WidgetSelection.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="225" width="260" x="343" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="4" language="java" name="ggll.canvas.action.GridProvider" project="GGLL.UI" 
+    file="/GGLL.UI/src/ggll/canvas/action/GridProvider.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="171" width="232" x="1365" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="5" language="java" name="ggll.canvas.action.WidgetDeleteAction" project="GGLL.UI" 
+    file="/GGLL.UI/src/ggll/canvas/action/WidgetDeleteAction.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="117" width="239" x="504" y="1724"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="6" language="java" name="ggll.canvas.action.LabelTextFieldEditor" project="GGLL.UI" 
+    file="/GGLL.UI/src/ggll/canvas/action/LabelTextFieldEditor.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="171" width="208" x="1647" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="7" language="java" name="ggll.canvas.action.WidgetCopyPasteAction" project="GGLL.UI" 
+    file="/GGLL.UI/src/ggll/canvas/action/WidgetCopyPasteAction.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="117" width="275" x="783" y="1724"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="8" language="java" name="ggll.canvas.action.WidgetActionFactory" project="GGLL.UI" 
+    file="/GGLL.UI/src/ggll/canvas/action/WidgetActionFactory.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="657" width="257" x="1895" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <association id="9">    
+    <end type="SOURCE" refId="2" navigable="false">      
+      <attribute id="10" name="DELETE_ACTION"/>      
+      <multiplicity id="11" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="5" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="12">    
+    <end type="SOURCE" refId="8" navigable="false">      
+      <attribute id="13" name="instance"/>      
+      <multiplicity id="14" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="8" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="15">    
+    <end type="SOURCE" refId="4" navigable="false">      
+      <attribute id="16" name="gridProviders"/>      
+      <multiplicity id="17" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="4" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="18">    
+    <end type="SOURCE" refId="2" navigable="false">      
+      <attribute id="19" name="COPY_PASTE_ACTION"/>      
+      <multiplicity id="20" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="7" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+    accessors="true" visibility="true">    
+    <attributes public="true" package="true" protected="true" private="true" static="true"/>    
+    <operations public="true" package="true" protected="true" private="true" static="true"/>  
+  </classifier-display>  
+  <association-display labels="true" multiplicity="true"/>
+</class-diagram>

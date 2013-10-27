@@ -1,10 +1,10 @@
 package ggll.project;
 
-import ggll.core.exceptions.WarningException;
 import ggll.file.FileNames;
 import ggll.file.GrammarFile;
 import ggll.file.LexicalFile;
 import ggll.file.SemanticFile;
+import ggll.ui.exceptions.WarningException;
 
 import java.io.File;
 import java.io.IOException;

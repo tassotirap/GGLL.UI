@@ -1,7 +1,7 @@
 package ggll.ui;
 
-import ggll.core.exceptions.WarningException;
 import ggll.project.ProjectHelper;
+import ggll.ui.exceptions.WarningException;
 import ggll.util.Log;
 
 import java.awt.Dimension;

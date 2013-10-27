@@ -86,18 +86,8 @@ import org.netbeans.modules.visual.action.TwoStatedMouseHoverAction;
 import org.netbeans.modules.visual.action.WheelPanAction;
 import org.netbeans.modules.visual.action.ZoomAction;
 
-/**
- * The factory class of all built-in actions. Action creation usually requires
- * some parameter like decorator (cares about the visualization) and provider
- * (cares about the logic of an action).
- * <p>
- * Instances of the built-in actions could be shared by multiple widgets.
- * 
- * @author David Kaspar
- */
 public final class ActionFactory
 {
-
 	private static final ActionMapAction ACTION_MAP_ACTION = new ActionMapAction(null, null);
 
 	private static final AlignWithMoveDecorator ALIGN_WITH_MOVE_DECORATOR_DEFAULT = new AlignWithMoveDecorator()

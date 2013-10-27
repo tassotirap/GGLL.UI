@@ -36,7 +36,6 @@ import org.netbeans.api.visual.widget.LayerWidget;
 
 public abstract class AbstractCanvas extends GraphScene.StringGraph implements PropertyChangeListener
 {
-
 	private static final double MIN_ZOOM = 0.5;
 
 	private static final double MAX_ZOOM = 1.5;

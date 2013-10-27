@@ -28,6 +28,13 @@ public class CanvasState implements Serializable, ObjectSceneListener, PropertyC
 	private HashMap<String, Node> nodes = new HashMap<String, Node>();
 	private Preferences preferences = new Preferences();
 
+	private int lastTerminalId = 0;
+	private int lastNTerminalId = 0;
+	private int lastLeftSides = 0;
+	private int lastLAMBDA = 0;
+	private int lastSTART = 0;
+	private int lastCustomNode = 0;
+
 	public CanvasState()
 	{
 	}
@@ -81,6 +88,36 @@ public class CanvasState implements Serializable, ObjectSceneListener, PropertyC
 		return list;
 	}
 
+	public int getLastCustomNode()
+	{
+		return lastCustomNode;
+	}
+
+	public int getLastLAMBDA()
+	{
+		return lastLAMBDA;
+	}
+
+	public int getLastLeftSides()
+	{
+		return lastLeftSides;
+	}
+
+	public int getLastNTerminalId()
+	{
+		return lastNTerminalId;
+	}
+
+	public int getLastSTART()
+	{
+		return lastSTART;
+	}
+
+	public int getLastTerminalId()
+	{
+		return lastTerminalId;
+	}
+
 	public Set<String> getNodes()
 	{
 		return nodes.keySet();
@@ -113,6 +150,36 @@ public class CanvasState implements Serializable, ObjectSceneListener, PropertyC
 	@Override
 	public void hoverChanged(ObjectSceneEvent arg0, Object arg1, Object arg2)
 	{
+	}
+
+	public void incLastCustomNode()
+	{
+		this.lastCustomNode++;
+	}
+
+	public void incLastLAMBDA()
+	{
+		this.lastLAMBDA++;
+	}
+
+	public void incLastLeftSides()
+	{
+		this.lastLeftSides++;
+	}
+
+	public void incLastNTerminalId()
+	{
+		this.lastNTerminalId++;
+	}
+
+	public void incLastSTART()
+	{
+		this.lastSTART++;
+	}
+
+	public void incLastTerminalId()
+	{
+		this.lastTerminalId++;
 	}
 
 	@Override

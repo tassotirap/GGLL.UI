@@ -2,6 +2,10 @@ package ggll.parser;
 
 import ggll.core.compile.ClassLoader;
 import ggll.core.compile.Compiler;
+import ggll.core.exceptions.ErrorRecoveryException;
+import ggll.core.exceptions.LexicalException;
+import ggll.core.exceptions.SemanticException;
+import ggll.core.exceptions.SintaticException;
 import ggll.core.lexical.YyFactory;
 import ggll.core.lexical.Yylex;
 import ggll.core.semantics.SemanticRoutineClass;
@@ -54,9 +58,28 @@ public class ParsingEditor
 		else
 		{
 			AppOutput.displayText("<font color='red'>Expression can't be recognized.</font>", TOPIC.Output);
-			for (String error : analyzer.getErrorList())
+			for (Exception error : analyzer.getErrorList())
 			{
-				AppOutput.displayText("<font color='red'>" + error + "</font>", TOPIC.Output);
+				if(error instanceof SintaticException)
+				{
+					SintaticException sintaticException = (SintaticException)error;
+					AppOutput.displayText("<font color='red'>Sintatic Error: " + sintaticException.getToken() + "</font>", TOPIC.Output);
+				}
+				else if(error instanceof ErrorRecoveryException)
+				{
+					ErrorRecoveryException errorRecoveryException = (ErrorRecoveryException)error;
+					AppOutput.displayText("<font color='red'>Erro Recovery: " + errorRecoveryException.getMessage() + "</font>", TOPIC.Output);
+				}
+				else if(error instanceof LexicalException)
+				{
+					LexicalException lexicalException = (LexicalException)error;
+					AppOutput.displayText("<font color='red'>Lexical Error: " + lexicalException.getToken() + "</font>", TOPIC.Output);
+				}
+				else if(error instanceof SemanticException)
+				{
+					SemanticException semanticException = (SemanticException)error;
+					AppOutput.displayText("<font color='red'>Semantic Error: " + semanticException.getMessage() + "</font>", TOPIC.Output);
+				}				
 			}
 		}
 		analyzer = null;
