@@ -1,8 +1,8 @@
-package ggll.ui.interfaces;
+package ggll.ui.main;
 
-import ggll.ui.ThemeManager.Theme;
 import ggll.ui.component.AbstractComponent;
 import ggll.ui.icon.IconView;
+import ggll.ui.main.ThemeManager.Theme;
 import ggll.ui.tab.TabWindowList;
 
 import javax.swing.Icon;

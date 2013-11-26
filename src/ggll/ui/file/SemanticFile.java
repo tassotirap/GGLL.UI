@@ -16,7 +16,7 @@ import java.util.Set;
 
 public class SemanticFile extends File
 {
-	private static final String ORG_GRVIEW_PROJECT_EMPTY_SEMMANTIC = "/ggll/ui/project/empty_semmantic";
+	private static final String ORG_GRVIEW_PROJECT_EMPTY_SEMMANTIC = "/ggll/ui/file/template/empty_semmantic";
 	public static final String BEGIN_ROUTINE = "/* BEGIN ROUTINE: ";
 	public static final String BEGIN_SEMANTIC_ROUTINES = "/* BEGIN SEMANTIC ROUTINES */";
 	public static final String END_ROUTINE = "/* END ROUTINE: ";

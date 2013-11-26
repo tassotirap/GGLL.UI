@@ -8,7 +8,7 @@ import java.io.IOException;
 
 public class LexicalFile extends File
 {
-	private static final String ORG_GRVIEW_PROJECT_EMPTY_LEX = "/ggll/ui/project/empty_lex";
+	private static final String ORG_GRVIEW_PROJECT_EMPTY_LEX = "/ggll/ui/file/template/empty_lex";
 	private static final long serialVersionUID = 1L;
 
 	public LexicalFile(String pathname)

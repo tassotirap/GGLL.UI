@@ -1,7 +1,5 @@
-package ggll.ui;
+package ggll.ui.main;
 
-import ggll.ui.Menu.MenuModel;
-import ggll.ui.ThemeManager.Theme;
 import ggll.ui.canvas.CanvasFactory;
 import ggll.ui.component.AbstractComponent;
 import ggll.ui.component.ComponentListener;
@@ -13,7 +11,8 @@ import ggll.ui.component.ParserComponent;
 import ggll.ui.component.TextAreaComponent;
 import ggll.ui.file.FileNames;
 import ggll.ui.icon.IconFactory;
-import ggll.ui.interfaces.IMainWindow;
+import ggll.ui.main.Menu.MenuModel;
+import ggll.ui.main.ThemeManager.Theme;
 import ggll.ui.menubar.MenuBarFactory;
 import ggll.ui.project.GGLLManager;
 import ggll.ui.tab.TabWindowList;

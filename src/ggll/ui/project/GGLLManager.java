@@ -1,12 +1,12 @@
 package ggll.ui.project;
 
-import ggll.ui.MainWindow;
 import ggll.ui.canvas.AbstractCanvas;
 import ggll.ui.canvas.state.StaticStateManager;
 import ggll.ui.component.GrammarComponent;
 import ggll.ui.component.TextAreaComponent;
 import ggll.ui.file.FileNames;
-import ggll.ui.interfaces.IMainWindow;
+import ggll.ui.main.IMainWindow;
+import ggll.ui.main.MainWindow;
 import ggll.ui.util.Log;
 import ggll.ui.util.print.ComponentPrinter;
 import ggll.ui.util.print.TextPrinter;

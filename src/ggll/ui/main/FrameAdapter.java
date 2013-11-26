@@ -1,4 +1,4 @@
-package ggll.ui;
+package ggll.ui.main;
 
 import ggll.ui.project.GGLLManager;
 

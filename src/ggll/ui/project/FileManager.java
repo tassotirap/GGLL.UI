@@ -1,6 +1,5 @@
 package ggll.ui.project;
 
-import ggll.ui.MainWindow;
 import ggll.ui.canvas.AbstractCanvas;
 import ggll.ui.component.AbstractComponent;
 import ggll.ui.component.FileComponent;
@@ -10,6 +9,7 @@ import ggll.ui.component.TextAreaComponent;
 import ggll.ui.file.FileNames;
 import ggll.ui.icon.IconFactory;
 import ggll.ui.icon.IconFactory.IconType;
+import ggll.ui.main.MainWindow;
 import ggll.ui.tab.TabWindowList.TabPlace;
 import ggll.ui.util.Log;
 import ggll.ui.view.AbstractView;

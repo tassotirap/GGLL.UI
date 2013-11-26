@@ -1,9 +1,9 @@
 package ggll.ui.project;
 
-import ggll.ui.ThemeManager.Theme;
 import ggll.ui.file.GrammarFile;
 import ggll.ui.file.LexicalFile;
 import ggll.ui.file.SemanticFile;
+import ggll.ui.main.ThemeManager.Theme;
 
 import java.io.File;
 import java.io.Serializable;

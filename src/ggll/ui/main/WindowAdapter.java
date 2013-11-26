@@ -1,9 +1,8 @@
-package ggll.ui;
+package ggll.ui.main;
 
 import ggll.ui.component.AbstractComponent;
 import ggll.ui.component.EmptyComponent;
 import ggll.ui.component.FileComponent;
-import ggll.ui.interfaces.IMainWindow;
 import ggll.ui.project.GGLLManager;
 import ggll.ui.view.AbstractView;
 

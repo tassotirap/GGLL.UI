@@ -1,6 +1,5 @@
-package ggll.ui;
+package ggll.ui.main;
 
-import ggll.ui.interfaces.IMainWindow;
 import ggll.ui.lib.SplashWindow;
 import ggll.ui.project.GGLLManager;
 

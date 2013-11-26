@@ -1,8 +1,7 @@
-package ggll.ui;
+package ggll.ui.main;
 
-import ggll.ui.ThemeManager.Theme;
 import ggll.ui.canvas.AbstractCanvas;
-import ggll.ui.interfaces.IMainWindow;
+import ggll.ui.main.ThemeManager.Theme;
 import ggll.ui.project.GGLLManager;
 import ggll.ui.resource.LangResource;
 

@@ -8,7 +8,7 @@ import java.io.IOException;
 
 public class GrammarFile extends File
 {
-	private static final String ORG_GRVIEW_PROJECT_EMPTY_GRAMMAR = "/ggll/ui/project/empty_grammar";
+	private static final String ORG_GRVIEW_PROJECT_EMPTY_GRAMMAR = "/ggll/ui/file/template/empty_grammar";
 	private static final long serialVersionUID = 1L;
 
 	public GrammarFile(String pathname)
