@@ -1,0 +1,45 @@
+package ggll.ui.canvas.widget;
+
+import ggll.ui.canvas.AbstractCanvas;
+
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.Rectangle;
+
+public class GuideLineWidget extends LineWidget
+{
+
+	public static final int DEFAULT_WIDTH = 1;
+	public static final int DEFAULT_X_POS = 120;
+	public static final Color GUIDE_LINE_COLOR = new Color(240, 100, 100);
+	private AbstractCanvas canvas;
+
+	public GuideLineWidget(AbstractCanvas canvas)
+	{
+		super(canvas);
+		this.canvas = canvas;
+	}
+
+	@Override
+	protected void paintWidget()
+	{
+		height = (canvas.getBounds() == null) ? canvas.getView().getParent().getHeight() : canvas.getBounds().height;
+		width = DEFAULT_WIDTH;
+		Graphics2D g = getGraphics();
+		g.setStroke(new BasicStroke(width));
+		g.setColor(GUIDE_LINE_COLOR);
+		g.drawLine(0, 0, 0, height);
+	}
+
+	@Override
+	public Rectangle calculateClientArea()
+	{
+		if (width == 0 || height == 0)
+		{
+			height = (canvas.getBounds() == null) ? canvas.getView().getParent().getHeight() : canvas.getBounds().height;
+			width = DEFAULT_WIDTH;
+		}
+		return new Rectangle(width, height);
+	}
+}

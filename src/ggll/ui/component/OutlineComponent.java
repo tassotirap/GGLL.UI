@@ -1,7 +1,7 @@
 package ggll.ui.component;
 
-import ggll.canvas.AbstractCanvas;
-import ggll.canvas.OutlineTopComponent;
+import ggll.ui.canvas.AbstractCanvas;
+import ggll.ui.canvas.OutlineTopComponent;
 
 public class OutlineComponent extends AbstractComponent
 {

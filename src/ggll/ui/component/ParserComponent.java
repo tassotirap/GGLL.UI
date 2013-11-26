@@ -1,7 +1,7 @@
 package ggll.ui.component;
 
-import ggll.images.GGLLImages;
-import ggll.parser.ParsingEditor;
+import ggll.ui.images.GGLLImages;
+import ggll.ui.parser.ParsingEditor;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;

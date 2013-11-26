@@ -1,6 +1,6 @@
 package ggll.ui.component;
 
-import ggll.util.Log;
+import ggll.ui.util.Log;
 
 import java.io.BufferedReader;
 import java.io.File;

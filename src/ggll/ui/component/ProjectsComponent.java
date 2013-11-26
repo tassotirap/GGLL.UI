@@ -1,7 +1,7 @@
 package ggll.ui.component;
 
-import ggll.project.Project;
-import ggll.project.tree.Tree;
+import ggll.ui.project.Project;
+import ggll.ui.project.tree.Tree;
 
 import javax.swing.JScrollPane;
 

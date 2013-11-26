@@ -1,7 +1,7 @@
 package ggll.ui.icon;
 
-import ggll.file.FileNames;
-import ggll.images.GGLLImages;
+import ggll.ui.file.FileNames;
+import ggll.ui.images.GGLLImages;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;

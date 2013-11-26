@@ -1,7 +1,7 @@
 package ggll.ui.component;
 
-import ggll.canvas.AbstractCanvas;
-import ggll.output.GeneratedGrammar;
+import ggll.ui.canvas.AbstractCanvas;
+import ggll.ui.output.GeneratedGrammar;
 
 import javax.swing.JScrollPane;
 

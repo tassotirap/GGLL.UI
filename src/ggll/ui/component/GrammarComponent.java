@@ -1,10 +1,10 @@
 package ggll.ui.component;
 
-import ggll.canvas.AbstractCanvas;
-import ggll.canvas.CanvasFactory;
-import ggll.canvas.state.StaticStateManager;
+import ggll.ui.canvas.AbstractCanvas;
+import ggll.ui.canvas.CanvasFactory;
+import ggll.ui.canvas.state.StaticStateManager;
 import ggll.ui.toolbar.ToolBarGrammar;
-import ggll.util.Log;
+import ggll.ui.util.Log;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;

@@ -1,9 +1,9 @@
 package ggll.ui.wizard;
 
-import ggll.canvas.widget.MarkedWidget;
-import ggll.core.semantics.SemFileManager;
-import ggll.project.GGLLManager;
-import ggll.util.Log;
+import ggll.ui.canvas.widget.MarkedWidget;
+import ggll.ui.core.semantics.SemFileManager;
+import ggll.ui.project.GGLLManager;
+import ggll.ui.util.Log;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

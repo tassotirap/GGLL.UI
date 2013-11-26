@@ -1,6 +1,6 @@
 package ggll.ui.component;
 
-import ggll.file.FileNames;
+import ggll.ui.file.FileNames;
 
 public class ComponetFactory
 {

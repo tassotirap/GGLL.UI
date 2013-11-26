@@ -1,8 +1,8 @@
 package ggll.ui.toolbar;
 
-import ggll.canvas.AbstractCanvas;
-import ggll.core.syntax.grammar.Controller;
-import ggll.resource.LangResource;
+import ggll.ui.canvas.AbstractCanvas;
+import ggll.ui.core.syntax.grammar.Controller;
+import ggll.ui.resource.LangResource;
 
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;

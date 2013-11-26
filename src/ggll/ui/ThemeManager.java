@@ -1,6 +1,6 @@
 package ggll.ui;
 
-import ggll.project.GGLLManager;
+import ggll.ui.project.GGLLManager;
 import net.infonode.docking.properties.RootWindowProperties;
 import net.infonode.docking.theme.BlueHighlightDockingTheme;
 import net.infonode.docking.theme.ClassicDockingTheme;

@@ -1,6 +1,6 @@
 package ggll.ui.toolbar;
 
-import ggll.canvas.AbstractCanvas;
+import ggll.ui.canvas.AbstractCanvas;
 
 import java.util.HashMap;
 

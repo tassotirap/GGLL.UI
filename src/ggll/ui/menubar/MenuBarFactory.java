@@ -1,9 +1,9 @@
 package ggll.ui.menubar;
 
-import ggll.project.GGLLManager;
 import ggll.ui.Menu;
 import ggll.ui.Menu.MenuModel;
 import ggll.ui.interfaces.IMainWindow;
+import ggll.ui.project.GGLLManager;
 
 import java.util.HashMap;
 

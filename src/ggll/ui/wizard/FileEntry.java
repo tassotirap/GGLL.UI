@@ -1,6 +1,6 @@
 package ggll.ui.wizard;
 
-import ggll.file.FileNames;
+import ggll.ui.file.FileNames;
 
 import javax.swing.ImageIcon;
 

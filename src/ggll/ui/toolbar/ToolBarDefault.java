@@ -1,12 +1,12 @@
 package ggll.ui.toolbar;
 
-import ggll.canvas.AbstractCanvas;
-import ggll.canvas.provider.WidgetCopyPasteProvider;
-import ggll.canvas.provider.WidgetDeleteProvider;
-import ggll.canvas.state.VolatileStateManager;
-import ggll.project.GGLLManager;
-import ggll.resource.LangResource;
+import ggll.ui.canvas.AbstractCanvas;
+import ggll.ui.canvas.provider.WidgetCopyPasteProvider;
+import ggll.ui.canvas.provider.WidgetDeleteProvider;
+import ggll.ui.canvas.state.VolatileStateManager;
 import ggll.ui.component.TextAreaComponent;
+import ggll.ui.project.GGLLManager;
+import ggll.ui.resource.LangResource;
 
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;

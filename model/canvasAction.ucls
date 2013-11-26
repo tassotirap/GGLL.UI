@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class-diagram version="1.1.4" icons="true" always-add-relationships="false" generalizations="true" realizations="true" 
   associations="true" dependencies="false" nesting-relationships="true">  
-  <class id="1" language="java" name="ggll.canvas.action.NodeCreateAction" project="GGLL.UI" 
-    file="/GGLL.UI/src/ggll/canvas/action/NodeCreateAction.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="1" language="java" name="ggll.ui.canvas.action.NodeCreateAction" project="GGLL.UI" 
+    file="/GGLL.UI/src/ggll/ui/canvas/action/NodeCreateAction.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="153" width="262" x="41" y="37"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
@@ -10,8 +10,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="2" language="java" name="ggll.canvas.action.ActionFactory" project="GGLL.UI" 
-    file="/GGLL.UI/src/ggll/canvas/action/ActionFactory.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="2" language="java" name="ggll.ui.canvas.action.ActionFactory" project="GGLL.UI" 
+    file="/GGLL.UI/src/ggll/ui/canvas/action/ActionFactory.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="1647" width="682" x="643" y="37"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
@@ -19,8 +19,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="3" language="java" name="ggll.canvas.action.WidgetSelection" project="GGLL.UI" 
-    file="/GGLL.UI/src/ggll/canvas/action/WidgetSelection.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="3" language="java" name="ggll.ui.canvas.action.WidgetSelection" project="GGLL.UI" 
+    file="/GGLL.UI/src/ggll/ui/canvas/action/WidgetSelection.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="225" width="260" x="343" y="37"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
@@ -28,8 +28,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="4" language="java" name="ggll.canvas.provider.GridProvider" project="GGLL.UI" 
-    file="/GGLL.UI/src/ggll/canvas/provider/GridProvider.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="4" language="java" name="ggll.ui.canvas.provider.GridProvider" project="GGLL.UI" 
+    file="/GGLL.UI/src/ggll/ui/canvas/provider/GridProvider.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="171" width="232" x="1365" y="37"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
@@ -37,8 +37,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="5" language="java" name="ggll.canvas.action.WidgetDeleteAction" project="GGLL.UI" 
-    file="/GGLL.UI/src/ggll/canvas/action/WidgetDeleteAction.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="5" language="java" name="ggll.ui.canvas.action.WidgetDeleteAction" project="GGLL.UI" 
+    file="/GGLL.UI/src/ggll/ui/canvas/action/WidgetDeleteAction.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="117" width="239" x="504" y="1724"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
@@ -46,8 +46,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="6" language="java" name="ggll.canvas.widget.LabelTextFieldEditor" project="GGLL.UI" 
-    file="/GGLL.UI/src/ggll/canvas/widget/LabelTextFieldEditor.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="6" language="java" name="ggll.ui.canvas.widget.LabelTextFieldEditor" project="GGLL.UI" 
+    file="/GGLL.UI/src/ggll/ui/canvas/widget/LabelTextFieldEditor.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="171" width="208" x="1647" y="37"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
@@ -55,8 +55,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="7" language="java" name="ggll.canvas.action.WidgetCopyPasteAction" project="GGLL.UI" 
-    file="/GGLL.UI/src/ggll/canvas/action/WidgetCopyPasteAction.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="7" language="java" name="ggll.ui.canvas.action.WidgetCopyPasteAction" project="GGLL.UI" 
+    file="/GGLL.UI/src/ggll/ui/canvas/action/WidgetCopyPasteAction.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="117" width="275" x="783" y="1724"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
@@ -64,8 +64,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="8" language="java" name="ggll.canvas.action.WidgetActionFactory" project="GGLL.UI" 
-    file="/GGLL.UI/src/ggll/canvas/action/WidgetActionFactory.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="8" language="java" name="ggll.ui.canvas.action.WidgetActionFactory" project="GGLL.UI" 
+    file="/GGLL.UI/src/ggll/ui/canvas/action/WidgetActionFactory.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="657" width="257" x="1895" y="37"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      

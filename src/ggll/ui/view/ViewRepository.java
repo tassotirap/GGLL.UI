@@ -1,6 +1,5 @@
 package ggll.ui.view;
 
-import ggll.project.GGLLManager;
 import ggll.ui.component.AbstractComponent;
 import ggll.ui.component.GeneratedGrammarComponent;
 import ggll.ui.component.OutlineComponent;
@@ -11,6 +10,7 @@ import ggll.ui.component.SemanticStackComponent;
 import ggll.ui.component.SyntaxStackComponent;
 import ggll.ui.icon.IconFactory;
 import ggll.ui.icon.IconFactory.IconType;
+import ggll.ui.project.GGLLManager;
 import ggll.ui.tab.TabWindowList.TabPlace;
 
 import java.util.ArrayList;

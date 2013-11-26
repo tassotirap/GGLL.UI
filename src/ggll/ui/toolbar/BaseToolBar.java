@@ -8,7 +8,7 @@ public abstract class BaseToolBar extends JToolBar
 
 	protected Object context;
 
-	protected final String imgPath = "/ggll/images/";
+	protected final String imgPath = "/ggll/ui/images/";
 
 	public BaseToolBar(Object context)
 	{

@@ -1,8 +1,8 @@
 package ggll.ui;
 
-import ggll.project.GGLLManager;
 import ggll.ui.interfaces.IMainWindow;
 import ggll.ui.lib.SplashWindow;
+import ggll.ui.project.GGLLManager;
 
 import javax.swing.JFrame;
 
@@ -16,7 +16,7 @@ import javax.swing.JFrame;
  */
 public class GuiLauncher
 {
-	private final static String SPLASH_SCREEN_PNG = "splash_screen.png";
+	private final static String SPLASH_SCREEN_PNG = "/ggll/ui/images/splash_screen.png";
 
 	public static void main(String[] args)
 	{

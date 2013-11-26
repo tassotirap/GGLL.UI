@@ -1,7 +1,7 @@
 package ggll.ui.component;
 
-import ggll.canvas.AbstractCanvas;
-import ggll.output.SemanticStack;
+import ggll.ui.canvas.AbstractCanvas;
+import ggll.ui.output.SemanticStack;
 
 import javax.swing.JScrollPane;
 

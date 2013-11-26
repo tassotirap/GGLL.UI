@@ -1,10 +1,10 @@
 package ggll.ui;
 
-import ggll.canvas.AbstractCanvas;
-import ggll.project.GGLLManager;
-import ggll.resource.LangResource;
 import ggll.ui.ThemeManager.Theme;
+import ggll.ui.canvas.AbstractCanvas;
 import ggll.ui.interfaces.IMainWindow;
+import ggll.ui.project.GGLLManager;
+import ggll.ui.resource.LangResource;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

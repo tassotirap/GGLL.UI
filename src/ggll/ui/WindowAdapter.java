@@ -1,10 +1,10 @@
 package ggll.ui;
 
-import ggll.project.GGLLManager;
 import ggll.ui.component.AbstractComponent;
 import ggll.ui.component.EmptyComponent;
 import ggll.ui.component.FileComponent;
 import ggll.ui.interfaces.IMainWindow;
+import ggll.ui.project.GGLLManager;
 import ggll.ui.view.AbstractView;
 
 import javax.swing.JOptionPane;

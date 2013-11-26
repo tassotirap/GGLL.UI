@@ -1,6 +1,6 @@
 package ggll.ui;
 
-import ggll.project.GGLLManager;
+import ggll.ui.project.GGLLManager;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;

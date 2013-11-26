@@ -1,8 +1,8 @@
 package ggll.ui;
 
-import ggll.project.ProjectHelper;
 import ggll.ui.exceptions.WarningException;
-import ggll.util.Log;
+import ggll.ui.project.ProjectHelper;
+import ggll.ui.util.Log;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
@@ -26,15 +26,14 @@ import org.jdesktop.layout.LayoutStyle;
 /**
  * 
  * @author Gusga
- * @author Tasso Tirapani Silva Pinto
- * Refactory: OK
+ * @author Tasso Tirapani Silva Pinto Refactory: OK
  */
 public class WorkspaceChooser extends JFrame
 {
 	private static final long serialVersionUID = 1L;
 
 	private static final String LIST_FILE = "workspace";
-	private static final String PROJECTS_SCREEN_PNG = "projects_screen.png";
+	private static final String PROJECTS_SCREEN_PNG = "/ggll/ui/images/projects_screen.png";
 
 	private JButton btnBrowse;
 	private JButton btnCancel;
@@ -57,45 +56,36 @@ public class WorkspaceChooser extends JFrame
 
 	private void addDirToList(String filename)
 	{
-		boolean exists = false;
-		for (int i = 0; i < ckbWorkspace.getItemCount(); i++)
-		{
-			if (ckbWorkspace.getItemAt(i).toString().equals(filename))
-			{
-				exists = true;
-				break;
-			}
-		}
-		if (!exists)
-		{
-			File file = new File(System.getProperty("java.io.tmpdir"), LIST_FILE);
+		File file = new File(System.getProperty("java.io.tmpdir"), LIST_FILE);
 
-			try
+		try
+		{
+			if (!file.exists())
 			{
-				if (!file.exists())
-				{
-					file.createNewFile();
-				}
-				FileReader fileReader = new FileReader(file);
-				BufferedReader bufferedReader = new BufferedReader(fileReader);
-				
-				StringBuffer oldText = new StringBuffer();
-				
-				String line = "";				
-				while ((line = bufferedReader.readLine()) != null)
+				file.createNewFile();
+			}
+			FileReader fileReader = new FileReader(file);
+			BufferedReader bufferedReader = new BufferedReader(fileReader);
+
+			StringBuffer oldText = new StringBuffer();
+
+			String line = "";
+			while ((line = bufferedReader.readLine()) != null)
+			{
+				if (!line.equalsIgnoreCase(filename))
 				{
 					oldText.append(line + "\n");
-				}				
-				bufferedReader.close();
-				PrintWriter printWriter = new PrintWriter(file);
-				printWriter.println(filename);
-				printWriter.print(oldText.toString());
-				printWriter.close();
+				}
 			}
-			catch (IOException e)
-			{
-				Log.log(Log.ERROR, this, "Could not load workspace list!", e);
-			}
+			bufferedReader.close();
+			PrintWriter printWriter = new PrintWriter(file);
+			printWriter.println(filename);
+			printWriter.print(oldText.toString());
+			printWriter.close();
+		}
+		catch (IOException e)
+		{
+			Log.log(Log.ERROR, this, "Could not load workspace list!", e);
 		}
 	}
 

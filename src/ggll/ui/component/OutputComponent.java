@@ -1,10 +1,10 @@
 package ggll.ui.component;
 
-import ggll.canvas.AbstractCanvas;
-import ggll.images.GGLLImages;
-import ggll.output.Output;
-import ggll.output.SyntaxErrorOutput;
-import ggll.output.TokenOutput;
+import ggll.ui.canvas.AbstractCanvas;
+import ggll.ui.images.GGLLImages;
+import ggll.ui.output.Output;
+import ggll.ui.output.SyntaxErrorOutput;
+import ggll.ui.output.TokenOutput;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
