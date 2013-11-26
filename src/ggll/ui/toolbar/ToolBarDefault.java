@@ -1,13 +1,12 @@
 package ggll.ui.toolbar;
 
 import ggll.canvas.AbstractCanvas;
-import ggll.canvas.CanvasFactory;
 import ggll.canvas.provider.WidgetCopyPasteProvider;
 import ggll.canvas.provider.WidgetDeleteProvider;
 import ggll.canvas.state.VolatileStateManager;
 import ggll.project.GGLLManager;
+import ggll.resource.LangResource;
 import ggll.ui.component.TextAreaComponent;
-import ggll.util.LangHelper;
 
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -234,7 +233,7 @@ public class ToolBarDefault extends BaseToolBar implements PropertyChangeListene
 		btnUndo = new JButton(new ImageIcon(getClass().getResource(imgPath + "edit-undo.png")));
 		btnRedo = new JButton(new ImageIcon(getClass().getResource(imgPath + "edit-redo.png")));
 		buttons = new JButton[]{ btnSave, btnSaveAll, btnPrint, btnCopy, btnCut, btnPaste, btnUndo, btnRedo };
-		names = new String[]{ LangHelper.save, LangHelper.save_all, LangHelper.print, LangHelper.copy, LangHelper.cut, LangHelper.paste, LangHelper.undo, LangHelper.redo };
+		names = new String[]{ LangResource.save, LangResource.save_all, LangResource.print, LangResource.copy, LangResource.cut, LangResource.paste, LangResource.undo, LangResource.redo };
 	}
 
 	@Override
@@ -259,7 +258,8 @@ public class ToolBarDefault extends BaseToolBar implements PropertyChangeListene
 	{
 		if (event.getSource() instanceof AbstractCanvas)
 		{
-			VolatileStateManager vsm = CanvasFactory.getVolatileStateManager();
+			AbstractCanvas canvas = (AbstractCanvas)event.getSource();
+			VolatileStateManager vsm = canvas.getVolatileStateManager();
 			if (event.getPropertyName().equals("undoable"))
 			{
 				btnUndo.setEnabled(true);

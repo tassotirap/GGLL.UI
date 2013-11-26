@@ -1,8 +1,9 @@
 package ggll.canvas.state;
 
 import java.awt.Point;
+import java.io.Serializable;
 
-public class Node extends CanvasSerializableElement
+public class Node implements Serializable
 {
 
 	private static final long serialVersionUID = -5146510630189874864L;

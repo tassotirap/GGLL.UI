@@ -1,8 +1,8 @@
 package ggll.project.tree;
 
 import ggll.project.GGLLManager;
-import ggll.ui.model.IconFactory;
-import ggll.ui.model.IconFactory.IconType;
+import ggll.ui.icon.IconFactory;
+import ggll.ui.icon.IconFactory.IconType;
 
 import java.awt.Component;
 import java.awt.Dimension;

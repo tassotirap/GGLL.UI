@@ -2,7 +2,7 @@ package ggll.ui.toolbar;
 
 import ggll.canvas.AbstractCanvas;
 import ggll.core.syntax.grammar.Controller;
-import ggll.util.LangHelper;
+import ggll.resource.LangResource;
 
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -97,7 +97,7 @@ public class ToolBarCanvas extends BaseToolBar
 		btnZoomIn = new JButton(new ImageIcon(getClass().getResource(imgPath + "zoom-in.png")));
 		btnZoomOut = new JButton(new ImageIcon(getClass().getResource(imgPath + "zoom-out.png")));
 		buttons = new JButton[]{ btnRun, btnZoomIn, btnZoomOut };
-		names = new String[]{ LangHelper.build, LangHelper.zoom_plus, LangHelper.zoom_minus };
+		names = new String[]{ LangResource.build, LangResource.zoom_plus, LangResource.zoom_minus };
 	}
 
 	@Override

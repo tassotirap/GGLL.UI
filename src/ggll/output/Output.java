@@ -1,9 +1,9 @@
 package ggll.output;
 
 import ggll.canvas.AbstractCanvas;
-import ggll.util.ExampleFileFilter;
-import ggll.util.IOUtilities;
+import ggll.util.CustomFileFilter;
 import ggll.util.Log;
+import ggll.util.io.IOHelper;
 
 import java.awt.Component;
 import java.awt.Graphics2D;
@@ -150,7 +150,7 @@ public class Output extends HtmlViewer
 	public void saveReport(Component parent)
 	{
 		JFileChooser c = new JFileChooser();
-		c.setFileFilter(new ExampleFileFilter(new String[]{ "html", "htm" }, "An html File"));
+		c.setFileFilter(new CustomFileFilter(new String[]{ "html", "htm" }, "An html File"));
 		int rVal = c.showSaveDialog(parent);
 		if (rVal == JFileChooser.APPROVE_OPTION)
 		{
@@ -171,7 +171,7 @@ public class Output extends HtmlViewer
 				{
 					for (File f : oldImagesDir.listFiles())
 					{
-						IOUtilities.copyFile(f, new File(newImagesDir, f.getName()));
+						IOHelper.copyFile(f, new File(newImagesDir, f.getName()));
 					}
 					int width = (super.getActiveScene().getBounds() == null) ? super.getActiveScene().getView().getParent().getWidth() : super.getActiveScene().getBounds().width;
 					int height = (super.getActiveScene().getBounds() == null) ? super.getActiveScene().getView().getParent().getHeight() : super.getActiveScene().getBounds().height;

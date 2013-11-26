@@ -1,9 +1,10 @@
 package ggll.canvas.state;
 
 import java.awt.Point;
+import java.io.Serializable;
 import java.util.List;
 
-public class Connection extends CanvasSerializableElement implements Comparable<Connection>
+public class Connection implements Comparable<Connection>, Serializable
 {
 
 	private static final long serialVersionUID = -4162245206128920310L;

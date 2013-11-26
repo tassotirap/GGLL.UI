@@ -1,5 +1,6 @@
 package ggll.canvas.decorator;
 
+import ggll.canvas.AbstractCanvas;
 import ggll.canvas.UnidirectionalAnchor;
 
 import java.awt.Color;
@@ -20,6 +21,12 @@ public class SuccessorConnectorDecorator implements ConnectDecorator
 
 	private GraphScene scene;
 	private ConnectionWidget thisConnection;
+	private AbstractCanvas canvas;
+	
+	public SuccessorConnectorDecorator(AbstractCanvas canvas)
+	{
+		this.canvas = canvas;
+	}
 
 	@Override
 	public ConnectionWidget createConnectionWidget(Scene scene)
@@ -36,20 +43,18 @@ public class SuccessorConnectorDecorator implements ConnectDecorator
 	public Anchor createFloatAnchor(Point location)
 	{
 		return AnchorFactory.createFixedAnchor(location);
-
 	}
 
 	@Override
 	public Anchor createSourceAnchor(Widget sourceWidget)
 	{
-		return new UnidirectionalAnchor(sourceWidget, Direction.RIGHT);
+		return new UnidirectionalAnchor(canvas, sourceWidget, Direction.RIGHT);
 	}
 
 	@Override
 	public Anchor createTargetAnchor(Widget targetWidget)
 	{
 		String connection = (String) scene.findObject(thisConnection);
-		String target = (String) scene.findObject(targetWidget);
-		return new UnidirectionalAnchor(targetWidget, Direction.LEFT, connection, target, Direction.TOP);
+		return new UnidirectionalAnchor(canvas, targetWidget, Direction.LEFT, connection, Direction.TOP);
 	}
 }

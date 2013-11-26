@@ -1,13 +1,11 @@
 package ggll.canvas.provider;
 
 import ggll.canvas.AbstractCanvas;
-import ggll.canvas.CanvasStrings;
-import ggll.canvas.CanvasFactory;
 import ggll.canvas.action.WidgetSelection;
 import ggll.canvas.state.Connection;
 import ggll.canvas.state.Node;
-import ggll.core.syntax.command.CommandFactory;
-import ggll.util.ClipboardManager;
+import ggll.resource.CanvasResource;
+import ggll.util.clipboard.ClipboardHelper;
 
 import java.awt.MouseInfo;
 import java.awt.Point;
@@ -29,7 +27,7 @@ public class WidgetCopyPasteProvider
 	{
 		this.canvas = canvas;
 		monitor = new PropertyChangeSupport(this);
-		monitor.addPropertyChangeListener(CanvasFactory.getVolatileStateManager());
+		monitor.addPropertyChangeListener(canvas.getVolatileStateManager());
 	}
 
 	/** copy all selected widgets to clipboard **/
@@ -75,7 +73,7 @@ public class WidgetCopyPasteProvider
 		}
 		if (hasSelection)
 		{
-			ClipboardManager.setClipboardContents(ws, ws);
+			ClipboardHelper.setClipboardContents(ws, ws);
 		}
 	}
 
@@ -113,7 +111,7 @@ public class WidgetCopyPasteProvider
 	@SuppressWarnings("unchecked")
 	public void paste(Point p)
 	{
-		Object contents = ClipboardManager.getClipboardContents();
+		Object contents = ClipboardHelper.getClipboardContents();
 		PointerInfo pi = MouseInfo.getPointerInfo();
 		Point pm = canvas.convertLocalToScene(pi.getLocation());
 		ArrayList<Node> nodes = new ArrayList<Node>();
@@ -150,7 +148,7 @@ public class WidgetCopyPasteProvider
 					n.setName(n.getName() + "_" + (i++));
 					newName = n.getName();
 					oldNewNames.put(oldName, newName);
-					if (n.getType().equals(CanvasStrings.LEFT_SIDE) || n.getType().equals(CanvasStrings.START))
+					if (n.getType().equals(CanvasResource.LEFT_SIDE) || n.getType().equals(CanvasResource.START))
 					{
 						if (n.getTitle().endsWith("_" + (i - 2)))
 							n.setTitle(n.getTitle().substring(0, n.getTitle().length() - ("_" + Math.abs(i - 2)).length()));
@@ -186,8 +184,8 @@ public class WidgetCopyPasteProvider
 			}
 			n.setLocation(p);
 			p = null;
-			canvas.getCanvasState().addNode(n);
-			monitor.firePropertyChange("undoable", null, CommandFactory.createAddCommand());
+			canvas.getCanvasState().update(canvas);
+			monitor.firePropertyChange("undoable", null, "Add");
 		}
 		for (Connection c : connections)
 		{
@@ -207,8 +205,8 @@ public class WidgetCopyPasteProvider
 				oldNewNames.put(oldName, newName);
 			}
 			while (canvas.findWidget(c.getName()) != null);
-			canvas.getCanvasState().addConnection(c);
-			monitor.firePropertyChange("undoable", null, CommandFactory.createConnectionCommand());
+			canvas.getCanvasState().update(canvas);
+			monitor.firePropertyChange("undoable", null, "Connection");
 		}
 		canvas.updateState(canvas.getCanvasState());
 		for (String name : oldNewNames.values())

@@ -104,7 +104,6 @@ public class AsinEditor
 
 	private void recreateDiagram(AbstractCanvas canvas)
 	{
-
 		CanvasState canvasState = canvas.getCanvasState();
 		logicDiagram = new SyntaxModel();
 

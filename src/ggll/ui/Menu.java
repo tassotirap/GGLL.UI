@@ -2,9 +2,9 @@ package ggll.ui;
 
 import ggll.canvas.AbstractCanvas;
 import ggll.project.GGLLManager;
+import ggll.resource.LangResource;
 import ggll.ui.ThemeManager.Theme;
 import ggll.ui.interfaces.IMainWindow;
-import ggll.util.LangHelper;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -142,9 +142,9 @@ public class Menu extends JMenuBar
 		final ArrayList<String> PMbuttons = new ArrayList<String>();
 		final ArrayList<String> Ebuttons = new ArrayList<String>();
 
-		JMenuItem save = new JMenuItem(LangHelper.save);
+		JMenuItem save = new JMenuItem(LangResource.save);
 		save.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK));
-		JMenuItem saveAll = new JMenuItem(LangHelper.save_all);
+		JMenuItem saveAll = new JMenuItem(LangResource.save_all);
 		saveAll.addActionListener(new ActionListener()
 		{
 
@@ -167,7 +167,7 @@ public class Menu extends JMenuBar
 			}
 		});
 
-		JMenuItem print = new JMenuItem(LangHelper.print + DOTS);
+		JMenuItem print = new JMenuItem(LangResource.print + DOTS);
 
 		print.addActionListener(new ActionListener()
 		{

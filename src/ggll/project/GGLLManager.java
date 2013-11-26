@@ -7,11 +7,11 @@ import ggll.ui.MainWindow;
 import ggll.ui.component.GrammarComponent;
 import ggll.ui.component.TextAreaComponent;
 import ggll.ui.interfaces.IMainWindow;
-import ggll.util.ComponentPrinter;
+import ggll.ui.view.AbstractView;
+import ggll.ui.view.UnsavedViewRepository;
 import ggll.util.Log;
-import ggll.util.TextPrinter;
-import ggll.view.AbstractView;
-import ggll.view.UnsavedViewRepository;
+import ggll.util.print.ComponentPrinter;
+import ggll.util.print.TextPrinter;
 
 import java.io.File;
 import java.io.IOException;
@@ -84,7 +84,7 @@ public final class GGLLManager
 		List<File> filesOpened = project.getOpenedFiles();
 		if (filesOpened.size() == 0)
 		{
-			GGLLManager.project.getOpenedFiles().add(project.getGrammarFile());
+			GGLLManager.project.getOpenedFiles().add(project.getGrammarFile().get(0));
 		}
 		return filesOpened;
 	}

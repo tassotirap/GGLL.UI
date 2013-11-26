@@ -1,6 +1,7 @@
 package ggll.core.syntax.grammar;
 
 import ggll.canvas.AbstractCanvas;
+import ggll.canvas.CanvasFactory;
 import ggll.core.syntax.command.AsinEditor;
 import ggll.core.syntax.grammar.model.AbstractNode;
 import ggll.core.syntax.grammar.model.LambdaAlternative;
@@ -14,6 +15,7 @@ import ggll.output.AppOutput;
 import ggll.output.HtmlViewer.TOPIC;
 import ggll.project.GGLLManager;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -108,7 +110,7 @@ public class GrammarFactory
 	{
 		return canPerformAction();
 	}
-
+	
 	public Grammar getGrammar()
 	{
 		return grammar;
@@ -118,10 +120,17 @@ public class GrammarFactory
 	{
 		StringBuffer returnString = new StringBuffer();
 
-		AbstractCanvas canvas = GGLLManager.getActiveScene();
-
-		List<SyntaxElement> children = AsinEditor.getInstance().getLogicDiagram(canvas).getChildrenNodes();
-		List<AbstractNode> startNodes = clearAndSetStartNodes(children);
+		List<SyntaxElement> children = new ArrayList<SyntaxElement>();
+		List<AbstractNode> startNodes = new ArrayList<AbstractNode>();	
+		
+		for(File grammar :  GGLLManager.getProject().getGrammarFile())
+		{
+			AbstractCanvas cavans = CanvasFactory.getInstance(grammar.getAbsolutePath());
+			children.addAll(AsinEditor.getInstance().getLogicDiagram(cavans).getChildrenNodes());
+		}
+		
+		startNodes.addAll(clearAndSetStartNodes(children));
+		
 
 		for (int i = 0; i < startNodes.size(); i++)
 		{

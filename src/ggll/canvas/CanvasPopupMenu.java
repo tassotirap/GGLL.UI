@@ -1,14 +1,14 @@
 package ggll.canvas;
 
-import ggll.canvas.action.GridProvider;
+import ggll.canvas.provider.GridProvider;
 import ggll.canvas.provider.LineProvider;
 import ggll.canvas.provider.WidgetCopyPasteProvider;
 import ggll.canvas.provider.WidgetDeleteProvider;
 import ggll.canvas.state.VolatileStateManager;
 import ggll.canvas.widget.MarkedWidget;
-import ggll.core.syntax.command.CommandFactory;
 import ggll.core.syntax.grammar.Controller;
 import ggll.project.GGLLManager;
+import ggll.resource.CanvasResource;
 import ggll.ui.wizard.RoutineWizard;
 
 import java.awt.Cursor;
@@ -19,7 +19,6 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeSupport;
 import java.util.Set;
 
-import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -48,7 +47,7 @@ public class CanvasPopupMenu extends WidgetAction.Adapter implements PopupMenuPr
 		gridProvider = GridProvider.getInstance(canvas);
 		lineProvider = LineProvider.getInstance(canvas);
 		monitor = new PropertyChangeSupport(this);
-		monitor.addPropertyChangeListener(CanvasFactory.getVolatileStateManager());
+		monitor.addPropertyChangeListener(canvas.getVolatileStateManager());
 	}
 
 	private JMenuItem createBuildAndParseMenu()
@@ -146,10 +145,10 @@ public class CanvasPopupMenu extends WidgetAction.Adapter implements PopupMenuPr
 		JRadioButtonMenuItem alignMenuItem = new JRadioButtonMenuItem("Auto Align");
 		JRadioButtonMenuItem linesMenuItem = new JRadioButtonMenuItem("Snap To Lines");
 
-		freeMenuItem.setSelected(canvas.getCanvasState().getPreferences().getMoveStrategy().equals(CanvasStrings.M_FREE));
-		snapMenuItem.setSelected(canvas.getCanvasState().getPreferences().getMoveStrategy().equals(CanvasStrings.M_SNAP));
-		alignMenuItem.setSelected(canvas.getCanvasState().getPreferences().getMoveStrategy().equals(CanvasStrings.M_ALIGN));
-		linesMenuItem.setSelected(canvas.getCanvasState().getPreferences().getMoveStrategy().equals(CanvasStrings.M_LINES));
+		freeMenuItem.setSelected(canvas.getCanvasState().getPreferences().getMoveStrategy().equals(CanvasResource.M_FREE));
+		snapMenuItem.setSelected(canvas.getCanvasState().getPreferences().getMoveStrategy().equals(CanvasResource.M_SNAP));
+		alignMenuItem.setSelected(canvas.getCanvasState().getPreferences().getMoveStrategy().equals(CanvasResource.M_ALIGN));
+		linesMenuItem.setSelected(canvas.getCanvasState().getPreferences().getMoveStrategy().equals(CanvasResource.M_LINES));
 
 		movingMenu.add(freeMenuItem);
 		movingMenu.add(snapMenuItem);
@@ -163,7 +162,7 @@ public class CanvasPopupMenu extends WidgetAction.Adapter implements PopupMenuPr
 			{
 				gridProvider.setVisible(false);
 				lineProvider.removeAllLines();
-				canvas.setMoveStrategy(CanvasStrings.M_FREE);
+				canvas.setMoveStrategy(CanvasResource.M_FREE);
 			}
 		});
 
@@ -174,7 +173,7 @@ public class CanvasPopupMenu extends WidgetAction.Adapter implements PopupMenuPr
 			{
 				gridProvider.setVisible(true);
 				lineProvider.removeAllLines();
-				canvas.setMoveStrategy(CanvasStrings.M_SNAP);
+				canvas.setMoveStrategy(CanvasResource.M_SNAP);
 			}
 		});
 
@@ -185,7 +184,7 @@ public class CanvasPopupMenu extends WidgetAction.Adapter implements PopupMenuPr
 			{
 				gridProvider.setVisible(false);
 				lineProvider.removeAllLines();
-				canvas.setMoveStrategy(CanvasStrings.M_ALIGN);
+				canvas.setMoveStrategy(CanvasResource.M_ALIGN);
 			}
 		});
 
@@ -196,7 +195,7 @@ public class CanvasPopupMenu extends WidgetAction.Adapter implements PopupMenuPr
 			{
 				gridProvider.setVisible(false);
 				lineProvider.populateCanvas();
-				canvas.setMoveStrategy(CanvasStrings.M_LINES);
+				canvas.setMoveStrategy(CanvasResource.M_LINES);
 			}
 		});
 		return movingMenu;
@@ -220,7 +219,7 @@ public class CanvasPopupMenu extends WidgetAction.Adapter implements PopupMenuPr
 
 	private JMenuItem createRedoMenu()
 	{
-		final VolatileStateManager volatileStateManager = CanvasFactory.getVolatileStateManager();
+		final VolatileStateManager volatileStateManager = canvas.getVolatileStateManager();
 		JMenuItem redoMenu = new JMenuItem();
 		redoMenu.addActionListener(new ActionListener()
 		{
@@ -253,9 +252,9 @@ public class CanvasPopupMenu extends WidgetAction.Adapter implements PopupMenuPr
 		JRadioButtonMenuItem directMenuItem = new JRadioButtonMenuItem("Direct");
 		JRadioButtonMenuItem freeMenuItem = new JRadioButtonMenuItem("Free");
 
-		ortoMenuItem.setSelected(canvas.getCanvasState().getPreferences().getConnectionStrategy().equals(CanvasStrings.R_ORTHOGONAL));
-		directMenuItem.setSelected(canvas.getCanvasState().getPreferences().getConnectionStrategy().equals(CanvasStrings.R_DIRECT));
-		freeMenuItem.setSelected(canvas.getCanvasState().getPreferences().getConnectionStrategy().equals(CanvasStrings.R_FREE));
+		ortoMenuItem.setSelected(canvas.getCanvasState().getPreferences().getConnectionStrategy().equals(CanvasResource.R_ORTHOGONAL));
+		directMenuItem.setSelected(canvas.getCanvasState().getPreferences().getConnectionStrategy().equals(CanvasResource.R_DIRECT));
+		freeMenuItem.setSelected(canvas.getCanvasState().getPreferences().getConnectionStrategy().equals(CanvasResource.R_FREE));
 
 		routingMenu.add(ortoMenuItem);
 		routingMenu.add(directMenuItem);
@@ -266,7 +265,7 @@ public class CanvasPopupMenu extends WidgetAction.Adapter implements PopupMenuPr
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				canvas.setConnStrategy(CanvasStrings.R_ORTHOGONAL);
+				canvas.setConnStrategy(CanvasResource.R_ORTHOGONAL);
 			}
 		});
 
@@ -275,7 +274,7 @@ public class CanvasPopupMenu extends WidgetAction.Adapter implements PopupMenuPr
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				canvas.setConnStrategy(CanvasStrings.R_DIRECT);
+				canvas.setConnStrategy(CanvasResource.R_DIRECT);
 			}
 		});
 
@@ -284,7 +283,7 @@ public class CanvasPopupMenu extends WidgetAction.Adapter implements PopupMenuPr
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				canvas.setConnStrategy(CanvasStrings.R_FREE);
+				canvas.setConnStrategy(CanvasResource.R_FREE);
 			}
 		});
 
@@ -347,7 +346,7 @@ public class CanvasPopupMenu extends WidgetAction.Adapter implements PopupMenuPr
 				public void actionPerformed(ActionEvent e)
 				{
 					markedWidget.setMark(semanticRoutineName);
-					monitor.firePropertyChange("undoable", null, CommandFactory.createAddRoutineCommand());
+					monitor.firePropertyChange("undoable", null, "AddRoutine");
 				}
 			});
 			semanticRoutinesMenu.add(semanticRoutinesNamesMenuItem);
@@ -393,7 +392,7 @@ public class CanvasPopupMenu extends WidgetAction.Adapter implements PopupMenuPr
 			public void actionPerformed(ActionEvent e)
 			{
 				markedWidget.setMark(null);
-				monitor.firePropertyChange("undoable", null, CommandFactory.createRemoveRoutineCommand());
+				monitor.firePropertyChange("undoable", null, "RemoveRoutine");
 			}
 		});
 
@@ -442,20 +441,16 @@ public class CanvasPopupMenu extends WidgetAction.Adapter implements PopupMenuPr
 		JRadioButtonMenuItem nothingMenuItem = new JRadioButtonMenuItem("Nothing");
 		JRadioButtonMenuItem gridMenuItem = new JRadioButtonMenuItem("Grid");
 		JRadioButtonMenuItem lineMenuItem = new JRadioButtonMenuItem("Lines");
-		JCheckBoxMenuItem guideMenuItem = new JCheckBoxMenuItem("Guide Line");
 
 		nothingMenuItem.setSelected((!canvas.isShowingGrid() && !canvas.isShowingGuide() && !canvas.isShowingLines()));
-		gridMenuItem.setEnabled(canvas.getCanvasState().getPreferences().getMoveStrategy().equals(CanvasStrings.M_FREE));
+		gridMenuItem.setEnabled(canvas.getCanvasState().getPreferences().getMoveStrategy().equals(CanvasResource.M_FREE));
 		gridMenuItem.setSelected(canvas.isShowingGrid());
-		lineMenuItem.setEnabled(canvas.getCanvasState().getPreferences().getMoveStrategy().equals(CanvasStrings.M_FREE));
+		lineMenuItem.setEnabled(canvas.getCanvasState().getPreferences().getMoveStrategy().equals(CanvasResource.M_FREE));
 		lineMenuItem.setSelected(canvas.isShowingLines());
-		guideMenuItem.setSelected(canvas.isShowingGuide());
 
 		showMenu.add(nothingMenuItem);
 		showMenu.add(gridMenuItem);
 		showMenu.add(lineMenuItem);
-		showMenu.add(new JSeparator());
-		showMenu.add(guideMenuItem);
 
 		nothingMenuItem.addActionListener(new ActionListener()
 		{
@@ -464,7 +459,6 @@ public class CanvasPopupMenu extends WidgetAction.Adapter implements PopupMenuPr
 			{
 				gridProvider.setVisible(false);
 				lineProvider.removeAllLines();
-				lineProvider.setGuideVisible(false);
 			}
 		});
 
@@ -475,7 +469,6 @@ public class CanvasPopupMenu extends WidgetAction.Adapter implements PopupMenuPr
 			{
 				gridProvider.setVisible(true);
 				lineProvider.removeAllLines();
-				lineProvider.setGuideVisible(false);
 			}
 		});
 
@@ -486,16 +479,6 @@ public class CanvasPopupMenu extends WidgetAction.Adapter implements PopupMenuPr
 			{
 				gridProvider.setVisible(false);
 				lineProvider.populateCanvas();
-				lineProvider.setGuideVisible(false);
-			}
-		});
-
-		guideMenuItem.addActionListener(new ActionListener()
-		{
-			@Override
-			public void actionPerformed(ActionEvent e)
-			{
-				lineProvider.setGuideVisible(!lineProvider.isGuideVisible());
 			}
 		});
 
@@ -504,7 +487,7 @@ public class CanvasPopupMenu extends WidgetAction.Adapter implements PopupMenuPr
 
 	private JMenuItem createUndoMenu()
 	{
-		final VolatileStateManager volatileStateManager = CanvasFactory.getVolatileStateManager();
+		final VolatileStateManager volatileStateManager = canvas.getVolatileStateManager();
 		JMenuItem undoMenu = new JMenuItem();
 		undoMenu.addActionListener(new ActionListener()
 		{

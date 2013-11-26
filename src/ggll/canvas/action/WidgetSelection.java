@@ -1,13 +1,12 @@
 package ggll.canvas.action;
 
 import ggll.canvas.AbstractCanvas;
-import ggll.canvas.CanvasStrings;
-import ggll.canvas.state.CanvasSerializableElement;
 import ggll.canvas.state.Connection;
 import ggll.canvas.state.Node;
 import ggll.canvas.widget.LabelWidgetExt;
 import ggll.canvas.widget.MarkedWidget;
 import ggll.canvas.widget.TypedWidget;
+import ggll.resource.CanvasResource;
 
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.ClipboardOwner;
@@ -15,7 +14,6 @@ import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
-import java.util.ArrayList;
 
 import org.netbeans.api.visual.widget.ConnectionWidget;
 import org.netbeans.api.visual.widget.LabelWidget;
@@ -23,8 +21,6 @@ import org.netbeans.api.visual.widget.Widget;
 
 public class WidgetSelection implements ClipboardOwner, Transferable
 {
-
-	ArrayList<CanvasSerializableElement> elements = new ArrayList<CanvasSerializableElement>();
 	private AbstractCanvas canvas;
 
 	public WidgetSelection(AbstractCanvas canvas)
@@ -65,7 +61,6 @@ public class WidgetSelection implements ClipboardOwner, Transferable
 			{
 				node.setMark(((MarkedWidget) w).getMark());
 			}
-			elements.add(node);
 		}
 		else if (w instanceof ConnectionWidget)
 		{
@@ -78,13 +73,12 @@ public class WidgetSelection implements ClipboardOwner, Transferable
 				c.setTarget(canvas.getEdgeTarget((String) object));
 				if (canvas.isAlternative((String) object))
 				{
-					c.setType(CanvasStrings.ALTERNATIVE);
+					c.setType(CanvasResource.ALTERNATIVE);
 				}
 				else if (canvas.isSuccessor((String) object))
 				{
-					c.setType(CanvasStrings.SUCCESSOR);
+					c.setType(CanvasResource.SUCCESSOR);
 				}
-				elements.add(c);
 			}
 		}
 	}
@@ -92,7 +86,7 @@ public class WidgetSelection implements ClipboardOwner, Transferable
 	@Override
 	public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException
 	{
-		return elements;
+		return null;
 	}
 
 	@Override
@@ -110,7 +104,5 @@ public class WidgetSelection implements ClipboardOwner, Transferable
 	@Override
 	public void lostOwnership(Clipboard clipboard, Transferable contents)
 	{
-		// TODO Auto-generated method stub
-
 	}
 }

@@ -1,17 +1,14 @@
 package ggll.canvas.state;
 
-public class Preferences extends CanvasSerializableElement
-{
+import java.io.Serializable;
 
-	/**
-	 * 
-	 */
+public class Preferences implements Serializable
+{
 	private static final long serialVersionUID = 1L;
 	private String connectionStrategy;
 	private String moveStrategy;
 	private boolean showGrid;
 
-	private boolean showGuide;
 	private boolean showLines;
 	private int showStatus;
 
@@ -47,13 +44,6 @@ public class Preferences extends CanvasSerializableElement
 		return showGrid;
 	}
 
-	/**
-	 * @return the showGuide
-	 */
-	public boolean isShowGuide()
-	{
-		return showGuide;
-	}
 
 	/**
 	 * @return the showLines
@@ -88,15 +78,6 @@ public class Preferences extends CanvasSerializableElement
 	public void setShowGrid(boolean showGrid)
 	{
 		this.showGrid = showGrid;
-	}
-
-	/**
-	 * @param showGuide
-	 *            the showGuide to set
-	 */
-	public void setShowGuide(boolean showGuide)
-	{
-		this.showGuide = showGuide;
 	}
 
 	/**

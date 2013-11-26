@@ -1,8 +1,6 @@
 package ggll.canvas.provider;
 
 import ggll.canvas.AbstractCanvas;
-import ggll.canvas.CanvasFactory;
-import ggll.core.syntax.command.CommandFactory;
 
 import java.awt.Point;
 import java.beans.PropertyChangeSupport;
@@ -20,11 +18,13 @@ public class NodeReconnectProvider implements ReconnectProvider
 	private PropertyChangeSupport monitor;
 	private String originalNode;
 	private String replacementNode;
+	private AbstractCanvas canvas;
 
 	public NodeReconnectProvider(AbstractCanvas canvas)
 	{
+		this.canvas = canvas;
 		monitor = new PropertyChangeSupport(this);
-		monitor.addPropertyChangeListener(CanvasFactory.getVolatileStateManager());
+		monitor.addPropertyChangeListener(canvas.getVolatileStateManager());
 	}
 
 	@Override
@@ -36,7 +36,6 @@ public class NodeReconnectProvider implements ReconnectProvider
 	@Override
 	public ConnectorState isReplacementWidget(ConnectionWidget connectionWidget, Widget replacementWidget, boolean reconnectingSource)
 	{
-		AbstractCanvas canvas = CanvasFactory.getCanvas();
 		Object object = canvas.findObject(replacementWidget);
 		replacementNode = canvas.isNode(object) ? (String) object : null;
 		if (replacementNode != null && edge != null)
@@ -62,7 +61,6 @@ public class NodeReconnectProvider implements ReconnectProvider
 	@Override
 	public boolean isTargetReconnectable(ConnectionWidget connectionWidget)
 	{
-		AbstractCanvas canvas = CanvasFactory.getCanvas();
 		Object object = canvas.findObject(connectionWidget);
 		edge = canvas.isEdge(object) ? (String) object : null;
 		originalNode = edge != null ? canvas.getEdgeTarget(edge) : null;
@@ -72,24 +70,23 @@ public class NodeReconnectProvider implements ReconnectProvider
 	@Override
 	public void reconnect(ConnectionWidget connectionWidget, Widget replacementWidget, boolean reconnectingSource)
 	{
-		AbstractCanvas canvas = CanvasFactory.getCanvas();
 		if (replacementWidget == null)
 		{
 			canvas.removeEdge(edge);
-			monitor.firePropertyChange("undoable", null, CommandFactory.createDisconnectionCommand());
+			monitor.firePropertyChange("undoable", null, "Disconnect");
 		}
 		else if (reconnectingSource)
 		{
 
 			canvas.setEdgeSource(edge, replacementNode);
-			monitor.firePropertyChange("undoable", null, CommandFactory.createConnectionCommand());
+			monitor.firePropertyChange("undoable", null, "Connection");
 
 		}
 		else
 		{
 
 			canvas.setEdgeTarget(edge, replacementNode);
-			monitor.firePropertyChange("undoable", null, CommandFactory.createConnectionCommand());
+			monitor.firePropertyChange("undoable", null, "Connection");
 
 		}
 	}

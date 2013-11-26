@@ -19,7 +19,7 @@ public class Project implements Serializable
 {
 	private static final long serialVersionUID = -6812190878328950994L;
 
-	private GrammarFile grammarFile;
+	private ArrayList<GrammarFile> grammarFile;
 	private LexicalFile lexicalFile;
 	private SemanticFile semanticFile;
 
@@ -36,8 +36,9 @@ public class Project implements Serializable
 	}
 
 	public Project(String projectsRootPath, ArrayList<File> openedFiles)
-	{
+	{		
 		this.projectDir = new File(projectsRootPath);
+		this.grammarFile = new ArrayList<GrammarFile>();
 		try
 		{
 			if (openedFiles == null)
@@ -55,7 +56,7 @@ public class Project implements Serializable
 		}
 	}
 
-	public GrammarFile getGrammarFile()
+	public ArrayList<GrammarFile> getGrammarFile()
 	{
 		return grammarFile;
 	}
@@ -96,9 +97,14 @@ public class Project implements Serializable
 		return yyLexFile;
 	}
 
+	public void setGrammarFile(ArrayList<GrammarFile> grammarFiles)
+	{
+		this.grammarFile.addAll(grammarFiles);
+	}
+	
 	public void setGrammarFile(GrammarFile grammarFile)
 	{
-		this.grammarFile = grammarFile;
+		this.grammarFile.add(grammarFile);
 	}
 
 	public void setLexicalFile(LexicalFile lexFile)

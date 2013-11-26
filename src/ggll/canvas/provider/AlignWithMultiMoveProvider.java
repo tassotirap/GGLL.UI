@@ -41,7 +41,6 @@
 package ggll.canvas.provider;
 
 import ggll.canvas.AbstractCanvas;
-import ggll.canvas.CanvasFactory;
 
 import java.awt.Insets;
 import java.awt.Point;
@@ -57,21 +56,20 @@ import org.netbeans.modules.visual.action.AlignWithSupport;
 
 public final class AlignWithMultiMoveProvider extends AlignWithSupport implements MoveStrategy, MoveProvider
 {
-
-	private MultiMoveProvider mmp;
+	private MultiMoveProvider multiMoveProvider;
 	private boolean outerBounds;
 
 	public AlignWithMultiMoveProvider(AbstractCanvas canvas, AlignWithWidgetCollector collector, LayerWidget interractionLayer, AlignWithMoveDecorator decorator, boolean outerBounds)
 	{
 		super(collector, interractionLayer, decorator);
 		this.outerBounds = outerBounds;
-		mmp = new MultiMoveProvider(CanvasFactory.getCanvas());
+		this.multiMoveProvider = new MultiMoveProvider(canvas);
 	}
 
 	@Override
 	public Point getOriginalLocation(Widget widget)
 	{
-		return mmp.getOriginalLocation(widget);
+		return multiMoveProvider.getOriginalLocation(widget);
 	}
 
 	@Override
@@ -100,20 +98,20 @@ public final class AlignWithMultiMoveProvider extends AlignWithSupport implement
 	public void movementFinished(Widget widget)
 	{
 		hide();
-		mmp.movementFinished(widget);
+		multiMoveProvider.movementFinished(widget);
 	}
 
 	@Override
 	public void movementStarted(Widget widget)
 	{
 		show();
-		mmp.movementStarted(widget);
+		multiMoveProvider.movementStarted(widget);
 	}
 
 	@Override
 	public void setNewLocation(Widget widget, Point location)
 	{
-		mmp.setNewLocation(widget, location);
+		multiMoveProvider.setNewLocation(widget, location);
 	}
 
 }

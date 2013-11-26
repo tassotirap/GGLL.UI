@@ -1,7 +1,6 @@
 package ggll.canvas.provider;
 
 import ggll.canvas.AbstractCanvas;
-import ggll.canvas.CanvasFactory;
 
 import java.awt.Color;
 import java.awt.Point;
@@ -12,8 +11,11 @@ import org.netbeans.api.visual.widget.Widget;
 
 public final class NodeMultiSelectProvider implements SelectProvider
 {
+	private AbstractCanvas canvas;
+	
 	public NodeMultiSelectProvider(AbstractCanvas canvas)
 	{
+		this.canvas = canvas;
 	}
 
 	@Override
@@ -25,14 +27,12 @@ public final class NodeMultiSelectProvider implements SelectProvider
 	@Override
 	public boolean isSelectionAllowed(Widget widget, Point localLocation, boolean invertSelection)
 	{
-		AbstractCanvas canvas = CanvasFactory.getCanvas();
 		return canvas.findObject(widget) != null;
 	}
 
 	@Override
 	public void select(Widget widget, Point localLocation, boolean invertSelection)
 	{
-		AbstractCanvas canvas = CanvasFactory.getCanvas();
 		Object object = canvas.findObject(widget);
 		canvas.setFocusedObject(object);
 		if (object != null)

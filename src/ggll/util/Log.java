@@ -37,6 +37,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import javax.swing.JOptionPane;
 import javax.swing.ListModel;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ListDataEvent;
@@ -594,7 +595,7 @@ public class Log
 	public synchronized static void log(int urgency, Object source, Object message, Throwable exception)
 	{
 		// We can do nicer here, but this is a start...
-		ErrorPop.ErrorRegistered(message);
+		JOptionPane.showMessageDialog(null, message, "An Erro Occurred", JOptionPane.ERROR_MESSAGE);
 		log(urgency, source, message);
 		log(urgency, source, exception);
 	} // }}}

@@ -1,7 +1,7 @@
 package ggll.output;
 
 import ggll.canvas.AbstractCanvas;
-import ggll.util.ExtHTMLEditorKit;
+import ggll.util.html.CustomHTMLEditorKit;
 
 import java.awt.Cursor;
 import java.io.File;
@@ -13,6 +13,7 @@ import javax.swing.JEditorPane;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import javax.swing.text.Document;
+import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.StyleSheet;
 
 public abstract class HtmlViewer implements HyperlinkListener
@@ -55,7 +56,7 @@ public abstract class HtmlViewer implements HyperlinkListener
 
 	private JEditorPane editorPane = new JEditorPane();
 
-	private ExtHTMLEditorKit kit = new ExtHTMLEditorKit();
+	private HTMLEditorKit kit = new CustomHTMLEditorKit(ApplicationImagePath);
 
 	public HtmlViewer()
 	{
@@ -74,7 +75,6 @@ public abstract class HtmlViewer implements HyperlinkListener
 		}
 		kit.setLinkCursor(new Cursor(Cursor.HAND_CURSOR));
 		setSystemImagePath(SystemImagePath);
-		ExtHTMLEditorKit.HTMLFactoryX.setApplicationImagePath(ApplicationImagePath);
 		editorPane.setEditorKit(kit);
 		Document doc = editorPane.getDocument();
 		StringReader reader = new StringReader(new Page().getContent());
@@ -125,7 +125,7 @@ public abstract class HtmlViewer implements HyperlinkListener
 		return editorPane;
 	}
 
-	public ExtHTMLEditorKit getKit()
+	public HTMLEditorKit getKit()
 	{
 		return kit;
 	}

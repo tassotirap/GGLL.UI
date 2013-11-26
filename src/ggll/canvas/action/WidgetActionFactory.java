@@ -2,8 +2,6 @@ package ggll.canvas.action;
 
 import ggll.canvas.AbstractCanvas;
 import ggll.canvas.CanvasPopupMenu;
-import ggll.canvas.CanvasStrings;
-import ggll.canvas.MoveTracker;
 import ggll.canvas.provider.CanvasRectangularSelectProvider;
 import ggll.canvas.provider.FreeMoveControl;
 import ggll.canvas.provider.LabelHoverProvider;
@@ -17,19 +15,16 @@ import ggll.canvas.provider.NodeSelectProvider;
 import ggll.canvas.provider.WidgetCopyPasteProvider;
 import ggll.canvas.provider.WidgetDeleteProvider;
 import ggll.canvas.widget.GridWidget;
-
-import java.util.HashMap;
-import java.util.Observable;
-import java.util.Observer;
+import ggll.canvas.widget.LabelTextFieldEditor;
+import ggll.resource.CanvasResource;
 
 import org.netbeans.api.visual.action.WidgetAction;
 import org.netbeans.api.visual.widget.ConnectionWidget.RoutingPolicy;
 import org.netbeans.modules.visual.action.MoveControlPointAction;
 import org.netbeans.modules.visual.action.SingleLayerAlignWithWidgetCollector;
 
-public class WidgetActionFactory implements Observer
+public class WidgetActionFactory
 {
-	private static WidgetActionFactory instance = null;
 	public final static String ADD_REMOVE_CP = "AddRemoveCP";
 	public final static String ALTERNATIVE = "Alternative";
 	public final static String CONN_SELECT = "ConnSelect";
@@ -56,290 +51,90 @@ public class WidgetActionFactory implements Observer
 	public final static String STATIC_MOVE_FREE = "StaticMoveFree";
 	public final static String SUCCESSOR = "Successor";
 
-	HashMap<String, WidgetAction> actions = new HashMap<String, WidgetAction>();
-
-	private String activeMoveAction = null;
+	private static String activeMoveAction = null;
 
 	private WidgetActionFactory()
 	{
-		actions.put(CREATE, null);
-		actions.put(SELECT, null);
-		actions.put(MULTI_SELECT, null);
-		actions.put(NODE_HOVER, null);
-		actions.put(ALTERNATIVE, null);
-		actions.put(SUCCESSOR, null);
-		actions.put(RECONNECT, null);
-		actions.put(EDITOR, null);
-		actions.put(MOVE, null);
-		actions.put(MOVE_FREE, null);
-		actions.put(MOVE_SNAP, null);
-		actions.put(MOVE_ALIGN, null);
-		actions.put(MOVE_LINES, null);
-		actions.put(POPUP_MENU_MAIN, null);
-		actions.put(RECTANGULAR_SELECT, null);
-		actions.put(MOUSE_CENTERED_ZOOM, null);
-		actions.put(PAN, null);
-		actions.put(CONN_SELECT, null);
-		actions.put(FREE_MOVE_CP, null);
-		actions.put(ADD_REMOVE_CP, null);
-		actions.put(SELECT_LABEL, null);
-		actions.put(LABEL_HOVER, null);
-		actions.put(STATIC_MOVE_FREE, null);
-		actions.put(DELETE, null);
-		actions.put(COPY_PASTE, null);
 	}
 
-	public static void dispose()
-	{
-		instance = null;
-	}
-	
-	public static WidgetActionFactory getInstance()
-	{
-		if (instance == null)
+
+	public static WidgetAction getAction(String action, AbstractCanvas canvas)
+	{	
+		ActionFactory actionFactory = new ActionFactory();		
+		switch (action)
 		{
-			instance = new WidgetActionFactory();
+			case MOVE:
+				if (activeMoveAction != null)
+				{
+					switch (activeMoveAction)
+					{
+						case CanvasResource.M_FREE:
+							return getAction(MOVE_FREE, canvas);
+						case CanvasResource.M_SNAP:
+							return getAction(MOVE_SNAP, canvas);
+						case CanvasResource.M_ALIGN:
+							return getAction(MOVE_ALIGN, canvas);
+						case CanvasResource.M_LINES:
+							return getAction(MOVE_LINES, canvas);
+					}
+				}
+				return getAction(MOVE_FREE, canvas);			
+			case MOVE_FREE:
+				return actionFactory.createMoveAction(actionFactory.createFreeMoveStrategy(), new MultiMoveProvider(canvas));
+			case MOVE_SNAP:
+				return actionFactory.createMoveAction(actionFactory.createSnapToGridMoveStrategy(GridWidget.GRID_SIZE, GridWidget.GRID_SIZE), new MultiMoveProvider(canvas));
+			case MOVE_ALIGN:
+				return actionFactory.createAlignWithMultiMoveAction(canvas, new SingleLayerAlignWithWidgetCollector(canvas.getMainLayer(), true), canvas.getInterractionLayer(), actionFactory.createDefaultAlignWithMoveDecorator(), true);
+			case MOVE_LINES:
+				return actionFactory.createMoveAction(actionFactory.createSnapToLineMoveStrategy(canvas), new MultiMoveProvider(canvas));
+			case CREATE:
+				return new NodeCreateAction(canvas);
+			case SELECT:
+				return actionFactory.createSelectAction(new NodeSelectProvider(canvas));
+			case MULTI_SELECT:
+				return actionFactory.createSelectAction(new NodeMultiSelectProvider(canvas));
+			case NODE_HOVER:
+				return actionFactory.createHoverAction(new NodeHoverProvider(canvas));
+			case ALTERNATIVE:
+				return actionFactory.createConnectAction(canvas.getCanvasDecorator().getConnDecoratorAlt(), canvas.getInterractionLayer(), new NodeConnectProvider(canvas));
+			case SUCCESSOR:
+				return actionFactory.createConnectAction(canvas.getCanvasDecorator().getConnDecoratorSuc(), canvas.getInterractionLayer(), new NodeConnectProvider(canvas));
+			case RECONNECT:
+				return actionFactory.createReconnectAction(new NodeReconnectProvider(canvas));
+			case EDITOR:
+				return actionFactory.createInplaceEditorAction(new LabelTextFieldEditor(canvas));
+			case POPUP_MENU_MAIN:
+				return actionFactory.createPopupMenuAction(new CanvasPopupMenu(canvas));
+			case RECTANGULAR_SELECT:
+				return actionFactory.createRectangularSelectAction(actionFactory.createDefaultRectangularSelectDecorator(canvas), canvas.getBackgroundLayer(), new CanvasRectangularSelectProvider(canvas));
+			case MOUSE_CENTERED_ZOOM:
+				return actionFactory.createMouseCenteredZoomAction(1.05);
+			case PAN:
+				return actionFactory.createPanAction();
+			case CONN_SELECT:
+				return canvas.createSelectAction();
+			case FREE_MOVE_CP:
+				return new MoveControlPointAction(new FreeMoveControl(canvas), RoutingPolicy.DISABLE_ROUTING_UNTIL_END_POINT_IS_MOVED);
+			case ADD_REMOVE_CP:
+				return org.netbeans.api.visual.action.ActionFactory.createAddRemoveControlPointAction();
+			case SELECT_LABEL:
+				return actionFactory.createSelectAction(new LabelSelectProvider(canvas));
+			case LABEL_HOVER:
+				return actionFactory.createHoverAction(new LabelHoverProvider(canvas));
+			case STATIC_MOVE_FREE:
+				return actionFactory.createMoveAction();
+			case DELETE:
+				return actionFactory.createDeleteAction(new WidgetDeleteProvider(canvas));
+			case COPY_PASTE:
+				return actionFactory.createCopyPasteAction(new WidgetCopyPasteProvider(canvas));
+			default:
+				return null;
+				
 		}
-		return instance;
 	}
 
-	public void clearAction(String action)
+	public static void setActiveMoveAction(String activeMoveAction)
 	{
-		actions.put(action, null);
-	}
-
-	public WidgetAction getAction(String action, AbstractCanvas canvas)
-	{
-		if (action.equals(MOVE))
-		{
-			if (activeMoveAction != null)
-			{
-				WidgetAction moveAction = null;
-				if (activeMoveAction.equals(CanvasStrings.M_FREE))
-				{
-					moveAction = getAction(MOVE_FREE, canvas);
-				}
-				else if (activeMoveAction.equals(CanvasStrings.M_SNAP))
-				{
-					moveAction = getAction(MOVE_SNAP, canvas);
-				}
-				else if (activeMoveAction.equals(CanvasStrings.M_ALIGN))
-				{
-					moveAction = getAction(MOVE_ALIGN, canvas);
-				}
-				else if (activeMoveAction.equals(CanvasStrings.M_LINES))
-				{
-					moveAction = getAction(MOVE_LINES, canvas);
-				}
-				return moveAction;
-			}
-			if (actions.get(MOVE) == null)
-			{
-				actions.put(MOVE, getAction(MOVE_FREE, canvas));
-			}
-			return actions.get(MOVE);
-		}
-		else if (action.equals(MOVE_FREE))
-		{
-			if (actions.get(MOVE_FREE) == null)
-			{
-				actions.put(MOVE_FREE, ActionFactory.createMoveAction(ActionFactory.createFreeMoveStrategy(), new MultiMoveProvider(canvas)));
-			}
-			return actions.get(MOVE_FREE);
-		}
-		else if (action.equals(MOVE_SNAP))
-		{
-			if (actions.get(MOVE_SNAP) == null)
-			{
-				actions.put(MOVE_SNAP, ActionFactory.createMoveAction(ActionFactory.createSnapToGridMoveStrategy(GridWidget.GRID_SIZE, GridWidget.GRID_SIZE), new MultiMoveProvider(canvas)));
-			}
-			return actions.get(MOVE_SNAP);
-		}
-		else if (action.equals(MOVE_ALIGN))
-		{
-			if (actions.get(MOVE_ALIGN) == null)
-			{
-				actions.put(MOVE_ALIGN, ActionFactory.createAlignWithMultiMoveAction(canvas, new SingleLayerAlignWithWidgetCollector(canvas.getMainLayer(), true), canvas.getInterractionLayer(), ActionFactory.createDefaultAlignWithMoveDecorator(), true));
-			}
-			return actions.get(MOVE_ALIGN);
-		}
-		else if (action.equals(MOVE_LINES))
-		{
-			if (actions.get(MOVE_LINES) == null)
-			{
-				actions.put(MOVE_LINES, ActionFactory.createMoveAction(ActionFactory.createSnapToLineMoveStrategy(canvas), new MultiMoveProvider(canvas))); // true));
-			}
-			return actions.get(MOVE_LINES);
-		}
-		else if (action.equals(CREATE))
-		{
-			if (actions.get(CREATE) == null)
-			{
-				actions.put(CREATE, new NodeCreateAction(canvas));
-			}
-			return actions.get(CREATE);
-		}
-		else if (action.equals(SELECT))
-		{
-			if (actions.get(SELECT) == null)
-			{
-				actions.put(SELECT, ActionFactory.createSelectAction(new NodeSelectProvider(canvas)));
-			}
-			return actions.get(SELECT);
-		}
-		else if (action.equals(MULTI_SELECT))
-		{
-			if (actions.get(MULTI_SELECT) == null)
-			{
-				actions.put(MULTI_SELECT, ActionFactory.createSelectAction(new NodeMultiSelectProvider(canvas)));
-			}
-			return actions.get(MULTI_SELECT);
-		}
-		else if (action.equals(NODE_HOVER))
-		{
-			if (actions.get(NODE_HOVER) == null)
-			{
-				actions.put(NODE_HOVER, ActionFactory.createHoverAction(new NodeHoverProvider(canvas)));
-			}
-			return actions.get(NODE_HOVER);
-		}
-		else if (action.equals(ALTERNATIVE))
-		{
-			if (actions.get(ALTERNATIVE) == null)
-			{
-				actions.put(ALTERNATIVE, ActionFactory.createConnectAction(canvas.getCanvasDecorator().getConnDecoratorAlt(), canvas.getInterractionLayer(), new NodeConnectProvider(canvas)));
-			}
-			return actions.get(ALTERNATIVE);
-		}
-		else if (action.equals(SUCCESSOR))
-		{
-			if (actions.get(SUCCESSOR) == null)
-			{
-				actions.put(SUCCESSOR, ActionFactory.createConnectAction(canvas.getCanvasDecorator().getConnDecoratorSuc(), canvas.getInterractionLayer(), new NodeConnectProvider(canvas)));
-			}
-			return actions.get(SUCCESSOR);
-		}
-		else if (action.equals(RECONNECT))
-		{
-			if (actions.get(RECONNECT) == null)
-			{
-				actions.put(RECONNECT, ActionFactory.createReconnectAction(new NodeReconnectProvider(canvas)));
-			}
-			return actions.get(RECONNECT);
-		}
-		else if (action.equals(EDITOR))
-		{
-			if (actions.get(EDITOR) == null)
-			{
-				actions.put(EDITOR, ActionFactory.createInplaceEditorAction(new LabelTextFieldEditor(canvas)));
-			}
-			return actions.get(EDITOR);
-		}
-		else if (action.equals(POPUP_MENU_MAIN))
-		{
-			if (actions.get(POPUP_MENU_MAIN) == null)
-			{
-				actions.put(POPUP_MENU_MAIN, ActionFactory.createPopupMenuAction(new CanvasPopupMenu(canvas)));
-			}
-			return actions.get(POPUP_MENU_MAIN);
-		}
-		else if (action.equals(RECTANGULAR_SELECT))
-		{
-			if (actions.get(RECTANGULAR_SELECT) == null)
-			{
-				actions.put(RECTANGULAR_SELECT, ActionFactory.createRectangularSelectAction(ActionFactory.createDefaultRectangularSelectDecorator(canvas), canvas.getBackgroundLayer(), new CanvasRectangularSelectProvider(canvas)));
-			}
-			return actions.get(RECTANGULAR_SELECT);
-		}
-		else if (action.equals(MOUSE_CENTERED_ZOOM))
-		{
-			if (actions.get(MOUSE_CENTERED_ZOOM) == null)
-			{
-				actions.put(MOUSE_CENTERED_ZOOM, ActionFactory.createMouseCenteredZoomAction(1.05));
-			}
-			return actions.get(MOUSE_CENTERED_ZOOM);
-		}
-		else if (action.equals(PAN))
-		{
-			if (actions.get(PAN) == null)
-			{
-				actions.put(PAN, ActionFactory.createPanAction());
-			}
-			return actions.get(PAN);
-		}
-		else if (action.equals(CONN_SELECT))
-		{
-			if (actions.get(CONN_SELECT) == null)
-			{
-				actions.put(CONN_SELECT, canvas.createSelectAction());
-			}
-			return actions.get(CONN_SELECT);
-		}
-		else if (action.equals(FREE_MOVE_CP))
-		{
-			if (actions.get(FREE_MOVE_CP) == null)
-			{
-				actions.put(FREE_MOVE_CP, new MoveControlPointAction(new FreeMoveControl(), RoutingPolicy.DISABLE_ROUTING));
-			}
-			return actions.get(FREE_MOVE_CP);
-		}
-		else if (action.equals(ADD_REMOVE_CP))
-		{
-			if (actions.get(ADD_REMOVE_CP) == null)
-			{
-				actions.put(ADD_REMOVE_CP, org.netbeans.api.visual.action.ActionFactory.createAddRemoveControlPointAction());
-			}
-			return actions.get(ADD_REMOVE_CP);
-		}
-		else if (action.equals(SELECT_LABEL))
-		{
-			if (actions.get(SELECT_LABEL) == null)
-			{
-				actions.put(SELECT_LABEL, ActionFactory.createSelectAction(new LabelSelectProvider(canvas)));
-			}
-			return actions.get(SELECT_LABEL);
-		}
-		else if (action.equals(LABEL_HOVER))
-		{
-			if (actions.get(LABEL_HOVER) == null)
-			{
-				actions.put(LABEL_HOVER, ActionFactory.createHoverAction(new LabelHoverProvider(canvas)));
-			}
-			return actions.get(LABEL_HOVER);
-		}
-		else if (action.equals(STATIC_MOVE_FREE))
-		{
-			if (actions.get(STATIC_MOVE_FREE) == null)
-			{
-				actions.put(STATIC_MOVE_FREE, ActionFactory.createMoveAction());
-			}
-			return actions.get(STATIC_MOVE_FREE);
-		}
-		else if (action.equals(DELETE))
-		{
-			if (actions.get(DELETE) == null)
-			{
-				actions.put(DELETE, ActionFactory.createDeleteAction(new WidgetDeleteProvider(canvas)));
-			}
-			return actions.get(DELETE);
-		}
-		else if (action.equals(COPY_PASTE))
-		{
-			if (actions.get(COPY_PASTE) == null)
-			{
-				actions.put(COPY_PASTE, ActionFactory.createCopyPasteAction(new WidgetCopyPasteProvider(canvas)));
-			}
-			return actions.get(COPY_PASTE);
-		}
-		return null;
-	}
-
-	@Override
-	public void update(Observable obs, Object obj)
-	{
-		if (obs instanceof MoveTracker)
-		{
-			activeMoveAction = (String) obj;
-		}
+		WidgetActionFactory.activeMoveAction = activeMoveAction;
 	}
 }

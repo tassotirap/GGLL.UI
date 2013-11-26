@@ -24,7 +24,7 @@ public class GrammarComponent extends AbstractComponent implements FileComponent
 
 	public GrammarComponent(AbstractCanvas canvas)
 	{
-		path = CanvasFactory.getCanvasPath();
+		path = canvas.getFile();
 
 		this.canvas = canvas;
 		JComponent view = canvas.createView();
@@ -42,14 +42,14 @@ public class GrammarComponent extends AbstractComponent implements FileComponent
 
 		canvasPanel.add(jsp, BorderLayout.CENTER);
 		canvas.setPreferredSize(new Dimension(jsp.getWidth(), jsp.getHeight()));
-		CanvasFactory.getVolatileStateManager().getMonitor().addPropertyChangeListener("writing", this);
-		GrammarFactory.addGramComponent(this);
+		canvas.getVolatileStateManager().getMonitor().addPropertyChangeListener("writing", this);
+		GrammarFactory.addGramComponent(this, canvas.getFile());
 		jComponent = canvasPanel;
 	}
 
 	public GrammarComponent(String fileName)
 	{
-		this(CanvasFactory.getCanvasFromFile(fileName));
+		this(CanvasFactory.getInstance(fileName));
 	}
 
 	@Override
@@ -92,7 +92,7 @@ public class GrammarComponent extends AbstractComponent implements FileComponent
 
 	public void setPath(String path)
 	{
-		canvas = CanvasFactory.getCanvasFromFile(path);
+		canvas = CanvasFactory.getInstance(path);
 		this.path = path;
 	}
 }

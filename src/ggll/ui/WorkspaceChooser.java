@@ -26,7 +26,8 @@ import org.jdesktop.layout.LayoutStyle;
 /**
  * 
  * @author Gusga
- * @author Tasso Tirapani Silva Pinto Refactory: OK
+ * @author Tasso Tirapani Silva Pinto
+ * Refactory: OK
  */
 public class WorkspaceChooser extends JFrame
 {
@@ -68,7 +69,7 @@ public class WorkspaceChooser extends JFrame
 		if (!exists)
 		{
 			File file = new File(System.getProperty("java.io.tmpdir"), LIST_FILE);
-			StringBuffer oldText = new StringBuffer();
+
 			try
 			{
 				if (!file.exists())
@@ -77,15 +78,18 @@ public class WorkspaceChooser extends JFrame
 				}
 				FileReader fileReader = new FileReader(file);
 				BufferedReader bufferedReader = new BufferedReader(fileReader);
-				String line = "";
+				
+				StringBuffer oldText = new StringBuffer();
+				
+				String line = "";				
 				while ((line = bufferedReader.readLine()) != null)
 				{
 					oldText.append(line + "\n");
-				}
+				}				
 				bufferedReader.close();
 				PrintWriter printWriter = new PrintWriter(file);
+				printWriter.println(filename);
 				printWriter.print(oldText.toString());
-				printWriter.print(filename);
 				printWriter.close();
 			}
 			catch (IOException e)

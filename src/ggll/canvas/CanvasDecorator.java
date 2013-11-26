@@ -6,6 +6,7 @@ import ggll.canvas.widget.IconNodeWidgetExt;
 import ggll.canvas.widget.IconNodeWidgetExt.TextOrientation;
 import ggll.canvas.widget.LabelWidgetExt;
 import ggll.images.GGLLImages;
+import ggll.resource.CanvasResource;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -24,23 +25,29 @@ import org.netbeans.api.visual.widget.Widget;
 
 public class CanvasDecorator
 {
-	protected static final ConnectDecorator CONNECT_DECORATOR_ALTERNATIVE = new AlternativeConnectorDecorator();
+	protected  ConnectDecorator ConnectDecoratorAlternative;
 
-	protected static final ConnectDecorator CONNECT_DECORATOR_SUCCESSOR = new SuccessorConnectorDecorator();
+	protected  ConnectDecorator ConnectDecoratorSuccessor;
 
-	private String[] iconName = new String[]{ CanvasStrings.N_TERMINAL, CanvasStrings.TERMINAL, CanvasStrings.LEFT_SIDE, CanvasStrings.LAMBDA, CanvasStrings.START };
+	private String[] iconName = new String[]{ CanvasResource.N_TERMINAL, CanvasResource.TERMINAL, CanvasResource.LEFT_SIDE, CanvasResource.LAMBDA, CanvasResource.START };
+
 	private URL[] icons = new URL[]{ getClass().getResource(GGLLImages.ICON_N_TERMINAL), getClass().getResource(GGLLImages.ICON_TERMINAL), getClass().getResource(GGLLImages.ICON_LEFT_SIDE), getClass().getResource(GGLLImages.ICON_LAMBDA), getClass().getResource(GGLLImages.ICON_START) };
+	public CanvasDecorator(AbstractCanvas canvas)
+	{
+		ConnectDecoratorAlternative = new AlternativeConnectorDecorator(canvas);
+		ConnectDecoratorSuccessor = new SuccessorConnectorDecorator(canvas);
+	}
 
 	public ConnectionWidget drawConnection(String type, AbstractCanvas canvas, String label)
 	{
 		ConnectionWidget connection = null;
-		if (type.equals(CanvasStrings.SUCCESSOR))
+		if (type.equals(CanvasResource.SUCCESSOR))
 		{
-			connection = CONNECT_DECORATOR_SUCCESSOR.createConnectionWidget(canvas.getMainLayer().getScene());
+			connection = ConnectDecoratorSuccessor.createConnectionWidget(canvas.getMainLayer().getScene());
 		}
 		else
 		{
-			connection = CONNECT_DECORATOR_ALTERNATIVE.createConnectionWidget(canvas.getMainLayer().getScene());
+			connection = ConnectDecoratorAlternative.createConnectionWidget(canvas.getMainLayer().getScene());
 		}
 
 		connection.setTargetAnchorShape(AnchorShape.TRIANGLE_FILLED);
@@ -54,7 +61,7 @@ public class CanvasDecorator
 	public Widget drawIcon(String type, AbstractCanvas canvas, String text) throws Exception
 	{
 		Widget widget;
-		if (type.equals(CanvasStrings.LAMBDA))
+		if (type.equals(CanvasResource.LAMBDA))
 		{
 			IconNodeWidgetExt iwidget = new IconNodeWidgetExt(canvas.getMainLayer().getScene(), TextOrientation.RIGHT_CENTER);
 
@@ -110,22 +117,22 @@ public class CanvasDecorator
 
 	public ConnectDecorator getConnDecoratorAlt()
 	{
-		return CONNECT_DECORATOR_ALTERNATIVE;
+		return ConnectDecoratorAlternative;
 	}
 
 	public ConnectDecorator getConnDecoratorSuc()
 	{
-		return CONNECT_DECORATOR_SUCCESSOR;
+		return ConnectDecoratorSuccessor;
 	}
 
 	public Border getIconBorder(String type)
 	{
 		Insets insets = null;
-		if (type.equals(CanvasStrings.START))
+		if (type.equals(CanvasResource.START))
 		{
 			insets = new Insets(6, 18, 6, 16);
 		}
-		else if (type.equals(CanvasStrings.LEFT_SIDE))
+		else if (type.equals(CanvasResource.LEFT_SIDE))
 		{
 			insets = new Insets(6, 8, 6, 16);
 		}

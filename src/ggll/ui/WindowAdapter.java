@@ -5,7 +5,7 @@ import ggll.ui.component.AbstractComponent;
 import ggll.ui.component.EmptyComponent;
 import ggll.ui.component.FileComponent;
 import ggll.ui.interfaces.IMainWindow;
-import ggll.view.AbstractView;
+import ggll.ui.view.AbstractView;
 
 import javax.swing.JOptionPane;
 

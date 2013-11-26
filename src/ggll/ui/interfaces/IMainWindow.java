@@ -1,9 +1,9 @@
 package ggll.ui.interfaces;
 
-import ggll.ui.TabWindowList;
 import ggll.ui.ThemeManager.Theme;
 import ggll.ui.component.AbstractComponent;
-import ggll.ui.model.IconView;
+import ggll.ui.icon.IconView;
+import ggll.ui.tab.TabWindowList;
 
 import javax.swing.Icon;
 import javax.swing.JFrame;

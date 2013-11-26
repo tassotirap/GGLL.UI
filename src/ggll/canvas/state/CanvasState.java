@@ -2,8 +2,11 @@ package ggll.canvas.state;
 
 import ggll.canvas.AbstractCanvas;
 import ggll.canvas.CanvasFactory;
+import ggll.canvas.widget.IconNodeWidgetExt;
+import ggll.canvas.widget.LabelWidgetExt;
 import ggll.canvas.widget.MarkedWidget;
 import ggll.canvas.widget.TypedWidget;
+import ggll.resource.CanvasResource;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -14,14 +17,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
-import org.netbeans.api.visual.model.ObjectSceneEvent;
-import org.netbeans.api.visual.model.ObjectSceneListener;
-import org.netbeans.api.visual.model.ObjectState;
 import org.netbeans.api.visual.widget.ConnectionWidget;
 import org.netbeans.api.visual.widget.LabelWidget;
 import org.netbeans.api.visual.widget.Widget;
 
-public class CanvasState implements Serializable, ObjectSceneListener, PropertyChangeListener
+public class CanvasState implements Serializable, PropertyChangeListener
 {
 	private static final long serialVersionUID = -7729464439313780001L;
 	private HashMap<String, Connection> connections = new HashMap<String, Connection>();
@@ -33,20 +33,12 @@ public class CanvasState implements Serializable, ObjectSceneListener, PropertyC
 	private int lastLeftSides = 0;
 	private int lastLAMBDA = 0;
 	private int lastSTART = 0;
-	private int lastCustomNode = 0;
-
-	public CanvasState()
+	private int lastCustomNode = 0;	
+	private String file;
+	
+	public CanvasState(String file)
 	{
-	}
-
-	public void addConnection(Connection c)
-	{
-		connections.put(c.getName(), c);
-	}
-
-	public void addNode(Node node)
-	{
-		nodes.put(node.getName(), node);
+		this.file = file;
 	}
 
 	public Connection findConnection(Object conn)
@@ -67,19 +59,6 @@ public class CanvasState implements Serializable, ObjectSceneListener, PropertyC
 		return null;
 	}
 
-	@Override
-	public void focusChanged(ObjectSceneEvent event, Object oldObject, Object newObject)
-	{
-
-	}
-
-	/**
-	 * Returns an ordered set of connections. The connections are ordered
-	 * according to their names, so that this collection reflects the order of
-	 * these connections's creation.
-	 * 
-	 * @return an ordered set of connections
-	 */
 	public List<String> getConnections()
 	{
 		ArrayList<String> list = new ArrayList<String>();
@@ -141,17 +120,6 @@ public class CanvasState implements Serializable, ObjectSceneListener, PropertyC
 		return null;
 	}
 
-	@Override
-	public void highlightingChanged(ObjectSceneEvent arg0, Set<Object> arg1, Set<Object> arg2)
-	{
-
-	}
-
-	@Override
-	public void hoverChanged(ObjectSceneEvent arg0, Object arg1, Object arg2)
-	{
-	}
-
 	public void incLastCustomNode()
 	{
 		this.lastCustomNode++;
@@ -182,78 +150,13 @@ public class CanvasState implements Serializable, ObjectSceneListener, PropertyC
 		this.lastTerminalId++;
 	}
 
-	@Override
-	public void objectAdded(ObjectSceneEvent event, Object added)
-	{
-		AbstractCanvas canvas = (AbstractCanvas) event.getObjectScene();
-		Widget widget = canvas.findWidget(added);
-		String name = (String) added;
-
-		if (canvas.isNode(added) || canvas.isLabel(added))
-		{
-
-			Node node = new Node();
-			node.setName(name);
-			node.setLocation(widget.getPreferredLocation());
-			if (widget instanceof TypedWidget)
-			{
-				node.setType(((TypedWidget) widget).getType());
-			}
-			else
-			{
-				node.setType(canvas.getCanvasActiveTool());
-			}
-			if (widget instanceof MarkedWidget)
-			{
-				node.setMark(((MarkedWidget) widget).getMark());
-			}
-			if (widget instanceof LabelWidget)
-			{
-				node.setTitle(((LabelWidget) widget).getLabel());
-			}
-			nodes.put(name, node);
-		}
-		else if (canvas.isSuccessor(name) || canvas.isAlternative(name))
-		{
-			Connection conn = new Connection();
-			conn.setName(name);
-			conn.setType(canvas.getCanvasActiveTool());
-
-			if (widget instanceof ConnectionWidget)
-			{
-				conn.setSource(canvas.getEdgeSource(name));
-				conn.setTarget(canvas.getEdgeTarget(name));
-				conn.setPoints(((ConnectionWidget) widget).getControlPoints());
-			}
-			connections.put(name, conn);
-		}
-	}
-
-	@Override
-	public void objectRemoved(ObjectSceneEvent event, Object removed)
-	{
-		if (nodes.containsKey(removed))
-		{
-			nodes.remove(removed);
-		}
-		if (connections.containsKey(removed))
-		{
-			connections.remove(removed);
-		}
-
-	}
-
-	@Override
-	public void objectStateChanged(ObjectSceneEvent arg0, Object arg1, ObjectState arg2, ObjectState arg3)
-	{
-	}
 
 	@Override
 	public void propertyChange(PropertyChangeEvent evt)
 	{
 		if (evt.getPropertyName().equals("writing"))
 		{
-			AbstractCanvas canvas = CanvasFactory.getCanvas();
+			AbstractCanvas canvas = CanvasFactory.getInstance(file);
 			if (canvas != null)
 			{
 				update(canvas);
@@ -261,38 +164,60 @@ public class CanvasState implements Serializable, ObjectSceneListener, PropertyC
 		}
 	}
 
-	@Override
-	public void selectionChanged(ObjectSceneEvent arg0, Set<Object> arg1, Set<Object> arg2)
-	{
-	}
-
 	public void update(AbstractCanvas canvas)
 	{
-		for (String node : nodes.keySet())
+		nodes.clear();
+		connections.clear();	
+		for(String object : canvas.getNodes())
 		{
-			Widget widget = canvas.findWidget(node);
-			if (widget != null)
+			Widget widget = canvas.findWidget(object);
+			if(widget instanceof LabelWidget)
 			{
-				nodes.get(node).setLocation(widget.getPreferredLocation());
-				if (widget instanceof LabelWidget)
+				LabelWidget labelWidget = (LabelWidget)widget;
+				Node node = new Node();
+				node.setName(object);
+				node.setTitle(labelWidget.getLabel());
+				node.setLocation(labelWidget.getPreferredLocation());
+				if (labelWidget instanceof TypedWidget)
 				{
-					nodes.get(node).setTitle(((LabelWidget) widget).getLabel());
+					node.setType(((LabelWidgetExt) labelWidget).getType());
 				}
-				if (widget instanceof MarkedWidget)
+				if (labelWidget instanceof MarkedWidget)
 				{
-					nodes.get(node).setMark(((MarkedWidget) widget).getMark());
+					node.setMark(((MarkedWidget) labelWidget).getMark());
 				}
+				nodes.put(node.getName(), node);
+			}
+			else if(widget instanceof IconNodeWidgetExt)
+			{
+				IconNodeWidgetExt iconNodeWidget = (IconNodeWidgetExt)widget;
+				Node node = new Node();
+				node.setName(object);
+				node.setLocation(iconNodeWidget.getPreferredLocation());
+				node.setType(iconNodeWidget.getType());
+				nodes.put(node.getName(), node);
 			}
 		}
-		for (String conn : connections.keySet())
+		for(String object : canvas.getEdges())
 		{
-			Widget w = canvas.findWidget(conn);
-			if (w != null && w instanceof ConnectionWidget)
+			Widget widget = canvas.findWidget(object);
+			if(widget instanceof ConnectionWidget)
 			{
-				ConnectionWidget cw = (ConnectionWidget) w;
-				connections.get(conn).setSource(canvas.getEdgeSource(conn));
-				connections.get(conn).setTarget(canvas.getEdgeTarget(conn));
-				connections.get(conn).setPoints(cw.getControlPoints());
+				ConnectionWidget connectionWidget = (ConnectionWidget)widget;
+				Connection connection = new Connection();
+				connection.setName(object);
+				connection.setSource(canvas.getEdgeSource(object));
+				connection.setTarget(canvas.getEdgeTarget(object));
+				if (canvas.isAlternative(object))
+				{
+					connection.setType(CanvasResource.ALTERNATIVE);
+				}
+				else if (canvas.isSuccessor(object))
+				{
+					connection.setType(CanvasResource.SUCCESSOR);
+				}
+				connection.setPoints(connectionWidget.getControlPoints());
+				connections.put(connection.getName(), connection);
 			}
 		}
 	}

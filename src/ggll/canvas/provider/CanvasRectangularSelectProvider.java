@@ -41,7 +41,6 @@
 package ggll.canvas.provider;
 
 import ggll.canvas.AbstractCanvas;
-import ggll.canvas.CanvasFactory;
 
 import java.awt.Color;
 import java.awt.Point;
@@ -60,14 +59,15 @@ import org.netbeans.api.visual.widget.Widget;
 public final class CanvasRectangularSelectProvider implements RectangularSelectProvider
 {
 
+	private AbstractCanvas canvas;
 	public CanvasRectangularSelectProvider(AbstractCanvas canvas)
 	{
+		this.canvas = canvas;
 	}
 
 	@Override
 	public void performSelection(Rectangle sceneSelection)
 	{
-		AbstractCanvas canvas = CanvasFactory.getCanvas();
 		boolean entirely = sceneSelection.width > 0;
 		int w = sceneSelection.width;
 		int h = sceneSelection.height;
@@ -130,7 +130,7 @@ public final class CanvasRectangularSelectProvider implements RectangularSelectP
 		{
 			if (canvas.isNode(o) || canvas.isLabel(o))
 			{
-				Widget lw = CanvasFactory.getCanvas().findWidget(o);
+				Widget lw = canvas.findWidget(o);
 				if (canvas.isLabel(o))
 				{
 					lw.setForeground(Color.BLUE);

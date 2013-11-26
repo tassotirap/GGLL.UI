@@ -1,8 +1,6 @@
 package ggll.canvas.provider;
 
 import ggll.canvas.AbstractCanvas;
-import ggll.canvas.CanvasFactory;
-import ggll.core.syntax.command.CommandFactory;
 
 import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
@@ -21,7 +19,7 @@ public class WidgetDeleteProvider
 	{
 		this.canvas = canvas;
 		monitor = new PropertyChangeSupport(this);
-		monitor.addPropertyChangeListener(CanvasFactory.getVolatileStateManager());
+		monitor.addPropertyChangeListener(canvas.getVolatileStateManager());
 	}
 
 	/** delete all selected widgets **/
@@ -76,12 +74,12 @@ public class WidgetDeleteProvider
 				Collection<String> edges = canvas.findNodeEdges(objs[i].toString(), true, true);
 				deleteThese(edges);
 				canvas.removeNodeSafely((String) objs[i]);
-				monitor.firePropertyChange("undoable", null, CommandFactory.createDelCommand());
+				monitor.firePropertyChange("undoable", null, "Delete");
 			}
 			else if (canvas.isEdge(objs[i]))
 			{
 				canvas.removeEdgeSafely((String) objs[i]);
-				monitor.firePropertyChange("undoable", null, CommandFactory.createDelCommand());
+				monitor.firePropertyChange("undoable", null, "Delete");
 			}
 		}
 	}

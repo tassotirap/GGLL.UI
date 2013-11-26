@@ -8,6 +8,7 @@ import ggll.ui.exceptions.WarningException;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class ProjectHelper
 {
@@ -58,7 +59,7 @@ public class ProjectHelper
 	public static Project openProject(String projectRootPath)
 	{
 		Project project = null;
-		GrammarFile gramFile = null;
+		ArrayList<GrammarFile> gramFiles = new ArrayList<GrammarFile>();
 		SemanticFile semFile = null;
 		LexicalFile lexFile = null;
 		
@@ -74,7 +75,7 @@ public class ProjectHelper
 			{
 				if (file.getName().endsWith(FileNames.GRAM_EXTENSION))
 				{
-					gramFile = new GrammarFile(file.getAbsolutePath());
+					gramFiles.add(new GrammarFile(file.getAbsolutePath()));
 				}
 				else if (file.getName().endsWith(FileNames.SEM_EXTENSION))
 				{
@@ -86,13 +87,13 @@ public class ProjectHelper
 				}
 			}
 
-			if (gramFile != null && semFile != null && lexFile != null)
+			if (gramFiles.size() > 0 && semFile != null && lexFile != null)
 			{
 				project = new Project(projectRootPath);
-				project.setGrammarFile(gramFile);
+				project.setGrammarFile(gramFiles);
 				project.setSemamticFile(semFile);
 				project.setLexicalFile(lexFile);
-				project.getOpenedFiles().add(gramFile);
+				project.getOpenedFiles().add(gramFiles.get(0));
 				return project;
 			}
 		}

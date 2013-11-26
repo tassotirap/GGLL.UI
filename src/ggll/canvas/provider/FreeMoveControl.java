@@ -1,7 +1,6 @@
 package ggll.canvas.provider;
 
-import ggll.canvas.CanvasFactory;
-import ggll.core.syntax.command.CommandFactory;
+import ggll.canvas.AbstractCanvas;
 
 import java.awt.Point;
 import java.beans.PropertyChangeSupport;
@@ -15,10 +14,10 @@ public class FreeMoveControl implements MoveControlPointProvider
 	private PropertyChangeSupport monitor;
 	MoveControlPointProvider moveProvider;
 
-	public FreeMoveControl()
+	public FreeMoveControl(AbstractCanvas canvas)
 	{
 		monitor = new PropertyChangeSupport(this);
-		monitor.addPropertyChangeListener(CanvasFactory.getVolatileStateManager());
+		monitor.addPropertyChangeListener(canvas.getVolatileStateManager());
 		moveProvider = org.netbeans.api.visual.action.ActionFactory.createFreeMoveControlPointProvider();
 	}
 
@@ -27,7 +26,7 @@ public class FreeMoveControl implements MoveControlPointProvider
 	{
 		List<Point> points = moveProvider.locationSuggested(arg0, arg1, arg2);
 		arg0.setControlPoints(points, true);
-		monitor.firePropertyChange("undoable", null, CommandFactory.createMoveCommand());
+		monitor.firePropertyChange("undoable", null, "Move");
 		return points;
 	}
 

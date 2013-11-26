@@ -1,7 +1,6 @@
 package ggll.canvas.provider;
 
 import ggll.canvas.AbstractCanvas;
-import ggll.canvas.CanvasFactory;
 
 import java.awt.Color;
 
@@ -12,10 +11,11 @@ import org.netbeans.api.visual.widget.Widget;
 
 public class LabelHoverProvider implements TwoStateHoverProvider
 {
+	private AbstractCanvas canvas;
 
 	public LabelHoverProvider(AbstractCanvas canvas)
 	{
-
+		this.canvas = canvas;
 	}
 
 	@Override
@@ -25,7 +25,6 @@ public class LabelHoverProvider implements TwoStateHoverProvider
 		{
 			((LabelWidget) widget).setBorder(BorderFactory.createLineBorder(1, Color.BLUE));
 		}
-
 	}
 
 	@Override
@@ -33,12 +32,11 @@ public class LabelHoverProvider implements TwoStateHoverProvider
 	{
 		if (widget != null)
 		{
-			if (!CanvasFactory.getCanvas().getSelectedObjects().contains(CanvasFactory.getCanvas().findObject(widget)))
+			if (!canvas.getSelectedObjects().contains(canvas.findObject(widget)))
 			{
 				((LabelWidget) widget).setBorder(BorderFactory.createEmptyBorder());
 			}
 		}
-
 	}
 
 }

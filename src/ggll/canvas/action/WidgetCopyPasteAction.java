@@ -9,12 +9,11 @@ import org.netbeans.api.visual.widget.Widget;
 
 public class WidgetCopyPasteAction extends Adapter
 {
+	WidgetCopyPasteProvider copyPasteProvider;
 
-	WidgetCopyPasteProvider wcpp;
-
-	public WidgetCopyPasteAction(WidgetCopyPasteProvider wcpp)
+	public WidgetCopyPasteAction(WidgetCopyPasteProvider copyPasteProvider)
 	{
-		this.wcpp = wcpp;
+		this.copyPasteProvider = copyPasteProvider;
 	}
 
 	@Override
@@ -24,15 +23,15 @@ public class WidgetCopyPasteAction extends Adapter
 		{
 			if (event.getKeyCode() == KeyEvent.VK_C)
 			{
-				wcpp.copySelected();
+				copyPasteProvider.copySelected();
 			}
 			else if (event.getKeyCode() == KeyEvent.VK_X)
 			{
-				wcpp.cutSelected(null);
+				copyPasteProvider.cutSelected(null);
 			}
 			else if (event.getKeyCode() == KeyEvent.VK_V)
 			{
-				wcpp.paste(null);
+				copyPasteProvider.paste(null);
 			}
 		}
 		return State.REJECTED;

@@ -12,7 +12,7 @@ import ggll.output.AppOutput;
 import ggll.output.HtmlViewer.TOPIC;
 import ggll.parser.ParsingEditor;
 import ggll.project.GGLLManager;
-import ggll.util.IOUtilities;
+import ggll.util.io.IOHelper;
 
 import java.io.File;
 
@@ -79,7 +79,7 @@ public class Controller
 			analyzer.serialize(GGLLManager.getProject().getProjectDir().getAbsolutePath() + "\\export\\data.ggll");
 
 			File semantic = new File(GGLLManager.getProject().getProjectDir().getAbsolutePath() + "\\" + GGLLManager.getProject().getProjectDir().getName() + FileNames.SEM_EXTENSION);
-			IOUtilities.copyFile(semantic, new File(GGLLManager.getProject().getProjectDir().getAbsolutePath() + "\\export\\" + GGLLManager.getProject().getProjectDir().getName() + FileNames.SEM_EXTENSION));
+			IOHelper.copyFile(semantic, new File(GGLLManager.getProject().getProjectDir().getAbsolutePath() + "\\export\\" + GGLLManager.getProject().getProjectDir().getName() + FileNames.SEM_EXTENSION));
 		}
 	}
 }

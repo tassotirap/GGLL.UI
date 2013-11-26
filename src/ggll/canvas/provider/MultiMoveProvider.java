@@ -1,8 +1,6 @@
 package ggll.canvas.provider;
 
 import ggll.canvas.AbstractCanvas;
-import ggll.canvas.CanvasFactory;
-import ggll.core.syntax.command.CommandFactory;
 import ggll.core.syntax.grammar.model.SyntaxDefinitions;
 
 import java.awt.Point;
@@ -15,7 +13,7 @@ import org.netbeans.api.visual.widget.Widget;
 
 public class MultiMoveProvider implements MoveProvider
 {
-
+	private AbstractCanvas canvas;
 	private PropertyChangeSupport monitor;
 	private Point original;
 
@@ -23,8 +21,9 @@ public class MultiMoveProvider implements MoveProvider
 
 	public MultiMoveProvider(AbstractCanvas canvas)
 	{
+		this.canvas = canvas;
 		monitor = new PropertyChangeSupport(this);
-		monitor.addPropertyChangeListener(CanvasFactory.getVolatileStateManager());
+		monitor.addPropertyChangeListener(canvas.getVolatileStateManager());
 	}
 
 	@Override
@@ -50,14 +49,13 @@ public class MultiMoveProvider implements MoveProvider
 		original = null;
 		if (context != null)
 		{
-			monitor.firePropertyChange("undoable", null, CommandFactory.createMoveCommand());
+			monitor.firePropertyChange("undoable", null, "Move");
 		}
 	}
 
 	@Override
 	public void movementStarted(Widget widget)
 	{
-		AbstractCanvas canvas = CanvasFactory.getCanvas();
 		Object object = canvas.findObject(widget);
 		if (canvas.isNode(object) || canvas.isLabel(object))
 		{

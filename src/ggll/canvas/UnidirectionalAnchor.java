@@ -2,7 +2,6 @@ package ggll.canvas;
 
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.util.ArrayList;
 
 import org.netbeans.api.visual.anchor.Anchor;
 import org.netbeans.api.visual.widget.Widget;
@@ -12,23 +11,39 @@ public class UnidirectionalAnchor extends Anchor
 {
 	private Direction kind;
 	private Direction preferredDirection;
-	private String target;
 	private String connection;
+	private AbstractCanvas canvas;
 
-	public UnidirectionalAnchor(Widget widget, Direction kind)
+	public UnidirectionalAnchor(AbstractCanvas canvas, Widget widget, Direction kind)
 	{
-		this(widget, kind, null, null, null);
+		this(canvas, widget, kind, null, null);		
 	}
 
-	public UnidirectionalAnchor(Widget widget, Direction kind, String connection, String target, Direction preferredDirection)
+	public UnidirectionalAnchor(AbstractCanvas canvas, Widget widget, Direction kind, String connection, Direction preferredDirection)
 	{
 		super(widget);
+		this.canvas = canvas;
 		this.kind = kind;
 		this.preferredDirection = preferredDirection;
-		this.target = target;
 		this.connection = connection;
 	}
 
+	private boolean isFirstConnection(Object[] edges)
+	{
+		for(int i = 0; i < edges.length; i++)
+		{
+			String edge = (String)edges[i];
+			if(edge.equalsIgnoreCase(connection))
+			{
+				if(i > 0)
+				{
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+	
 	@Override
 	@SuppressWarnings("unchecked")
 	public Result compute(Entry entry)
@@ -39,38 +54,23 @@ public class UnidirectionalAnchor extends Anchor
 		{
 			return null;
 		}
+		
+		Object obj = canvas.findObject(widget);
+		Object[] edges = canvas.findNodeEdges((String)obj, false, true).toArray();		
+		if(preferredDirection != null && !isFirstConnection(edges))
+		{
+			kind = preferredDirection;
+		}
+		
 		Rectangle bounds;
 		Point center;
 		bounds = widget.convertLocalToScene(widget.getBounds());
 		center = GeomUtil.center(bounds);
 
-		if (target != null && preferredDirection != null && connection != null)
-		{
-			if (!TargetDirections.getConnections().contains(connection))
-			{
-				TargetDirections.getConnections().add(connection);
-				ArrayList<Direction> otherDirections = TargetDirections.getMaps().get(target);
-				if (otherDirections != null)
-				{
-					if (otherDirections.contains(kind))
-					{
-						kind = preferredDirection;
-					}
-					otherDirections.add(kind);
-				}
-				else
-				{
-					otherDirections = new ArrayList<Direction>();
-					otherDirections.add(kind);
-					TargetDirections.getMaps().put(target, otherDirections);
-				}
-			}
-		}
-
 		switch (kind)
 		{
 			case LEFT:
-				return new Anchor.Result(new Point(bounds.x, center.y), kind);
+				return new Anchor.Result(new Point(bounds.x + 2, center.y), kind);
 			case RIGHT:
 				return new Anchor.Result(new Point(bounds.x + bounds.width, center.y), kind);
 			case TOP:
@@ -79,15 +79,5 @@ public class UnidirectionalAnchor extends Anchor
 				return new Anchor.Result(new Point(bounds.x + 4, center.y + 3), kind);
 		}
 		return null;
-	}
-
-	public Direction getKind()
-	{
-		return kind;
-	}
-
-	public String getTarget()
-	{
-		return target;
 	}
 }

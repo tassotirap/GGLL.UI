@@ -1,17 +1,22 @@
 package ggll.ui.component;
+import java.util.Hashtable;
 
 public abstract class GrammarFactory
 {
-	private static GrammarComponent gramComponent;
+	private static Hashtable<String, GrammarComponent> gramComponents;
 
-	public static void addGramComponent(GrammarComponent gramComponent)
+	public static void addGramComponent(GrammarComponent gramComponent, String file)
 	{
-		GrammarFactory.gramComponent = gramComponent;
+		if(gramComponents == null)
+		{
+			gramComponents = new Hashtable<String, GrammarComponent>();
+		}		
+		gramComponents.put(file, gramComponent);
 	}
 
-	public static GrammarComponent getGrammarComponent()
+	public static GrammarComponent getGrammarComponent(String file)
 	{
-		return gramComponent;
+		return gramComponents.get(file);
 	}
 
 }

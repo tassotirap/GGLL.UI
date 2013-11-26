@@ -1,6 +1,5 @@
 package ggll.core.semantics;
 
-import ggll.core.syntax.command.CommandFactory;
 import ggll.file.SemanticFile;
 import ggll.util.Log;
 
@@ -172,7 +171,7 @@ public class SemFileManager
 
 	public boolean InsertRoutine(String name, String code, String widgetName)
 	{
-		monitor.firePropertyChange("undoable", null, CommandFactory.createAddRoutineCommand());
+		monitor.firePropertyChange("undoable", null, "AddRoutine");
 		code = getFormatedCode(name, code);
 		addToFile(name, code);
 		return true;

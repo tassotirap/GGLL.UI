@@ -1,7 +1,7 @@
 package ggll.file;
 
 import ggll.project.Project;
-import ggll.util.IOUtilities;
+import ggll.util.io.IOHelper;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -58,7 +58,7 @@ public class SemanticFile extends File
 		if (!this.exists() && !this.createNewFile())
 			throw new IOException("Could not create SemanticFile");
 
-		IOUtilities.copyFileFromInputSteam(Project.class.getResourceAsStream(ORG_GRVIEW_PROJECT_EMPTY_SEMMANTIC), this);
+		IOHelper.copyFileFromInputSteam(Project.class.getResourceAsStream(ORG_GRVIEW_PROJECT_EMPTY_SEMMANTIC), this);
 		String conteudo = readFile(getPath());
 		conteudo = conteudo.replace("PROJECT_NAME", this.getName().replace(".java", ""));
 		FileWriter output = new FileWriter(this);

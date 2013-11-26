@@ -1,7 +1,5 @@
 package ggll.canvas.state;
 
-import ggll.core.syntax.command.Command;
-
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -19,7 +17,7 @@ public class VolatileStateManager implements PropertyChangeListener
 
 	public class VolatileState
 	{
-		public Command command;
+		public String command;
 		public byte[] serializedObject;
 	}
 
@@ -28,9 +26,9 @@ public class VolatileStateManager implements PropertyChangeListener
 	private int capacity;
 	private long last;
 	private HashMap<String, VolatileState> lastStates = new HashMap<String, VolatileState>();
-	private PropertyChangeSupport monitor;
 	private HashMap<String, VolatileState> nextStates = new HashMap<String, VolatileState>();
 
+	private PropertyChangeSupport monitor;
 	private Object object;
 
 	private ObjectInputStream ois;
@@ -71,7 +69,7 @@ public class VolatileStateManager implements PropertyChangeListener
 		return null;
 	}
 
-	private void writeCanvas(String state, HashMap<String, VolatileState> states, Command command) throws IOException
+	private void writeCanvas(String state, HashMap<String, VolatileState> states, String command) throws IOException
 	{
 		monitor.firePropertyChange("writing", null, object);
 		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -194,22 +192,21 @@ public class VolatileStateManager implements PropertyChangeListener
 	{
 		if (event.getPropertyName().equals("undoable"))
 		{
-			String state = getUniqueName(((Command) event.getNewValue()).getDescription(), last++);
+			String state = getUniqueName((String) event.getNewValue(), last++);
 			try
 			{
-				writeCanvas(state, lastStates, (Command) event.getNewValue());
+				writeCanvas(state, lastStates, (String) event.getNewValue());
 				nextStates.clear();
 				redoables.clear();
 				undoables.add(state);
 				limitBuffer(undoables, lastStates);
-				monitor.firePropertyChange("undoable", null, ((Command) event.getNewValue()).getDescription());
+				monitor.firePropertyChange("undoable", null, (String) event.getNewValue());
 			}
 			catch (Exception e)
 			{
 				e.printStackTrace();
 			}
 		}
-
 	}
 
 	public void redo()
@@ -236,7 +233,7 @@ public class VolatileStateManager implements PropertyChangeListener
 		}
 		catch (Exception e)
 		{
-			// TODO error
+			e.printStackTrace();
 		}
 	}
 
@@ -254,10 +251,6 @@ public class VolatileStateManager implements PropertyChangeListener
 		{
 			Object nobject = read(undoables.get(index - 1), lastStates);
 			monitor.firePropertyChange("object_state", object, nobject);
-			if (lastStates.get(undoables.get(index - 1)).command != null)
-			{
-				lastStates.get(undoables.get(index - 1)).command.undo();
-			}
 			object = nobject;
 			redoables.add(undoables.get(index));
 			nextStates.put(undoables.get(index), lastStates.get(undoables.get(index)));
@@ -268,7 +261,6 @@ public class VolatileStateManager implements PropertyChangeListener
 		}
 		catch (Exception e)
 		{
-			// TODO error
 			e.printStackTrace();
 		}
 	}

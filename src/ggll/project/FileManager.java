@@ -3,17 +3,17 @@ package ggll.project;
 import ggll.canvas.AbstractCanvas;
 import ggll.file.FileNames;
 import ggll.ui.MainWindow;
-import ggll.ui.TabWindowList.TabPlace;
 import ggll.ui.component.AbstractComponent;
 import ggll.ui.component.FileComponent;
 import ggll.ui.component.GrammarComponent;
 import ggll.ui.component.GrammarFactory;
 import ggll.ui.component.TextAreaComponent;
-import ggll.ui.model.IconFactory;
-import ggll.ui.model.IconFactory.IconType;
+import ggll.ui.icon.IconFactory;
+import ggll.ui.icon.IconFactory.IconType;
+import ggll.ui.tab.TabWindowList.TabPlace;
+import ggll.ui.view.AbstractView;
+import ggll.ui.view.UnsavedViewRepository;
 import ggll.util.Log;
-import ggll.view.AbstractView;
-import ggll.view.UnsavedViewRepository;
 
 import java.io.File;
 import java.io.IOException;
@@ -36,7 +36,7 @@ public class FileManager
 
 	private String saveFile(AbstractCanvas canvas)
 	{
-		GrammarComponent grammarComponent = GrammarFactory.getGrammarComponent();
+		GrammarComponent grammarComponent = GrammarFactory.getGrammarComponent(canvas.getFile());
 		if (viewManager.hasUnsavedView(grammarComponent.getPath()))
 		{
 			grammarComponent.saveFile();

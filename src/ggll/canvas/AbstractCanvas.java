@@ -4,6 +4,7 @@ import ggll.canvas.state.CanvasState;
 import ggll.canvas.state.StaticStateManager;
 import ggll.canvas.state.VolatileStateManager;
 import ggll.images.GGLLImages;
+import ggll.resource.CanvasResource;
 
 import java.awt.Component;
 import java.awt.Cursor;
@@ -30,17 +31,20 @@ import java.util.List;
 import javax.swing.JComponent;
 
 import org.netbeans.api.visual.graph.GraphScene;
-import org.netbeans.api.visual.model.ObjectSceneEventType;
 import org.netbeans.api.visual.router.Router;
 import org.netbeans.api.visual.widget.LayerWidget;
 
 public abstract class AbstractCanvas extends GraphScene.StringGraph implements PropertyChangeListener
 {
 	private static final double MIN_ZOOM = 0.5;
-
 	private static final double MAX_ZOOM = 1.5;
+
 	private AbstractMap<String, Cursor> cursors = new HashMap<String, Cursor>();
-	private PropertyChangeSupport monitor;
+
+	protected PropertyChangeSupport monitor;
+	protected StaticStateManager staticStateManager;
+	protected VolatileStateManager volatileStateManager;
+	protected CanvasState state;
 
 	private List<PropertyChangeSupport> monitors = new ArrayList<PropertyChangeSupport>();
 	private boolean showingGrid;
@@ -60,10 +64,12 @@ public abstract class AbstractCanvas extends GraphScene.StringGraph implements P
 	protected List<String> successors = new ArrayList<String>();
 	protected List<String> terminals = new ArrayList<String>();
 
-	public AbstractCanvas(String cursor, String connectionStrategy, String movementStrategy, CanvasDecorator decorator)
+	private String file;
+
+	public AbstractCanvas(String cursor, String connectionStrategy, String movementStrategy, String file)
 	{
-		this.decorator = decorator;
-		monitor = new PropertyChangeSupport(this);
+		this.decorator = new CanvasDecorator(this);
+		this.file = file;
 	}
 
 	public boolean canZoomIn()
@@ -81,28 +87,28 @@ public abstract class AbstractCanvas extends GraphScene.StringGraph implements P
 		Toolkit toolkit = Toolkit.getDefaultToolkit();
 
 		Image image = toolkit.getImage(AbstractCanvas.class.getResource(GGLLImages.CURSOS_LEFT_SIDE_ENABLED));
-		cursors.put(CanvasStrings.LEFT_SIDE, toolkit.createCustomCursor(image, new Point(0, 0), "Left Side"));
+		cursors.put(CanvasResource.LEFT_SIDE, toolkit.createCustomCursor(image, new Point(0, 0), "Left Side"));
 
 		image = toolkit.getImage(AbstractCanvas.class.getResource(GGLLImages.CURSOS_TERMINAL_ENABLED));
-		cursors.put(CanvasStrings.TERMINAL, toolkit.createCustomCursor(image, new Point(0, 0), "Terminal"));
+		cursors.put(CanvasResource.TERMINAL, toolkit.createCustomCursor(image, new Point(0, 0), "Terminal"));
 
 		image = toolkit.getImage(AbstractCanvas.class.getResource(GGLLImages.CURSOS_N_TERMINAL_ENABLED));
-		cursors.put(CanvasStrings.N_TERMINAL, toolkit.createCustomCursor(image, new Point(0, 0), "Non-Terminal"));
+		cursors.put(CanvasResource.N_TERMINAL, toolkit.createCustomCursor(image, new Point(0, 0), "Non-Terminal"));
 
 		image = toolkit.getImage(AbstractCanvas.class.getResource(GGLLImages.CURSOS_LAMBDA_ENABLED));
-		cursors.put(CanvasStrings.LAMBDA, toolkit.createCustomCursor(image, new Point(0, 0), "Lambda Alternative"));
+		cursors.put(CanvasResource.LAMBDA, toolkit.createCustomCursor(image, new Point(0, 0), "Lambda Alternative"));
 
 		image = toolkit.getImage(AbstractCanvas.class.getResource(GGLLImages.CURSOS_SUCCESSOR_ENABLED));
-		cursors.put(CanvasStrings.SUCCESSOR, toolkit.createCustomCursor(image, new Point(0, 0), "Successor"));
+		cursors.put(CanvasResource.SUCCESSOR, toolkit.createCustomCursor(image, new Point(0, 0), "Successor"));
 
 		image = toolkit.getImage(AbstractCanvas.class.getResource(GGLLImages.CURSOS_ALTERNATIVE_ENABLED));
-		cursors.put(CanvasStrings.ALTERNATIVE, toolkit.createCustomCursor(image, new Point(0, 0), "Alternative"));
+		cursors.put(CanvasResource.ALTERNATIVE, toolkit.createCustomCursor(image, new Point(0, 0), "Alternative"));
 
 		image = toolkit.getImage(AbstractCanvas.class.getResource(GGLLImages.CURSOS_LABEL_ENABLED));
-		cursors.put(CanvasStrings.LABEL, toolkit.createCustomCursor(image, new Point(0, 0), "Label"));
+		cursors.put(CanvasResource.LABEL, toolkit.createCustomCursor(image, new Point(0, 0), "Label"));
 
 		image = toolkit.getImage(AbstractCanvas.class.getResource(GGLLImages.CURSOS_START_ENABLED));
-		cursors.put(CanvasStrings.START, toolkit.createCustomCursor(image, new Point(0, 0), "Start"));
+		cursors.put(CanvasResource.START, toolkit.createCustomCursor(image, new Point(0, 0), "Start"));
 	}
 
 	@Override
@@ -113,13 +119,6 @@ public abstract class AbstractCanvas extends GraphScene.StringGraph implements P
 		return component;
 	}
 
-	/**
-	 * Fires a property change to all registered monitors
-	 * 
-	 * @param property
-	 * @param oldObj
-	 * @param newObj
-	 */
 	public void firePropertyChange(String property, Object oldObj, Object newObj)
 	{
 		for (PropertyChangeSupport monitor : monitors)
@@ -143,7 +142,7 @@ public abstract class AbstractCanvas extends GraphScene.StringGraph implements P
 		String tool = super.getActiveTool();
 		if (tool == null)
 		{
-			tool = CanvasStrings.SELECT;
+			tool = CanvasResource.SELECT;
 		}
 		return tool;
 	}
@@ -159,6 +158,11 @@ public abstract class AbstractCanvas extends GraphScene.StringGraph implements P
 	public List<String> getCustomNodes()
 	{
 		return customNodes;
+	}
+
+	public String getFile()
+	{
+		return file;
 	}
 
 	public abstract LayerWidget getInterractionLayer();
@@ -177,10 +181,6 @@ public abstract class AbstractCanvas extends GraphScene.StringGraph implements P
 
 	public abstract LayerWidget getMainLayer();
 
-	/**
-	 * @return the main monitor, all events of interest to canvas should be
-	 *         registered through this monitor
-	 */
 	public PropertyChangeSupport getMonitor()
 	{
 		return this.monitor;
@@ -217,7 +217,7 @@ public abstract class AbstractCanvas extends GraphScene.StringGraph implements P
 	 */
 	public StaticStateManager getStaticStateManager()
 	{
-		return CanvasFactory.getStaticStateManager();
+		return staticStateManager;
 	}
 
 	public List<String> getSuccessors()
@@ -238,7 +238,7 @@ public abstract class AbstractCanvas extends GraphScene.StringGraph implements P
 	 */
 	public VolatileStateManager getVolatileStateManager()
 	{
-		return CanvasFactory.getVolatileStateManager();
+		return volatileStateManager;
 	}
 
 	/**
@@ -246,10 +246,8 @@ public abstract class AbstractCanvas extends GraphScene.StringGraph implements P
 	 * 
 	 * @param state
 	 */
-	public void init(CanvasState state)
+	public void init()
 	{
-		addObjectSceneListener(state, ObjectSceneEventType.OBJECT_ADDED);
-		addObjectSceneListener(state, ObjectSceneEventType.OBJECT_REMOVED);
 		createCursors();
 	}
 
@@ -310,12 +308,28 @@ public abstract class AbstractCanvas extends GraphScene.StringGraph implements P
 	@Override
 	public void propertyChange(PropertyChangeEvent event)
 	{
-		for (PropertyChangeSupport monitor : monitors)
+		if (event.getSource() instanceof VolatileStateManager && event.getPropertyName().equals("object_state"))
 		{
-			event.setPropagationId("canvas");
-			monitor.firePropertyChange(event);
+			if (event.getNewValue() instanceof CanvasState)
+			{
+				CanvasState state = (CanvasState) event.getNewValue();				
+				((VolatileStateManager) event.getSource()).getMonitor().removePropertyChangeListener(this.state);
+				((VolatileStateManager) event.getSource()).getMonitor().addPropertyChangeListener("writing", state);
+				this.state = state;
+				this.staticStateManager.setObject(state);
+				this.updateState(state);
+				this.revalidate();
+			}
 		}
-		this.getMonitor().firePropertyChange(event);
+		else
+		{
+			for (PropertyChangeSupport monitor : monitors)
+			{
+				event.setPropagationId("canvas");
+				monitor.firePropertyChange(event);
+			}
+			this.getMonitor().firePropertyChange(event);
+		}
 	}
 
 	/**
@@ -353,7 +367,7 @@ public abstract class AbstractCanvas extends GraphScene.StringGraph implements P
 	public void setActiveTool(String activeTool)
 	{
 		super.setActiveTool(activeTool);
-		if (activeTool.equals(CanvasStrings.SELECT))
+		if (activeTool.equals(CanvasResource.SELECT))
 		{
 			this.setCursor(Cursor.getDefaultCursor());
 		}
@@ -431,34 +445,12 @@ public abstract class AbstractCanvas extends GraphScene.StringGraph implements P
 		getCanvasState().getPreferences().setShowGrid(showingGrid);
 	}
 
-	/**
-	 * @param showingGuide
-	 *            the showingGuide to set
-	 */
-	public void setShowingGuide(boolean showingGuide)
-	{
-		this.showingGuide = showingGuide;
-		getCanvasState().getPreferences().setShowGuide(showingGuide);
-	}
-
-	// //INNER CLASSES////////
-
-	/**
-	 * @param showingLines
-	 *            the showingLines to set
-	 */
 	public void setShowingLines(boolean showingLines)
 	{
 		this.showingLines = showingLines;
 		getCanvasState().getPreferences().setShowLines(showingLines);
 	}
 
-	/**
-	 * Unregister a monitor of events
-	 * 
-	 * @param monitor
-	 *            a Property change support previously registered in canvas
-	 */
 	public void unregisterMonitor(PropertyChangeSupport monitor)
 	{
 		if (monitors.contains(monitor))

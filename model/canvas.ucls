@@ -64,8 +64,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="8" language="java" name="ggll.canvas.CanvasStrings" project="GGLL.UI" 
-    file="/GGLL.UI/src/ggll/canvas/CanvasStrings.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="8" language="java" name="ggll.resource.CanvasResource" project="GGLL.UI" 
+    file="/GGLL.UI/src/ggll/resource/CanvasResource.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="423" width="146" x="315" y="37"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      

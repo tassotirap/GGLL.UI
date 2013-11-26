@@ -283,18 +283,4 @@ public class LineProvider implements PropertyChangeListener
 		canvas.removeNodeSafely(GuideLineWidget.class.getCanonicalName());
 		guideLine = null;
 	}
-
-	public void setGuideVisible(boolean visible)
-	{
-		if (guideLine != null)
-		{
-			guideLine.setVisible(visible);
-		}
-		else if (visible == true)
-		{
-			guideLine = insertGuideLine(null);
-		}
-		canvas.setShowingGuide(visible);
-		canvas.repaint();
-	}
 }
