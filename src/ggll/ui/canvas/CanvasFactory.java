@@ -1,5 +1,7 @@
 package ggll.ui.canvas;
 
+import ggll.ui.file.GrammarFile;
+import ggll.ui.project.GGLLManager;
 import ggll.ui.resource.CanvasResource;
 
 import java.util.Collection;
@@ -17,6 +19,66 @@ public class CanvasFactory
 	{
 	}
 	
+	public static int getLastCustomNode()
+	{
+		int lastCustomNode = 0;
+		for(AbstractCanvas canvas : getInstances())
+		{
+			lastCustomNode += canvas.getCanvasState().getLastCustomNode();
+		}
+		return lastCustomNode;
+	}
+
+	public static int getLastLAMBDA()
+	{
+		int lastLAMBDA = 0;
+		for(AbstractCanvas canvas : getInstances())
+		{
+			lastLAMBDA += canvas.getCanvasState().getLastLAMBDA();
+		}
+		return lastLAMBDA;
+	}
+
+	public static int getLastLeftSides()
+	{
+		int lastLeftSides = 0;
+		for(AbstractCanvas canvas : getInstances())
+		{
+			lastLeftSides += canvas.getCanvasState().getLastLeftSides();
+		}
+		return lastLeftSides;
+	}
+
+	public static int getLastNTerminalId()
+	{
+		int lastNTerminalId = 0;
+		for(AbstractCanvas canvas : getInstances())
+		{
+			lastNTerminalId += canvas.getCanvasState().getLastNTerminalId();
+		}
+		return lastNTerminalId;
+	}
+
+	public static int getLastSTART()
+	{
+		int lastSTART = 0;
+		for(AbstractCanvas canvas : getInstances())
+		{
+			lastSTART += canvas.getCanvasState().getLastSTART();
+		}
+		return lastSTART;
+	}
+
+	public static int getLastTerminalId()
+	{
+		int lastTerminalId = 0;
+		for(AbstractCanvas canvas : getInstances())
+		{
+			lastTerminalId += canvas.getCanvasState().getLastTerminalId();
+		}
+		return lastTerminalId;
+	} 
+	
 	public static AbstractCanvas getInstance(String file)
 	{
 		if (instances == null)
@@ -27,6 +89,7 @@ public class CanvasFactory
 		if(!instances.containsKey(file))
 		{
 			AbstractCanvas canvasFactory = new Canvas(defaultCursor, connStrategy, moveStrategy, file);
+			GGLLManager.getProject().setGrammarFile(new GrammarFile(file));
 			instances.put(file, canvasFactory);
 		}
 		
@@ -35,6 +98,15 @@ public class CanvasFactory
 
 	public static Collection<AbstractCanvas> getInstances()
 	{
+		refresh();	
 		return instances.values();
+	}
+	
+	public static void refresh()
+	{
+		for(GrammarFile grammar : GGLLManager.getProject().getGrammarFile())
+		{
+			getInstance(grammar.getAbsolutePath());
+		}	
 	}
 }

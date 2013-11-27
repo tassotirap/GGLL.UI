@@ -1,13 +1,12 @@
 package ggll.ui.main;
 
 import ggll.ui.canvas.AbstractCanvas;
-import ggll.ui.component.ProjectsComponent;
 import ggll.ui.file.FileNames;
 import ggll.ui.main.ThemeManager.Theme;
 import ggll.ui.project.FileManager;
 import ggll.ui.project.GGLLManager;
+import ggll.ui.project.tree.Tree;
 import ggll.ui.resource.LangResource;
-import ggll.ui.view.AbstractView;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -160,10 +159,7 @@ public class Menu extends JMenuBar
 					try
 					{
 						fileManager.createFile(fileName, new FileNames(FileNames.GRAM_EXTENSION));
-						AbstractView abstractView = (AbstractView)GGLLManager.getMainWindow().getPerspectiveMap().getView(0);
-						ProjectsComponent projectsComponent = (ProjectsComponent)abstractView.getComponentModel();
-						projectsComponent.refresh();
-						
+						Tree.reload(GGLLManager.getProject().getProjectsRootPath());						
 					}
 					catch (IOException e1)
 					{

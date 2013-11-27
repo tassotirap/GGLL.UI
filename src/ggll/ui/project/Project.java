@@ -99,12 +99,16 @@ public class Project implements Serializable
 
 	public void setGrammarFile(ArrayList<GrammarFile> grammarFiles)
 	{
+		
 		this.grammarFile.addAll(grammarFiles);
 	}
 	
 	public void setGrammarFile(GrammarFile grammarFile)
 	{
-		this.grammarFile.add(grammarFile);
+		if(!this.grammarFile.contains(grammarFile))
+		{
+			this.grammarFile.add(grammarFile);
+		}
 	}
 
 	public void setLexicalFile(LexicalFile lexFile)

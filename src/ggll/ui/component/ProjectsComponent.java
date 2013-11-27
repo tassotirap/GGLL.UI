@@ -1,6 +1,5 @@
 package ggll.ui.component;
 
-import ggll.ui.project.GGLLManager;
 import ggll.ui.project.Project;
 import ggll.ui.project.tree.Tree;
 
@@ -20,11 +19,4 @@ public class ProjectsComponent extends AbstractComponent
 	public void fireContentChanged()
 	{
 	}
-	
-	public void refresh()
-	{
-		String rootPath = GGLLManager.getProject().getProjectsRootPath();
-		fileTree.reload(rootPath);
-	}
-
 }

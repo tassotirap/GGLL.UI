@@ -1,6 +1,7 @@
 package ggll.ui.canvas.action;
 
 import ggll.ui.canvas.AbstractCanvas;
+import ggll.ui.canvas.CanvasFactory;
 import ggll.ui.resource.CanvasResource;
 
 import java.awt.event.MouseEvent;
@@ -26,30 +27,30 @@ public class NodeCreateAction extends WidgetAction.Adapter
 		if (canvas.getCanvasActiveTool().equals(CanvasResource.TERMINAL))
 		{
 			canvas.getCanvasState().incLastTerminalId();
-			return String.format("Terminal%d", canvas.getCanvasState().getLastTerminalId());
+			return String.format("Terminal%d", CanvasFactory.getLastTerminalId());
 		}
 		if (canvas.getCanvasActiveTool().equals(CanvasResource.N_TERMINAL))
 		{
 			canvas.getCanvasState().incLastNTerminalId();
-			return String.format("NTerminal%d", canvas.getCanvasState().getLastNTerminalId());
+			return String.format("NTerminal%d", CanvasFactory.getLastNTerminalId());
 		}
 		if (canvas.getCanvasActiveTool().equals(CanvasResource.LEFT_SIDE))
 		{
 			canvas.getCanvasState().incLastLeftSides();
-			return String.format("LeftSide%d", canvas.getCanvasState().getLastLeftSides());
+			return String.format("LeftSide%d", CanvasFactory.getLastLeftSides());
 		}
 		if (canvas.getCanvasActiveTool().equals(CanvasResource.LAMBDA))
 		{
 			canvas.getCanvasState().incLastLAMBDA();
-			return String.format("Lambda%d", canvas.getCanvasState().getLastLAMBDA());
+			return String.format("Lambda%d", CanvasFactory.getLastLAMBDA());
 		}
 		if (canvas.getCanvasActiveTool().equals(CanvasResource.START))
 		{
 			canvas.getCanvasState().incLastSTART();
-			return String.format("S%d", canvas.getCanvasState().getLastSTART());
+			return String.format("S%d", CanvasFactory.getLastSTART());
 		}
 		canvas.getCanvasState().incLastCustomNode();
-		return String.format("node%d", canvas.getCanvasState().getLastCustomNode());
+		return String.format("node%d", CanvasFactory.getLastCustomNode());
 	}
 
 	private boolean isNode(AbstractCanvas canvas)
