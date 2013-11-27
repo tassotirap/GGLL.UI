@@ -1,18 +1,24 @@
 package ggll.ui.main;
 
 import ggll.ui.canvas.AbstractCanvas;
+import ggll.ui.component.ProjectsComponent;
+import ggll.ui.file.FileNames;
 import ggll.ui.main.ThemeManager.Theme;
+import ggll.ui.project.FileManager;
 import ggll.ui.project.GGLLManager;
 import ggll.ui.resource.LangResource;
+import ggll.ui.view.AbstractView;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JSeparator;
 import javax.swing.JTextArea;
 import javax.swing.KeyStroke;
@@ -141,24 +147,36 @@ public class Menu extends JMenuBar
 		final ArrayList<String> PMbuttons = new ArrayList<String>();
 		final ArrayList<String> Ebuttons = new ArrayList<String>();
 
-		JMenuItem save = new JMenuItem(LangResource.save);
-		save.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK));
-		JMenuItem saveAll = new JMenuItem(LangResource.save_all);
-		saveAll.addActionListener(new ActionListener()
+		JMenuItem grammar = new JMenuItem(LangResource.new_gram);
+		grammar.addActionListener(new ActionListener()
 		{
-
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				GGLLManager.saveAllFiles();
+				String fileName = JOptionPane.showInputDialog("New Gramma Graph File name?");
+				if (fileName != null && !fileName.equals(""))
+				{
+					FileManager fileManager = new FileManager();
+					try
+					{
+						fileManager.createFile(fileName, new FileNames(FileNames.GRAM_EXTENSION));
+						AbstractView abstractView = (AbstractView)GGLLManager.getMainWindow().getPerspectiveMap().getView(0);
+						ProjectsComponent projectsComponent = (ProjectsComponent)abstractView.getComponentModel();
+						projectsComponent.refresh();
+						
+					}
+					catch (IOException e1)
+					{
+						e1.printStackTrace();
+					}
+				}
 			}
 		});
 
-		saveAll.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK + ActionEvent.SHIFT_MASK));
-
+		JMenuItem save = new JMenuItem(LangResource.save);
+		save.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK));
 		save.addActionListener(new ActionListener()
 		{
-
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
@@ -166,11 +184,21 @@ public class Menu extends JMenuBar
 			}
 		});
 
-		JMenuItem print = new JMenuItem(LangResource.print + DOTS);
+		JMenuItem saveAll = new JMenuItem(LangResource.save_all);
+		saveAll.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK + ActionEvent.SHIFT_MASK));
+		saveAll.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				GGLLManager.saveAllFiles();
+			}
+		});
 
+		JMenuItem print = new JMenuItem(LangResource.print + DOTS);
+		print.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, ActionEvent.CTRL_MASK));
 		print.addActionListener(new ActionListener()
 		{
-
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
@@ -178,14 +206,16 @@ public class Menu extends JMenuBar
 			}
 		});
 
-		print.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, ActionEvent.CTRL_MASK));
 		JMenu exportAs = new JMenu("Export As");
 		JMenuItem png = new JMenuItem("PNG File" + DOTS);
 		png.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F11, ActionEvent.CTRL_MASK));
+
 		JMenuItem ebnf = new JMenuItem("Extended BNF" + DOTS);
 		ebnf.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F12, ActionEvent.CTRL_MASK));
+
 		exportAs.add(png);
 		exportAs.add(ebnf);
+
 		png.setEnabled(model.pngExport);
 		ebnf.setEnabled(model.ebnfExport);
 		if (!model.pngExport && !model.ebnfExport)
@@ -214,6 +244,8 @@ public class Menu extends JMenuBar
 		Ebuttons.add(png.getText());
 		Ebuttons.add(ebnf.getText());
 
+		mFile.add(grammar);
+		mFile.add(new JSeparator());
 		mFile.add(save);
 		mFile.add(saveAll);
 		mFile.add(new JSeparator());

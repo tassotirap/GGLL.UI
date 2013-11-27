@@ -1,16 +1,20 @@
 package ggll.ui.project.tree;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Iterator;
 
+import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
-public class TreeFileSystemModel implements TreeModel
+public class TreeFileModel implements TreeModel
 {
 	private File root;
+	private ArrayList<TreeModelListener> listeners = new ArrayList<TreeModelListener>();
 
-	public TreeFileSystemModel(File rootDirectory)
+	public TreeFileModel(File rootDirectory)
 	{
 		root = rootDirectory;
 	}
@@ -18,6 +22,31 @@ public class TreeFileSystemModel implements TreeModel
 	@Override
 	public void addTreeModelListener(TreeModelListener listener)
 	{
+		listeners.add(listener);
+	}
+
+	public void fireTreeNodesChanged(TreePath parentPath, int[] indices, Object[] children)
+	{
+		TreeModelEvent event = new TreeModelEvent(this, parentPath, indices, children);
+		Iterator<TreeModelListener> iterator = listeners.iterator();
+		TreeModelListener listener = null;
+		while (iterator.hasNext())
+		{
+			listener = iterator.next();
+			listener.treeNodesChanged(event);
+		}
+	}
+
+	public void fireTreeStructureChanged(Object source, TreePath path)
+	{
+		Iterator<TreeModelListener> iterator = listeners.iterator();
+		TreeModelEvent e = null;
+		while (iterator.hasNext())
+		{
+			if (e == null)
+				e = new TreeModelEvent(source, path);
+			iterator.next().treeStructureChanged(e);
+		}
 	}
 
 	@Override
@@ -73,10 +102,12 @@ public class TreeFileSystemModel implements TreeModel
 	@Override
 	public void removeTreeModelListener(TreeModelListener listener)
 	{
+		listeners.remove(listener);
 	}
 
 	@Override
 	public void valueForPathChanged(TreePath path, Object value)
 	{
+
 	}
 }

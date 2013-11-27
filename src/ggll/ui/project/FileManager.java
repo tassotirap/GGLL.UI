@@ -81,14 +81,7 @@ public class FileManager
 
 	public void createFile(String name, FileNames extension) throws IOException
 	{
-		if (extension.getExtension().equals(FileNames.GRAM_EXTENSION))
-		{
-			if (project.getGrammarFile() != null)
-			{
-				JOptionPane.showMessageDialog(null, "Only one grammar file is allowed by project.", "Could not create file", JOptionPane.INFORMATION_MESSAGE);
-			}
-		}
-		else if (extension.getExtension().equals(FileNames.SEM_EXTENSION))
+		if (extension.getExtension().equals(FileNames.SEM_EXTENSION))
 		{
 			if (project.getSemanticFile() != null)
 			{
@@ -123,8 +116,15 @@ public class FileManager
 			}
 			try
 			{
-				newFile.createNewFile();
-				openFile(newFile.getAbsolutePath());
+				if (newFile.exists())
+				{
+					JOptionPane.showMessageDialog(null, "File already exists.", "Could not create file", JOptionPane.INFORMATION_MESSAGE);
+				}
+				else
+				{
+					newFile.createNewFile();
+					openFile(newFile.getAbsolutePath());
+				}
 			}
 			catch (SecurityException e)
 			{

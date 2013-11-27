@@ -421,4 +421,9 @@ public class MainWindow implements ComponentListener, IMainWindow
 	{
 		viewRepository.updateViews(window, added);
 	}
+
+	public ViewMap getPerspectiveMap()
+	{
+		return perspectiveMap;
+	}
 }
