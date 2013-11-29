@@ -29,9 +29,9 @@ public class FileManager
 
 	public FileManager()
 	{
-		this.project = GGLLManager.getProject();
-		this.mainWindow = GGLLManager.getMainWindow();
-		this.viewManager = GGLLManager.getUnsavedViewManager();
+		this.project = Context.getProject();
+		this.mainWindow = Context.getMainWindow();
+		this.viewManager = Context.getUnsavedViewManager();
 	}
 
 	private String saveFile(AbstractCanvas canvas)
@@ -143,40 +143,48 @@ public class FileManager
 		}
 		return false;
 	}
-
+	
 	public void openFile(String path)
+	{
+		openFile(path, true);
+	}
+
+	public void openFile(String path, boolean verifyOpen)
 	{
 		IconFactory iconFactory = new IconFactory();
 		File file = new File(path);
-		if (!isFileOpen(path))
+		if (!verifyOpen || !isFileOpen(path))
 		{
 			try
 			{
 				if (file.getName().toLowerCase().endsWith(FileNames.LEX_EXTENSION.toLowerCase()))
 				{
-					mainWindow.addComponent(new TextAreaComponent(path), file.getName(), path, iconFactory.getIcon(IconType.LEX_ICON), TabPlace.CENTER_TABS);
+					mainWindow.addComponent(new TextAreaComponent(path), file.getName(), path, iconFactory.getIcon(IconType.LEX_ICON), TabPlace.CENTER_LEFT_TABS);
 				}
 				else if (file.getName().toLowerCase().endsWith(FileNames.SEM_EXTENSION.toLowerCase()))
 				{
-					mainWindow.addComponent(new TextAreaComponent(path), file.getName(), path, iconFactory.getIcon(IconType.SEM_ICON), TabPlace.CENTER_TABS);
+					mainWindow.addComponent(new TextAreaComponent(path), file.getName(), path, iconFactory.getIcon(IconType.SEM_ICON), TabPlace.CENTER_LEFT_TABS);
 				}
 				else if (file.getName().toLowerCase().endsWith(FileNames.GRAM_EXTENSION.toLowerCase()))
 				{
-					mainWindow.addComponent(new GrammarComponent(path), file.getName(), path, iconFactory.getIcon(IconType.GRAM_ICON), TabPlace.CENTER_TABS);
+					mainWindow.addComponent(new GrammarComponent(path), file.getName(), path, iconFactory.getIcon(IconType.GRAM_ICON), TabPlace.CENTER_LEFT_TABS);
 				}
 				else if (file.getName().toLowerCase().endsWith(FileNames.XML_EXTENSION.toLowerCase()))
 				{
-					mainWindow.addComponent(new TextAreaComponent(path), file.getName(), path, iconFactory.getIcon(IconType.XML_ICON), TabPlace.CENTER_TABS);
+					mainWindow.addComponent(new TextAreaComponent(path), file.getName(), path, iconFactory.getIcon(IconType.XML_ICON), TabPlace.CENTER_LEFT_TABS);
 				}
 				else if (file.getName().toLowerCase().endsWith(FileNames.JAVA_EXTENSION.toLowerCase()))
 				{
-					mainWindow.addComponent(new TextAreaComponent(path), file.getName(), path, iconFactory.getIcon(IconType.JAVA_ICON), TabPlace.CENTER_TABS);
+					mainWindow.addComponent(new TextAreaComponent(path), file.getName(), path, iconFactory.getIcon(IconType.JAVA_ICON), TabPlace.CENTER_LEFT_TABS);
 				}
 				else
 				{
-					mainWindow.addComponent(new TextAreaComponent(path), file.getName(), path, iconFactory.getIcon(IconType.TXT_ICON), TabPlace.CENTER_TABS);
+					mainWindow.addComponent(new TextAreaComponent(path), file.getName(), path, iconFactory.getIcon(IconType.TXT_ICON), TabPlace.CENTER_LEFT_TABS);
 				}
-				project.getOpenedFiles().add(new File(path));
+				if(verifyOpen)
+				{
+					project.getOpenedFiles().add(new File(path));
+				}
 			}
 			catch (Exception ex)
 			{

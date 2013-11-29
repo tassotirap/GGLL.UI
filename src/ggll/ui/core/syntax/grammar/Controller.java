@@ -11,7 +11,7 @@ import ggll.ui.file.FileNames;
 import ggll.ui.output.AppOutput;
 import ggll.ui.output.HtmlViewer.TOPIC;
 import ggll.ui.parser.ParsingEditor;
-import ggll.ui.project.GGLLManager;
+import ggll.ui.project.Context;
 import ggll.ui.util.io.IOHelper;
 
 import java.io.File;
@@ -29,7 +29,7 @@ public class Controller
 
 	public static void generateAndParseCurrentGrammar()
 	{
-		YyFactory.createYylex(GGLLManager.getProject().getLexicalFile().getParent(), "export", GGLLManager.getProject().getLexicalFile().getPath());
+		YyFactory.createYylex(Context.getProject().getLexicalFile().getParent(), "export", Context.getProject().getLexicalFile().getPath());
 		AppOutput.clearOutputBuffer();
 		AppOutput.clearStacks();
 		GrammarFactory grammarFactory = new GrammarFactory();
@@ -68,7 +68,7 @@ public class Controller
 			TableCreate tableCreate = new TableCreate(grammar, false);
 			SyntacticLoader syntacticLoader = new SyntacticLoader(tableCreate);
 			ParsingEditor parsingEditor = ParsingEditor.getInstance().build();
-			File dir = new File(GGLLManager.getProject().getProjectDir().getAbsolutePath(), "export");
+			File dir = new File(Context.getProject().getProjectDir().getAbsolutePath(), "export");
 			if (!dir.exists())
 			{
 				dir.mkdir();
@@ -76,10 +76,10 @@ public class Controller
 			parsingEditor.setSyntacticLoader(syntacticLoader);
 
 			GGLLTable analyzer = new GGLLTable(syntacticLoader.tabGraph(), syntacticLoader.tabNt(), syntacticLoader.tabT());
-			analyzer.serialize(GGLLManager.getProject().getProjectDir().getAbsolutePath() + "\\export\\data.ggll");
+			analyzer.serialize(Context.getProject().getProjectDir().getAbsolutePath() + "\\export\\data.ggll");
 
-			File semantic = new File(GGLLManager.getProject().getProjectDir().getAbsolutePath() + "\\" + GGLLManager.getProject().getProjectDir().getName() + FileNames.SEM_EXTENSION);
-			IOHelper.copyFile(semantic, new File(GGLLManager.getProject().getProjectDir().getAbsolutePath() + "\\export\\" + GGLLManager.getProject().getProjectDir().getName() + FileNames.SEM_EXTENSION));
+			File semantic = new File(Context.getProject().getProjectDir().getAbsolutePath() + "\\" + Context.getProject().getProjectDir().getName() + FileNames.SEM_EXTENSION);
+			IOHelper.copyFile(semantic, new File(Context.getProject().getProjectDir().getAbsolutePath() + "\\export\\" + Context.getProject().getProjectDir().getName() + FileNames.SEM_EXTENSION));
 		}
 	}
 }

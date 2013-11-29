@@ -18,7 +18,7 @@ import ggll.ui.core.syntax.SyntacticLoader;
 import ggll.ui.output.AppOutput;
 import ggll.ui.output.Output;
 import ggll.ui.output.HtmlViewer.TOPIC;
-import ggll.ui.project.GGLLManager;
+import ggll.ui.project.Context;
 import ggll.ui.util.Log;
 
 import java.io.File;
@@ -102,8 +102,8 @@ public class ParsingEditor
 		try
 		{
 			Compiler compiler = new Compiler();
-			compiler.compile(GGLLManager.getProject().getSemanticFile().getPath());
-			ClassLoader<SemanticRoutineClass> classLoader = new ClassLoader<SemanticRoutineClass>(GGLLManager.getProject().getSemanticFile());
+			compiler.compile(Context.getProject().getSemanticFile().getPath());
+			ClassLoader<SemanticRoutineClass> classLoader = new ClassLoader<SemanticRoutineClass>(Context.getProject().getSemanticFile());
 			analyzer = new Parser(new GGLLTable(syntacticLoader.tabGraph(), syntacticLoader.tabNt(), syntacticLoader.tabT()), yylex, classLoader.getInstance(), stepping);
 			analyzer.setParserOutput(new ParserOutput()
 			{

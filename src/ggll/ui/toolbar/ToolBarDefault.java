@@ -5,7 +5,7 @@ import ggll.ui.canvas.provider.WidgetCopyPasteProvider;
 import ggll.ui.canvas.provider.WidgetDeleteProvider;
 import ggll.ui.canvas.state.VolatileStateManager;
 import ggll.ui.component.TextAreaComponent;
-import ggll.ui.project.GGLLManager;
+import ggll.ui.project.Context;
 import ggll.ui.resource.LangResource;
 
 import java.awt.Dimension;
@@ -71,7 +71,7 @@ public class ToolBarDefault extends BaseToolBar implements PropertyChangeListene
 			@Override
 			public void actionPerformed(ActionEvent evt)
 			{
-				GGLLManager.saveFile(context);
+				Context.saveFile(context);
 			}
 
 		});
@@ -80,7 +80,7 @@ public class ToolBarDefault extends BaseToolBar implements PropertyChangeListene
 			@Override
 			public void actionPerformed(ActionEvent evt)
 			{
-				GGLLManager.saveAllFiles();
+				Context.saveAllFiles();
 			}
 
 		});
@@ -89,7 +89,7 @@ public class ToolBarDefault extends BaseToolBar implements PropertyChangeListene
 			@Override
 			public void actionPerformed(ActionEvent evt)
 			{
-				GGLLManager.print(context);
+				Context.print(context);
 			}
 		});
 	}

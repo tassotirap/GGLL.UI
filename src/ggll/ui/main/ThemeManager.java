@@ -1,6 +1,6 @@
 package ggll.ui.main;
 
-import ggll.ui.project.GGLLManager;
+import ggll.ui.project.Context;
 import net.infonode.docking.properties.RootWindowProperties;
 import net.infonode.docking.theme.BlueHighlightDockingTheme;
 import net.infonode.docking.theme.ClassicDockingTheme;
@@ -90,12 +90,12 @@ public class ThemeManager
 		DockingWindowsTheme oldTheme = getCurrentTheme();
 		DockingWindowsTheme newTheme = getTheme(theme);
 		rootWindowProperties.replaceSuperObject(oldTheme.getRootWindowProperties(), newTheme.getRootWindowProperties());
-		GGLLManager.getProject().setTheme(theme);
+		Context.getProject().setTheme(theme);
 	}
 
 	public static DockingWindowsTheme getCurrentTheme()
 	{
-		return getTheme(GGLLManager.getProject().getTheme());
+		return getTheme(Context.getProject().getTheme());
 	}
 
 	public static DockingWindowsTheme getTheme(Theme theme)

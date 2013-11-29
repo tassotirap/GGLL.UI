@@ -95,4 +95,9 @@ public class GrammarComponent extends AbstractComponent implements FileComponent
 		canvas = CanvasFactory.getInstance(path);
 		this.path = path;
 	}
+
+	public AbstractCanvas getCanvas()
+	{
+		return canvas;
+	}
 }

@@ -3,7 +3,7 @@ package ggll.ui.menubar;
 import ggll.ui.main.IMainWindow;
 import ggll.ui.main.Menu;
 import ggll.ui.main.Menu.MenuModel;
-import ggll.ui.project.GGLLManager;
+import ggll.ui.project.Context;
 
 import java.util.HashMap;
 
@@ -17,7 +17,7 @@ public class MenuBarFactory
 
 	public MenuBarFactory()
 	{
-		this.window = GGLLManager.getMainWindow();
+		this.window = Context.getMainWindow();
 	}
 
 	@SuppressWarnings("rawtypes")

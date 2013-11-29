@@ -2,7 +2,7 @@ package ggll.ui.wizard;
 
 import ggll.ui.canvas.widget.MarkedWidget;
 import ggll.ui.core.semantics.SemFileManager;
-import ggll.ui.project.GGLLManager;
+import ggll.ui.project.Context;
 import ggll.ui.util.Log;
 
 import java.awt.event.ActionEvent;
@@ -32,7 +32,7 @@ public class RoutineWizard
 		this.widget = widget;
 		this.widgetName = widgetName;
 		this.routineName = routineName;
-		semFileManager = new SemFileManager(GGLLManager.getProject().getSemanticFile(), monitor);
+		semFileManager = new SemFileManager(Context.getProject().getSemanticFile(), monitor);
 		if (widgetName != null && widget != null)
 		{
 			initWindow();

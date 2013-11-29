@@ -1,7 +1,7 @@
 package ggll.ui.canvas;
 
 import ggll.ui.file.GrammarFile;
-import ggll.ui.project.GGLLManager;
+import ggll.ui.project.Context;
 import ggll.ui.resource.CanvasResource;
 
 import java.util.Collection;
@@ -89,7 +89,7 @@ public class CanvasFactory
 		if(!instances.containsKey(file))
 		{
 			AbstractCanvas canvasFactory = new Canvas(defaultCursor, connStrategy, moveStrategy, file);
-			GGLLManager.getProject().setGrammarFile(new GrammarFile(file));
+			Context.getProject().setGrammarFile(new GrammarFile(file));
 			instances.put(file, canvasFactory);
 		}
 		
@@ -104,7 +104,7 @@ public class CanvasFactory
 	
 	public static void refresh()
 	{
-		for(GrammarFile grammar : GGLLManager.getProject().getGrammarFile())
+		for(GrammarFile grammar : Context.getProject().getGrammarFile())
 		{
 			getInstance(grammar.getAbsolutePath());
 		}	

@@ -1,7 +1,7 @@
 package ggll.ui.main;
 
 import ggll.ui.lib.SplashWindow;
-import ggll.ui.project.GGLLManager;
+import ggll.ui.project.Context;
 
 import javax.swing.JFrame;
 
@@ -61,7 +61,7 @@ public class GuiLauncher
 	private IMainWindow startMainWindow(WorkspaceChooser workspaceChooser)
 	{
 		MainWindow mainWindow = new MainWindow();
-		GGLLManager.Start(mainWindow, workspaceChooser.getWorkspaceDir());
+		Context.Start(mainWindow, workspaceChooser.getWorkspaceDir());
 		showFrame(mainWindow);
 		return mainWindow;
 	}

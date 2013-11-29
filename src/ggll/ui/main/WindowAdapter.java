@@ -3,7 +3,7 @@ package ggll.ui.main;
 import ggll.ui.component.AbstractComponent;
 import ggll.ui.component.EmptyComponent;
 import ggll.ui.component.FileComponent;
-import ggll.ui.project.GGLLManager;
+import ggll.ui.project.Context;
 import ggll.ui.view.AbstractView;
 
 import javax.swing.JOptionPane;
@@ -21,7 +21,7 @@ public class WindowAdapter extends DockingWindowAdapter
 
 	public WindowAdapter()
 	{
-		this.window = GGLLManager.getMainWindow();
+		this.window = Context.getMainWindow();
 	}
 
 	@Override
@@ -44,9 +44,10 @@ public class WindowAdapter extends DockingWindowAdapter
 			AbstractComponent comp = ((AbstractView) addedWindow).getComponentModel();
 			if (!(comp instanceof EmptyComponent))
 			{
-				if (window.getTabs().getCenterTab().getChildWindowIndex(addedWindow) >= 0)
+				if (window.getTabs().getCenterLeftTab().getChildWindowIndex(addedWindow) >= 0)
 				{
 					window.removeEmptyDynamicView();
+					window.getTabs().getCenterLeftTab().setSelectedTab(0);
 				}
 			}
 		}
@@ -60,7 +61,7 @@ public class WindowAdapter extends DockingWindowAdapter
 			AbstractView view = (AbstractView) dWindow;
 			if (view.getComponentModel() instanceof FileComponent)
 			{
-				GGLLManager.closeFile(view.getFileName());
+				Context.closeFile(view.getFileName());
 			}
 		}
 	}
@@ -71,18 +72,18 @@ public class WindowAdapter extends DockingWindowAdapter
 		if (dWindow instanceof AbstractView)
 		{
 			AbstractView dynamicView = (AbstractView) dWindow;
-			if (GGLLManager.hasUnsavedView(dynamicView))
+			if (Context.hasUnsavedView(dynamicView))
 			{
 				int option = JOptionPane.showConfirmDialog(window.getFrame(), "Would you like to save '" + dWindow.getTitle().replace(IMainWindow.UNSAVED_PREFIX, "") + "' before closing?");
 				if (option == JOptionPane.CANCEL_OPTION)
 					throw new OperationAbortedException("Window close was aborted!");
 				if (option == JOptionPane.YES_OPTION)
 				{
-					GGLLManager.saveFile(dynamicView.getComponentModel());
+					Context.saveFile(dynamicView.getComponentModel());
 				}
 			}
 		}
-		if (window.getTabs().getCenterTab().getChildWindowIndex(dWindow) >= 0 && window.getTabs().getCenterTab().getChildWindowCount() == 1)
+		if (window.getTabs().getCenterLeftTab().getChildWindowIndex(dWindow) >= 0 && window.getTabs().getCenterLeftTab().getChildWindowCount() == 1)
 		{
 			window.addEmptyDynamicView();
 		}

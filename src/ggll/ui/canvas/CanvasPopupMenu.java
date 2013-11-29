@@ -7,7 +7,7 @@ import ggll.ui.canvas.provider.WidgetDeleteProvider;
 import ggll.ui.canvas.state.VolatileStateManager;
 import ggll.ui.canvas.widget.MarkedWidget;
 import ggll.ui.core.syntax.grammar.Controller;
-import ggll.ui.project.GGLLManager;
+import ggll.ui.project.Context;
 import ggll.ui.resource.CanvasResource;
 import ggll.ui.wizard.RoutineWizard;
 
@@ -336,7 +336,7 @@ public class CanvasPopupMenu extends WidgetAction.Adapter implements PopupMenuPr
 		semanticRoutinesMenu.add(editSemanticRoutine);
 		semanticRoutinesMenu.add(new JSeparator());
 
-		Set<String> semanticRoutinesNames = GGLLManager.getProject().getSemanticFile().getRegRoutines();
+		Set<String> semanticRoutinesNames = Context.getProject().getSemanticFile().getRegRoutines();
 		for (final String semanticRoutineName : semanticRoutinesNames)
 		{
 			JMenuItem semanticRoutinesNamesMenuItem = new JMenuItem("Use " + semanticRoutineName);
@@ -363,16 +363,16 @@ public class CanvasPopupMenu extends WidgetAction.Adapter implements PopupMenuPr
 			public void actionPerformed(ActionEvent e)
 			{
 				String semFile = null;
-				if (GGLLManager.getProject().getSemanticFile() != null)
+				if (Context.getProject().getSemanticFile() != null)
 				{
-					semFile = GGLLManager.getProject().getSemanticFile().getAbsolutePath();
+					semFile = Context.getProject().getSemanticFile().getAbsolutePath();
 				}
-				if (semFile != null && GGLLManager.hasUnsavedView(semFile))
+				if (semFile != null && Context.hasUnsavedView(semFile))
 				{
 					int option = JOptionPane.showConfirmDialog(popup, "A new semantic routine can not be created while the semantic routines file remains unsaved.\nWould you like to save it now?", "Can not create a new routine", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
 					if (option == JOptionPane.YES_OPTION)
 					{
-						GGLLManager.saveFile(semFile);
+						Context.saveFile(semFile);
 					}
 					else
 					{
@@ -402,21 +402,21 @@ public class CanvasPopupMenu extends WidgetAction.Adapter implements PopupMenuPr
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				if (GGLLManager.getProject() != null)
+				if (Context.getProject() != null)
 				{
 					String semFile = null;
-					if (GGLLManager.getProject().getSemanticFile() != null)
+					if (Context.getProject().getSemanticFile() != null)
 					{
-						semFile = GGLLManager.getProject().getSemanticFile().getAbsolutePath();
+						semFile = Context.getProject().getSemanticFile().getAbsolutePath();
 					}
 					if (semFile != null)
 					{
-						if (GGLLManager.hasUnsavedView(semFile))
+						if (Context.hasUnsavedView(semFile))
 						{
 							int option = JOptionPane.showConfirmDialog(popup, "A semantic routine can not be edited while the semantic routines file remains unsaved.\nWould you like to save it now?", "Can not create a new routine", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
 							if (option == JOptionPane.YES_OPTION)
 							{
-								GGLLManager.saveFile(semFile);
+								Context.saveFile(semFile);
 							}
 							else
 							{

@@ -13,7 +13,7 @@ import ggll.ui.core.syntax.grammar.model.SyntaxModel;
 import ggll.ui.core.syntax.grammar.model.SyntaxSubpart;
 import ggll.ui.output.AppOutput;
 import ggll.ui.output.HtmlViewer.TOPIC;
-import ggll.ui.project.GGLLManager;
+import ggll.ui.project.Context;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -123,7 +123,7 @@ public class GrammarFactory
 		List<SyntaxElement> children = new ArrayList<SyntaxElement>();
 		List<AbstractNode> startNodes = new ArrayList<AbstractNode>();	
 		
-		for(File grammar :  GGLLManager.getProject().getGrammarFile())
+		for(File grammar :  Context.getProject().getGrammarFile())
 		{
 			AbstractCanvas cavans = CanvasFactory.getInstance(grammar.getAbsolutePath());
 			children.addAll(AsinEditor.getInstance().getLogicDiagram(cavans).getChildrenNodes());

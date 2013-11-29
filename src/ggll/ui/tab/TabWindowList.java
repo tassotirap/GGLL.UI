@@ -9,12 +9,12 @@ public class TabWindowList
 
 	public enum TabPlace
 	{
-		LEFT_TOP_TABS, RIGHT_BOTTOM_TABS, RIGHT_TOP_TABS, BOTTOM_LEFT_TABS, CENTER_TABS, BOTTOM_RIGHT_TABS
+		TOP_TABS, CENTER_RIGHT_TABS, BOTTOM_TABS, CENTER_LEFT_TABS
 	}
 
 	private ArrayList<TabWindow> tabWindowList;
 
-	public static final int TAB_SIZE = 6;
+	public static final int TAB_SIZE = 4;
 
 	public TabWindowList()
 	{
@@ -26,35 +26,25 @@ public class TabWindowList
 		return tabWindowList.add(tabWindow);
 	}
 
-	public TabWindow getBottonLeftTab()
+	public TabWindow getBottonTab()
 	{
-		return tabWindowList.get(TabPlace.BOTTOM_LEFT_TABS.ordinal());
+		return tabWindowList.get(TabPlace.BOTTOM_TABS.ordinal());
 	}
 
-	public TabWindow getBottonRightTab()
+	public TabWindow getCenterLeftTab()
 	{
-		return tabWindowList.get(TabPlace.BOTTOM_RIGHT_TABS.ordinal());
+		return tabWindowList.get(TabPlace.CENTER_LEFT_TABS.ordinal());
 	}
 
-	public TabWindow getCenterTab()
+	public TabWindow getTopTab()
 	{
-		return tabWindowList.get(TabPlace.CENTER_TABS.ordinal());
+
+		return tabWindowList.get(TabPlace.TOP_TABS.ordinal());
 	}
 
-	public TabWindow getLeftTopTab()
+	public TabWindow getCenterRightTab()
 	{
-
-		return tabWindowList.get(TabPlace.LEFT_TOP_TABS.ordinal());
-	}
-
-	public TabWindow getRightBottonTab()
-	{
-		return tabWindowList.get(TabPlace.RIGHT_BOTTOM_TABS.ordinal());
-	}
-
-	public TabWindow getRightTopTab()
-	{
-		return tabWindowList.get(TabPlace.RIGHT_TOP_TABS.ordinal());
+		return tabWindowList.get(TabPlace.CENTER_RIGHT_TABS.ordinal());
 	}
 
 	public TabWindow getTabWindow(int place)

@@ -26,7 +26,7 @@ public class Project implements Serializable
 	private List<File> openedFiles;
 
 	private File projectDir;
-	private Theme theme = Theme.ShapedGradientDockingTheme;
+	private Theme theme = Theme.DefaultDockingTheme;
 
 	private File yyLexFile;
 

@@ -1,13 +1,10 @@
 package ggll.ui.project;
 
 import ggll.ui.canvas.AbstractCanvas;
-import ggll.ui.canvas.state.StaticStateManager;
-import ggll.ui.component.GrammarComponent;
 import ggll.ui.component.TextAreaComponent;
 import ggll.ui.file.FileNames;
 import ggll.ui.main.IMainWindow;
 import ggll.ui.main.MainWindow;
-import ggll.ui.util.Log;
 import ggll.ui.util.print.ComponentPrinter;
 import ggll.ui.util.print.TextPrinter;
 import ggll.ui.view.AbstractView;
@@ -20,7 +17,7 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 
-public final class GGLLManager
+public final class Context
 {
 	private static MainWindow mainWindow;
 	private static Project project;
@@ -30,12 +27,12 @@ public final class GGLLManager
 
 	public static void closeFile(String fileName)
 	{
-		GGLLManager.fileManager.closeFile(fileName);
+		Context.fileManager.closeFile(fileName);
 	}
 
 	public static void createFile(String name, FileNames extension) throws IOException
 	{
-		GGLLManager.fileManager.createFile(name, extension);
+		Context.fileManager.createFile(name, extension);
 	}
 
 	public static void exit()
@@ -47,20 +44,6 @@ public final class GGLLManager
 			int option = JOptionPane.showConfirmDialog(getMainWindow().getFrame(), "Would you like to save '" + dynamicView.getTitle().replace(IMainWindow.UNSAVED_PREFIX, "") + "' before exiting?");
 			if (option == JOptionPane.CANCEL_OPTION)
 				return;
-			if (option == JOptionPane.YES_OPTION && dynamicView.getComponentModel() instanceof GrammarComponent)
-			{
-				StaticStateManager StaticStateManager = activeScene.getStaticStateManager();
-				try
-				{
-					StaticStateManager.write();
-					String path = StaticStateManager.getParentDirectory();
-					saveFile(path);
-				}
-				catch (IOException e)
-				{
-					Log.log(Log.ERROR, getMainWindow(), "Could not save file", e);
-				}
-			}
 			else if (option == JOptionPane.YES_OPTION)
 			{
 				saveFile(dynamicView.getComponentModel());
@@ -76,7 +59,7 @@ public final class GGLLManager
 
 	public static MainWindow getMainWindow()
 	{
-		return GGLLManager.mainWindow;
+		return Context.mainWindow;
 	}
 
 	public static List<File> getOpenedFiles()
@@ -84,44 +67,44 @@ public final class GGLLManager
 		List<File> filesOpened = project.getOpenedFiles();
 		if (filesOpened.size() == 0)
 		{
-			GGLLManager.project.getOpenedFiles().add(project.getGrammarFile().get(0));
+			Context.project.getOpenedFiles().add(project.getGrammarFile().get(0));
 		}
 		return filesOpened;
 	}
 
 	public static Project getProject()
 	{
-		return GGLLManager.project;
+		return Context.project;
 	}
 
 	public static UnsavedViewRepository getUnsavedViewManager()
 	{
-		return GGLLManager.unViewManager;
+		return Context.unViewManager;
 	}
 
 	public static ArrayList<AbstractView> getUnsavedViews()
 	{
-		return GGLLManager.unViewManager.getUnsavedViews();
+		return Context.unViewManager.getUnsavedViews();
 	}
 
 	public static boolean hasUnsavedView(AbstractView dynamicView)
 	{
-		return GGLLManager.unViewManager.hasUnsavedView(dynamicView);
+		return Context.unViewManager.hasUnsavedView(dynamicView);
 	}
 
 	public static boolean hasUnsavedView(String file)
 	{
-		return GGLLManager.unViewManager.hasUnsavedView(file);
+		return Context.unViewManager.hasUnsavedView(file);
 	}
 
 	public static boolean isFileOpen(String absolutePath)
 	{
-		return GGLLManager.fileManager.isFileOpen(absolutePath);
+		return Context.fileManager.isFileOpen(absolutePath);
 	}
 
 	public static void openFile(String path)
 	{
-		GGLLManager.fileManager.openFile(path);
+		Context.fileManager.openFile(path);
 	}
 
 	public static void print(Object object)
@@ -138,34 +121,34 @@ public final class GGLLManager
 
 	public static void removeUnsavedView(String path)
 	{
-		GGLLManager.unViewManager.removeUnsavedView(path);
+		Context.unViewManager.removeUnsavedView(path);
 	}
 
 	public static void saveAllFiles()
 	{
-		GGLLManager.fileManager.saveAllFiles(getUnsavedViews());
+		Context.fileManager.saveAllFiles(getUnsavedViews());
 	}
 
 	public static void saveFile(Object object)
 	{
-		GGLLManager.fileManager.saveFileObject(object);
+		Context.fileManager.saveFileObject(object);
 	}
 
 	public static void setActiveScene(AbstractCanvas activeScene)
 	{
-		GGLLManager.activeScene = activeScene;
+		Context.activeScene = activeScene;
 	}
 
 	public static void setUnsavedView(String path, AbstractView view)
 	{
-		GGLLManager.unViewManager.setUnsavedView(path, view);
+		Context.unViewManager.setUnsavedView(path, view);
 	}
 
 	public static void Start(MainWindow mainWindow, String projectPath)
 	{
-		GGLLManager.mainWindow = mainWindow;
-		GGLLManager.project = ProjectHelper.openProject(projectPath);
-		GGLLManager.unViewManager = new UnsavedViewRepository();
-		GGLLManager.fileManager = new FileManager();
+		Context.mainWindow = mainWindow;
+		Context.project = ProjectHelper.openProject(projectPath);
+		Context.unViewManager = new UnsavedViewRepository();
+		Context.fileManager = new FileManager();
 	}
 }

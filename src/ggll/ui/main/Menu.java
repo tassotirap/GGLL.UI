@@ -4,7 +4,7 @@ import ggll.ui.canvas.AbstractCanvas;
 import ggll.ui.file.FileNames;
 import ggll.ui.main.ThemeManager.Theme;
 import ggll.ui.project.FileManager;
-import ggll.ui.project.GGLLManager;
+import ggll.ui.project.Context;
 import ggll.ui.project.tree.Tree;
 import ggll.ui.resource.LangResource;
 
@@ -159,7 +159,7 @@ public class Menu extends JMenuBar
 					try
 					{
 						fileManager.createFile(fileName, new FileNames(FileNames.GRAM_EXTENSION));
-						Tree.reload(GGLLManager.getProject().getProjectsRootPath());						
+						Tree.reload(Context.getProject().getProjectsRootPath());						
 					}
 					catch (IOException e1)
 					{
@@ -176,7 +176,7 @@ public class Menu extends JMenuBar
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				GGLLManager.saveFile(context);
+				Context.saveFile(context);
 			}
 		});
 
@@ -187,7 +187,7 @@ public class Menu extends JMenuBar
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				GGLLManager.saveAllFiles();
+				Context.saveAllFiles();
 			}
 		});
 
@@ -198,7 +198,7 @@ public class Menu extends JMenuBar
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				GGLLManager.print(context);
+				Context.print(context);
 			}
 		});
 
@@ -229,7 +229,7 @@ public class Menu extends JMenuBar
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				GGLLManager.exit();
+				Context.exit();
 			}
 		});
 
@@ -285,7 +285,7 @@ public class Menu extends JMenuBar
 			@Override
 			public void actionPerformed(ActionEvent arg0)
 			{
-				GGLLManager.getMainWindow().changeTheme(Theme.BlueHighlightDockingTheme);
+				Context.getMainWindow().changeTheme(Theme.BlueHighlightDockingTheme);
 			}
 		});
 		theme.add(themeBlueHighlight);
@@ -297,7 +297,7 @@ public class Menu extends JMenuBar
 			@Override
 			public void actionPerformed(ActionEvent arg0)
 			{
-				GGLLManager.getMainWindow().changeTheme(Theme.ClassicDockingTheme);
+				Context.getMainWindow().changeTheme(Theme.ClassicDockingTheme);
 			}
 		});
 		theme.add(themeClassic);
@@ -309,7 +309,7 @@ public class Menu extends JMenuBar
 			@Override
 			public void actionPerformed(ActionEvent arg0)
 			{
-				GGLLManager.getMainWindow().changeTheme(Theme.DefaultDockingTheme);
+				Context.getMainWindow().changeTheme(Theme.DefaultDockingTheme);
 			}
 		});
 		theme.add(themeDefault);
@@ -321,7 +321,7 @@ public class Menu extends JMenuBar
 			@Override
 			public void actionPerformed(ActionEvent arg0)
 			{
-				GGLLManager.getMainWindow().changeTheme(Theme.GradientDockingTheme);
+				Context.getMainWindow().changeTheme(Theme.GradientDockingTheme);
 			}
 		});
 		theme.add(themeGradient);
@@ -333,7 +333,7 @@ public class Menu extends JMenuBar
 			@Override
 			public void actionPerformed(ActionEvent arg0)
 			{
-				GGLLManager.getMainWindow().changeTheme(Theme.LookAndFeelDockingTheme);
+				Context.getMainWindow().changeTheme(Theme.LookAndFeelDockingTheme);
 			}
 		});
 		theme.add(themeLookAndFeel);
@@ -345,7 +345,7 @@ public class Menu extends JMenuBar
 			@Override
 			public void actionPerformed(ActionEvent arg0)
 			{
-				GGLLManager.getMainWindow().changeTheme(Theme.ShapedGradientDockingTheme);
+				Context.getMainWindow().changeTheme(Theme.ShapedGradientDockingTheme);
 			}
 		});
 		theme.add(themeShapedGradient);
@@ -357,7 +357,7 @@ public class Menu extends JMenuBar
 			@Override
 			public void actionPerformed(ActionEvent arg0)
 			{
-				GGLLManager.getMainWindow().changeTheme(Theme.SlimFlatDockingTheme);
+				Context.getMainWindow().changeTheme(Theme.SlimFlatDockingTheme);
 			}
 		});
 		theme.add(themeSlimFlatt);
@@ -369,7 +369,7 @@ public class Menu extends JMenuBar
 			@Override
 			public void actionPerformed(ActionEvent arg0)
 			{
-				GGLLManager.getMainWindow().changeTheme(Theme.SoftBlueIceDockingTheme);
+				Context.getMainWindow().changeTheme(Theme.SoftBlueIceDockingTheme);
 			}
 		});
 		theme.add(themeSoftBlueIce);
