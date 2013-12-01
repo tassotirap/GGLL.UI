@@ -1,5 +1,6 @@
 package ggll.ui.project;
 
+import ggll.core.list.ExtendedList;
 import ggll.ui.file.GrammarFile;
 import ggll.ui.file.LexicalFile;
 import ggll.ui.file.SemanticFile;
@@ -7,8 +8,6 @@ import ggll.ui.main.ThemeManager.Theme;
 
 import java.io.File;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * This class represents a projects and deals with the management of a project.
@@ -19,11 +18,11 @@ public class Project implements Serializable
 {
 	private static final long serialVersionUID = -6812190878328950994L;
 
-	private ArrayList<GrammarFile> grammarFile;
+	private ExtendedList<GrammarFile> grammarFile;
 	private LexicalFile lexicalFile;
 	private SemanticFile semanticFile;
 
-	private List<File> openedFiles;
+	private ExtendedList<File> openedFiles;
 
 	private File projectDir;
 	private Theme theme = Theme.DefaultDockingTheme;
@@ -35,15 +34,15 @@ public class Project implements Serializable
 		this(projectsRootPath, null);
 	}
 
-	public Project(String projectsRootPath, ArrayList<File> openedFiles)
+	public Project(String projectsRootPath, ExtendedList<File> openedFiles)
 	{		
 		this.projectDir = new File(projectsRootPath);
-		this.grammarFile = new ArrayList<GrammarFile>();
+		this.grammarFile = new ExtendedList<GrammarFile>();
 		try
 		{
 			if (openedFiles == null)
 			{
-				this.openedFiles = new ArrayList<File>();
+				this.openedFiles = new ExtendedList<File>();
 			}
 			else
 			{
@@ -56,7 +55,7 @@ public class Project implements Serializable
 		}
 	}
 
-	public ArrayList<GrammarFile> getGrammarFile()
+	public ExtendedList<GrammarFile> getGrammarFile()
 	{
 		return grammarFile;
 	}
@@ -67,7 +66,7 @@ public class Project implements Serializable
 	}
 
 
-	public List<File> getOpenedFiles()
+	public ExtendedList<File> getOpenedFiles()
 	{
 		return openedFiles;
 	}
@@ -97,17 +96,17 @@ public class Project implements Serializable
 		return yyLexFile;
 	}
 
-	public void setGrammarFile(ArrayList<GrammarFile> grammarFiles)
+	public void setGrammarFile(ExtendedList<GrammarFile> grammarFiles)
 	{
 		
-		this.grammarFile.addAll(grammarFiles);
+		this.grammarFile = grammarFiles;
 	}
 	
 	public void setGrammarFile(GrammarFile grammarFile)
 	{
 		if(!this.grammarFile.contains(grammarFile))
 		{
-			this.grammarFile.add(grammarFile);
+			this.grammarFile.append(grammarFile);
 		}
 	}
 
@@ -116,7 +115,7 @@ public class Project implements Serializable
 		this.lexicalFile = lexFile;
 	}
 
-	public void setOpenedFiles(List<File> openedFiles)
+	public void setOpenedFiles(ExtendedList<File> openedFiles)
 	{
 		this.openedFiles = openedFiles;
 	}

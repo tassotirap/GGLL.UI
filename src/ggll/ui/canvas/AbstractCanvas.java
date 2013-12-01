@@ -1,5 +1,7 @@
 package ggll.ui.canvas;
 
+import ggll.core.list.ExtendedList;
+import ggll.ui.canvas.action.ExtendedActionFactory;
 import ggll.ui.canvas.state.CanvasState;
 import ggll.ui.canvas.state.StaticStateManager;
 import ggll.ui.canvas.state.VolatileStateManager;
@@ -23,10 +25,8 @@ import java.beans.PropertyChangeSupport;
 import java.io.File;
 import java.io.IOException;
 import java.util.AbstractMap;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 
 import javax.swing.JComponent;
 
@@ -45,29 +45,31 @@ public abstract class AbstractCanvas extends GraphScene.StringGraph implements P
 	protected StaticStateManager staticStateManager;
 	protected VolatileStateManager volatileStateManager;
 	protected CanvasState state;
+	protected ExtendedActionFactory actionFactory; 
 
-	private List<PropertyChangeSupport> monitors = new ArrayList<PropertyChangeSupport>();
+	private ExtendedList<PropertyChangeSupport> monitors = new ExtendedList<PropertyChangeSupport>();
 	private boolean showingGrid;
 	private boolean showingGuide;
 	private boolean showingLines;
 
-	private List<String> customNodes = new ArrayList<String>();
+	private ExtendedList<String> customNodes = new ExtendedList<String>();
 
 	protected CanvasDecorator decorator;
 
-	protected List<String> alternatives = new ArrayList<String>();
-	protected List<String> labels = new ArrayList<String>();
-	protected List<String> lambdas = new ArrayList<String>();
-	protected List<String> leftSides = new ArrayList<String>();
-	protected List<String> nterminals = new ArrayList<String>();
-	protected List<String> start = new ArrayList<String>();
-	protected List<String> successors = new ArrayList<String>();
-	protected List<String> terminals = new ArrayList<String>();
+	protected ExtendedList<String> alternatives = new ExtendedList<String>();
+	protected ExtendedList<String> labels = new ExtendedList<String>();
+	protected ExtendedList<String> lambdas = new ExtendedList<String>();
+	protected ExtendedList<String> leftSides = new ExtendedList<String>();
+	protected ExtendedList<String> nterminals = new ExtendedList<String>();
+	protected ExtendedList<String> start = new ExtendedList<String>();
+	protected ExtendedList<String> successors = new ExtendedList<String>();
+	protected ExtendedList<String> terminals = new ExtendedList<String>();
 
 	private String file;
 
 	public AbstractCanvas(String cursor, String connectionStrategy, String movementStrategy, String file)
 	{
+		this.actionFactory = new ExtendedActionFactory(this);
 		this.decorator = new CanvasDecorator(this);
 		this.file = file;
 	}
@@ -121,7 +123,7 @@ public abstract class AbstractCanvas extends GraphScene.StringGraph implements P
 
 	public void firePropertyChange(String property, Object oldObj, Object newObj)
 	{
-		for (PropertyChangeSupport monitor : monitors)
+		for (PropertyChangeSupport monitor : monitors.getAll())
 		{
 			monitor.firePropertyChange(property, oldObj, newObj);
 		}
@@ -130,7 +132,7 @@ public abstract class AbstractCanvas extends GraphScene.StringGraph implements P
 
 	public abstract Router getActiveRouter();
 
-	public List<String> getAlternatives()
+	public ExtendedList<String> getAlternatives()
 	{
 		return alternatives;
 	}
@@ -155,7 +157,7 @@ public abstract class AbstractCanvas extends GraphScene.StringGraph implements P
 
 	public abstract String getConnStrategy();
 
-	public List<String> getCustomNodes()
+	public ExtendedList<String> getCustomNodes()
 	{
 		return customNodes;
 	}
@@ -169,12 +171,12 @@ public abstract class AbstractCanvas extends GraphScene.StringGraph implements P
 
 	public abstract Collection<?> getLabels();
 
-	public List<String> getLambdas()
+	public ExtendedList<String> getLambdas()
 	{
 		return lambdas;
 	}
 
-	public List<String> getLeftSides()
+	public ExtendedList<String> getLeftSides()
 	{
 		return leftSides;
 	}
@@ -190,7 +192,7 @@ public abstract class AbstractCanvas extends GraphScene.StringGraph implements P
 
 	public abstract String getNodeType(Object node);
 
-	public List<String> getNterminals()
+	public ExtendedList<String> getNterminals()
 	{
 		return nterminals;
 	}
@@ -204,7 +206,7 @@ public abstract class AbstractCanvas extends GraphScene.StringGraph implements P
 		return bi;
 	}
 
-	public List<String> getStart()
+	public ExtendedList<String> getStart()
 	{
 		return start;
 	}
@@ -220,12 +222,12 @@ public abstract class AbstractCanvas extends GraphScene.StringGraph implements P
 		return staticStateManager;
 	}
 
-	public List<String> getSuccessors()
+	public ExtendedList<String> getSuccessors()
 	{
 		return successors;
 	}
 
-	public List<String> getTerminals()
+	public ExtendedList<String> getTerminals()
 	{
 		return terminals;
 	}
@@ -323,7 +325,7 @@ public abstract class AbstractCanvas extends GraphScene.StringGraph implements P
 		}
 		else
 		{
-			for (PropertyChangeSupport monitor : monitors)
+			for (PropertyChangeSupport monitor : monitors.getAll())
 			{
 				event.setPropagationId("canvas");
 				monitor.firePropertyChange(event);
@@ -343,7 +345,7 @@ public abstract class AbstractCanvas extends GraphScene.StringGraph implements P
 	{
 		if (!monitors.contains(monitor))
 		{
-			monitors.add(monitor);
+			monitors.append(monitor);
 		}
 	}
 
@@ -428,7 +430,7 @@ public abstract class AbstractCanvas extends GraphScene.StringGraph implements P
 	 * 
 	 * @param labels
 	 */
-	public void setLabels(List<String> labels)
+	public void setLabels(ExtendedList<String> labels)
 	{
 		this.labels = labels;
 	}

@@ -1,5 +1,6 @@
 package ggll.ui.project;
 
+import ggll.core.list.ExtendedList;
 import ggll.ui.exceptions.WarningException;
 import ggll.ui.file.FileNames;
 import ggll.ui.file.GrammarFile;
@@ -8,7 +9,6 @@ import ggll.ui.file.SemanticFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 
 public class ProjectHelper
 {
@@ -29,7 +29,7 @@ public class ProjectHelper
 		project.setGrammarFile(gramFile);
 		project.setSemamticFile(semFile);
 		project.setLexicalFile(lexFile);
-		project.getOpenedFiles().add(gramFile);
+		project.getOpenedFiles().append(gramFile);
 	}
 
 	public static boolean isProject(File projectRoot) throws WarningException
@@ -59,7 +59,7 @@ public class ProjectHelper
 	public static Project openProject(String projectRootPath)
 	{
 		Project project = null;
-		ArrayList<GrammarFile> gramFiles = new ArrayList<GrammarFile>();
+		ExtendedList<GrammarFile> gramFiles = new ExtendedList<GrammarFile>();
 		SemanticFile semFile = null;
 		LexicalFile lexFile = null;
 		
@@ -75,7 +75,7 @@ public class ProjectHelper
 			{
 				if (file.getName().endsWith(FileNames.GRAM_EXTENSION))
 				{
-					gramFiles.add(new GrammarFile(file.getAbsolutePath()));
+					gramFiles.append(new GrammarFile(file.getAbsolutePath()));
 				}
 				else if (file.getName().endsWith(FileNames.SEM_EXTENSION))
 				{
@@ -87,13 +87,13 @@ public class ProjectHelper
 				}
 			}
 
-			if (gramFiles.size() > 0 && semFile != null && lexFile != null)
+			if (gramFiles.count() > 0 && semFile != null && lexFile != null)
 			{
 				project = new Project(projectRootPath);
 				project.setGrammarFile(gramFiles);
 				project.setSemamticFile(semFile);
 				project.setLexicalFile(lexFile);
-				project.getOpenedFiles().add(gramFiles.get(0));
+				project.getOpenedFiles().append(gramFiles.get(0));
 				return project;
 			}
 		}

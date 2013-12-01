@@ -1,7 +1,6 @@
 package ggll.ui.core.syntax.grammar.model;
 
-import java.util.ArrayList;
-import java.util.List;
+import ggll.core.list.ExtendedList;
 
 /**
  * This class is a container to all essential elements of a grammar.
@@ -13,7 +12,7 @@ public class SyntaxModel extends SyntaxSubpart
 
 	private static int count;
 
-	private List<SyntaxElement> children = new ArrayList<SyntaxElement>();
+	private ExtendedList<SyntaxElement> children = new ExtendedList<SyntaxElement>();
 	private SimpleNode semanticNode;
 	protected Integer connectionRouter = null;
 
@@ -39,17 +38,13 @@ public class SyntaxModel extends SyntaxSubpart
 
 	public void addChild(SyntaxElement child, int index)
 	{
-		if (index < 0)
-		{
-			index = children.size();
-		}
-		children.add(index, child);
+		children.insertAt(index, child);
 		fireStructureChange(CHILDREN, child);
 	}
 
 	public SyntaxElement findElement(String id)
 	{
-		for (SyntaxElement e : children)
+		for (SyntaxElement e : children.getAll())
 		{
 			if (e.getID().equals(id))
 			{
@@ -59,45 +54,45 @@ public class SyntaxModel extends SyntaxSubpart
 		return null;
 	}
 
-	public List<SyntaxElement> getChildren()
+	public ExtendedList<SyntaxElement> getChildren()
 	{
 		return children;
 	}
 
-	public List<NodeLabel> getChildrenAsLabels()
+	public ExtendedList<NodeLabel> getChildrenAsLabels()
 	{
-		ArrayList<NodeLabel> lNodes = new ArrayList<NodeLabel>();
-		for (SyntaxElement e : children)
+		ExtendedList<NodeLabel> lNodes = new ExtendedList<NodeLabel>();
+		for (SyntaxElement e : children.getAll())
 		{
 			if (e instanceof NodeLabel)
 			{
-				lNodes.add((NodeLabel) e);
+				lNodes.append((NodeLabel) e);
 			}
 		}
 		return lNodes;
 	}
 
-	public List<SyntaxElement> getChildrenConnections()
+	public ExtendedList<SyntaxElement> getChildrenConnections()
 	{
-		ArrayList<SyntaxElement> cNodes = new ArrayList<SyntaxElement>();
-		for (SyntaxElement e : children)
+		ExtendedList<SyntaxElement> cNodes = new ExtendedList<SyntaxElement>();
+		for (SyntaxElement e : children.getAll())
 		{
 			if (e instanceof Connection)
 			{
-				cNodes.add(e);
+				cNodes.append(e);
 			}
 		}
 		return cNodes;
 	}
 
-	public List<SyntaxElement> getChildrenNodes()
+	public ExtendedList<SyntaxElement> getChildrenNodes()
 	{
-		ArrayList<SyntaxElement> cNodes = new ArrayList<SyntaxElement>();
-		for (SyntaxElement e : children)
+		ExtendedList<SyntaxElement> cNodes = new ExtendedList<SyntaxElement>();
+		for (SyntaxElement e : children.getAll())
 		{
 			if (e instanceof SimpleNode)
 			{
-				cNodes.add(e);
+				cNodes.append(e);
 			}
 		}
 		return cNodes;
@@ -127,20 +122,17 @@ public class SyntaxModel extends SyntaxSubpart
 	{
 		if (child == null)
 			return;
-		SyntaxElement[] remainingChildren = new SyntaxElement[children.size() - 1];
+		SyntaxElement[] remainingChildren = new SyntaxElement[children.count() - 1];
 		int i = 0;
-		for (SyntaxElement se : children)
+		for (SyntaxElement se : children.getAll())
 		{
 			if (se != child)
 			{
 				remainingChildren[i++] = se;
 			}
 		}
-		children = new ArrayList<SyntaxElement>();
-		for (int j = 0; j < i; j++)
-		{
-			children.add(remainingChildren[j]);
-		}
+		children = new ExtendedList<SyntaxElement>();
+		children.addAll(remainingChildren);
 		fireStructureChange(CHILDREN, child);
 	}
 

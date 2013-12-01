@@ -16,8 +16,8 @@ import ggll.core.syntax.parser.Parser;
 import ggll.core.syntax.parser.ParserOutput;
 import ggll.ui.core.syntax.SyntacticLoader;
 import ggll.ui.output.AppOutput;
-import ggll.ui.output.Output;
 import ggll.ui.output.HtmlViewer.TOPIC;
+import ggll.ui.output.Output;
 import ggll.ui.project.Context;
 import ggll.ui.util.Log;
 
@@ -58,7 +58,7 @@ public class ParsingEditor
 		else
 		{
 			AppOutput.displayText("<font color='red'>Expression can't be recognized.</font>", TOPIC.Output);
-			for (Exception error : analyzer.getErrorList())
+			for (Exception error : analyzer.getErrorList().getAll())
 			{
 				if(error instanceof SintaticException)
 				{

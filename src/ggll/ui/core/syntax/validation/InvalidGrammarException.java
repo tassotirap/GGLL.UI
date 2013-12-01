@@ -1,9 +1,7 @@
 package ggll.ui.core.syntax.validation;
 
+import ggll.core.list.ExtendedList;
 import ggll.ui.core.syntax.grammar.GrammarComponent;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class InvalidGrammarException extends Exception
 {
@@ -16,7 +14,7 @@ public class InvalidGrammarException extends Exception
 	private String description;
 	private int iteratorIndex;
 
-	private List<InvalidGrammarException> nextExceptions = new ArrayList<InvalidGrammarException>();
+	private ExtendedList<InvalidGrammarException> nextExceptions = new ExtendedList<InvalidGrammarException>();
 	private GrammarComponent problem;
 
 	public InvalidGrammarException(String message, String description, GrammarComponent problem)
@@ -33,12 +31,12 @@ public class InvalidGrammarException extends Exception
 
 	public boolean hasNext()
 	{
-		return iteratorIndex < nextExceptions.size();
+		return iteratorIndex < nextExceptions.count();
 	}
 
 	public void insertMoreExceptions(InvalidGrammarException ex)
 	{
-		nextExceptions.add(ex);
+		nextExceptions.append(ex);
 	}
 
 	public InvalidGrammarException nextException()

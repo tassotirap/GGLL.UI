@@ -55,7 +55,7 @@ public class GrammarComponent extends AbstractComponent implements FileComponent
 	@Override
 	public void fireContentChanged()
 	{
-		for (ComponentListener listener : listeners)
+		for (ComponentListener listener : listeners.getAll())
 		{
 			listener.ContentChanged(this);
 		}

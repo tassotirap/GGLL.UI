@@ -1,7 +1,6 @@
 package ggll.ui.tab;
 
-import java.util.ArrayList;
-
+import ggll.core.list.ExtendedList;
 import net.infonode.docking.TabWindow;
 
 public class TabWindowList
@@ -12,18 +11,18 @@ public class TabWindowList
 		TOP_TABS, CENTER_RIGHT_TABS, BOTTOM_TABS, CENTER_LEFT_TABS
 	}
 
-	private ArrayList<TabWindow> tabWindowList;
+	private ExtendedList<TabWindow> tabWindowList;
 
 	public static final int TAB_SIZE = 4;
 
 	public TabWindowList()
 	{
-		tabWindowList = new ArrayList<TabWindow>(TAB_SIZE);
+		tabWindowList = new ExtendedList<TabWindow>(TAB_SIZE);
 	}
 
-	public boolean add(TabWindow tabWindow)
+	public void add(TabWindow tabWindow)
 	{
-		return tabWindowList.add(tabWindow);
+		tabWindowList.append(tabWindow);
 	}
 
 	public TabWindow getBottonTab()

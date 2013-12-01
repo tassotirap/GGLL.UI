@@ -1,8 +1,8 @@
 package ggll.ui.project.tree;
 
+import ggll.core.list.ExtendedList;
+
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Iterator;
 
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
@@ -12,7 +12,7 @@ import javax.swing.tree.TreePath;
 public class TreeFileModel implements TreeModel
 {
 	private File root;
-	private ArrayList<TreeModelListener> listeners = new ArrayList<TreeModelListener>();
+	private ExtendedList<TreeModelListener> listeners = new ExtendedList<TreeModelListener>();
 
 	public TreeFileModel(File rootDirectory)
 	{
@@ -22,30 +22,24 @@ public class TreeFileModel implements TreeModel
 	@Override
 	public void addTreeModelListener(TreeModelListener listener)
 	{
-		listeners.add(listener);
+		listeners.append(listener);
 	}
 
 	public void fireTreeNodesChanged(TreePath parentPath, int[] indices, Object[] children)
 	{
 		TreeModelEvent event = new TreeModelEvent(this, parentPath, indices, children);
-		Iterator<TreeModelListener> iterator = listeners.iterator();
-		TreeModelListener listener = null;
-		while (iterator.hasNext())
+		for(TreeModelListener treeModelListener : listeners.getAll())
 		{
-			listener = iterator.next();
-			listener.treeNodesChanged(event);
+			treeModelListener.treeNodesChanged(event);
 		}
 	}
 
 	public void fireTreeStructureChanged(Object source, TreePath path)
 	{
-		Iterator<TreeModelListener> iterator = listeners.iterator();
-		TreeModelEvent e = null;
-		while (iterator.hasNext())
-		{
-			if (e == null)
-				e = new TreeModelEvent(source, path);
-			iterator.next().treeStructureChanged(e);
+		TreeModelEvent event = new TreeModelEvent(source, path);
+		for(TreeModelListener treeModelListener : listeners.getAll())
+		{			
+			treeModelListener.treeStructureChanged(event);
 		}
 	}
 

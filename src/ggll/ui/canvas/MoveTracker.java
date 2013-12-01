@@ -1,12 +1,10 @@
 package ggll.ui.canvas;
 
-import ggll.ui.canvas.action.WidgetActionFactory;
+import ggll.core.list.ExtendedList;
 import ggll.ui.canvas.widget.IconNodeWidgetExt;
 import ggll.ui.canvas.widget.LabelWidgetExt;
 import ggll.ui.resource.CanvasResource;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Observable;
 
 import org.netbeans.api.visual.action.WidgetAction;
@@ -24,15 +22,15 @@ public class MoveTracker extends Observable
 
 	private void removeAllMoveAction(Chain chainActions)
 	{
-		List<WidgetAction> tmpActions = new ArrayList<WidgetAction>();
+		ExtendedList<WidgetAction> tmpActions = new ExtendedList<WidgetAction>();
 		for (WidgetAction action : chainActions.getActions())
 		{
 			if (action instanceof MoveAction)
 			{
-				tmpActions.add(action);
+				tmpActions.append(action);
 			}
 		}
-		for (WidgetAction action : tmpActions)
+		for (WidgetAction action : tmpActions.getAll())
 		{
 			chainActions.removeAction(action);
 		}
@@ -44,8 +42,8 @@ public class MoveTracker extends Observable
 	{
 		setChanged();
 		super.notifyObservers(obj);
-		WidgetActionFactory.setActiveMoveAction((String)obj);
-		WidgetAction activeMovement = WidgetActionFactory.getAction("Move", canvas);
+		canvas.actionFactory.setActiveMoveAction((String)obj);
+		WidgetAction activeMovement = canvas.actionFactory.getAction("Move");
 		for (String nodes : canvas.getNodes())
 		{
 			Object obecjtWidget = canvas.findWidget(nodes);

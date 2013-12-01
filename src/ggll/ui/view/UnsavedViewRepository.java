@@ -1,6 +1,7 @@
 package ggll.ui.view;
 
-import java.util.ArrayList;
+import ggll.core.list.ExtendedList;
+
 import java.util.HashMap;
 
 public class UnsavedViewRepository
@@ -12,9 +13,9 @@ public class UnsavedViewRepository
 		unsavedViews = new HashMap<String, AbstractView>();
 	}
 
-	public ArrayList<AbstractView> getUnsavedViews()
+	public ExtendedList<AbstractView> getUnsavedViews()
 	{
-		return new ArrayList<AbstractView>(unsavedViews.values());
+		return new ExtendedList<AbstractView>(unsavedViews.values());
 	}
 
 	public boolean hasUnsavedView(AbstractView value)

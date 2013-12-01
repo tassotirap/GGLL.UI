@@ -7,11 +7,11 @@ import java.awt.event.KeyEvent;
 import org.netbeans.api.visual.action.WidgetAction.Adapter;
 import org.netbeans.api.visual.widget.Widget;
 
-public class WidgetCopyPasteAction extends Adapter
+public class CopyPasteAction extends Adapter
 {
 	WidgetCopyPasteProvider copyPasteProvider;
 
-	public WidgetCopyPasteAction(WidgetCopyPasteProvider copyPasteProvider)
+	public CopyPasteAction(WidgetCopyPasteProvider copyPasteProvider)
 	{
 		this.copyPasteProvider = copyPasteProvider;
 	}

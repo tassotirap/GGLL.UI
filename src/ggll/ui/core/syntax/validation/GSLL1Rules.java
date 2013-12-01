@@ -1,10 +1,8 @@
 package ggll.ui.core.syntax.validation;
 
+import ggll.core.list.ExtendedList;
 import ggll.ui.core.syntax.grammar.Grammar;
 import ggll.ui.core.syntax.grammar.GrammarComponent;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class GSLL1Rules extends GrammarRule
 {
@@ -22,13 +20,13 @@ public class GSLL1Rules extends GrammarRule
 	/** Is there a valid header **/
 	public InvalidGrammarException r0()
 	{
-		if (!onTheFly && grammar.getHeads().size() == 0)
+		if (!onTheFly && grammar.getHeads().count() == 0)
 		{
 			return new InvalidGrammarException("There must be an initial non-terminal.", "Any grammar must have exactly one start point: an initial non-terminal.", null);
 		}
-		if (grammar.getHeads().size() > 1)
+		if (grammar.getHeads().count() > 1)
 		{
-			return new InvalidGrammarException("There must only one initial non-terminal.", "Only one initial point by grammar is allowed. Only one grammar is allowed within each file.", grammar.getHeads().get(grammar.getHeads().size() - 1));
+			return new InvalidGrammarException("There must only one initial non-terminal.", "Only one initial point by grammar is allowed. Only one grammar is allowed within each file.", grammar.getHeads().get(grammar.getHeads().count() - 1));
 		}
 		return null;
 	}
@@ -41,21 +39,21 @@ public class GSLL1Rules extends GrammarRule
 	{
 		GrammarComponent head = grammar.getHead();
 		int index = -1;
-		if (grammar.getLeftHands() != null && grammar.getLeftHands().size() > 0)
+		if (grammar.getLeftHands() != null && grammar.getLeftHands().count() > 0)
 		{
-			index = grammar.getLeftHands().size();
+			index = grammar.getLeftHands().count();
 		}
 		while (head != null)
 		{
-			if (grammar.getAlternatives(head).size() > 0)
+			if (grammar.getAlternatives(head).count() > 0)
 			{
 				return new InvalidGrammarException("A left non-terminal can only have an successor.", "A left non-terminal can not be immediately followed by an alternative node", head);
 			}
-			if (!onTheFly && head != grammar.getHead() && grammar.getSucessors(head).size() != 1)
+			if (!onTheFly && head != grammar.getHead() && grammar.getSucessors(head).count() != 1)
 			{
 				return new InvalidGrammarException("A left non-terminal must have exactly one successor.", null, head);
 			}
-			if ((grammar.getAntiAlternatives(head) != null && grammar.getAntiAlternatives(head).size() > 0) || (grammar.getAntiSuccessors(head) != null && grammar.getAntiSuccessors(head).size() > 0))
+			if ((grammar.getAntiAlternatives(head) != null && grammar.getAntiAlternatives(head).count() > 0) || (grammar.getAntiSuccessors(head) != null && grammar.getAntiSuccessors(head).count() > 0))
 			{
 				return new InvalidGrammarException("A left non-terminal can not be alternative or successor of any other node", null, head);
 			}
@@ -74,9 +72,9 @@ public class GSLL1Rules extends GrammarRule
 	/** avoid repeated left hands **/
 	public InvalidGrammarException r2()
 	{
-		for (int i = 0; i < grammar.getLeftHands().size(); i++)
+		for (int i = 0; i < grammar.getLeftHands().count(); i++)
 		{
-			for (int j = 0; j < grammar.getLeftHands().size(); j++)
+			for (int j = 0; j < grammar.getLeftHands().count(); j++)
 			{
 				if (i != j)
 				{
@@ -93,9 +91,9 @@ public class GSLL1Rules extends GrammarRule
 	/** only one successor and one alternative by node **/
 	public InvalidGrammarException r3()
 	{
-		for (GrammarComponent comp : grammar.getComponents())
+		for (GrammarComponent comp : grammar.getComponents().getAll())
 		{
-			if (grammar.getAntiAlternatives(comp).size() > 1 || grammar.getAntiSuccessors(comp).size() > 1 || grammar.getSucessors(comp).size() > 1 || grammar.getAlternatives(comp).size() > 1)
+			if (grammar.getAntiAlternatives(comp).count() > 1 || grammar.getAntiSuccessors(comp).count() > 1 || grammar.getSucessors(comp).count() > 1 || grammar.getAlternatives(comp).count() > 1)
 			{
 				return new InvalidGrammarException("It is not allowed to have a node being simultaneously alternative or successor of two distinct nodes. ", null, comp);
 			}
@@ -108,9 +106,9 @@ public class GSLL1Rules extends GrammarRule
 	{
 		if (!onTheFly)
 		{
-			for (GrammarComponent comp : grammar.getComponents())
+			for (GrammarComponent comp : grammar.getComponents().getAll())
 			{
-				if (comp != grammar.getHead() && grammar.getAlternatives(comp).size() == 0 && grammar.getSucessors(comp).size() == 0 && grammar.getAntiAlternatives(comp).size() == 0 && grammar.getAntiSuccessors(comp).size() == 0)
+				if (comp != grammar.getHead() && grammar.getAlternatives(comp).count() == 0 && grammar.getSucessors(comp).count() == 0 && grammar.getAntiAlternatives(comp).count() == 0 && grammar.getAntiSuccessors(comp).count() == 0)
 				{
 					return new InvalidGrammarException("There is node not connected to the graph.", "All terminal and non-terminal nodes present in the drawing area must be connected to the graph.", comp);
 				}
@@ -127,9 +125,9 @@ public class GSLL1Rules extends GrammarRule
 	 **/
 	public InvalidGrammarException r5()
 	{
-		for (GrammarComponent comp : grammar.getComponents())
+		for (GrammarComponent comp : grammar.getComponents().getAll())
 		{
-			if (comp.isTerminal() && grammar.getAlternatives(comp).size() > 0)
+			if (comp.isTerminal() && grammar.getAlternatives(comp).count() > 0)
 			{
 				GrammarComponent alt = grammar.getAlternatives(comp).get(0);
 				while (alt != null)
@@ -142,11 +140,11 @@ public class GSLL1Rules extends GrammarRule
 					}
 					if (alt.isNonterminal())
 					{
-						for (GrammarComponent lh : grammar.getLeftHands())
+						for (GrammarComponent lh : grammar.getLeftHands().getAll())
 						{
 							if (lh.getContents().equals(alt.getContents()))
 							{
-								if (grammar.getSucessors(lh).size() > 0)
+								if (grammar.getSucessors(lh).count() > 0)
 								{
 									if (grammar.getSucessors(lh).get(0).getContents().equals(comp.getContents()))
 									{
@@ -156,7 +154,7 @@ public class GSLL1Rules extends GrammarRule
 							}
 						}
 					}
-					if (grammar.getAlternatives(alt).size() > 0)
+					if (grammar.getAlternatives(alt).count() > 0)
 					{
 						alt = grammar.getAlternatives(alt).get(0);
 					}
@@ -173,31 +171,31 @@ public class GSLL1Rules extends GrammarRule
 	@Override
 	public void validate() throws InvalidGrammarException
 	{
-		List<InvalidGrammarException> exs = new ArrayList<InvalidGrammarException>();
+		ExtendedList<InvalidGrammarException> exs = new ExtendedList<InvalidGrammarException>();
 		InvalidGrammarException ex;
 		ex = r0();
 		if (ex != null)
-			exs.add(ex);
+			exs.append(ex);
 		ex = r1();
 		if (ex != null)
-			exs.add(ex);
+			exs.append(ex);
 		ex = r2();
 		if (ex != null)
-			exs.add(ex);
+			exs.append(ex);
 		/*
 		 * ex = r3(); if (ex != null) exs.add(ex);
 		 */
 		ex = r4();
 		if (ex != null)
-			exs.add(ex);
+			exs.append(ex);
 		ex = r5();
 		if (ex != null)
-			exs.add(ex);
-		if (exs.size() > 0)
+			exs.append(ex);
+		if (exs.count() > 0)
 		{
 			int index = 1;
 			InvalidGrammarException result = exs.get(0);
-			while (exs.size() > index)
+			while (exs.count() > index)
 			{
 				result.insertMoreExceptions(exs.get(index++));
 			}

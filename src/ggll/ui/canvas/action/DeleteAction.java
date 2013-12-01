@@ -7,11 +7,11 @@ import java.awt.event.KeyEvent;
 import org.netbeans.api.visual.action.WidgetAction.Adapter;
 import org.netbeans.api.visual.widget.Widget;
 
-public class WidgetDeleteAction extends Adapter
+public class DeleteAction extends Adapter
 {
 	WidgetDeleteProvider widgetDeleteProvider;
 
-	public WidgetDeleteAction(WidgetDeleteProvider widgetDeleteProvider)
+	public DeleteAction(WidgetDeleteProvider widgetDeleteProvider)
 	{
 		this.widgetDeleteProvider = widgetDeleteProvider;
 	}

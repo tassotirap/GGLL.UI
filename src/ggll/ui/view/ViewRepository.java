@@ -1,5 +1,6 @@
 package ggll.ui.view;
 
+import ggll.core.list.ExtendedList;
 import ggll.ui.component.AbstractComponent;
 import ggll.ui.component.GeneratedGrammarComponent;
 import ggll.ui.component.OutlineComponent;
@@ -12,9 +13,6 @@ import ggll.ui.icon.IconFactory;
 import ggll.ui.icon.IconFactory.IconType;
 import ggll.ui.project.Context;
 import ggll.ui.tab.TabWindowList.TabPlace;
-
-import java.util.ArrayList;
-
 import net.infonode.docking.DockingWindow;
 import net.infonode.docking.TabWindow;
 import net.infonode.docking.util.ViewMap;
@@ -23,22 +21,22 @@ public class ViewRepository
 {
 	private static int DEFAULT_LAYOUT = 4;
 	
-	private ArrayList<TabWindow> tabWindowList;	
-	private ArrayList<AbstractView> views;
+	private ExtendedList<TabWindow> tabWindowList;	
+	private ExtendedList<AbstractView> views;
 	private IconFactory iconFactory;
 	private ViewMap viewMap;
 
 	public ViewRepository(ViewMap viewMap)
 	{
-		this.tabWindowList = new ArrayList<TabWindow>();
-		this.views = new ArrayList<AbstractView>();
+		this.tabWindowList = new ExtendedList<TabWindow>();
+		this.views = new ExtendedList<AbstractView>();
 		this.iconFactory = new IconFactory();
 		this.viewMap = viewMap;
 	}
 
 	private void addView(AbstractView view)
 	{
-		views.add(view);
+		views.append(view);
 	}
 
 	private void createGrammarView()
@@ -105,7 +103,7 @@ public class ViewRepository
 
 	public boolean containsView(AbstractComponent component)
 	{
-		for (AbstractView abstractView : views)
+		for (AbstractView abstractView : views.getAll())
 		{
 			if (abstractView.getComponentModel().equals(component))
 			{
@@ -117,7 +115,7 @@ public class ViewRepository
 
 	public boolean containsView(int id)
 	{
-		for (AbstractView ggllView : views)
+		for (AbstractView ggllView : views.getAll())
 		{
 			if (ggllView.getId() == id)
 			{
@@ -129,7 +127,7 @@ public class ViewRepository
 
 	public boolean containsView(String path)
 	{
-		for (AbstractView ggllView : views)
+		for (AbstractView ggllView : views.getAll())
 		{
 			if (ggllView.getFileName().equals(path))
 			{
@@ -142,7 +140,7 @@ public class ViewRepository
 	public void createDefaultViews()
 	{
 		for (int i = 0; i < DEFAULT_LAYOUT; i++)
-			tabWindowList.add(new TabWindow());
+			tabWindowList.append(new TabWindow());
 
 		createParserView();
 		createFilesView();
@@ -158,7 +156,7 @@ public class ViewRepository
 	}
 	
 
-	public ArrayList<TabWindow> getTabWindowList()
+	public ExtendedList<TabWindow> getTabWindowList()
 	{
 		return tabWindowList;
 	}
@@ -166,7 +164,7 @@ public class ViewRepository
 	public int getNextViewId()
 	{
 		int max = 0;
-		for (AbstractView ggllView : views)
+		for (AbstractView ggllView : views.getAll())
 		{
 			if (ggllView.getId() > max)
 			{
@@ -178,7 +176,7 @@ public class ViewRepository
 
 	public AbstractView getView(AbstractComponent component)
 	{
-		for (AbstractView ggllView : views)
+		for (AbstractView ggllView : views.getAll())
 		{
 			if (ggllView.getComponentModel().equals(component))
 			{
@@ -190,7 +188,7 @@ public class ViewRepository
 
 	public AbstractView getView(int id)
 	{
-		for (AbstractView abstractView : views)
+		for (AbstractView abstractView : views.getAll())
 		{
 			if (abstractView.getId() == id)
 			{
@@ -202,7 +200,7 @@ public class ViewRepository
 
 	public AbstractView getView(String path)
 	{
-		for (AbstractView abstractView : views)
+		for (AbstractView abstractView : views.getAll())
 		{
 			if (abstractView.getFileName().equals(path))
 			{

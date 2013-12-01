@@ -95,7 +95,7 @@ public class TextAreaComponent extends AbstractComponent implements HyperlinkLis
 	@Override
 	public void fireContentChanged()
 	{
-		for (ComponentListener listener : listeners)
+		for (ComponentListener listener : listeners.getAll())
 		{
 			listener.ContentChanged(this);
 		}

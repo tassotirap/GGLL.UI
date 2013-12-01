@@ -104,7 +104,7 @@ public class CanvasFactory
 	
 	public static void refresh()
 	{
-		for(GrammarFile grammar : Context.getProject().getGrammarFile())
+		for(GrammarFile grammar : Context.getProject().getGrammarFile().getAll())
 		{
 			getInstance(grammar.getAbsolutePath());
 		}	

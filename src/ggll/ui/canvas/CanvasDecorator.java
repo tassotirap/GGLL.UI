@@ -3,8 +3,8 @@ package ggll.ui.canvas;
 import ggll.ui.canvas.decorator.AlternativeConnectorDecorator;
 import ggll.ui.canvas.decorator.SuccessorConnectorDecorator;
 import ggll.ui.canvas.widget.IconNodeWidgetExt;
-import ggll.ui.canvas.widget.LabelWidgetExt;
 import ggll.ui.canvas.widget.IconNodeWidgetExt.TextOrientation;
+import ggll.ui.canvas.widget.LabelWidgetExt;
 import ggll.ui.images.GGLLImages;
 import ggll.ui.resource.CanvasResource;
 

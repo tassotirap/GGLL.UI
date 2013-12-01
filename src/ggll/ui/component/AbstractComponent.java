@@ -1,19 +1,19 @@
 package ggll.ui.component;
 
-import java.util.ArrayList;
+import ggll.core.list.ExtendedList;
 
 import javax.swing.JComponent;
 
 public abstract class AbstractComponent
 {
 	protected JComponent jComponent;
-	protected ArrayList<ComponentListener> listeners = new ArrayList<ComponentListener>();
+	protected ExtendedList<ComponentListener> listeners = new ExtendedList<ComponentListener>();
 
 	public void addComponentListener(ComponentListener listener)
 	{
 		if (!listeners.contains(listener))
 		{
-			listeners.add(listener);
+			listeners.append(listener);
 		}
 	}
 

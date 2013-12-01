@@ -141,7 +141,7 @@ public class MainWindow implements ComponentListener, IMainWindow
 
 	private void openFiles()
 	{
-		List<File> filesToOpen = Context.getOpenedFiles();
+		List<File> filesToOpen = Context.getOpenedFiles().getAll();
 		FileManager fileManager = new FileManager();
 
 		for (int i = 0; i < filesToOpen.size(); i++)
@@ -152,7 +152,7 @@ public class MainWindow implements ComponentListener, IMainWindow
 
 	private void setDefaultLayout()
 	{
-		for (TabWindow tab : viewRepository.getTabWindowList())
+		for (TabWindow tab : viewRepository.getTabWindowList().getAll())
 		{
 			tab.getTabWindowProperties().getCloseButtonProperties().setVisible(false);
 			tabWindow.add(tab);
@@ -216,6 +216,7 @@ public class MainWindow implements ComponentListener, IMainWindow
 		openFiles();
 
 		frame.getContentPane().add(rootWindow, BorderLayout.CENTER);
+		frame.setSize(1024, 768);
 		frame.setExtendedState(frame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
 		Dimension screenDim = Toolkit.getDefaultToolkit().getScreenSize();
 		frame.setLocation((screenDim.width - frame.getWidth()) / 2, (screenDim.height - frame.getHeight()) / 2);

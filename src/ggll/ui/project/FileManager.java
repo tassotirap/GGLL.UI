@@ -1,5 +1,6 @@
 package ggll.ui.project;
 
+import ggll.core.list.ExtendedList;
 import ggll.ui.canvas.AbstractCanvas;
 import ggll.ui.component.AbstractComponent;
 import ggll.ui.component.FileComponent;
@@ -17,7 +18,6 @@ import ggll.ui.view.UnsavedViewRepository;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
 
@@ -69,7 +69,7 @@ public class FileManager
 
 	public void closeFile(String fileName)
 	{
-		for (File file : project.getOpenedFiles())
+		for (File file : project.getOpenedFiles().getAll())
 		{
 			if (file.getAbsolutePath().equals(fileName))
 			{
@@ -136,7 +136,7 @@ public class FileManager
 
 	public boolean isFileOpen(String fileName)
 	{
-		for (File file : project.getOpenedFiles())
+		for (File file : project.getOpenedFiles().getAll())
 		{
 			if (file.getAbsolutePath().equals(fileName))
 				return true;
@@ -183,7 +183,7 @@ public class FileManager
 				}
 				if(verifyOpen)
 				{
-					project.getOpenedFiles().add(new File(path));
+					project.getOpenedFiles().append(new File(path));
 				}
 			}
 			catch (Exception ex)
@@ -193,9 +193,9 @@ public class FileManager
 		}
 	}
 
-	public void saveAllFiles(ArrayList<AbstractView> views)
+	public void saveAllFiles(ExtendedList<AbstractView> views)
 	{
-		for (AbstractView dynamicView : views)
+		for (AbstractView dynamicView : views.getAll())
 		{
 			AbstractComponent abstractComponent = dynamicView.getComponentModel();
 			saveFileObject(abstractComponent);
@@ -240,7 +240,7 @@ public class FileManager
 		{
 			if (mainWindow != null && !componentSaved)
 			{
-				for (AbstractView dynamicView : viewManager.getUnsavedViews())
+				for (AbstractView dynamicView : viewManager.getUnsavedViews().getAll())
 				{
 					AbstractComponent comp = dynamicView.getComponentModel();
 					if (comp instanceof FileComponent && ((FileComponent) comp).getPath().equals(path))

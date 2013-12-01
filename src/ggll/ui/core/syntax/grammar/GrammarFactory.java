@@ -1,5 +1,6 @@
 package ggll.ui.core.syntax.grammar;
 
+import ggll.core.list.ExtendedList;
 import ggll.ui.canvas.AbstractCanvas;
 import ggll.ui.canvas.CanvasFactory;
 import ggll.ui.core.syntax.AsinEditor;
@@ -16,8 +17,6 @@ import ggll.ui.output.HtmlViewer.TOPIC;
 import ggll.ui.project.Context;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 /** Compiles a grammar textual representation from the designed graph **/
 public class GrammarFactory
@@ -43,11 +42,11 @@ public class GrammarFactory
 		return true;
 	}
 
-	private List<AbstractNode> clearAndSetStartNodes(List<SyntaxElement> children)
+	private ExtendedList<AbstractNode> clearAndSetStartNodes(ExtendedList<SyntaxElement> children)
 	{
-		List<AbstractNode> startNodes = new ArrayList<AbstractNode>();
+		ExtendedList<AbstractNode> startNodes = new ExtendedList<AbstractNode>();
 
-		for (SyntaxElement object : children)
+		for (SyntaxElement object : children.getAll())
 		{
 			if (object instanceof SyntaxSubpart)
 			{
@@ -55,11 +54,11 @@ public class GrammarFactory
 			}
 			if (object instanceof AbstractNode && ((AbstractNode) object).getType().equals(AbstractNode.LEFTSIDE))
 			{
-				startNodes.add((AbstractNode) object);
+				startNodes.append((AbstractNode) object);
 			}
 			if (object instanceof AbstractNode && ((AbstractNode) object).getType().equals(AbstractNode.START))
 			{
-				startNodes.add(0, (AbstractNode) object);
+				startNodes.prepend((AbstractNode) object);
 			}
 		}
 		return startNodes;
@@ -72,8 +71,8 @@ public class GrammarFactory
 		String[] stringValue = new String[2];
 		GrammarData returnValue = new GrammarData();
 		SimpleNode simpleNode;
-		List<NodeLabel> listChildren = syntaxModel.getChildrenAsLabels();
-		NodeLabel label = listChildren.iterator().next();
+		ExtendedList<NodeLabel> listChildren = syntaxModel.getChildrenAsLabels();
+		NodeLabel label = listChildren.first();
 		stringValue = label.getLabelContents().split("#");
 		if (syntaxModel instanceof AbstractNode && ((AbstractNode) syntaxModel).getType().equals(AbstractNode.LAMBDA_ALTERNATIVE))
 		{
@@ -120,10 +119,10 @@ public class GrammarFactory
 	{
 		StringBuffer returnString = new StringBuffer();
 
-		List<SyntaxElement> children = new ArrayList<SyntaxElement>();
-		List<AbstractNode> startNodes = new ArrayList<AbstractNode>();	
+		ExtendedList<SyntaxElement> children = new ExtendedList<SyntaxElement>();
+		ExtendedList<AbstractNode> startNodes = new ExtendedList<AbstractNode>();	
 		
-		for(File grammar :  Context.getProject().getGrammarFile())
+		for(File grammar :  Context.getProject().getGrammarFile().getAll())
 		{
 			AbstractCanvas cavans = CanvasFactory.getInstance(grammar.getAbsolutePath());
 			children.addAll(AsinEditor.getInstance().getLogicDiagram(cavans).getChildrenNodes());
@@ -132,7 +131,7 @@ public class GrammarFactory
 		startNodes.addAll(clearAndSetStartNodes(children));
 		
 
-		for (int i = 0; i < startNodes.size(); i++)
+		for (int i = 0; i < startNodes.count(); i++)
 		{
 			cont = 0;
 			SyntaxModel startSyntaxModel = ((SyntaxModel) startNodes.get(i));
@@ -151,8 +150,8 @@ public class GrammarFactory
 			AbstractNode startNode = startNodes.get(i);
 			AbstractNode successorNode = (AbstractNode) successorSyntaxSubpart;
 
-			List listChildren = ((SyntaxModel) startNodes.get(i)).getChildrenAsLabels();
-			NodeLabel label = (NodeLabel) listChildren.iterator().next();
+			ExtendedList listChildren = ((SyntaxModel) startNodes.get(i)).getChildrenAsLabels();
+			NodeLabel label = (NodeLabel) listChildren.first();
 
 			writeBegining(label);
 

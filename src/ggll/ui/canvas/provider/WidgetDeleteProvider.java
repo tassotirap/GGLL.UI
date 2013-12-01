@@ -1,9 +1,9 @@
 package ggll.ui.canvas.provider;
 
+import ggll.core.list.ExtendedList;
 import ggll.ui.canvas.AbstractCanvas;
 
 import java.beans.PropertyChangeSupport;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
 
@@ -36,21 +36,21 @@ public class WidgetDeleteProvider
 	 */
 	public void deleteThese(Object... widgets)
 	{
-		ArrayList<Object> toRemove = new ArrayList<Object>();
+		ExtendedList<Object> toRemove = new ExtendedList<Object>();
 		for (Object w : widgets)
 		{
 			if (w instanceof Set<?>)
 			{
 				for (Object obj : ((Set<?>) w))
 				{
-					toRemove.add(obj);
+					toRemove.append(obj);
 				}
 			}
 			else if (w instanceof Collection<?>)
 			{
 				for (Object obj : ((Collection<?>) w))
 				{
-					toRemove.add(obj);
+					toRemove.append(obj);
 				}
 			}
 			else if (w instanceof Widget)
@@ -58,12 +58,12 @@ public class WidgetDeleteProvider
 				Object obj = canvas.findObject((Widget) w);
 				if (obj != null)
 				{
-					toRemove.add(obj);
+					toRemove.append(obj);
 				}
 			}
 			else
 			{
-				toRemove.add(w);
+				toRemove.append(w);
 			}
 		}
 		Object[] objs = toRemove.toArray();

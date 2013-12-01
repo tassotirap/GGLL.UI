@@ -19,16 +19,16 @@ import org.netbeans.api.visual.widget.ConnectionWidget;
 import org.netbeans.api.visual.widget.LabelWidget;
 import org.netbeans.api.visual.widget.Widget;
 
-public class WidgetSelection implements ClipboardOwner, Transferable
+public class SelectionAction implements ClipboardOwner, Transferable
 {
 	private AbstractCanvas canvas;
 
-	public WidgetSelection(AbstractCanvas canvas)
+	public SelectionAction(AbstractCanvas canvas)
 	{
 		this.canvas = canvas;
 	}
 
-	public WidgetSelection(Widget[] widgets, AbstractCanvas canvas)
+	public SelectionAction(Widget[] widgets, AbstractCanvas canvas)
 	{
 		this.canvas = canvas;
 		for (Widget w : widgets)

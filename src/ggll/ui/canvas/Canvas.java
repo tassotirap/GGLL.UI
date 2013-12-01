@@ -1,6 +1,6 @@
 package ggll.ui.canvas;
 
-import ggll.ui.canvas.action.WidgetActionFactory;
+import ggll.ui.canvas.action.ExtendedActionFactory;
 import ggll.ui.canvas.provider.GridProvider;
 import ggll.ui.canvas.provider.LineProvider;
 import ggll.ui.canvas.provider.NodeSelectProvider;
@@ -40,6 +40,8 @@ public class Canvas extends AbstractCanvas
 	private LayerWidget connectionLayer = new LayerWidget(this);
 	private LayerWidget interractionLayer = new LayerWidget(this);
 	private LayerWidget mainLayer = new LayerWidget(this);
+	
+	
 
 	private String connStrategy;
 	private String cursor;
@@ -134,24 +136,24 @@ public class Canvas extends AbstractCanvas
 		{
 			connection = decorator.drawConnection(activeTool, this, edge);
 			connection.setRouter(getActiveRouter());
-			connection.createActions(CanvasResource.SELECT).addAction(WidgetActionFactory.getAction(WidgetActionFactory.CONN_SELECT, this));
-			connection.getActions(CanvasResource.SELECT).addAction(WidgetActionFactory.getAction(WidgetActionFactory.RECONNECT, this));
+			connection.createActions(CanvasResource.SELECT).addAction(actionFactory.getAction(ExtendedActionFactory.CONN_SELECT));
+			connection.getActions(CanvasResource.SELECT).addAction(actionFactory.getAction(ExtendedActionFactory.RECONNECT));
 
-			connection.getActions(CanvasResource.SELECT).addAction(WidgetActionFactory.getAction(WidgetActionFactory.FREE_MOVE_CP, this));
-			connection.getActions(CanvasResource.SELECT).addAction(WidgetActionFactory.getAction(WidgetActionFactory.ADD_REMOVE_CP, this));
+			connection.getActions(CanvasResource.SELECT).addAction(actionFactory.getAction(ExtendedActionFactory.FREE_MOVE_CP));
+			connection.getActions(CanvasResource.SELECT).addAction(actionFactory.getAction(ExtendedActionFactory.ADD_REMOVE_CP));
 			connectionLayer.addChild(connection);
 			if (activeTool.equals(CanvasResource.SUCCESSOR))
 			{
 				if (!isSuccessor(edge))
 				{
-					getSuccessors().add(edge);
+					getSuccessors().append(edge);
 				}
 			}
 			else if (activeTool.equals(CanvasResource.ALTERNATIVE))
 			{
 				if (!isAlternative(edge))
 				{
-					getAlternatives().add(edge);
+					getAlternatives().append(edge);
 				}
 			}
 		}
@@ -197,52 +199,52 @@ public class Canvas extends AbstractCanvas
 				widget.createActions(CanvasResource.SELECT);
 				if (!tool.equals(CanvasResource.LAMBDA))
 				{
-					widget.getActions(CanvasResource.SELECT).addAction(WidgetActionFactory.getAction(WidgetActionFactory.NODE_HOVER, this));
+					widget.getActions(CanvasResource.SELECT).addAction(actionFactory.getAction(ExtendedActionFactory.NODE_HOVER));
 				}
-				widget.getActions(CanvasResource.SELECT).addAction(WidgetActionFactory.getAction(WidgetActionFactory.SELECT, this));
+				widget.getActions(CanvasResource.SELECT).addAction(actionFactory.getAction(ExtendedActionFactory.SELECT));
 				if (!tool.equals(CanvasResource.LAMBDA))
 				{
-					widget.getActions(CanvasResource.SELECT).addAction(WidgetActionFactory.getAction(WidgetActionFactory.EDITOR, this));
+					widget.getActions(CanvasResource.SELECT).addAction(actionFactory.getAction(ExtendedActionFactory.EDITOR));
 				}
-				widget.getActions(CanvasResource.SELECT).addAction(WidgetActionFactory.getAction(WidgetActionFactory.MOVE, this));
+				widget.getActions(CanvasResource.SELECT).addAction(actionFactory.getAction(ExtendedActionFactory.MOVE));
 				if (!tool.equals(CanvasResource.LAMBDA))
 				{
-					widget.createActions(CanvasResource.SUCCESSOR).addAction(WidgetActionFactory.getAction(WidgetActionFactory.SUCCESSOR, this));
+					widget.createActions(CanvasResource.SUCCESSOR).addAction(actionFactory.getAction(ExtendedActionFactory.SUCCESSOR));
 				}
 				if (!tool.equals(CanvasResource.LAMBDA))
 				{
-					widget.createActions(CanvasResource.ALTERNATIVE).addAction(WidgetActionFactory.getAction(WidgetActionFactory.ALTERNATIVE, this));
+					widget.createActions(CanvasResource.ALTERNATIVE).addAction(actionFactory.getAction(ExtendedActionFactory.ALTERNATIVE));
 				}
 				mainLayer.addChild(widget);
 				if (tool.equals(CanvasResource.LEFT_SIDE))
 				{
-					leftSides.add(node);
+					leftSides.append(node);
 				}
 				else if (tool.equals(CanvasResource.TERMINAL))
 				{
-					terminals.add(node);
+					terminals.append(node);
 				}
 				else if (tool.equals(CanvasResource.N_TERMINAL))
 				{
-					nterminals.add(node);
+					nterminals.append(node);
 				}
 				else if (tool.equals(CanvasResource.LAMBDA))
 				{
-					lambdas.add(node);
+					lambdas.append(node);
 				}
 				else if (tool.equals(CanvasResource.START))
 				{
-					start.add(node);
+					start.append(node);
 				}
 			}
 			else if (tool.equals(CanvasResource.LABEL))
 			{
 				widget = new LabelWidgetExt(mainLayer.getScene(), "Double Click Here to Edit");
-				widget.createActions(CanvasResource.SELECT).addAction(WidgetActionFactory.getAction(WidgetActionFactory.LABEL_HOVER, this));
-				widget.getActions(CanvasResource.SELECT).addAction(WidgetActionFactory.getAction(WidgetActionFactory.SELECT_LABEL, this));
-				widget.getActions(CanvasResource.SELECT).addAction(WidgetActionFactory.getAction(WidgetActionFactory.EDITOR, this));
-				widget.getActions(CanvasResource.SELECT).addAction(WidgetActionFactory.getAction(WidgetActionFactory.MOVE, this));
-				labels.add(node);
+				widget.createActions(CanvasResource.SELECT).addAction(actionFactory.getAction(ExtendedActionFactory.LABEL_HOVER));
+				widget.getActions(CanvasResource.SELECT).addAction(actionFactory.getAction(ExtendedActionFactory.SELECT_LABEL));
+				widget.getActions(CanvasResource.SELECT).addAction(actionFactory.getAction(ExtendedActionFactory.EDITOR));
+				widget.getActions(CanvasResource.SELECT).addAction(actionFactory.getAction(ExtendedActionFactory.MOVE));
+				labels.append(node);
 				mainLayer.addChild(widget);
 			}
 			if (widget != null)
@@ -301,7 +303,7 @@ public class Canvas extends AbstractCanvas
 	@Override
 	public Collection<?> getLabels()
 	{
-		return labels;
+		return labels.getAll();
 	}
 
 	@Override
@@ -340,17 +342,17 @@ public class Canvas extends AbstractCanvas
 		addChild(connectionLayer);
 		addChild(interractionLayer);
 
-		getActions().addAction(WidgetActionFactory.getAction(WidgetActionFactory.SELECT, this));
-		getActions().addAction(WidgetActionFactory.getAction(WidgetActionFactory.SELECT_LABEL, this));
-		getActions().addAction(WidgetActionFactory.getAction(WidgetActionFactory.CREATE, this));
-		getActions().addAction(WidgetActionFactory.getAction(WidgetActionFactory.POPUP_MENU_MAIN, this));
-		getActions().addAction(WidgetActionFactory.getAction(WidgetActionFactory.NODE_HOVER, this));
-		getActions().addAction(WidgetActionFactory.getAction(WidgetActionFactory.LABEL_HOVER, this));
-		getActions().addAction(WidgetActionFactory.getAction(WidgetActionFactory.MOUSE_CENTERED_ZOOM, this));
-		getActions().addAction(WidgetActionFactory.getAction(WidgetActionFactory.PAN, this));
-		getActions().addAction(WidgetActionFactory.getAction(WidgetActionFactory.RECTANGULAR_SELECT, this));
-		getActions().addAction(WidgetActionFactory.getAction(WidgetActionFactory.DELETE, this));
-		getActions().addAction(WidgetActionFactory.getAction(WidgetActionFactory.COPY_PASTE, this));
+		getActions().addAction(actionFactory.getAction(ExtendedActionFactory.SELECT));
+		getActions().addAction(actionFactory.getAction(ExtendedActionFactory.SELECT_LABEL));
+		getActions().addAction(actionFactory.getAction(ExtendedActionFactory.CREATE_NODE));
+		getActions().addAction(actionFactory.getAction(ExtendedActionFactory.POPUP_MENU_MAIN));
+		getActions().addAction(actionFactory.getAction(ExtendedActionFactory.NODE_HOVER));
+		getActions().addAction(actionFactory.getAction(ExtendedActionFactory.LABEL_HOVER));
+		getActions().addAction(actionFactory.getAction(ExtendedActionFactory.MOUSE_CENTERED_ZOOM));
+		getActions().addAction(actionFactory.getAction(ExtendedActionFactory.PAN));
+		getActions().addAction(actionFactory.getAction(ExtendedActionFactory.RECTANGULAR_SELECT));
+		getActions().addAction(actionFactory.getAction(ExtendedActionFactory.DELETE));
+		getActions().addAction(actionFactory.getAction(ExtendedActionFactory.COPY_PASTE));
 		setActiveTool(cursor);
 
 		if (state.getPreferences().getConnectionStrategy() != null)
@@ -374,17 +376,17 @@ public class Canvas extends AbstractCanvas
 	@Override
 	public boolean isLabel(Object o)
 	{
-		return labels.contains(o);
+		return labels.contains((String)o);
 	}
 
 	public boolean isLambda(Object o)
 	{
-		return this.lambdas.contains(o);
+		return this.lambdas.contains((String)o);
 	}
 
 	public boolean isLeftSide(Object o)
 	{
-		return this.leftSides.contains(o);
+		return this.leftSides.contains((String)o);
 	}
 
 	@Override
@@ -399,17 +401,17 @@ public class Canvas extends AbstractCanvas
 
 	public boolean isNonTerminal(Object o)
 	{
-		return this.nterminals.contains(o);
+		return this.nterminals.contains((String)o);
 	}
 
 	public boolean isStart(Object o)
 	{
-		return this.start.contains(o);
+		return this.start.contains((String)o);
 	}
 
 	public boolean isTerminal(Object o)
 	{
-		return this.terminals.contains(o);
+		return this.terminals.contains((String)o);
 	}
 
 	@Override

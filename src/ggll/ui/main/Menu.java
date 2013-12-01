@@ -1,10 +1,11 @@
 package ggll.ui.main;
 
+import ggll.core.list.ExtendedList;
 import ggll.ui.canvas.AbstractCanvas;
 import ggll.ui.file.FileNames;
 import ggll.ui.main.ThemeManager.Theme;
-import ggll.ui.project.FileManager;
 import ggll.ui.project.Context;
+import ggll.ui.project.FileManager;
 import ggll.ui.project.tree.Tree;
 import ggll.ui.resource.LangResource;
 
@@ -12,7 +13,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
-import java.util.ArrayList;
 
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -58,7 +58,7 @@ public class Menu extends JMenuBar
 	public final static String WINDOW = "Window";
 	Object context;
 	int contextDesc;
-	ArrayList<String> menus;
+	ExtendedList<String> menus;
 	MenuModel model;
 
 	IMainWindow window;
@@ -66,7 +66,7 @@ public class Menu extends JMenuBar
 	public Menu(String[] menus, IMainWindow window, Object context, MenuModel model)
 	{
 		this.window = window;
-		this.menus = new ArrayList<String>();
+		this.menus = new ExtendedList<String>();
 		this.context = context;
 		this.model = model;
 		if (context instanceof AbstractCanvas)
@@ -81,16 +81,13 @@ public class Menu extends JMenuBar
 		{
 			contextDesc = DEFAULT_CONTEXT;
 		}
-		for (String m : menus)
-		{
-			this.menus.add(m);
-		}
+		this.menus.addAll(menus);
 	}
 
 	private JMenu createEditMenu()
 	{
 		JMenu edit = new JMenu("Edit");
-		final ArrayList<String> Ebuttons = new ArrayList<String>();
+		final ExtendedList<String> Ebuttons = new ExtendedList<String>();
 		edit.setMnemonic(KeyEvent.VK_E);
 		JMenuItem undo = new JMenuItem("Undo");
 		undo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, ActionEvent.CTRL_MASK));
@@ -109,13 +106,13 @@ public class Menu extends JMenuBar
 		JMenuItem findReplace = new JMenuItem("Find/Replace...");
 		findReplace.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F, ActionEvent.CTRL_MASK));
 		JMenuItem preferences = new JMenuItem("Preferences...");
-		Ebuttons.add(undo.getText());
-		Ebuttons.add(redo.getText());
-		Ebuttons.add(copy.getText());
-		Ebuttons.add(cut.getText());
-		Ebuttons.add(paste.getText());
-		Ebuttons.add(zoomIn.getText());
-		Ebuttons.add(zoomOut.getText());
+		Ebuttons.append(undo.getText());
+		Ebuttons.append(redo.getText());
+		Ebuttons.append(copy.getText());
+		Ebuttons.append(cut.getText());
+		Ebuttons.append(paste.getText());
+		Ebuttons.append(zoomIn.getText());
+		Ebuttons.append(zoomOut.getText());
 
 		undo.setEnabled(model.undo);
 		redo.setEnabled(model.redo);
@@ -143,8 +140,8 @@ public class Menu extends JMenuBar
 	private JMenu createFileMenu()
 	{
 		JMenu mFile = new JMenu(FILE);
-		final ArrayList<String> PMbuttons = new ArrayList<String>();
-		final ArrayList<String> Ebuttons = new ArrayList<String>();
+		final ExtendedList<String> PMbuttons = new ExtendedList<String>();
+		final ExtendedList<String> Ebuttons = new ExtendedList<String>();
 
 		JMenuItem grammar = new JMenuItem(LangResource.new_gram);
 		grammar.addActionListener(new ActionListener()
@@ -159,7 +156,7 @@ public class Menu extends JMenuBar
 					try
 					{
 						fileManager.createFile(fileName, new FileNames(FileNames.GRAM_EXTENSION));
-						Tree.reload(Context.getProject().getProjectsRootPath());						
+						Tree.reload(Context.getProject().getProjectsRootPath());
 					}
 					catch (IOException e1)
 					{
@@ -233,12 +230,12 @@ public class Menu extends JMenuBar
 			}
 		});
 
-		PMbuttons.add(saveAll.getText());
-		PMbuttons.add(quit.getText());
-		Ebuttons.add(save.getText());
-		Ebuttons.add(print.getText());
-		Ebuttons.add(png.getText());
-		Ebuttons.add(ebnf.getText());
+		PMbuttons.append(saveAll.getText());
+		PMbuttons.append(quit.getText());
+		Ebuttons.append(save.getText());
+		Ebuttons.append(print.getText());
+		Ebuttons.append(png.getText());
+		Ebuttons.append(ebnf.getText());
 
 		mFile.add(grammar);
 		mFile.add(new JSeparator());
@@ -379,30 +376,29 @@ public class Menu extends JMenuBar
 
 	public void build()
 	{
-		for (int i = 0; i < menus.size(); i++)
+		for(String menu : menus.getAll())		
 		{
-			String m = menus.get(i);
-			if (m.equals(EDIT))
+			if (menu.equals(EDIT))
 			{
 				this.add(createEditMenu());
 			}
-			else if (m.equals(FILE))
+			else if (menu.equals(FILE))
 			{
 				this.add(createFileMenu());
 			}
-			else if (m.equals(OPTIONS))
+			else if (menu.equals(OPTIONS))
 			{
 				this.add(createOptionsMenu());
 			}
-			else if (m.equals(PROJECT))
+			else if (menu.equals(PROJECT))
 			{
 				this.add(createProjectMenu());
 			}
-			else if (m.equals(HELP))
+			else if (menu.equals(HELP))
 			{
 				this.add(createHelpMenu());
 			}
-			else if (m.equals(WINDOW))
+			else if (menu.equals(WINDOW))
 			{
 				this.add(createWindowMenu());
 			}

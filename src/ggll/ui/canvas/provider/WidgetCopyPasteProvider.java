@@ -1,7 +1,8 @@
 package ggll.ui.canvas.provider;
 
+import ggll.core.list.ExtendedList;
 import ggll.ui.canvas.AbstractCanvas;
-import ggll.ui.canvas.action.WidgetSelection;
+import ggll.ui.canvas.action.SelectionAction;
 import ggll.ui.canvas.state.Connection;
 import ggll.ui.canvas.state.Node;
 import ggll.ui.resource.CanvasResource;
@@ -46,7 +47,7 @@ public class WidgetCopyPasteProvider
 	{
 		Widget widget;
 		boolean hasSelection = false;
-		WidgetSelection ws = new WidgetSelection(canvas);
+		SelectionAction ws = new SelectionAction(canvas);
 		for (Object w : widgets)
 		{
 			if (w instanceof Set<?>)
@@ -114,8 +115,8 @@ public class WidgetCopyPasteProvider
 		Object contents = ClipboardHelper.getClipboardContents();
 		PointerInfo pi = MouseInfo.getPointerInfo();
 		Point pm = canvas.convertLocalToScene(pi.getLocation());
-		ArrayList<Node> nodes = new ArrayList<Node>();
-		ArrayList<Connection> connections = new ArrayList<Connection>();
+		ExtendedList<Node> nodes = new ExtendedList<Node>();
+		ExtendedList<Connection> connections = new ExtendedList<Connection>();
 		Point firstNode = null;
 		Point originalFirstNode = null;
 		HashMap<String, String> oldNewNames = new HashMap<String, String>();
@@ -125,15 +126,15 @@ public class WidgetCopyPasteProvider
 			{
 				if (obj instanceof Connection)
 				{
-					connections.add((Connection) obj);
+					connections.append((Connection) obj);
 				}
 				else if (obj instanceof Node)
 				{
-					nodes.add((Node) obj);
+					nodes.append((Node) obj);
 				}
 			}
 		}
-		for (Node n : nodes)
+		for (Node n : nodes.getAll())
 		{
 			if (canvas.findWidget(n.getName()) != null)
 			{
@@ -187,7 +188,7 @@ public class WidgetCopyPasteProvider
 			canvas.getCanvasState().update(canvas);
 			monitor.firePropertyChange("undoable", null, "Add");
 		}
-		for (Connection c : connections)
+		for (Connection c : connections.getAll())
 		{
 			String newSource = oldNewNames.get(c.getSource());
 			if (newSource != null)

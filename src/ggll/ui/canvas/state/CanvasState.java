@@ -1,5 +1,6 @@
 package ggll.ui.canvas.state;
 
+import ggll.core.list.ExtendedList;
 import ggll.ui.canvas.AbstractCanvas;
 import ggll.ui.canvas.CanvasFactory;
 import ggll.ui.canvas.widget.IconNodeWidgetExt;
@@ -11,7 +12,6 @@ import ggll.ui.resource.CanvasResource;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -61,10 +61,10 @@ public class CanvasState implements Serializable, PropertyChangeListener
 
 	public List<String> getConnections()
 	{
-		ArrayList<String> list = new ArrayList<String>();
+		ExtendedList<String> list = new ExtendedList<String>();
 		list.addAll(connections.keySet());
-		Collections.sort(list);
-		return list;
+		Collections.sort(list.getAll());
+		return list.getAll();
 	}
 
 	public int getLastCustomNode()

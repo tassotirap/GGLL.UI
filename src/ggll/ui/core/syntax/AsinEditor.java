@@ -107,22 +107,22 @@ public class AsinEditor
 		CanvasState canvasState = canvas.getCanvasState();
 		logicDiagram = new SyntaxModel();
 
-		for (String name : canvas.getTerminals())
+		for (String name : canvas.getTerminals().getAll())
 		{
 			addAndRenameNode(canvasState, name, SyntaxDefinitions.Terminal);
 		}
 
-		for (String name : canvas.getNterminals())
+		for (String name : canvas.getNterminals().getAll())
 		{
 			addAndRenameNode(canvasState, name, SyntaxDefinitions.NTerminal);
 		}
 
-		for (String name : canvas.getLeftSides())
+		for (String name : canvas.getLeftSides().getAll())
 		{
 			addAndRenameNode(canvasState, name, SyntaxDefinitions.LeftSide);
 		}
 
-		for (String name : canvas.getLambdas())
+		for (String name : canvas.getLambdas().getAll())
 		{
 			Node node = canvasState.findNode(name);
 			if (node != null)
@@ -137,17 +137,17 @@ public class AsinEditor
 			}
 		}
 
-		for (String name : canvas.getStart())
+		for (String name : canvas.getStart().getAll())
 		{
 			addAndRenameNode(canvasState, name, SyntaxDefinitions.Start);
 		}
 
-		for (String name : canvas.getSuccessors())
+		for (String name : canvas.getSuccessors().getAll())
 		{
 			addConnection(canvasState, name, SyntaxDefinitions.SucConnection);
 		}
 
-		for (String name : canvas.getAlternatives())
+		for (String name : canvas.getAlternatives().getAll())
 		{
 			addConnection(canvasState, name, SyntaxDefinitions.AltConnection);
 		}
@@ -159,7 +159,7 @@ public class AsinEditor
 		if (logicDiagram.isNode(syntaxElement))
 		{
 			SyntaxModel syntaxModel = (SyntaxModel) syntaxElement;
-			List<NodeLabel> labels = syntaxModel.getChildrenAsLabels();
+			List<NodeLabel> labels = syntaxModel.getChildrenAsLabels().getAll();
 			for (int i = 0; i < labels.size(); i++)
 			{
 				if (labels.get(i).getLabelContents().equals(oldName))

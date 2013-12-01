@@ -1,5 +1,6 @@
 package ggll.ui.project;
 
+import ggll.core.list.ExtendedList;
 import ggll.ui.canvas.AbstractCanvas;
 import ggll.ui.component.TextAreaComponent;
 import ggll.ui.file.FileNames;
@@ -12,8 +13,6 @@ import ggll.ui.view.UnsavedViewRepository;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.JOptionPane;
 
@@ -37,9 +36,9 @@ public final class Context
 
 	public static void exit()
 	{
-		ArrayList<AbstractView> unsavedViews = getUnsavedViews();
+		ExtendedList<AbstractView> unsavedViews = getUnsavedViews();
 
-		for (AbstractView dynamicView : unsavedViews)
+		for (AbstractView dynamicView : unsavedViews.getAll())
 		{
 			int option = JOptionPane.showConfirmDialog(getMainWindow().getFrame(), "Would you like to save '" + dynamicView.getTitle().replace(IMainWindow.UNSAVED_PREFIX, "") + "' before exiting?");
 			if (option == JOptionPane.CANCEL_OPTION)
@@ -62,12 +61,12 @@ public final class Context
 		return Context.mainWindow;
 	}
 
-	public static List<File> getOpenedFiles()
+	public static ExtendedList<File> getOpenedFiles()
 	{
-		List<File> filesOpened = project.getOpenedFiles();
-		if (filesOpened.size() == 0)
+		ExtendedList<File> filesOpened = project.getOpenedFiles();
+		if (filesOpened.count() == 0)
 		{
-			Context.project.getOpenedFiles().add(project.getGrammarFile().get(0));
+			Context.project.getOpenedFiles().append(project.getGrammarFile().get(0));
 		}
 		return filesOpened;
 	}
@@ -82,7 +81,7 @@ public final class Context
 		return Context.unViewManager;
 	}
 
-	public static ArrayList<AbstractView> getUnsavedViews()
+	public static ExtendedList<AbstractView> getUnsavedViews()
 	{
 		return Context.unViewManager.getUnsavedViews();
 	}
