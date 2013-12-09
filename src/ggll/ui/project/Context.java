@@ -1,8 +1,7 @@
 package ggll.ui.project;
 
 import ggll.core.list.ExtendedList;
-import ggll.ui.canvas.AbstractCanvas;
-import ggll.ui.component.TextAreaComponent;
+import ggll.ui.canvas.Canvas;
 import ggll.ui.file.FileNames;
 import ggll.ui.main.IMainWindow;
 import ggll.ui.main.MainWindow;
@@ -10,6 +9,8 @@ import ggll.ui.util.print.ComponentPrinter;
 import ggll.ui.util.print.TextPrinter;
 import ggll.ui.view.AbstractView;
 import ggll.ui.view.UnsavedViewRepository;
+import ggll.ui.view.component.AbstractComponent;
+import ggll.ui.view.component.TextAreaComponent;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,21 +23,26 @@ public final class Context
 	private static Project project;
 	private static FileManager fileManager;
 	private static UnsavedViewRepository unViewManager;
-	private static AbstractCanvas activeScene;
+	private static Canvas activeScene;
 
 	public static void closeFile(String fileName)
 	{
-		Context.fileManager.closeFile(fileName);
+		fileManager.closeFile(fileName);
 	}
 
 	public static void createFile(String name, FileNames extension) throws IOException
 	{
-		Context.fileManager.createFile(name, extension);
+		fileManager.createFile(name, extension);
+	}
+	
+	public static void openFile(String path, boolean verifyOpen)
+	{
+		fileManager.openFile(path, verifyOpen);
 	}
 
 	public static void exit()
 	{
-		ExtendedList<AbstractView> unsavedViews = getUnsavedViews();
+		ExtendedList<AbstractView> unsavedViews = unViewManager.getUnsavedViews();
 
 		for (AbstractView dynamicView : unsavedViews.getAll())
 		{
@@ -51,7 +57,7 @@ public final class Context
 		System.exit(0);
 	}
 
-	public static AbstractCanvas getActiveScene()
+	public static Canvas getActiveScene()
 	{
 		return activeScene;
 	}
@@ -76,21 +82,17 @@ public final class Context
 		return Context.project;
 	}
 
-	public static UnsavedViewRepository getUnsavedViewManager()
+	
+	public static AbstractView getUnsavedView(String file)
 	{
-		return Context.unViewManager;
+		return Context.unViewManager.getUnsavedView(file);
 	}
-
-	public static ExtendedList<AbstractView> getUnsavedViews()
+	
+	public static boolean hasUnsavedView(AbstractView view)
 	{
-		return Context.unViewManager.getUnsavedViews();
+		return Context.unViewManager.hasUnsavedView(view);
 	}
-
-	public static boolean hasUnsavedView(AbstractView dynamicView)
-	{
-		return Context.unViewManager.hasUnsavedView(dynamicView);
-	}
-
+	
 	public static boolean hasUnsavedView(String file)
 	{
 		return Context.unViewManager.hasUnsavedView(file);
@@ -112,9 +114,9 @@ public final class Context
 		{
 			TextPrinter.printText(((TextAreaComponent) object).getText());
 		}
-		else if (object instanceof AbstractCanvas)
+		else if (object instanceof Canvas)
 		{
-			ComponentPrinter.printWidget((AbstractCanvas) object);
+			ComponentPrinter.printWidget((Canvas) object);
 		}
 	}
 
@@ -125,15 +127,15 @@ public final class Context
 
 	public static void saveAllFiles()
 	{
-		Context.fileManager.saveAllFiles(getUnsavedViews());
+		Context.fileManager.saveAllFiles(unViewManager.getUnsavedViews());
 	}
 
-	public static void saveFile(Object object)
+	public static void saveFile(AbstractComponent object)
 	{
-		Context.fileManager.saveFileObject(object);
+		Context.fileManager.saveFileObject((AbstractComponent)object);
 	}
 
-	public static void setActiveScene(AbstractCanvas activeScene)
+	public static void setActiveScene(Canvas activeScene)
 	{
 		Context.activeScene = activeScene;
 	}

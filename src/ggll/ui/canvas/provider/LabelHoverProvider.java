@@ -1,6 +1,6 @@
 package ggll.ui.canvas.provider;
 
-import ggll.ui.canvas.AbstractCanvas;
+import ggll.ui.canvas.Canvas;
 
 import java.awt.Color;
 
@@ -11,9 +11,9 @@ import org.netbeans.api.visual.widget.Widget;
 
 public class LabelHoverProvider implements TwoStateHoverProvider
 {
-	private AbstractCanvas canvas;
+	private Canvas canvas;
 
-	public LabelHoverProvider(AbstractCanvas canvas)
+	public LabelHoverProvider(Canvas canvas)
 	{
 		this.canvas = canvas;
 	}

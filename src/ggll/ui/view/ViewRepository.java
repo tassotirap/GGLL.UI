@@ -1,18 +1,18 @@
 package ggll.ui.view;
 
 import ggll.core.list.ExtendedList;
-import ggll.ui.component.AbstractComponent;
-import ggll.ui.component.GeneratedGrammarComponent;
-import ggll.ui.component.OutlineComponent;
-import ggll.ui.component.OutputComponent;
-import ggll.ui.component.ParserComponent;
-import ggll.ui.component.ProjectsComponent;
-import ggll.ui.component.SemanticStackComponent;
-import ggll.ui.component.SyntaxStackComponent;
 import ggll.ui.icon.IconFactory;
 import ggll.ui.icon.IconFactory.IconType;
 import ggll.ui.project.Context;
 import ggll.ui.tab.TabWindowList.TabPlace;
+import ggll.ui.view.component.AbstractComponent;
+import ggll.ui.view.component.GeneratedGrammarComponent;
+import ggll.ui.view.component.OutlineComponent;
+import ggll.ui.view.component.OutputComponent;
+import ggll.ui.view.component.ParserComponent;
+import ggll.ui.view.component.ProjectsComponent;
+import ggll.ui.view.component.SemanticStackComponent;
+import ggll.ui.view.component.SyntaxStackComponent;
 import net.infonode.docking.DockingWindow;
 import net.infonode.docking.TabWindow;
 import net.infonode.docking.util.ViewMap;
@@ -39,18 +39,18 @@ public class ViewRepository
 		views.append(view);
 	}
 
+	private void createFilesView()
+	{
+		AbstractView abstractView = new AbstractView("Files", iconFactory.getIcon(IconType.PROJECT_ICON), new ProjectsComponent(Context.getProject()), getNextViewId());
+		tabWindowList.get(TabPlace.CENTER_RIGHT_TABS.ordinal()).addTab(abstractView);
+		viewMap.addView(0, abstractView);
+	}
+
 	private void createGrammarView()
 	{
 		AbstractView abstractView = new AbstractView("Grammar", iconFactory.getIcon(IconType.GRAMMAR_ICON), new GeneratedGrammarComponent(Context.getActiveScene()), getNextViewId());
 		tabWindowList.get(TabPlace.BOTTOM_TABS.ordinal()).addTab(abstractView);
 		viewMap.addView(2, abstractView);
-	}
-
-	private void createViewView()
-	{
-		AbstractView abstractView = new AbstractView("View", iconFactory.getIcon(IconType.OVERVIEW_CON), new OutlineComponent(Context.getActiveScene()), getNextViewId());
-		tabWindowList.get(TabPlace.CENTER_RIGHT_TABS.ordinal()).addTab(abstractView);
-		viewMap.addView(1, abstractView);
 	}
 
 	private void createOutputView()
@@ -67,13 +67,6 @@ public class ViewRepository
 		viewMap.addView(6, abstractView);
 	}
 
-	private void createFilesView()
-	{
-		AbstractView abstractView = new AbstractView("Files", iconFactory.getIcon(IconType.PROJECT_ICON), new ProjectsComponent(Context.getProject()), getNextViewId());
-		tabWindowList.get(TabPlace.CENTER_RIGHT_TABS.ordinal()).addTab(abstractView);
-		viewMap.addView(0, abstractView);
-	}
-
 	private void createSemanticStackView()
 	{
 		AbstractView abstractView = new AbstractView("Semantic Stack", iconFactory.getIcon(IconType.SEMANTIC_STACK_ICON), new SemanticStackComponent(Context.getActiveScene()), getNextViewId());
@@ -86,6 +79,13 @@ public class ViewRepository
 		AbstractView abstractView = new AbstractView("Syntax Stack", iconFactory.getIcon(IconType.SYNTACTIC_STACK_ICON), new SyntaxStackComponent(Context.getActiveScene()), getNextViewId());
 		tabWindowList.get(TabPlace.BOTTOM_TABS.ordinal()).addTab(abstractView);
 		viewMap.addView(3, abstractView);
+	}
+
+	private void createViewView()
+	{
+		AbstractView abstractView = new AbstractView("View", iconFactory.getIcon(IconType.OVERVIEW_CON), new OutlineComponent(Context.getActiveScene()), getNextViewId());
+		tabWindowList.get(TabPlace.CENTER_RIGHT_TABS.ordinal()).addTab(abstractView);
+		viewMap.addView(1, abstractView);
 	}
 
 	private void removeView(AbstractView abstractView)
@@ -156,11 +156,6 @@ public class ViewRepository
 	}
 	
 
-	public ExtendedList<TabWindow> getTabWindowList()
-	{
-		return tabWindowList;
-	}
-
 	public int getNextViewId()
 	{
 		int max = 0;
@@ -172,6 +167,11 @@ public class ViewRepository
 			}
 		}
 		return max + 1;
+	}
+
+	public ExtendedList<TabWindow> getTabWindowList()
+	{
+		return tabWindowList;
 	}
 
 	public AbstractView getView(AbstractComponent component)

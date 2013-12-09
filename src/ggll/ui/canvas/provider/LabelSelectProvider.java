@@ -1,6 +1,6 @@
 package ggll.ui.canvas.provider;
 
-import ggll.ui.canvas.AbstractCanvas;
+import ggll.ui.canvas.Canvas;
 
 import java.awt.Color;
 import java.awt.Point;
@@ -12,9 +12,9 @@ import org.netbeans.api.visual.widget.Widget;
 
 public class LabelSelectProvider extends CanvasSelectProvider
 {
-	private AbstractCanvas canvas;
+	private Canvas canvas;
 
-	public LabelSelectProvider(AbstractCanvas canvas)
+	public LabelSelectProvider(Canvas canvas)
 	{
 		super(canvas);
 		this.canvas = canvas;

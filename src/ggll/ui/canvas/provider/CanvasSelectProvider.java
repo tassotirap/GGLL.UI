@@ -1,6 +1,6 @@
 package ggll.ui.canvas.provider;
 
-import ggll.ui.canvas.AbstractCanvas;
+import ggll.ui.canvas.Canvas;
 
 import java.awt.Point;
 
@@ -9,9 +9,9 @@ import org.netbeans.api.visual.widget.Widget;
 
 public abstract class CanvasSelectProvider implements SelectProvider
 {
-	private AbstractCanvas canvas;
+	private Canvas canvas;
 
-	public CanvasSelectProvider(AbstractCanvas canvas)
+	public CanvasSelectProvider(Canvas canvas)
 	{
 		this.canvas = canvas;
 	}

@@ -1,24 +1,23 @@
 package ggll.ui.main;
 
-import ggll.ui.canvas.CanvasFactory;
-import ggll.ui.component.AbstractComponent;
-import ggll.ui.component.ComponentListener;
-import ggll.ui.component.EmptyComponent;
-import ggll.ui.component.FileComponent;
-import ggll.ui.component.GrammarComponent;
-import ggll.ui.component.ParserComponent;
-import ggll.ui.component.TextAreaComponent;
+import ggll.ui.canvas.CanvasRepository;
 import ggll.ui.file.GrammarFile;
 import ggll.ui.main.Menu.MenuModel;
 import ggll.ui.main.ThemeManager.Theme;
 import ggll.ui.menubar.MenuBarFactory;
 import ggll.ui.project.Context;
-import ggll.ui.project.FileManager;
 import ggll.ui.tab.TabWindowList;
 import ggll.ui.tab.TabWindowList.TabPlace;
 import ggll.ui.toolbar.ToolBarFactory;
 import ggll.ui.view.AbstractView;
 import ggll.ui.view.ViewRepository;
+import ggll.ui.view.component.AbstractComponent;
+import ggll.ui.view.component.AbstractFileComponent;
+import ggll.ui.view.component.ComponentListener;
+import ggll.ui.view.component.EmptyComponent;
+import ggll.ui.view.component.GrammarComponent;
+import ggll.ui.view.component.ParserComponent;
+import ggll.ui.view.component.TextAreaComponent;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -78,7 +77,7 @@ public class MainWindow implements ComponentListener, IMainWindow
 	private void createDefaultViews()
 	{
 		GrammarFile grammarFile = Context.getProject().getGrammarFile().get(0);
-		Context.setActiveScene(CanvasFactory.getInstance(grammarFile.getAbsolutePath()));
+		Context.setActiveScene(CanvasRepository.getInstance(grammarFile.getAbsolutePath()));
 		viewRepository.createDefaultViews();
 	}
 
@@ -142,11 +141,9 @@ public class MainWindow implements ComponentListener, IMainWindow
 	private void openFiles()
 	{
 		List<File> filesToOpen = Context.getOpenedFiles().getAll();
-		FileManager fileManager = new FileManager();
-
 		for (int i = 0; i < filesToOpen.size(); i++)
 		{
-			fileManager.openFile(filesToOpen.get(i).getAbsolutePath(), false);
+			Context.openFile(filesToOpen.get(i).getAbsolutePath(), false);
 		}
 	}
 
@@ -231,7 +228,7 @@ public class MainWindow implements ComponentListener, IMainWindow
 			AbstractView view = new AbstractView(title, icon, componentModel, fileName, 2);
 			if (componentModel instanceof GrammarComponent)
 			{
-				Context.setActiveScene(CanvasFactory.getInstance(fileName));
+				Context.setActiveScene(CanvasRepository.getInstance(fileName));
 			}
 
 			componentModel.addComponentListener(this);
@@ -264,7 +261,7 @@ public class MainWindow implements ComponentListener, IMainWindow
 			AbstractView view = viewRepository.getView(source);
 			if (!view.getTitle().startsWith(UNSAVED_PREFIX))
 				view.getViewProperties().setTitle(UNSAVED_PREFIX + view.getTitle());
-			Context.setUnsavedView(((FileComponent) source).getPath(), view);
+			Context.setUnsavedView(((AbstractFileComponent) source).getPath(), view);
 		}
 	}
 
@@ -336,7 +333,7 @@ public class MainWindow implements ComponentListener, IMainWindow
 			}
 			return;
 		}
-		if (component instanceof FileComponent)
+		if (component instanceof AbstractFileComponent)
 		{
 			MenuModel model = new MenuModel();
 			model.save = true;
@@ -363,8 +360,8 @@ public class MainWindow implements ComponentListener, IMainWindow
 					model.zoomIn = true;
 					model.zoomOut = true;
 					Context.setActiveScene(grammar.getCanvas());
-					addToolBar(toolBarFactory.createToolBar(Context.getActiveScene(), true, true), true, true);
-					addMenuBar(menuBarFactory.createMenuBar(Context.getActiveScene(), model), true, true);
+					addToolBar(toolBarFactory.createToolBar(grammar, true, true), true, true);
+					addMenuBar(menuBarFactory.createMenuBar(grammar, model), true, true);
 
 				}
 			}

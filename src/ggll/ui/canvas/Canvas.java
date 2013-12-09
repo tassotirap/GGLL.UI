@@ -1,28 +1,46 @@
 package ggll.ui.canvas;
 
+import ggll.core.list.ExtendedList;
 import ggll.ui.canvas.action.ExtendedActionFactory;
 import ggll.ui.canvas.provider.GridProvider;
 import ggll.ui.canvas.provider.LineProvider;
 import ggll.ui.canvas.provider.NodeSelectProvider;
 import ggll.ui.canvas.state.CanvasState;
+import ggll.ui.canvas.state.CanvasStateRepository;
 import ggll.ui.canvas.state.Connection;
 import ggll.ui.canvas.state.Node;
-import ggll.ui.canvas.state.StaticStateManager;
-import ggll.ui.canvas.state.VolatileStateManager;
 import ggll.ui.canvas.widget.GridWidget;
 import ggll.ui.canvas.widget.LabelWidgetExt;
 import ggll.ui.canvas.widget.LineWidget;
 import ggll.ui.canvas.widget.MarkedWidget;
 import ggll.ui.canvas.widget.TypedWidget;
+import ggll.ui.images.GGLLImages;
 import ggll.ui.resource.CanvasResource;
 import ggll.ui.util.Log;
 
+import java.awt.Component;
+import java.awt.Cursor;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.KeyboardFocusManager;
+import java.awt.Point;
+import java.awt.RenderingHints;
+import java.awt.Toolkit;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.image.BufferedImage;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.io.File;
+import java.util.AbstractMap;
 import java.util.Collection;
+import java.util.HashMap;
+
+import javax.swing.JComponent;
 
 import org.netbeans.api.visual.anchor.Anchor.Direction;
 import org.netbeans.api.visual.anchor.AnchorFactory;
+import org.netbeans.api.visual.graph.GraphScene;
 import org.netbeans.api.visual.router.Router;
 import org.netbeans.api.visual.router.RouterFactory;
 import org.netbeans.api.visual.widget.ConnectionWidget;
@@ -30,62 +48,122 @@ import org.netbeans.api.visual.widget.ConnectionWidget.RoutingPolicy;
 import org.netbeans.api.visual.widget.LayerWidget;
 import org.netbeans.api.visual.widget.Widget;
 
-public class Canvas extends AbstractCanvas
+public class Canvas extends GraphScene.StringGraph implements PropertyChangeListener
 {
-	private static int defaultBufferCapacity = 20;
+	private static final double MIN_ZOOM = 0.5;
+	private static final double MAX_ZOOM = 1.5;
+
+	// Canvas States
+	private CanvasState currentCanvasState;
+	private CanvasStateRepository canvasStateRepository;
+
+	private ExtendedActionFactory actionFactory = new ExtendedActionFactory(this);
+
+	// Monitors
+	private PropertyChangeSupport monitor;
+
+	private boolean showingGrid;
+	private boolean showingLines;
 
 	private Router activeRouter;
-
 	private LayerWidget backgroundLayer = new LayerWidget(this);
 	private LayerWidget connectionLayer = new LayerWidget(this);
 	private LayerWidget interractionLayer = new LayerWidget(this);
 	private LayerWidget mainLayer = new LayerWidget(this);
-	
-	
 
-	private String connStrategy;
-	private String cursor;
+	private String connectionStrategy;
 	private String moveStrategy;
 
-	private CanvasState state;
+	private AbstractMap<String, Cursor> cursors = new HashMap<String, Cursor>();
+	private CanvasDecorator decorator = new CanvasDecorator(this);
+	private ExtendedList<String> alternatives = new ExtendedList<String>();
+	private ExtendedList<String> labels = new ExtendedList<String>();
+	private ExtendedList<String> lambdas = new ExtendedList<String>();
+	private ExtendedList<String> leftSides = new ExtendedList<String>();
+	private ExtendedList<String> nterminals = new ExtendedList<String>();
+	private ExtendedList<String> start = new ExtendedList<String>();
+	private ExtendedList<String> successors = new ExtendedList<String>();
+	private ExtendedList<String> terminals = new ExtendedList<String>();
+
+	private String file;
 
 	public Canvas(String cursor, String connectionStrategy, String movementStrategy, String file)
 	{
-		super(cursor, connectionStrategy, movementStrategy, file);
 		try
 		{
-			this.connStrategy = connectionStrategy;
+			this.connectionStrategy = connectionStrategy;
 			this.moveStrategy = movementStrategy;
-			this.cursor = cursor;
+			this.file = file;
+			this.currentCanvasState = CanvasState.read(file);
+			this.canvasStateRepository = new CanvasStateRepository(this);
 
-			this.staticStateManager = new StaticStateManager();
-			this.staticStateManager.setFile(new File(file));
-			Object oState = staticStateManager.read();
-			if (oState == null || !(oState instanceof CanvasState))
+			this.monitor = new PropertyChangeSupport(this);
+
+			createCursors();
+			addChild(backgroundLayer);
+			addChild(mainLayer);
+			addChild(connectionLayer);
+			addChild(interractionLayer);
+
+			getActions().addAction(actionFactory.getAction(ExtendedActionFactory.SELECT));
+			getActions().addAction(actionFactory.getAction(ExtendedActionFactory.SELECT_LABEL));
+			getActions().addAction(actionFactory.getAction(ExtendedActionFactory.CREATE_NODE));
+			getActions().addAction(actionFactory.getAction(ExtendedActionFactory.POPUP_MENU_MAIN));
+			getActions().addAction(actionFactory.getAction(ExtendedActionFactory.NODE_HOVER));
+			getActions().addAction(actionFactory.getAction(ExtendedActionFactory.LABEL_HOVER));
+			getActions().addAction(actionFactory.getAction(ExtendedActionFactory.MOUSE_CENTERED_ZOOM));
+			getActions().addAction(actionFactory.getAction(ExtendedActionFactory.PAN));
+			getActions().addAction(actionFactory.getAction(ExtendedActionFactory.RECTANGULAR_SELECT));
+			getActions().addAction(actionFactory.getAction(ExtendedActionFactory.DELETE));
+			getActions().addAction(actionFactory.getAction(ExtendedActionFactory.COPY_PASTE));
+			setActiveTool(cursor);
+
+			if (currentCanvasState.getPreferences().getConnectionStrategy() != null)
 			{
-				state = new CanvasState(file);
+				setConnectionStrategy(currentCanvasState.getPreferences().getConnectionStrategy());
 			}
 			else
 			{
-				state = (CanvasState) oState;
+				setConnectionStrategy(connectionStrategy);
 			}
-			this.staticStateManager.setObject(state);
-			this.volatileStateManager = new VolatileStateManager(state, defaultBufferCapacity);
-			this.volatileStateManager.init();
-			this.volatileStateManager.getMonitor().addPropertyChangeListener("object_state", this);
-			this.volatileStateManager.getMonitor().addPropertyChangeListener("writing", this);
-			this.volatileStateManager.getMonitor().addPropertyChangeListener("undoable", this);
+			if (currentCanvasState.getPreferences().getMoveStrategy() != null)
+			{
+				setMoveStrategy(currentCanvasState.getPreferences().getMoveStrategy());
+			}
+			else
+			{
+				setMoveStrategy(moveStrategy);
+			}
 
-			this.monitor = new PropertyChangeSupport(this);
-			this.monitor.addPropertyChangeListener("object_state", this);
-			this.monitor.addPropertyChangeListener("writing", state);
-			this.init();
-			this.updateState(state);
+			this.updateState(currentCanvasState);
 		}
 		catch (Exception e)
 		{
 			e.printStackTrace();
 		}
+	}
+
+	private void clearWidgets()
+	{
+		Object[] edges = this.getEdges().toArray();
+		for (int i = 0; i < edges.length; i++)
+		{
+			this.removeEdgeSafely((String) edges[i]);
+		}
+
+		Object[] nodes = this.getNodes().toArray();
+		for (int i = 0; i < nodes.length; i++)
+		{
+			this.removeNodeSafely((String) nodes[i]);
+		}
+		
+		getTerminals().removeAll();
+		getNterminals().removeAll();
+		getLeftSides().removeAll();
+		getLambdas().removeAll();
+		getStart().removeAll();
+		getSuccessors().removeAll();
+		getAlternatives().removeAll();
 	}
 
 	@Override
@@ -172,7 +250,7 @@ public class Canvas extends AbstractCanvas
 			backgroundLayer.addChild(lWidget);
 			widget = lWidget;
 			setShowingLines(true);
-			state.getPreferences().setShowLines(true);
+			currentCanvasState.getPreferences().setShowLines(true);
 		}
 		else if (node.startsWith(GridWidget.class.getCanonicalName()))
 		{
@@ -180,7 +258,7 @@ public class Canvas extends AbstractCanvas
 			backgroundLayer.addChild(gWidget);
 			widget = gWidget;
 			setShowingGrid(true);
-			state.getPreferences().setShowGrid(true);
+			currentCanvasState.getPreferences().setShowGrid(true);
 		}
 		else if (!activeTool.equals(CanvasResource.SELECT))
 		{
@@ -258,67 +336,138 @@ public class Canvas extends AbstractCanvas
 		return widget;
 	}
 
+	public boolean canZoomIn()
+	{
+		return getZoomFactor() < MAX_ZOOM;
+	}
+
+	public boolean canZoomOut()
+	{
+		return getZoomFactor() > MIN_ZOOM;
+	}
+
+	public void createCursors()
+	{
+		Toolkit toolkit = Toolkit.getDefaultToolkit();
+
+		Image image = toolkit.getImage(Canvas.class.getResource(GGLLImages.CURSOS_LEFT_SIDE_ENABLED));
+		cursors.put(CanvasResource.LEFT_SIDE, toolkit.createCustomCursor(image, new Point(0, 0), "Left Side"));
+
+		image = toolkit.getImage(Canvas.class.getResource(GGLLImages.CURSOS_TERMINAL_ENABLED));
+		cursors.put(CanvasResource.TERMINAL, toolkit.createCustomCursor(image, new Point(0, 0), "Terminal"));
+
+		image = toolkit.getImage(Canvas.class.getResource(GGLLImages.CURSOS_N_TERMINAL_ENABLED));
+		cursors.put(CanvasResource.N_TERMINAL, toolkit.createCustomCursor(image, new Point(0, 0), "Non-Terminal"));
+
+		image = toolkit.getImage(Canvas.class.getResource(GGLLImages.CURSOS_LAMBDA_ENABLED));
+		cursors.put(CanvasResource.LAMBDA, toolkit.createCustomCursor(image, new Point(0, 0), "Lambda Alternative"));
+
+		image = toolkit.getImage(Canvas.class.getResource(GGLLImages.CURSOS_SUCCESSOR_ENABLED));
+		cursors.put(CanvasResource.SUCCESSOR, toolkit.createCustomCursor(image, new Point(0, 0), "Successor"));
+
+		image = toolkit.getImage(Canvas.class.getResource(GGLLImages.CURSOS_ALTERNATIVE_ENABLED));
+		cursors.put(CanvasResource.ALTERNATIVE, toolkit.createCustomCursor(image, new Point(0, 0), "Alternative"));
+
+		image = toolkit.getImage(Canvas.class.getResource(GGLLImages.CURSOS_LABEL_ENABLED));
+		cursors.put(CanvasResource.LABEL, toolkit.createCustomCursor(image, new Point(0, 0), "Label"));
+
+		image = toolkit.getImage(Canvas.class.getResource(GGLLImages.CURSOS_START_ENABLED));
+		cursors.put(CanvasResource.START, toolkit.createCustomCursor(image, new Point(0, 0), "Start"));
+	}
+
 	@Override
+	public JComponent createView()
+	{
+		JComponent component = super.createView();
+		component.addMouseListener(new CanvasMouseHandler(this));
+		return component;
+	}
+
 	public Router getActiveRouter()
 	{
 		return activeRouter;
 	}
 
-	@Override
+	public ExtendedList<String> getAlternatives()
+	{
+		return alternatives;
+	}
+
 	public LayerWidget getBackgroundLayer()
 	{
 		return backgroundLayer;
 	}
 
-	@Override
+	public String getCanvasActiveTool()
+	{
+		String tool = super.getActiveTool();
+		if (tool == null)
+		{
+			tool = CanvasResource.SELECT;
+		}
+		return tool;
+	}
+
 	public CanvasDecorator getCanvasDecorator()
 	{
 		return decorator;
 	}
 
-	@Override
-	public CanvasState getCanvasState()
+	public CanvasState getCurrentCanvasState()
 	{
-		return state;
+		return currentCanvasState;
 	}
 
-	@Override
 	public LayerWidget getConnectionLayer()
 	{
 		return connectionLayer;
 	}
 
-	@Override
-	public String getConnStrategy()
+	public String getConnectionStrategy()
 	{
-		return this.connStrategy;
+		return this.connectionStrategy;
 	}
 
-	@Override
+	public String getFile()
+	{
+		return file;
+	}
+
 	public LayerWidget getInterractionLayer()
 	{
 		return interractionLayer;
 	}
 
-	@Override
 	public Collection<?> getLabels()
 	{
 		return labels.getAll();
 	}
 
-	@Override
+	public ExtendedList<String> getLambdas()
+	{
+		return lambdas;
+	}
+
+	public ExtendedList<String> getLeftSides()
+	{
+		return leftSides;
+	}
+
 	public LayerWidget getMainLayer()
 	{
 		return mainLayer;
 	}
 
-	@Override
+	public PropertyChangeSupport getMonitor()
+	{
+		return this.monitor;
+	}
+
 	public String getMoveStrategy()
 	{
 		return moveStrategy;
 	}
 
-	@Override
 	public String getNodeType(Object node)
 	{
 		Widget w = findWidget(node);
@@ -332,61 +481,64 @@ public class Canvas extends AbstractCanvas
 		return null;
 	}
 
-	@Override
-	public void init()
+	public ExtendedList<String> getNterminals()
 	{
-		super.init();
-
-		addChild(backgroundLayer);
-		addChild(mainLayer);
-		addChild(connectionLayer);
-		addChild(interractionLayer);
-
-		getActions().addAction(actionFactory.getAction(ExtendedActionFactory.SELECT));
-		getActions().addAction(actionFactory.getAction(ExtendedActionFactory.SELECT_LABEL));
-		getActions().addAction(actionFactory.getAction(ExtendedActionFactory.CREATE_NODE));
-		getActions().addAction(actionFactory.getAction(ExtendedActionFactory.POPUP_MENU_MAIN));
-		getActions().addAction(actionFactory.getAction(ExtendedActionFactory.NODE_HOVER));
-		getActions().addAction(actionFactory.getAction(ExtendedActionFactory.LABEL_HOVER));
-		getActions().addAction(actionFactory.getAction(ExtendedActionFactory.MOUSE_CENTERED_ZOOM));
-		getActions().addAction(actionFactory.getAction(ExtendedActionFactory.PAN));
-		getActions().addAction(actionFactory.getAction(ExtendedActionFactory.RECTANGULAR_SELECT));
-		getActions().addAction(actionFactory.getAction(ExtendedActionFactory.DELETE));
-		getActions().addAction(actionFactory.getAction(ExtendedActionFactory.COPY_PASTE));
-		setActiveTool(cursor);
-
-		if (state.getPreferences().getConnectionStrategy() != null)
-		{
-			setConnStrategy(state.getPreferences().getConnectionStrategy());
-		}
-		else
-		{
-			setConnStrategy(connStrategy);
-		}
-		if (state.getPreferences().getMoveStrategy() != null)
-		{
-			setMoveStrategy(state.getPreferences().getMoveStrategy());
-		}
-		else
-		{
-			setMoveStrategy(moveStrategy);
-		}
+		return nterminals;
 	}
 
-	@Override
+	public BufferedImage getScreenshot()
+	{
+		BufferedImage bi = new BufferedImage(this.getPreferredSize().width, this.getPreferredSize().height, BufferedImage.TYPE_4BYTE_ABGR);
+		Graphics2D graphics = bi.createGraphics();
+		getScene().paint(graphics);
+		graphics.dispose();
+		return bi;
+	}
+
+	public ExtendedList<String> getStart()
+	{
+		return start;
+	}
+
+	public ExtendedList<String> getSuccessors()
+	{
+		return successors;
+	}
+
+	public ExtendedList<String> getTerminals()
+	{
+		return terminals;
+	}
+
+	/**
+	 * This method is here for a mere convenience, is really essential for the
+	 * canvas itself
+	 * 
+	 * @return the volatile state manager of this canvas
+	 */
+	public CanvasStateRepository getCanvasStateRepository()
+	{
+		return canvasStateRepository;
+	}
+
+	public boolean isAlternative(String edge)
+	{
+		return alternatives.contains(edge);
+	}
+
 	public boolean isLabel(Object o)
 	{
-		return labels.contains((String)o);
+		return labels.contains((String) o);
 	}
 
 	public boolean isLambda(Object o)
 	{
-		return this.lambdas.contains((String)o);
+		return this.lambdas.contains((String) o);
 	}
 
 	public boolean isLeftSide(Object o)
 	{
-		return this.leftSides.contains((String)o);
+		return this.leftSides.contains((String) o);
 	}
 
 	@Override
@@ -401,20 +553,78 @@ public class Canvas extends AbstractCanvas
 
 	public boolean isNonTerminal(Object o)
 	{
-		return this.nterminals.contains((String)o);
+		return this.nterminals.contains((String) o);
+	}
+
+	/**
+	 * @return the showingGrid
+	 */
+	public boolean isShowingGrid()
+	{
+		return showingGrid;
+	}
+
+	/**
+	 * @return the showingLines
+	 */
+	public boolean isShowingLines()
+	{
+		return showingLines;
 	}
 
 	public boolean isStart(Object o)
 	{
-		return this.start.contains((String)o);
+		return this.start.contains((String) o);
+	}
+
+	public boolean isSuccessor(String edge)
+	{
+		return successors.contains(edge);
 	}
 
 	public boolean isTerminal(Object o)
 	{
-		return this.terminals.contains((String)o);
+		return this.terminals.contains((String) o);
+	}
+
+	/**
+	 * painting with antialias
+	 */
+	@Override
+	public void paintChildren()
+	{
+		Object anti = getGraphics().getRenderingHint(RenderingHints.KEY_ANTIALIASING);
+		Object textAnti = getGraphics().getRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING);
+
+		getGraphics().setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		getGraphics().setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+
+		super.paintChildren();
+
+		getGraphics().setRenderingHint(RenderingHints.KEY_ANTIALIASING, anti);
+		getGraphics().setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, textAnti);
 	}
 
 	@Override
+	public void propertyChange(PropertyChangeEvent event)
+	{
+		if (event.getSource() instanceof CanvasStateRepository)
+		{
+			if (event.getPropertyName().equals("object_state"))
+			{
+				this.currentCanvasState = (CanvasState) event.getNewValue();
+				this.updateState(this.currentCanvasState);
+				this.revalidate();
+			}
+			if (event.getPropertyName().equals("writing"))
+			{
+				this.currentCanvasState.reloadFromCanvas(this);
+
+			}
+		}
+		this.monitor.firePropertyChange(event);
+	}
+
 	public void removeEdgeSafely(String edge)
 	{
 		if (isEdge(edge))
@@ -431,7 +641,6 @@ public class Canvas extends AbstractCanvas
 		}
 	}
 
-	@Override
 	public void removeNodeSafely(String node)
 	{
 		if (isLabel(node))
@@ -449,13 +658,11 @@ public class Canvas extends AbstractCanvas
 		}
 	}
 
-	@Override
 	public void select(Object object)
 	{
 		select(object, false);
 	}
 
-	@Override
 	public void select(Object object, boolean invertSelection)
 	{
 		Widget w;
@@ -472,16 +679,29 @@ public class Canvas extends AbstractCanvas
 	}
 
 	@Override
-	public void setConnStrategy(String policy)
+	public void setActiveTool(String activeTool)
+	{
+		super.setActiveTool(activeTool);
+		if (activeTool.equals(CanvasResource.SELECT))
+		{
+			this.setCursor(Cursor.getDefaultCursor());
+		}
+		else
+		{
+			this.setCursor(cursors.get(activeTool));
+		}
+	}
+
+	public void setConnectionStrategy(String policy)
 	{
 		if (policy != null)
 		{
-			state.getPreferences().setConnectionStrategy(policy);
+			currentCanvasState.getPreferences().setConnectionStrategy(policy);
 			if (policy.equals(CanvasResource.R_ORTHOGONAL) || policy.equals(CanvasResource.R_FREE) || policy.equals(CanvasResource.R_DIRECT))
 			{
-				if (!policy.equals(connStrategy) || activeRouter == null)
+				if (!policy.equals(connectionStrategy) || activeRouter == null)
 				{
-					connStrategy = policy;
+					connectionStrategy = policy;
 					if (policy.equals(CanvasResource.R_ORTHOGONAL))
 					{
 						activeRouter = RouterFactory.createOrthogonalSearchRouter(mainLayer);
@@ -499,13 +719,66 @@ public class Canvas extends AbstractCanvas
 		}
 	}
 
-	@Override
+	/**
+	 * Called to give properly give focus to this canvas
+	 */
+	public void setFocused()
+	{
+		getView().grabFocus();
+		Component component = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
+		if (component != null)
+		{
+			if (component.getKeyListeners().length == 0)
+			{
+				component.addKeyListener(new KeyListener()
+				{
+
+					@Override
+					public void keyPressed(KeyEvent e)
+					{
+						for (KeyListener keyListener : getView().getKeyListeners())
+						{
+							keyListener.keyPressed(e);
+						}
+					}
+
+					@Override
+					public void keyReleased(KeyEvent e)
+					{
+						for (KeyListener keyListener : getView().getKeyListeners())
+						{
+							keyListener.keyReleased(e);
+						}
+					}
+
+					@Override
+					public void keyTyped(KeyEvent e)
+					{
+						for (KeyListener keyListener : getView().getKeyListeners())
+						{
+							keyListener.keyTyped(e);
+						}
+					}
+				});
+			}
+		}
+	}
+
+	/**
+	 * 
+	 * @param labels
+	 */
+	public void setLabels(ExtendedList<String> labels)
+	{
+		this.labels = labels;
+	}
+
 	public void setMoveStrategy(String strategy)
 	{
 		MoveTracker moveTracker = new MoveTracker(this);
 		if (strategy != null)
 		{
-			state.getPreferences().setMoveStrategy(strategy);
+			currentCanvasState.getPreferences().setMoveStrategy(strategy);
 			if (strategy.equals(CanvasResource.M_ALIGN) || strategy.equals(CanvasResource.M_SNAP) || strategy.equals(CanvasResource.M_FREE) || strategy.equals(CanvasResource.M_LINES))
 			{
 				if (moveStrategy == null || !moveStrategy.equals(strategy))
@@ -516,32 +789,28 @@ public class Canvas extends AbstractCanvas
 			}
 		}
 	}
-	
-	private void clearWidgets()
-	{
-		for (String element : state.getNodes())
-		{
-			if (findWidget(element) != null)
-			{
-				removeNode(element);
-			}
-		}
 
-		for (String element : state.getConnections())
-		{
-			if (findWidget(element) != null)
-			{
-				removeEdge(element);
-			}
-		}
+	/**
+	 * @param showingGrid
+	 *            the showingGrid to set
+	 */
+	public void setShowingGrid(boolean showingGrid)
+	{
+		this.showingGrid = showingGrid;
+		getCurrentCanvasState().getPreferences().setShowGrid(showingGrid);
 	}
 
-	@Override
+	public void setShowingLines(boolean showingLines)
+	{
+		this.showingLines = showingLines;
+		getCurrentCanvasState().getPreferences().setShowLines(showingLines);
+	}
+
 	public void updateState(CanvasState state)
 	{
 		clearWidgets();
-		this.state = state;
-		setConnStrategy(state.getPreferences().getConnectionStrategy());
+		this.currentCanvasState = state;
+		setConnectionStrategy(state.getPreferences().getConnectionStrategy());
 		setMoveStrategy(state.getPreferences().getMoveStrategy());
 
 		for (String element : state.getNodes())
@@ -591,5 +860,10 @@ public class Canvas extends AbstractCanvas
 
 		setActiveTool(CanvasResource.SELECT);
 		validate();
+	}
+
+	public ExtendedActionFactory getActionFactory()
+	{
+		return actionFactory;
 	}
 }

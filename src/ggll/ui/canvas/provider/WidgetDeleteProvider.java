@@ -1,7 +1,7 @@
 package ggll.ui.canvas.provider;
 
 import ggll.core.list.ExtendedList;
-import ggll.ui.canvas.AbstractCanvas;
+import ggll.ui.canvas.Canvas;
 
 import java.beans.PropertyChangeSupport;
 import java.util.Collection;
@@ -13,13 +13,13 @@ public class WidgetDeleteProvider
 {
 
 	PropertyChangeSupport monitor;
-	private AbstractCanvas canvas;
+	private Canvas canvas;
 
-	public WidgetDeleteProvider(AbstractCanvas canvas)
+	public WidgetDeleteProvider(Canvas canvas)
 	{
 		this.canvas = canvas;
 		monitor = new PropertyChangeSupport(this);
-		monitor.addPropertyChangeListener(canvas.getVolatileStateManager());
+		monitor.addPropertyChangeListener(canvas.getCanvasStateRepository());
 	}
 
 	/** delete all selected widgets **/

@@ -12,14 +12,14 @@ public class UnidirectionalAnchor extends Anchor
 	private Direction kind;
 	private Direction preferredDirection;
 	private String connection;
-	private AbstractCanvas canvas;
+	private Canvas canvas;
 
-	public UnidirectionalAnchor(AbstractCanvas canvas, Widget widget, Direction kind)
+	public UnidirectionalAnchor(Canvas canvas, Widget widget, Direction kind)
 	{
 		this(canvas, widget, kind, null, null);		
 	}
 
-	public UnidirectionalAnchor(AbstractCanvas canvas, Widget widget, Direction kind, String connection, Direction preferredDirection)
+	public UnidirectionalAnchor(Canvas canvas, Widget widget, Direction kind, String connection, Direction preferredDirection)
 	{
 		super(widget);
 		this.canvas = canvas;

@@ -1,4 +1,4 @@
-package ggll.ui.component;
+package ggll.ui.view.component;
 
 import java.io.BufferedReader;
 import java.io.File;

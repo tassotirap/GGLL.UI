@@ -1,6 +1,6 @@
 package ggll.ui.canvas.action;
 
-import ggll.ui.canvas.AbstractCanvas;
+import ggll.ui.canvas.Canvas;
 import ggll.ui.canvas.state.Connection;
 import ggll.ui.canvas.state.Node;
 import ggll.ui.canvas.widget.LabelWidgetExt;
@@ -21,14 +21,14 @@ import org.netbeans.api.visual.widget.Widget;
 
 public class SelectionAction implements ClipboardOwner, Transferable
 {
-	private AbstractCanvas canvas;
+	private Canvas canvas;
 
-	public SelectionAction(AbstractCanvas canvas)
+	public SelectionAction(Canvas canvas)
 	{
 		this.canvas = canvas;
 	}
 
-	public SelectionAction(Widget[] widgets, AbstractCanvas canvas)
+	public SelectionAction(Widget[] widgets, Canvas canvas)
 	{
 		this.canvas = canvas;
 		for (Widget w : widgets)

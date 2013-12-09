@@ -40,7 +40,7 @@
  */
 package ggll.ui.canvas.provider;
 
-import ggll.ui.canvas.AbstractCanvas;
+import ggll.ui.canvas.Canvas;
 
 import java.awt.Color;
 import java.awt.Point;
@@ -59,8 +59,8 @@ import org.netbeans.api.visual.widget.Widget;
 public final class CanvasRectangularSelectProvider implements RectangularSelectProvider
 {
 
-	private AbstractCanvas canvas;
-	public CanvasRectangularSelectProvider(AbstractCanvas canvas)
+	private Canvas canvas;
+	public CanvasRectangularSelectProvider(Canvas canvas)
 	{
 		this.canvas = canvas;
 	}

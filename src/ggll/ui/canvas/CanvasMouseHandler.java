@@ -5,9 +5,9 @@ import java.awt.event.MouseListener;
 
 public class CanvasMouseHandler implements MouseListener
 {
-	AbstractCanvas canvas;
+	Canvas canvas;
 
-	public CanvasMouseHandler(AbstractCanvas canvas)
+	public CanvasMouseHandler(Canvas canvas)
 	{
 		this.canvas = canvas;
 	}

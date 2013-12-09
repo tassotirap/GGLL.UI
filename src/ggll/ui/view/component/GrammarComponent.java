@@ -1,8 +1,8 @@
-package ggll.ui.component;
+package ggll.ui.view.component;
 
-import ggll.ui.canvas.AbstractCanvas;
-import ggll.ui.canvas.CanvasFactory;
-import ggll.ui.canvas.state.StaticStateManager;
+import ggll.ui.canvas.Canvas;
+import ggll.ui.canvas.CanvasRepository;
+import ggll.ui.canvas.state.CanvasState;
 import ggll.ui.toolbar.ToolBarGrammar;
 import ggll.ui.util.Log;
 
@@ -17,12 +17,12 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-public class GrammarComponent extends AbstractComponent implements FileComponent, PropertyChangeListener
+public class GrammarComponent extends AbstractFileComponent implements PropertyChangeListener
 {
 	String path;
-	private AbstractCanvas canvas;
+	private Canvas canvas;
 
-	public GrammarComponent(AbstractCanvas canvas)
+	public GrammarComponent(Canvas canvas)
 	{
 		path = canvas.getFile();
 
@@ -39,17 +39,19 @@ public class GrammarComponent extends AbstractComponent implements FileComponent
 
 		canvasPanel.setLayout(new BorderLayout());
 		canvasPanel.add(toolBarGrammar, BorderLayout.WEST);
-
 		canvasPanel.add(jsp, BorderLayout.CENTER);
+
 		canvas.setPreferredSize(new Dimension(jsp.getWidth(), jsp.getHeight()));
-		canvas.getVolatileStateManager().getMonitor().addPropertyChangeListener("writing", this);
+		canvas.getMonitor().addPropertyChangeListener("object_state", this);
+		canvas.getMonitor().addPropertyChangeListener("writing", this);
+
 		GrammarFactory.addGramComponent(this, canvas.getFile());
 		jComponent = canvasPanel;
 	}
 
 	public GrammarComponent(String fileName)
 	{
-		this(CanvasFactory.getInstance(fileName));
+		this(CanvasRepository.getInstance(fileName));
 	}
 
 	@Override
@@ -70,33 +72,31 @@ public class GrammarComponent extends AbstractComponent implements FileComponent
 	@Override
 	public void propertyChange(PropertyChangeEvent evt)
 	{
-		if (evt.getPropertyName().equals("writing"))
-		{
-			fireContentChanged();
-		}
+		fireContentChanged();
 	}
 
 	@Override
-	public void saveFile()
+	public String saveFile()
 	{
-		StaticStateManager staticStateManager = canvas.getStaticStateManager();
+		CanvasState canvasState = canvas.getCurrentCanvasState();
 		try
 		{
-			staticStateManager.write();
+			canvasState.write();
 		}
 		catch (IOException e)
 		{
 			Log.log(Log.ERROR, this, "Could not save file!", e);
 		}
+		return getPath();
 	}
 
 	public void setPath(String path)
 	{
-		canvas = CanvasFactory.getInstance(path);
+		canvas = CanvasRepository.getInstance(path);
 		this.path = path;
 	}
 
-	public AbstractCanvas getCanvas()
+	public Canvas getCanvas()
 	{
 		return canvas;
 	}

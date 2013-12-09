@@ -1,8 +1,8 @@
 package ggll.ui.canvas.state;
 
 import ggll.core.list.ExtendedList;
-import ggll.ui.canvas.AbstractCanvas;
-import ggll.ui.canvas.CanvasFactory;
+import ggll.ui.canvas.Canvas;
+import ggll.ui.canvas.CanvasRepository;
 import ggll.ui.canvas.widget.IconNodeWidgetExt;
 import ggll.ui.canvas.widget.LabelWidgetExt;
 import ggll.ui.canvas.widget.MarkedWidget;
@@ -11,6 +11,12 @@ import ggll.ui.resource.CanvasResource;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashMap;
@@ -27,19 +33,15 @@ public class CanvasState implements Serializable, PropertyChangeListener
 	private HashMap<String, Connection> connections = new HashMap<String, Connection>();
 	private HashMap<String, Node> nodes = new HashMap<String, Node>();
 	private Preferences preferences = new Preferences();
+	private PropertyChangeSupport monitor;
 
 	private int lastTerminalId = 0;
 	private int lastNTerminalId = 0;
 	private int lastLeftSides = 0;
 	private int lastLAMBDA = 0;
 	private int lastSTART = 0;
-	private int lastCustomNode = 0;	
+	private int lastCustomNode = 0;
 	private String file;
-	
-	public CanvasState(String file)
-	{
-		this.file = file;
-	}
 
 	public Connection findConnection(Object conn)
 	{
@@ -150,75 +152,134 @@ public class CanvasState implements Serializable, PropertyChangeListener
 		this.lastTerminalId++;
 	}
 
-
 	@Override
 	public void propertyChange(PropertyChangeEvent evt)
 	{
 		if (evt.getPropertyName().equals("writing"))
 		{
-			AbstractCanvas canvas = CanvasFactory.getInstance(file);
+			Canvas canvas = CanvasRepository.getInstance(file);
 			if (canvas != null)
 			{
-				update(canvas);
+				reloadFromCanvas(canvas);
 			}
 		}
 	}
+	
+	public void addNode(Canvas canvas, String object)
+	{
+		Widget widget = canvas.findWidget(object);
+		if (widget instanceof LabelWidget)
+		{
+			LabelWidget labelWidget = (LabelWidget) widget;
+			Node node = new Node();
+			node.setName(object);
+			node.setTitle(labelWidget.getLabel());
+			node.setLocation(labelWidget.getPreferredLocation());
+			if (labelWidget instanceof TypedWidget)
+			{
+				node.setType(((LabelWidgetExt) labelWidget).getType());
+			}
+			if (labelWidget instanceof MarkedWidget)
+			{
+				node.setMark(((MarkedWidget) labelWidget).getMark());
+			}
+			nodes.put(node.getName(), node);
+		}
+		else if (widget instanceof IconNodeWidgetExt)
+		{
+			IconNodeWidgetExt iconNodeWidget = (IconNodeWidgetExt) widget;
+			Node node = new Node();
+			node.setName(object);
+			node.setLocation(iconNodeWidget.getPreferredLocation());
+			node.setType(iconNodeWidget.getType());
+			nodes.put(node.getName(), node);
+		}
+	}
+	
+	public void addConnection(Canvas canvas, String object)
+	{
+		Widget widget = canvas.findWidget(object);
+		if (widget instanceof ConnectionWidget)
+		{
+			ConnectionWidget connectionWidget = (ConnectionWidget) widget;
+			Connection connection = new Connection();
+			connection.setName(object);
+			connection.setSource(canvas.getEdgeSource(object));
+			connection.setTarget(canvas.getEdgeTarget(object));
+			if (canvas.isAlternative(object))
+			{
+				connection.setType(CanvasResource.ALTERNATIVE);
+			}
+			else if (canvas.isSuccessor(object))
+			{
+				connection.setType(CanvasResource.SUCCESSOR);
+			}
+			connection.setPoints(connectionWidget.getControlPoints());
+			connections.put(connection.getName(), connection);
+		}
+	}
 
-	public void update(AbstractCanvas canvas)
+	public void reloadFromCanvas(Canvas canvas)
 	{
 		nodes.clear();
-		connections.clear();	
-		for(String object : canvas.getNodes())
+		connections.clear();
+		for (String object : canvas.getNodes())
 		{
-			Widget widget = canvas.findWidget(object);
-			if(widget instanceof LabelWidget)
+			addNode(canvas, object);
+		}
+		for (String object : canvas.getEdges())
+		{
+			addConnection(canvas, object);
+		}
+	}
+
+	public String getFile()
+	{
+		return file;
+	}
+
+	public void setFile(String file)
+	{
+		this.file = file;
+	}
+
+	public static CanvasState read(String file) throws IOException, ClassNotFoundException
+	{
+		CanvasState canvasState = null;
+		if (file.length() > 0)
+		{
+			try
 			{
-				LabelWidget labelWidget = (LabelWidget)widget;
-				Node node = new Node();
-				node.setName(object);
-				node.setTitle(labelWidget.getLabel());
-				node.setLocation(labelWidget.getPreferredLocation());
-				if (labelWidget instanceof TypedWidget)
-				{
-					node.setType(((LabelWidgetExt) labelWidget).getType());
-				}
-				if (labelWidget instanceof MarkedWidget)
-				{
-					node.setMark(((MarkedWidget) labelWidget).getMark());
-				}
-				nodes.put(node.getName(), node);
+				FileInputStream fileInputStream = new FileInputStream(file);
+				ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+				canvasState = (CanvasState) objectInputStream.readObject();
+				objectInputStream.close();
+				fileInputStream.close();				
 			}
-			else if(widget instanceof IconNodeWidgetExt)
+			catch (Exception e)
 			{
-				IconNodeWidgetExt iconNodeWidget = (IconNodeWidgetExt)widget;
-				Node node = new Node();
-				node.setName(object);
-				node.setLocation(iconNodeWidget.getPreferredLocation());
-				node.setType(iconNodeWidget.getType());
-				nodes.put(node.getName(), node);
+				canvasState = new CanvasState(file);
 			}
 		}
-		for(String object : canvas.getEdges())
+		if (canvasState.monitor == null)
 		{
-			Widget widget = canvas.findWidget(object);
-			if(widget instanceof ConnectionWidget)
-			{
-				ConnectionWidget connectionWidget = (ConnectionWidget)widget;
-				Connection connection = new Connection();
-				connection.setName(object);
-				connection.setSource(canvas.getEdgeSource(object));
-				connection.setTarget(canvas.getEdgeTarget(object));
-				if (canvas.isAlternative(object))
-				{
-					connection.setType(CanvasResource.ALTERNATIVE);
-				}
-				else if (canvas.isSuccessor(object))
-				{
-					connection.setType(CanvasResource.SUCCESSOR);
-				}
-				connection.setPoints(connectionWidget.getControlPoints());
-				connections.put(connection.getName(), connection);
-			}
+			canvasState.monitor = new PropertyChangeSupport(canvasState);
 		}
+		return canvasState;
+	}
+
+	private CanvasState(String file)
+	{
+		this.file = file;
+	}
+
+	public void write() throws IOException
+	{
+		monitor.firePropertyChange("writing", null, this);
+		FileOutputStream fileOutputStream = new FileOutputStream(file);
+		ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+		objectOutputStream.writeObject(this);
+		objectOutputStream.close();
+		fileOutputStream.close();
 	}
 }

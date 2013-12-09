@@ -1,6 +1,6 @@
 package ggll.ui.canvas.widget;
 
-import ggll.ui.canvas.AbstractCanvas;
+import ggll.ui.canvas.Canvas;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -14,12 +14,12 @@ public class GridWidget extends Widget
 
 	public final static int GRID_SIZE = 16;
 	public final static Color LINE_COLOR = new Color(221, 221, 221);
-	private AbstractCanvas canvas;
+	private Canvas canvas;
 
 	private int height;
 	private int width;
 
-	public GridWidget(AbstractCanvas canvas)
+	public GridWidget(Canvas canvas)
 	{
 		super(canvas);
 		this.canvas = canvas;

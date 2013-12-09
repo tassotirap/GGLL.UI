@@ -40,7 +40,7 @@
  */
 package ggll.ui.canvas.provider;
 
-import ggll.ui.canvas.AbstractCanvas;
+import ggll.ui.canvas.Canvas;
 
 import java.awt.Insets;
 import java.awt.Point;
@@ -59,7 +59,7 @@ public final class AlignWithMultiMoveProvider extends AlignWithSupport implement
 	private MultiMoveProvider multiMoveProvider;
 	private boolean outerBounds;
 
-	public AlignWithMultiMoveProvider(AbstractCanvas canvas, AlignWithWidgetCollector collector, LayerWidget interractionLayer, AlignWithMoveDecorator decorator, boolean outerBounds)
+	public AlignWithMultiMoveProvider(Canvas canvas, AlignWithWidgetCollector collector, LayerWidget interractionLayer, AlignWithMoveDecorator decorator, boolean outerBounds)
 	{
 		super(collector, interractionLayer, decorator);
 		this.outerBounds = outerBounds;

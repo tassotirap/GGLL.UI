@@ -1,6 +1,6 @@
 package ggll.ui.canvas.provider;
 
-import ggll.ui.canvas.AbstractCanvas;
+import ggll.ui.canvas.Canvas;
 import ggll.ui.canvas.widget.MarkedWidget;
 
 import java.awt.Color;
@@ -10,9 +10,9 @@ import org.netbeans.api.visual.widget.Widget;
 
 public class NodeHoverProvider implements TwoStateHoverProvider
 {
-	AbstractCanvas canvas;
+	Canvas canvas;
 	
-	public NodeHoverProvider(AbstractCanvas canvas)
+	public NodeHoverProvider(Canvas canvas)
 	{
 		this.canvas = canvas;
 	}

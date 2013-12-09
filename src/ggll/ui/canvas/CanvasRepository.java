@@ -7,24 +7,24 @@ import ggll.ui.resource.CanvasResource;
 import java.util.Collection;
 import java.util.Hashtable;
 
-public class CanvasFactory
+public class CanvasRepository
 {
 	private static String connStrategy = CanvasResource.R_ORTHOGONAL;	
 	private static String defaultCursor = CanvasResource.SELECT;
 	private static String moveStrategy = CanvasResource.M_FREE;
 
-	private static Hashtable<String, AbstractCanvas> instances;
+	private static Hashtable<String, Canvas> instances;
 
-	private CanvasFactory()
+	private CanvasRepository()
 	{
 	}
 	
 	public static int getLastCustomNode()
 	{
 		int lastCustomNode = 0;
-		for(AbstractCanvas canvas : getInstances())
+		for(Canvas canvas : getInstances())
 		{
-			lastCustomNode += canvas.getCanvasState().getLastCustomNode();
+			lastCustomNode += canvas.getCurrentCanvasState().getLastCustomNode();
 		}
 		return lastCustomNode;
 	}
@@ -32,9 +32,9 @@ public class CanvasFactory
 	public static int getLastLAMBDA()
 	{
 		int lastLAMBDA = 0;
-		for(AbstractCanvas canvas : getInstances())
+		for(Canvas canvas : getInstances())
 		{
-			lastLAMBDA += canvas.getCanvasState().getLastLAMBDA();
+			lastLAMBDA += canvas.getCurrentCanvasState().getLastLAMBDA();
 		}
 		return lastLAMBDA;
 	}
@@ -42,9 +42,9 @@ public class CanvasFactory
 	public static int getLastLeftSides()
 	{
 		int lastLeftSides = 0;
-		for(AbstractCanvas canvas : getInstances())
+		for(Canvas canvas : getInstances())
 		{
-			lastLeftSides += canvas.getCanvasState().getLastLeftSides();
+			lastLeftSides += canvas.getCurrentCanvasState().getLastLeftSides();
 		}
 		return lastLeftSides;
 	}
@@ -52,9 +52,9 @@ public class CanvasFactory
 	public static int getLastNTerminalId()
 	{
 		int lastNTerminalId = 0;
-		for(AbstractCanvas canvas : getInstances())
+		for(Canvas canvas : getInstances())
 		{
-			lastNTerminalId += canvas.getCanvasState().getLastNTerminalId();
+			lastNTerminalId += canvas.getCurrentCanvasState().getLastNTerminalId();
 		}
 		return lastNTerminalId;
 	}
@@ -62,9 +62,9 @@ public class CanvasFactory
 	public static int getLastSTART()
 	{
 		int lastSTART = 0;
-		for(AbstractCanvas canvas : getInstances())
+		for(Canvas canvas : getInstances())
 		{
-			lastSTART += canvas.getCanvasState().getLastSTART();
+			lastSTART += canvas.getCurrentCanvasState().getLastSTART();
 		}
 		return lastSTART;
 	}
@@ -72,23 +72,23 @@ public class CanvasFactory
 	public static int getLastTerminalId()
 	{
 		int lastTerminalId = 0;
-		for(AbstractCanvas canvas : getInstances())
+		for(Canvas canvas : getInstances())
 		{
-			lastTerminalId += canvas.getCanvasState().getLastTerminalId();
+			lastTerminalId += canvas.getCurrentCanvasState().getLastTerminalId();
 		}
 		return lastTerminalId;
 	} 
 	
-	public static AbstractCanvas getInstance(String file)
+	public static Canvas getInstance(String file)
 	{
 		if (instances == null)
 		{
-			instances = new Hashtable<String, AbstractCanvas>();
+			instances = new Hashtable<String, Canvas>();
 		}
 		
 		if(!instances.containsKey(file))
 		{
-			AbstractCanvas canvasFactory = new Canvas(defaultCursor, connStrategy, moveStrategy, file);
+			Canvas canvasFactory = new Canvas(defaultCursor, connStrategy, moveStrategy, file);
 			Context.getProject().setGrammarFile(new GrammarFile(file));
 			instances.put(file, canvasFactory);
 		}
@@ -96,7 +96,7 @@ public class CanvasFactory
 		return instances.get(file);
 	}
 
-	public static Collection<AbstractCanvas> getInstances()
+	public static Collection<Canvas> getInstances()
 	{
 		refresh();	
 		return instances.values();

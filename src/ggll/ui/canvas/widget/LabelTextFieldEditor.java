@@ -1,6 +1,6 @@
 package ggll.ui.canvas.widget;
 
-import ggll.ui.canvas.AbstractCanvas;
+import ggll.ui.canvas.Canvas;
 import ggll.ui.resource.CanvasResource;
 
 import java.beans.PropertyChangeSupport;
@@ -12,14 +12,14 @@ import org.netbeans.api.visual.widget.Widget;
 public class LabelTextFieldEditor implements TextFieldInplaceEditor
 {
 
-	private AbstractCanvas canvas;
+	private Canvas canvas;
 	private PropertyChangeSupport monitor;
 
-	public LabelTextFieldEditor(AbstractCanvas canvas)
+	public LabelTextFieldEditor(Canvas canvas)
 	{
 		this.canvas = canvas;
 		monitor = new PropertyChangeSupport(this);
-		monitor.addPropertyChangeListener(canvas.getVolatileStateManager());
+		monitor.addPropertyChangeListener(canvas.getCanvasStateRepository());
 	}
 
 	@Override

@@ -1,4 +1,4 @@
-package ggll.ui.component;
+package ggll.ui.view.component;
 
 import ggll.ui.file.FileNames;
 

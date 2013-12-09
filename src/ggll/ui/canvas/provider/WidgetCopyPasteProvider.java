@@ -1,7 +1,7 @@
 package ggll.ui.canvas.provider;
 
 import ggll.core.list.ExtendedList;
-import ggll.ui.canvas.AbstractCanvas;
+import ggll.ui.canvas.Canvas;
 import ggll.ui.canvas.action.SelectionAction;
 import ggll.ui.canvas.state.Connection;
 import ggll.ui.canvas.state.Node;
@@ -21,14 +21,14 @@ import org.netbeans.api.visual.widget.Widget;
 public class WidgetCopyPasteProvider
 {
 
-	private AbstractCanvas canvas;
+	private Canvas canvas;
 	private PropertyChangeSupport monitor;
 
-	public WidgetCopyPasteProvider(AbstractCanvas canvas)
+	public WidgetCopyPasteProvider(Canvas canvas)
 	{
 		this.canvas = canvas;
 		monitor = new PropertyChangeSupport(this);
-		monitor.addPropertyChangeListener(canvas.getVolatileStateManager());
+		monitor.addPropertyChangeListener(canvas.getCanvasStateRepository());
 	}
 
 	/** copy all selected widgets to clipboard **/
@@ -91,7 +91,7 @@ public class WidgetCopyPasteProvider
 			wdp = new WidgetDeleteProvider(canvas);
 		copySelected();
 		wdp.deleteSelected();
-		canvas.updateState(canvas.getCanvasState());
+		canvas.updateState(canvas.getCurrentCanvasState());
 	}
 
 	public void cutThese(WidgetDeleteProvider wdp, Object... widgets)
@@ -100,7 +100,7 @@ public class WidgetCopyPasteProvider
 			wdp = new WidgetDeleteProvider(canvas);
 		copyThese(widgets);
 		wdp.deleteThese(widgets);
-		canvas.updateState(canvas.getCanvasState());
+		canvas.updateState(canvas.getCurrentCanvasState());
 	}
 
 	/**
@@ -185,7 +185,7 @@ public class WidgetCopyPasteProvider
 			}
 			n.setLocation(p);
 			p = null;
-			canvas.getCanvasState().update(canvas);
+			canvas.getCurrentCanvasState().reloadFromCanvas(canvas);
 			monitor.firePropertyChange("undoable", null, "Add");
 		}
 		for (Connection c : connections.getAll())
@@ -206,10 +206,10 @@ public class WidgetCopyPasteProvider
 				oldNewNames.put(oldName, newName);
 			}
 			while (canvas.findWidget(c.getName()) != null);
-			canvas.getCanvasState().update(canvas);
+			canvas.getCurrentCanvasState().reloadFromCanvas(canvas);
 			monitor.firePropertyChange("undoable", null, "Connection");
 		}
-		canvas.updateState(canvas.getCanvasState());
+		canvas.updateState(canvas.getCurrentCanvasState());
 		for (String name : oldNewNames.values())
 		{
 			canvas.select(name, true);

@@ -1,6 +1,6 @@
 package ggll.ui.toolbar;
 
-import ggll.ui.canvas.AbstractCanvas;
+import ggll.ui.canvas.Canvas;
 import ggll.ui.resource.CanvasResource;
 import ggll.ui.resource.LangResource;
 
@@ -23,11 +23,11 @@ public class ToolBarGrammar extends BaseToolBar
 
 	JButton[] buttons;
 	String[] names;
-	AbstractCanvas canvas;
+	Canvas canvas;
 	private JButton btnNTerminal, btnTerminal, btnLambdaAlternative, btnStart;
 	private JButton btnSelect, btnSucessor, btnAlternative, btnLeftHand, btnLabel;
 
-	public ToolBarGrammar(AbstractCanvas canvas)
+	public ToolBarGrammar(Canvas canvas)
 	{
 		super(canvas);
 		this.canvas = canvas;

@@ -1,6 +1,6 @@
 package ggll.ui.canvas.provider;
 
-import ggll.ui.canvas.AbstractCanvas;
+import ggll.ui.canvas.Canvas;
 
 import java.awt.Point;
 import java.beans.PropertyChangeSupport;
@@ -14,10 +14,10 @@ public class FreeMoveControl implements MoveControlPointProvider
 	private PropertyChangeSupport monitor;
 	MoveControlPointProvider moveProvider;
 
-	public FreeMoveControl(AbstractCanvas canvas)
+	public FreeMoveControl(Canvas canvas)
 	{
 		monitor = new PropertyChangeSupport(this);
-		monitor.addPropertyChangeListener(canvas.getVolatileStateManager());
+		monitor.addPropertyChangeListener(canvas.getCanvasStateRepository());
 		moveProvider = org.netbeans.api.visual.action.ActionFactory.createFreeMoveControlPointProvider();
 	}
 

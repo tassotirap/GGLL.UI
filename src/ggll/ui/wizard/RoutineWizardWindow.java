@@ -1,6 +1,6 @@
 package ggll.ui.wizard;
 
-import ggll.ui.component.TextAreaComponent;
+import ggll.ui.view.component.TextAreaComponent;
 
 import java.awt.Dimension;
 import java.awt.FlowLayout;

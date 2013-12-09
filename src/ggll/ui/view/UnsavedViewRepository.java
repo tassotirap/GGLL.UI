@@ -12,6 +12,15 @@ public class UnsavedViewRepository
 	{
 		unsavedViews = new HashMap<String, AbstractView>();
 	}
+	
+	public AbstractView getUnsavedView(String key)
+	{
+		if (!unsavedViews.containsKey(key))
+		{
+			return unsavedViews.get(key);
+		}
+		return null;
+	}
 
 	public ExtendedList<AbstractView> getUnsavedViews()
 	{

@@ -1,6 +1,6 @@
 package ggll.ui.canvas.provider;
 
-import ggll.ui.canvas.AbstractCanvas;
+import ggll.ui.canvas.Canvas;
 import ggll.ui.canvas.widget.GuideLineWidget;
 import ggll.ui.canvas.widget.LineWidget;
 
@@ -18,10 +18,10 @@ import java.util.HashMap;
 public class LineProvider implements PropertyChangeListener
 {
 
-	private static HashMap<AbstractCanvas, LineProvider> lineProviders = new HashMap<AbstractCanvas, LineProvider>();
+	private static HashMap<Canvas, LineProvider> lineProviders = new HashMap<Canvas, LineProvider>();
 	/** the distance between lines **/
 	public final static int LINE_OFFSET = 25;
-	private AbstractCanvas canvas;
+	private Canvas canvas;
 	private LineWidget guideLine;
 	private LineWidget lastLine;
 	private int lastYPos;
@@ -30,13 +30,13 @@ public class LineProvider implements PropertyChangeListener
 
 	private boolean populated = false;
 
-	private LineProvider(AbstractCanvas canvas)
+	private LineProvider(Canvas canvas)
 	{
 		this.canvas = canvas;
 		lines = new HashMap<Integer, LineWidget>();
 	}
 
-	public static LineProvider getInstance(AbstractCanvas canvas)
+	public static LineProvider getInstance(Canvas canvas)
 	{
 		if (!lineProviders.containsKey(canvas))
 		{

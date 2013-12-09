@@ -1,6 +1,6 @@
 package ggll.ui.canvas.widget;
 
-import ggll.ui.canvas.AbstractCanvas;
+import ggll.ui.canvas.Canvas;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -13,9 +13,9 @@ public class GuideLineWidget extends LineWidget
 	public static final int DEFAULT_WIDTH = 1;
 	public static final int DEFAULT_X_POS = 120;
 	public static final Color GUIDE_LINE_COLOR = new Color(240, 100, 100);
-	private AbstractCanvas canvas;
+	private Canvas canvas;
 
-	public GuideLineWidget(AbstractCanvas canvas)
+	public GuideLineWidget(Canvas canvas)
 	{
 		super(canvas);
 		this.canvas = canvas;

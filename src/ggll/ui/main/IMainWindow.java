@@ -1,9 +1,9 @@
 package ggll.ui.main;
 
-import ggll.ui.component.AbstractComponent;
 import ggll.ui.icon.IconView;
 import ggll.ui.main.ThemeManager.Theme;
 import ggll.ui.tab.TabWindowList;
+import ggll.ui.view.component.AbstractComponent;
 
 import javax.swing.Icon;
 import javax.swing.JFrame;

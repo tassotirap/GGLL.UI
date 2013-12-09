@@ -1,6 +1,6 @@
 package ggll.ui.canvas.provider;
 
-import ggll.ui.canvas.AbstractCanvas;
+import ggll.ui.canvas.Canvas;
 import ggll.ui.core.syntax.grammar.model.SyntaxDefinitions;
 
 import java.awt.Point;
@@ -13,40 +13,39 @@ import org.netbeans.api.visual.widget.Widget;
 
 public class MultiMoveProvider implements MoveProvider
 {
-	private AbstractCanvas canvas;
+	private Canvas canvas;
 	private PropertyChangeSupport monitor;
-	private Point original;
+	private Point originalLocation;
+	private HashMap<Widget, Point> targets = new HashMap<Widget, Point>();
 
-	private HashMap<Widget, Point> originals = new HashMap<Widget, Point>();
-
-	public MultiMoveProvider(AbstractCanvas canvas)
+	public MultiMoveProvider(Canvas canvas)
 	{
 		this.canvas = canvas;
 		monitor = new PropertyChangeSupport(this);
-		monitor.addPropertyChangeListener(canvas.getVolatileStateManager());
+		monitor.addPropertyChangeListener(canvas.getCanvasStateRepository());
 	}
 
 	@Override
 	public Point getOriginalLocation(Widget widget)
 	{
-		original = widget.getPreferredLocation();
-		return original;
+		originalLocation = widget.getPreferredLocation();
+		return originalLocation;
 	}
 
 	@Override
 	public void movementFinished(Widget widget)
 	{
 		String context = null;
-		if (originals.entrySet().size() > 1)
+		if (targets.entrySet().size() > 1)
 		{
 			context = SyntaxDefinitions.Set;
 		}
-		else if (originals.entrySet().size() == 1)
+		else if (targets.entrySet().size() == 1)
 		{
 			context = SyntaxDefinitions.Node;
 		}
-		originals.clear();
-		original = null;
+		targets.clear();
+		originalLocation = null;
 		if (context != null)
 		{
 			monitor.firePropertyChange("undoable", null, "Move");
@@ -64,21 +63,21 @@ public class MultiMoveProvider implements MoveProvider
 				{
 					Widget w = canvas.findWidget(o);
 					if (w != null)
-						originals.put(w, w.getPreferredLocation());
+						targets.put(w, w.getPreferredLocation());
 				}
 		}
 		else
 		{
-			originals.put(widget, widget.getPreferredLocation());
+			targets.put(widget, widget.getPreferredLocation());
 		}
 	}
 
 	@Override
 	public void setNewLocation(Widget widget, Point location)
 	{
-		int dx = location.x - original.x;
-		int dy = location.y - original.y;
-		for (Map.Entry<Widget, Point> entry : originals.entrySet())
+		int dx = location.x - originalLocation.x;
+		int dy = location.y - originalLocation.y;
+		for (Map.Entry<Widget, Point> entry : targets.entrySet())
 		{
 			Point point = entry.getValue();
 			entry.getKey().setPreferredLocation(new Point(point.x + dx, point.y + dy));

@@ -1,6 +1,6 @@
 package ggll.ui.canvas.provider;
 
-import ggll.ui.canvas.AbstractCanvas;
+import ggll.ui.canvas.Canvas;
 
 import java.awt.Point;
 import java.beans.PropertyChangeSupport;
@@ -18,13 +18,13 @@ public class NodeReconnectProvider implements ReconnectProvider
 	private PropertyChangeSupport monitor;
 	private String originalNode;
 	private String replacementNode;
-	private AbstractCanvas canvas;
+	private Canvas canvas;
 
-	public NodeReconnectProvider(AbstractCanvas canvas)
+	public NodeReconnectProvider(Canvas canvas)
 	{
 		this.canvas = canvas;
 		monitor = new PropertyChangeSupport(this);
-		monitor.addPropertyChangeListener(canvas.getVolatileStateManager());
+		monitor.addPropertyChangeListener(canvas.getCanvasStateRepository());
 	}
 
 	@Override

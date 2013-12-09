@@ -1,6 +1,6 @@
 package ggll.ui.canvas.provider;
 
-import ggll.ui.canvas.AbstractCanvas;
+import ggll.ui.canvas.Canvas;
 import ggll.ui.canvas.widget.IconNodeWidgetExt;
 import ggll.ui.canvas.widget.LabelWidgetExt;
 import ggll.ui.resource.CanvasResource;
@@ -21,13 +21,13 @@ public class NodeConnectProvider implements ConnectProvider
 	private String source = null;
 
 	private String target = null;
-	private AbstractCanvas canvas;
+	private Canvas canvas;
 
-	public NodeConnectProvider(AbstractCanvas canvas)
+	public NodeConnectProvider(Canvas canvas)
 	{
 		this.canvas = canvas;
 		monitor = new PropertyChangeSupport(this);
-		monitor.addPropertyChangeListener(canvas.getVolatileStateManager());
+		monitor.addPropertyChangeListener(canvas.getCanvasStateRepository());
 	}
 
 	@Override

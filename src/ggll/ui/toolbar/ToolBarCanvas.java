@@ -1,6 +1,6 @@
 package ggll.ui.toolbar;
 
-import ggll.ui.canvas.AbstractCanvas;
+import ggll.ui.canvas.Canvas;
 import ggll.ui.core.syntax.grammar.Controller;
 import ggll.ui.resource.LangResource;
 
@@ -24,9 +24,9 @@ public class ToolBarCanvas extends BaseToolBar
 
 	String[] names;
 	private JButton btnRun, btnZoomIn, btnZoomOut;
-	private AbstractCanvas canvas;
+	private Canvas canvas;
 
-	public ToolBarCanvas(AbstractCanvas canvas)
+	public ToolBarCanvas(Canvas canvas)
 	{
 		super(canvas);
 		this.canvas = canvas;

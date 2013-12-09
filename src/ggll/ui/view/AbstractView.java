@@ -1,6 +1,6 @@
 package ggll.ui.view;
 
-import ggll.ui.component.AbstractComponent;
+import ggll.ui.view.component.AbstractComponent;
 
 import javax.swing.Icon;
 

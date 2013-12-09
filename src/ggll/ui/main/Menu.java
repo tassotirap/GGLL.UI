@@ -1,13 +1,14 @@
 package ggll.ui.main;
 
 import ggll.core.list.ExtendedList;
-import ggll.ui.canvas.AbstractCanvas;
 import ggll.ui.file.FileNames;
 import ggll.ui.main.ThemeManager.Theme;
 import ggll.ui.project.Context;
-import ggll.ui.project.FileManager;
 import ggll.ui.project.tree.Tree;
 import ggll.ui.resource.LangResource;
+import ggll.ui.view.component.AbstractComponent;
+import ggll.ui.view.component.GrammarComponent;
+import ggll.ui.view.component.TextAreaComponent;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -19,7 +20,6 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JSeparator;
-import javax.swing.JTextArea;
 import javax.swing.KeyStroke;
 
 public class Menu extends JMenuBar
@@ -56,24 +56,24 @@ public class Menu extends JMenuBar
 	public final static int TEXTAREA_CONTEXT = 2;
 
 	public final static String WINDOW = "Window";
-	Object context;
+	AbstractComponent context;
 	int contextDesc;
 	ExtendedList<String> menus;
 	MenuModel model;
 
 	IMainWindow window;
 
-	public Menu(String[] menus, IMainWindow window, Object context, MenuModel model)
+	public Menu(String[] menus, IMainWindow window, AbstractComponent context, MenuModel model)
 	{
 		this.window = window;
 		this.menus = new ExtendedList<String>();
 		this.context = context;
 		this.model = model;
-		if (context instanceof AbstractCanvas)
+		if (context instanceof GrammarComponent)
 		{
 			contextDesc = CANVAS_CONTEXT;
 		}
-		else if (context instanceof JTextArea)
+		else if (context instanceof TextAreaComponent)
 		{
 			contextDesc = TEXTAREA_CONTEXT;
 		}
@@ -152,10 +152,9 @@ public class Menu extends JMenuBar
 				String fileName = JOptionPane.showInputDialog("New Gramma Graph File name?");
 				if (fileName != null && !fileName.equals(""))
 				{
-					FileManager fileManager = new FileManager();
 					try
 					{
-						fileManager.createFile(fileName, new FileNames(FileNames.GRAM_EXTENSION));
+						Context.createFile(fileName, new FileNames(FileNames.GRAM_EXTENSION));
 						Tree.reload(Context.getProject().getProjectsRootPath());
 					}
 					catch (IOException e1)

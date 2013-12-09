@@ -1,8 +1,8 @@
 package ggll.ui.core.syntax.grammar;
 
 import ggll.core.list.ExtendedList;
-import ggll.ui.canvas.AbstractCanvas;
-import ggll.ui.canvas.CanvasFactory;
+import ggll.ui.canvas.Canvas;
+import ggll.ui.canvas.CanvasRepository;
 import ggll.ui.core.syntax.AsinEditor;
 import ggll.ui.core.syntax.grammar.model.AbstractNode;
 import ggll.ui.core.syntax.grammar.model.LambdaAlternative;
@@ -124,7 +124,7 @@ public class GrammarFactory
 		
 		for(File grammar :  Context.getProject().getGrammarFile().getAll())
 		{
-			AbstractCanvas cavans = CanvasFactory.getInstance(grammar.getAbsolutePath());
+			Canvas cavans = CanvasRepository.getInstance(grammar.getAbsolutePath());
 			children.addAll(AsinEditor.getInstance().getLogicDiagram(cavans).getChildrenNodes());
 		}
 		

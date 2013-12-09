@@ -1,4 +1,4 @@
-package ggll.ui.component;
+package ggll.ui.view.component;
 
 import ggll.ui.util.Log;
 
@@ -24,7 +24,7 @@ import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 import org.fife.ui.rsyntaxtextarea.Theme;
 import org.fife.ui.rtextarea.RTextScrollPane;
 
-public class TextAreaComponent extends AbstractComponent implements HyperlinkListener, SyntaxConstants, FileComponent
+public class TextAreaComponent extends AbstractFileComponent implements HyperlinkListener, SyntaxConstants
 {
 	private RSyntaxTextArea textArea;
 	private String path;
@@ -135,7 +135,7 @@ public class TextAreaComponent extends AbstractComponent implements HyperlinkLis
 	}
 
 	@Override
-	public void saveFile()
+	public String saveFile()
 	{
 		File file = new File(path);
 		try
@@ -148,6 +148,7 @@ public class TextAreaComponent extends AbstractComponent implements HyperlinkLis
 		{
 			Log.log(Log.ERROR, null, "Could not save file!", e);
 		}
+		return getPath();
 	}
 
 	public void setText(String resource, boolean file)

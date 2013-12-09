@@ -1,12 +1,13 @@
 package ggll.ui.toolbar;
 
-import ggll.ui.canvas.AbstractCanvas;
 import ggll.ui.canvas.provider.WidgetCopyPasteProvider;
 import ggll.ui.canvas.provider.WidgetDeleteProvider;
-import ggll.ui.canvas.state.VolatileStateManager;
-import ggll.ui.component.TextAreaComponent;
+import ggll.ui.canvas.state.CanvasStateRepository;
 import ggll.ui.project.Context;
 import ggll.ui.resource.LangResource;
+import ggll.ui.view.component.AbstractComponent;
+import ggll.ui.view.component.GrammarComponent;
+import ggll.ui.view.component.TextAreaComponent;
 
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -36,10 +37,11 @@ public class ToolBarDefault extends BaseToolBar implements PropertyChangeListene
 	public ToolBarDefault(Object context)
 	{
 		super(context);
-		if (context instanceof AbstractCanvas)
+		if (context instanceof GrammarComponent)
 		{
-			((AbstractCanvas) context).getMonitor().addPropertyChangeListener("undoable", this);
-			((AbstractCanvas) context).getMonitor().addPropertyChangeListener("object_state", this);
+			GrammarComponent grammarComponent = (GrammarComponent)context;
+			grammarComponent.getCanvas().getMonitor().addPropertyChangeListener("undoable", this);
+			grammarComponent.getCanvas().getMonitor().addPropertyChangeListener("object_state", this);
 		}
 		for (int i = 0; i < buttons.length; i++)
 		{
@@ -71,7 +73,7 @@ public class ToolBarDefault extends BaseToolBar implements PropertyChangeListene
 			@Override
 			public void actionPerformed(ActionEvent evt)
 			{
-				Context.saveFile(context);
+				Context.saveFile((AbstractComponent)context);
 			}
 
 		});
@@ -94,14 +96,14 @@ public class ToolBarDefault extends BaseToolBar implements PropertyChangeListene
 		});
 	}
 
-	private void setCanvasActions(final AbstractCanvas canvas)
+	private void setCanvasActions(final GrammarComponent grammarComponent)
 	{
 		btnCopy.addActionListener(new ActionListener()
 		{
 			@Override
 			public void actionPerformed(ActionEvent evt)
 			{
-				WidgetCopyPasteProvider wcpp = new WidgetCopyPasteProvider(canvas);
+				WidgetCopyPasteProvider wcpp = new WidgetCopyPasteProvider(grammarComponent.getCanvas());
 				wcpp.copySelected();
 			}
 
@@ -111,8 +113,8 @@ public class ToolBarDefault extends BaseToolBar implements PropertyChangeListene
 			@Override
 			public void actionPerformed(ActionEvent evt)
 			{
-				WidgetCopyPasteProvider wcpp = new WidgetCopyPasteProvider(canvas);
-				WidgetDeleteProvider wdp = new WidgetDeleteProvider(canvas);
+				WidgetCopyPasteProvider wcpp = new WidgetCopyPasteProvider(grammarComponent.getCanvas());
+				WidgetDeleteProvider wdp = new WidgetDeleteProvider(grammarComponent.getCanvas());
 				wcpp.cutSelected(wdp);
 			}
 
@@ -122,7 +124,7 @@ public class ToolBarDefault extends BaseToolBar implements PropertyChangeListene
 			@Override
 			public void actionPerformed(ActionEvent evt)
 			{
-				WidgetCopyPasteProvider wcpp = new WidgetCopyPasteProvider(canvas);
+				WidgetCopyPasteProvider wcpp = new WidgetCopyPasteProvider(grammarComponent.getCanvas());
 				wcpp.paste(null);
 			}
 
@@ -132,7 +134,7 @@ public class ToolBarDefault extends BaseToolBar implements PropertyChangeListene
 			@Override
 			public void actionPerformed(ActionEvent evt)
 			{
-				VolatileStateManager volatileStateManager = canvas.getVolatileStateManager();
+				CanvasStateRepository volatileStateManager = grammarComponent.getCanvas().getCanvasStateRepository();
 				if (volatileStateManager.hasNextUndo())
 				{
 					volatileStateManager.undo();
@@ -145,7 +147,7 @@ public class ToolBarDefault extends BaseToolBar implements PropertyChangeListene
 			@Override
 			public void actionPerformed(ActionEvent evt)
 			{
-				VolatileStateManager vsm = canvas.getVolatileStateManager();
+				CanvasStateRepository vsm = grammarComponent.getCanvas().getCanvasStateRepository();
 				if (vsm.hasNextRedo())
 				{
 					vsm.redo();
@@ -211,9 +213,9 @@ public class ToolBarDefault extends BaseToolBar implements PropertyChangeListene
 	{
 		setBaseActions();
 
-		if (context instanceof AbstractCanvas)
+		if (context instanceof GrammarComponent)
 		{
-			setCanvasActions((AbstractCanvas) context);
+			setCanvasActions((GrammarComponent) context);
 		}
 		else if (context instanceof TextAreaComponent)
 		{
@@ -256,21 +258,20 @@ public class ToolBarDefault extends BaseToolBar implements PropertyChangeListene
 	@Override
 	public void propertyChange(PropertyChangeEvent event)
 	{
-		if (event.getSource() instanceof AbstractCanvas)
+		if (event.getSource() instanceof CanvasStateRepository)
 		{
-			AbstractCanvas canvas = (AbstractCanvas)event.getSource();
-			VolatileStateManager vsm = canvas.getVolatileStateManager();
+			CanvasStateRepository canvasStateRepository = (CanvasStateRepository)event.getSource();
 			if (event.getPropertyName().equals("undoable"))
 			{
 				btnUndo.setEnabled(true);
-				btnUndo.setToolTipText("Undo " + vsm.getNextUndoable());
+				btnUndo.setToolTipText("Undo");
 			}
 			if (event.getPropertyName().equals("object_state"))
 			{
-				if (vsm.hasNextRedo())
+				if (canvasStateRepository.hasNextRedo())
 				{
 					btnRedo.setEnabled(true);
-					btnRedo.setToolTipText("Redo " + vsm.getNextRedoable());
+					btnRedo.setToolTipText("Redo");
 				}
 			}
 		}

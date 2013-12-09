@@ -1,6 +1,6 @@
 package ggll.ui.canvas.action;
 
-import ggll.ui.canvas.AbstractCanvas;
+import ggll.ui.canvas.Canvas;
 import ggll.ui.canvas.CanvasPopupMenu;
 import ggll.ui.canvas.SnapToLineMoveStrategy;
 import ggll.ui.canvas.provider.AlignWithMultiMoveProvider;
@@ -98,16 +98,16 @@ public class ExtendedActionFactory
 	public final static String SUCCESSOR = "Successor";
 
 	private String activeMoveAction = null;
-	private AbstractCanvas canvas = null;
+	private Canvas canvas = null;
 
 	private final BasicStroke STROKE = new BasicStroke(1.0f, BasicStroke.JOIN_BEVEL, BasicStroke.CAP_BUTT, 5.0f, new float[]{ 6.0f, 3.0f }, 0.0f);
 
-	public ExtendedActionFactory(AbstractCanvas canvas)
+	public ExtendedActionFactory(Canvas canvas)
 	{
 		this.canvas = canvas;
 	}
 
-	private WidgetAction createAlignWithMultiMoveAction(AbstractCanvas canvas, AlignWithWidgetCollector collector, LayerWidget interractionLayer, AlignWithMoveDecorator decorator, boolean outerBounds)
+	private WidgetAction createAlignWithMultiMoveAction(Canvas canvas, AlignWithWidgetCollector collector, LayerWidget interractionLayer, AlignWithMoveDecorator decorator, boolean outerBounds)
 	{
 		AlignWithMultiMoveProvider alignWithMultiMoveProvidersp = new AlignWithMultiMoveProvider(canvas, collector, interractionLayer, decorator, outerBounds);
 		return createMoveAction(alignWithMultiMoveProvidersp, alignWithMultiMoveProvidersp);
@@ -311,7 +311,7 @@ public class ExtendedActionFactory
 		return new SnapToGridMoveStrategy(horizontalGridSize, verticalGridSize);
 	}
 
-	private MoveStrategy createSnapToLineMoveStrategy(AbstractCanvas canvas)
+	private MoveStrategy createSnapToLineMoveStrategy(Canvas canvas)
 	{
 		return new SnapToLineMoveStrategy(LineProvider.getInstance(canvas));
 	}
@@ -353,9 +353,9 @@ public class ExtendedActionFactory
 			case NODE_HOVER:
 				return createHoverAction(new NodeHoverProvider(canvas));
 			case ALTERNATIVE:
-				return createConnectAction(canvas.getCanvasDecorator().getConnDecoratorAlt(), canvas.getInterractionLayer(), new NodeConnectProvider(canvas));
+				return createConnectAction(canvas.getCanvasDecorator().getConnectDecoratorAlternative(), canvas.getInterractionLayer(), new NodeConnectProvider(canvas));
 			case SUCCESSOR:
-				return createConnectAction(canvas.getCanvasDecorator().getConnDecoratorSuc(), canvas.getInterractionLayer(), new NodeConnectProvider(canvas));
+				return createConnectAction(canvas.getCanvasDecorator().getConnectDecoratorSuccessor(), canvas.getInterractionLayer(), new NodeConnectProvider(canvas));
 			case RECONNECT:
 				return createReconnectAction(new NodeReconnectProvider(canvas));
 			case EDITOR:

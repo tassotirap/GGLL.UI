@@ -1,6 +1,8 @@
 package ggll.ui.toolbar;
 
-import ggll.ui.canvas.AbstractCanvas;
+import ggll.ui.canvas.Canvas;
+import ggll.ui.view.component.AbstractComponent;
+import ggll.ui.view.component.GrammarComponent;
 
 import java.util.HashMap;
 
@@ -17,7 +19,7 @@ public class ToolBarFactory
 	{
 	}
 
-	private ToolBarCanvas createToolBarCanvas(final AbstractCanvas canvas)
+	private ToolBarCanvas createToolBarCanvas(final Canvas canvas)
 	{
 		ToolBarCanvas toolBarCanvas = new ToolBarCanvas(canvas);
 		toolBarCanvas.setLayout(new BoxLayout(toolBarCanvas, BoxLayout.LINE_AXIS));
@@ -37,7 +39,8 @@ public class ToolBarFactory
 		}
 		if (enableToolBarCanvas)
 		{
-			ToolBarCanvas toolBarCanvas = createToolBarCanvas((AbstractCanvas) acContextHolder);
+			GrammarComponent grammarComponent = (GrammarComponent)acContextHolder;
+			ToolBarCanvas toolBarCanvas = createToolBarCanvas(grammarComponent.getCanvas());
 			panel.add(toolBarCanvas);
 		}
 		return panel;
@@ -52,7 +55,7 @@ public class ToolBarFactory
 	}
 
 	@SuppressWarnings("rawtypes")
-	public JComponent createToolBar(final Object reference, boolean enableToolBarFile, boolean enableToolBarCanvas)
+	public JComponent createToolBar(final AbstractComponent reference, boolean enableToolBarFile, boolean enableToolBarCanvas)
 	{
 		ToolBarFactory toolBarFactory = new ToolBarFactory();
 		if (reference == null)

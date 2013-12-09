@@ -1,10 +1,10 @@
 package ggll.ui.main;
 
-import ggll.ui.component.AbstractComponent;
-import ggll.ui.component.EmptyComponent;
-import ggll.ui.component.FileComponent;
 import ggll.ui.project.Context;
 import ggll.ui.view.AbstractView;
+import ggll.ui.view.component.AbstractComponent;
+import ggll.ui.view.component.AbstractFileComponent;
+import ggll.ui.view.component.EmptyComponent;
 
 import javax.swing.JOptionPane;
 
@@ -59,7 +59,7 @@ public class WindowAdapter extends DockingWindowAdapter
 		if (dWindow instanceof AbstractView)
 		{
 			AbstractView view = (AbstractView) dWindow;
-			if (view.getComponentModel() instanceof FileComponent)
+			if (view.getComponentModel() instanceof AbstractFileComponent)
 			{
 				Context.closeFile(view.getFileName());
 			}

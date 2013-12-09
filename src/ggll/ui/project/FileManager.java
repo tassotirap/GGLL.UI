@@ -1,12 +1,6 @@
 package ggll.ui.project;
 
 import ggll.core.list.ExtendedList;
-import ggll.ui.canvas.AbstractCanvas;
-import ggll.ui.component.AbstractComponent;
-import ggll.ui.component.FileComponent;
-import ggll.ui.component.GrammarComponent;
-import ggll.ui.component.GrammarFactory;
-import ggll.ui.component.TextAreaComponent;
 import ggll.ui.file.FileNames;
 import ggll.ui.icon.IconFactory;
 import ggll.ui.icon.IconFactory.IconType;
@@ -14,7 +8,10 @@ import ggll.ui.main.MainWindow;
 import ggll.ui.tab.TabWindowList.TabPlace;
 import ggll.ui.util.Log;
 import ggll.ui.view.AbstractView;
-import ggll.ui.view.UnsavedViewRepository;
+import ggll.ui.view.component.AbstractComponent;
+import ggll.ui.view.component.AbstractFileComponent;
+import ggll.ui.view.component.GrammarComponent;
+import ggll.ui.view.component.TextAreaComponent;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,46 +22,11 @@ public class FileManager
 {
 	private Project project;
 	private MainWindow mainWindow;
-	private UnsavedViewRepository viewManager;
 
 	public FileManager()
 	{
-		this.project = Context.getProject();
-		this.mainWindow = Context.getMainWindow();
-		this.viewManager = Context.getUnsavedViewManager();
-	}
-
-	private String saveFile(AbstractCanvas canvas)
-	{
-		GrammarComponent grammarComponent = GrammarFactory.getGrammarComponent(canvas.getFile());
-		if (viewManager.hasUnsavedView(grammarComponent.getPath()))
-		{
-			grammarComponent.saveFile();
-			return grammarComponent.getPath();
-		}
-		return null;
-	}
-
-	private String saveFile(FileComponent fileComponent)
-	{
-		fileComponent.saveFile();
-		return fileComponent.getPath();
-	}
-
-	private String saveFile(GrammarComponent grammarComponent)
-	{
-		grammarComponent.saveFile();
-		return grammarComponent.getPath();
-	}
-
-	private String saveFile(TextAreaComponent object)
-	{
-		if (object != null)
-		{
-			object.saveFile();
-			return object.getPath();
-		}
-		return null;
+		project = Context.getProject();
+		mainWindow = Context.getMainWindow();
 	}
 
 	public void closeFile(String fileName)
@@ -143,7 +105,7 @@ public class FileManager
 		}
 		return false;
 	}
-	
+
 	public void openFile(String path)
 	{
 		openFile(path, true);
@@ -181,7 +143,7 @@ public class FileManager
 				{
 					mainWindow.addComponent(new TextAreaComponent(path), file.getName(), path, iconFactory.getIcon(IconType.TXT_ICON), TabPlace.CENTER_LEFT_TABS);
 				}
-				if(verifyOpen)
+				if (verifyOpen)
 				{
 					project.getOpenedFiles().append(new File(path));
 				}
@@ -193,62 +155,20 @@ public class FileManager
 		}
 	}
 
-	public void saveAllFiles(ExtendedList<AbstractView> views)
+	public void saveAllFiles(ExtendedList<AbstractView> components)
 	{
-		for (AbstractView dynamicView : views.getAll())
+		for (AbstractView fileComponent : components.getAll())
 		{
-			AbstractComponent abstractComponent = dynamicView.getComponentModel();
-			saveFileObject(abstractComponent);
+			saveFileObject(fileComponent.getComponentModel());
 		}
 	}
 
-	public void saveFileObject(Object object)
+	public void saveFileObject(AbstractComponent component)
 	{
-		String path = null;
-		boolean componentSaved = false;
-		if (object != null)
+		if (component instanceof AbstractFileComponent)
 		{
-			if (object instanceof TextAreaComponent)
-			{
-				path = saveFile((TextAreaComponent) object);
-				componentSaved = true;
-			}
-			else if (object instanceof FileComponent)
-			{
-				path = saveFile((FileComponent) object);
-				componentSaved = true;
-			}
-			else if (object instanceof AbstractCanvas)
-			{
-				path = saveFile((AbstractCanvas) object);
-				componentSaved = true;
-			}
-			else if (object instanceof GrammarComponent)
-			{
-				path = saveFile((GrammarComponent) object);
-			}
-			else if (object instanceof String)
-			{
-				path = (String) object;
-			}
-		}
-
-		if (path == null)
-			return;
-
-		if (project != null)
-		{
-			if (mainWindow != null && !componentSaved)
-			{
-				for (AbstractView dynamicView : viewManager.getUnsavedViews().getAll())
-				{
-					AbstractComponent comp = dynamicView.getComponentModel();
-					if (comp instanceof FileComponent && ((FileComponent) comp).getPath().equals(path))
-					{
-						((FileComponent) comp).saveFile();
-					}
-				}
-			}
+			AbstractFileComponent fileComponent = (AbstractFileComponent)component;
+			String path = fileComponent.saveFile();
 			if (mainWindow != null)
 			{
 				mainWindow.setSaved(path);

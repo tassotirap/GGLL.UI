@@ -1,6 +1,6 @@
 package ggll.ui.canvas.decorator;
 
-import ggll.ui.canvas.AbstractCanvas;
+import ggll.ui.canvas.Canvas;
 import ggll.ui.canvas.UnidirectionalAnchor;
 
 import java.awt.Color;
@@ -11,19 +11,15 @@ import org.netbeans.api.visual.anchor.Anchor;
 import org.netbeans.api.visual.anchor.Anchor.Direction;
 import org.netbeans.api.visual.anchor.AnchorFactory;
 import org.netbeans.api.visual.anchor.AnchorShape;
-import org.netbeans.api.visual.graph.GraphScene;
 import org.netbeans.api.visual.widget.ConnectionWidget;
 import org.netbeans.api.visual.widget.Scene;
 import org.netbeans.api.visual.widget.Widget;
 
 public class SuccessorConnectorDecorator implements ConnectDecorator
 {
-
-	private GraphScene scene;
-	private ConnectionWidget thisConnection;
-	private AbstractCanvas canvas;
+	private Canvas canvas;
 	
-	public SuccessorConnectorDecorator(AbstractCanvas canvas)
+	public SuccessorConnectorDecorator(Canvas canvas)
 	{
 		this.canvas = canvas;
 	}
@@ -34,8 +30,6 @@ public class SuccessorConnectorDecorator implements ConnectDecorator
 		ConnectionWidget widget = new ConnectionWidget(scene);
 		widget.setTargetAnchorShape(AnchorShape.TRIANGLE_FILLED);
 		widget.setLineColor(Color.BLUE);
-		thisConnection = widget;
-		this.scene = (scene instanceof GraphScene) ? (GraphScene) scene : null;
 		return widget;
 	}
 
@@ -54,7 +48,11 @@ public class SuccessorConnectorDecorator implements ConnectDecorator
 	@Override
 	public Anchor createTargetAnchor(Widget targetWidget)
 	{
-		String connection = (String) scene.findObject(thisConnection);
-		return new UnidirectionalAnchor(canvas, targetWidget, Direction.LEFT, connection, Direction.TOP);
+		return new UnidirectionalAnchor(canvas, targetWidget, Direction.LEFT);
+	}
+	
+	public Anchor createTargetAnchor(Widget targetWidget, String edge)
+	{
+		return new UnidirectionalAnchor(canvas, targetWidget, Direction.LEFT, edge, Direction.TOP);
 	}
 }
