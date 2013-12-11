@@ -3,18 +3,17 @@ package ggll.ui.core.syntax.grammar;
 import ggll.core.list.ExtendedList;
 import ggll.ui.canvas.Canvas;
 import ggll.ui.canvas.CanvasRepository;
-import ggll.ui.core.syntax.AsinEditor;
+import ggll.ui.core.syntax.CanvasParser;
 import ggll.ui.core.syntax.grammar.model.AbstractNode;
-import ggll.ui.core.syntax.grammar.model.LambdaAlternative;
 import ggll.ui.core.syntax.grammar.model.NodeLabel;
 import ggll.ui.core.syntax.grammar.model.SimpleNode;
 import ggll.ui.core.syntax.grammar.model.SyntaxDefinitions;
 import ggll.ui.core.syntax.grammar.model.SyntaxElement;
 import ggll.ui.core.syntax.grammar.model.SyntaxModel;
 import ggll.ui.core.syntax.grammar.model.SyntaxSubpart;
+import ggll.ui.director.GGLLDirector;
 import ggll.ui.output.AppOutput;
 import ggll.ui.output.HtmlViewer.TOPIC;
-import ggll.ui.project.Context;
 
 import java.io.File;
 
@@ -109,7 +108,7 @@ public class GrammarFactory
 	{
 		return canPerformAction();
 	}
-	
+
 	public Grammar getGrammar()
 	{
 		return grammar;
@@ -118,18 +117,18 @@ public class GrammarFactory
 	public String run() throws Exception
 	{
 		StringBuffer returnString = new StringBuffer();
+		CanvasParser ggllTableGenerator = new CanvasParser();
 
 		ExtendedList<SyntaxElement> children = new ExtendedList<SyntaxElement>();
-		ExtendedList<AbstractNode> startNodes = new ExtendedList<AbstractNode>();	
-		
-		for(File grammar :  Context.getProject().getGrammarFile().getAll())
+		ExtendedList<AbstractNode> startNodes = new ExtendedList<AbstractNode>();
+
+		for (File grammar : GGLLDirector.getProject().getGrammarFile().getAll())
 		{
 			Canvas cavans = CanvasRepository.getInstance(grammar.getAbsolutePath());
-			children.addAll(AsinEditor.getInstance().getLogicDiagram(cavans).getChildrenNodes());
+			children.addAll(ggllTableGenerator.getLogicDiagram(cavans).getChildrenNodes());
 		}
-		
+
 		startNodes.addAll(clearAndSetStartNodes(children));
-		
 
 		for (int i = 0; i < startNodes.count(); i++)
 		{
@@ -223,7 +222,7 @@ public class GrammarFactory
 
 		AbstractNode subpartNode = (AbstractNode) syntaxSubpart;
 
-		if (syntaxSubpart instanceof SyntaxModel || syntaxSubpart instanceof LambdaAlternative)
+		if (syntaxSubpart instanceof SyntaxModel)
 		{
 			syntaxSubpart.setFlag(true);
 			SyntaxModel successor = (SyntaxModel) syntaxSubpart.getSucessor();

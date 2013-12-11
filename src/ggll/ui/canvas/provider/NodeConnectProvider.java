@@ -6,7 +6,7 @@ import ggll.ui.canvas.widget.LabelWidgetExt;
 import ggll.ui.resource.CanvasResource;
 
 import java.awt.Point;
-import java.beans.PropertyChangeSupport;
+import java.beans.PropertyChangeEvent;
 import java.util.Collection;
 
 import org.netbeans.api.visual.action.ConnectProvider;
@@ -17,17 +17,13 @@ import org.netbeans.api.visual.widget.Widget;
 public class NodeConnectProvider implements ConnectProvider
 {
 
-	private PropertyChangeSupport monitor;
 	private String source = null;
-
 	private String target = null;
 	private Canvas canvas;
 
 	public NodeConnectProvider(Canvas canvas)
 	{
 		this.canvas = canvas;
-		monitor = new PropertyChangeSupport(this);
-		monitor.addPropertyChangeListener(canvas.getCanvasStateRepository());
 	}
 
 	@Override
@@ -63,8 +59,7 @@ public class NodeConnectProvider implements ConnectProvider
 		canvas.addEdge(edge);
 		canvas.setEdgeSource(edge, source);
 		canvas.setEdgeTarget(edge, target);
-		monitor.firePropertyChange("undoable", null, "Connection");
-
+		canvas.getCanvasStateRepository().propertyChange(new PropertyChangeEvent(this, "undoable", null, "Connection"));
 	}
 
 	@Override

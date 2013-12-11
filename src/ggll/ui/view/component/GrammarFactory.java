@@ -1,4 +1,5 @@
 package ggll.ui.view.component;
+
 import java.util.Hashtable;
 
 public abstract class GrammarFactory
@@ -7,10 +8,10 @@ public abstract class GrammarFactory
 
 	public static void addGramComponent(GrammarComponent gramComponent, String file)
 	{
-		if(gramComponents == null)
+		if (gramComponents == null)
 		{
 			gramComponents = new Hashtable<String, GrammarComponent>();
-		}		
+		}
 		gramComponents.put(file, gramComponent);
 	}
 

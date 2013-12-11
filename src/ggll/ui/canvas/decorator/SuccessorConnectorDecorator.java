@@ -18,7 +18,7 @@ import org.netbeans.api.visual.widget.Widget;
 public class SuccessorConnectorDecorator implements ConnectDecorator
 {
 	private Canvas canvas;
-	
+
 	public SuccessorConnectorDecorator(Canvas canvas)
 	{
 		this.canvas = canvas;
@@ -50,7 +50,7 @@ public class SuccessorConnectorDecorator implements ConnectDecorator
 	{
 		return new UnidirectionalAnchor(canvas, targetWidget, Direction.LEFT);
 	}
-	
+
 	public Anchor createTargetAnchor(Widget targetWidget, String edge)
 	{
 		return new UnidirectionalAnchor(canvas, targetWidget, Direction.LEFT, edge, Direction.TOP);

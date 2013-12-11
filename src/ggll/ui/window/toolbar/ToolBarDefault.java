@@ -1,9 +1,9 @@
-package ggll.ui.toolbar;
+package ggll.ui.window.toolbar;
 
 import ggll.ui.canvas.provider.WidgetCopyPasteProvider;
 import ggll.ui.canvas.provider.WidgetDeleteProvider;
 import ggll.ui.canvas.state.CanvasStateRepository;
-import ggll.ui.project.Context;
+import ggll.ui.director.GGLLDirector;
 import ggll.ui.resource.LangResource;
 import ggll.ui.view.component.AbstractComponent;
 import ggll.ui.view.component.GrammarComponent;
@@ -39,8 +39,8 @@ public class ToolBarDefault extends BaseToolBar implements PropertyChangeListene
 		super(context);
 		if (context instanceof GrammarComponent)
 		{
-			GrammarComponent grammarComponent = (GrammarComponent)context;
-			grammarComponent.getCanvas().getMonitor().addPropertyChangeListener("undoable", this);
+			GrammarComponent grammarComponent = (GrammarComponent) context;
+			grammarComponent.getCanvas().getMonitor().addPropertyChangeListener("writing", this);
 			grammarComponent.getCanvas().getMonitor().addPropertyChangeListener("object_state", this);
 		}
 		for (int i = 0; i < buttons.length; i++)
@@ -73,7 +73,7 @@ public class ToolBarDefault extends BaseToolBar implements PropertyChangeListene
 			@Override
 			public void actionPerformed(ActionEvent evt)
 			{
-				Context.saveFile((AbstractComponent)context);
+				GGLLDirector.saveFile((AbstractComponent) context);
 			}
 
 		});
@@ -82,7 +82,7 @@ public class ToolBarDefault extends BaseToolBar implements PropertyChangeListene
 			@Override
 			public void actionPerformed(ActionEvent evt)
 			{
-				Context.saveAllFiles();
+				GGLLDirector.saveAllFiles();
 			}
 
 		});
@@ -91,7 +91,7 @@ public class ToolBarDefault extends BaseToolBar implements PropertyChangeListene
 			@Override
 			public void actionPerformed(ActionEvent evt)
 			{
-				Context.print(context);
+				GGLLDirector.print(context);
 			}
 		});
 	}
@@ -157,57 +157,6 @@ public class ToolBarDefault extends BaseToolBar implements PropertyChangeListene
 		});
 	}
 
-	private void setTextActions(final TextAreaComponent textArea)
-	{
-		btnCopy.addActionListener(new ActionListener()
-		{
-			@Override
-			public void actionPerformed(ActionEvent evt)
-			{
-				// Registers.copy(textArea, '$');
-			}
-
-		});
-		btnCut.addActionListener(new ActionListener()
-		{
-			@Override
-			public void actionPerformed(ActionEvent evt)
-			{
-				// Registers.cut(textArea, '$');
-			}
-
-		});
-		btnPaste.addActionListener(new ActionListener()
-		{
-			@Override
-			public void actionPerformed(ActionEvent evt)
-			{
-				// Registers.paste(textArea, '$', false);
-			}
-
-		});
-		btnUndo.addActionListener(new ActionListener()
-		{
-			@Override
-			public void actionPerformed(ActionEvent evt)
-			{
-				// JEditBuffer buffer = textArea.getBuffer();
-				// buffer.undo(textArea);
-			}
-
-		});
-		btnRedo.addActionListener(new ActionListener()
-		{
-			@Override
-			public void actionPerformed(ActionEvent evt)
-			{
-				// JEditBuffer buffer = textArea.getBuffer();
-				// buffer.redo(textArea);
-			}
-
-		});
-	}
-
 	@Override
 	protected void initActions()
 	{
@@ -219,7 +168,7 @@ public class ToolBarDefault extends BaseToolBar implements PropertyChangeListene
 		}
 		else if (context instanceof TextAreaComponent)
 		{
-			setTextActions((TextAreaComponent) context);
+			// setTextActions((TextAreaComponent) context);
 		}
 	}
 
@@ -233,7 +182,9 @@ public class ToolBarDefault extends BaseToolBar implements PropertyChangeListene
 		btnCut = new JButton(new ImageIcon(getClass().getResource(imgPath + "edit-cut.png")));
 		btnPaste = new JButton(new ImageIcon(getClass().getResource(imgPath + "edit-paste.png")));
 		btnUndo = new JButton(new ImageIcon(getClass().getResource(imgPath + "edit-undo.png")));
+		btnUndo.setEnabled(false);
 		btnRedo = new JButton(new ImageIcon(getClass().getResource(imgPath + "edit-redo.png")));
+		btnRedo.setEnabled(false);
 		buttons = new JButton[]{ btnSave, btnSaveAll, btnPrint, btnCopy, btnCut, btnPaste, btnUndo, btnRedo };
 		names = new String[]{ LangResource.save, LangResource.save_all, LangResource.print, LangResource.copy, LangResource.cut, LangResource.paste, LangResource.undo, LangResource.redo };
 	}
@@ -260,19 +211,17 @@ public class ToolBarDefault extends BaseToolBar implements PropertyChangeListene
 	{
 		if (event.getSource() instanceof CanvasStateRepository)
 		{
-			CanvasStateRepository canvasStateRepository = (CanvasStateRepository)event.getSource();
-			if (event.getPropertyName().equals("undoable"))
+			CanvasStateRepository canvas = (CanvasStateRepository) event.getSource();
+			switch (event.getPropertyName())
 			{
-				btnUndo.setEnabled(true);
-				btnUndo.setToolTipText("Undo");
-			}
-			if (event.getPropertyName().equals("object_state"))
-			{
-				if (canvasStateRepository.hasNextRedo())
-				{
-					btnRedo.setEnabled(true);
-					btnRedo.setToolTipText("Redo");
-				}
+				case "writing":
+					btnUndo.setEnabled(true);
+					btnUndo.setToolTipText("Undo");
+					break;
+				case "object_state":
+					btnRedo.setEnabled(canvas.hasNextRedo());
+					btnUndo.setEnabled(canvas.hasNextUndo());
+					break;
 			}
 		}
 	}

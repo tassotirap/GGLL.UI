@@ -75,7 +75,11 @@ public class Canvas extends GraphScene.StringGraph implements PropertyChangeList
 	private String moveStrategy;
 
 	private AbstractMap<String, Cursor> cursors = new HashMap<String, Cursor>();
+	
+	//Decorator
 	private CanvasDecorator decorator = new CanvasDecorator(this);
+	
+	//Components
 	private ExtendedList<String> alternatives = new ExtendedList<String>();
 	private ExtendedList<String> labels = new ExtendedList<String>();
 	private ExtendedList<String> lambdas = new ExtendedList<String>();
@@ -156,7 +160,7 @@ public class Canvas extends GraphScene.StringGraph implements PropertyChangeList
 		{
 			this.removeNodeSafely((String) nodes[i]);
 		}
-		
+
 		getTerminals().removeAll();
 		getNterminals().removeAll();
 		getLeftSides().removeAll();
@@ -383,6 +387,11 @@ public class Canvas extends GraphScene.StringGraph implements PropertyChangeList
 		return component;
 	}
 
+	public ExtendedActionFactory getActionFactory()
+	{
+		return actionFactory;
+	}
+
 	public Router getActiveRouter()
 	{
 		return activeRouter;
@@ -413,9 +422,15 @@ public class Canvas extends GraphScene.StringGraph implements PropertyChangeList
 		return decorator;
 	}
 
-	public CanvasState getCurrentCanvasState()
+	/**
+	 * This method is here for a mere convenience, is really essential for the
+	 * canvas itself
+	 * 
+	 * @return the volatile state manager of this canvas
+	 */
+	public CanvasStateRepository getCanvasStateRepository()
 	{
-		return currentCanvasState;
+		return canvasStateRepository;
 	}
 
 	public LayerWidget getConnectionLayer()
@@ -426,6 +441,11 @@ public class Canvas extends GraphScene.StringGraph implements PropertyChangeList
 	public String getConnectionStrategy()
 	{
 		return this.connectionStrategy;
+	}
+
+	public CanvasState getCurrentCanvasState()
+	{
+		return currentCanvasState;
 	}
 
 	public String getFile()
@@ -508,17 +528,6 @@ public class Canvas extends GraphScene.StringGraph implements PropertyChangeList
 	public ExtendedList<String> getTerminals()
 	{
 		return terminals;
-	}
-
-	/**
-	 * This method is here for a mere convenience, is really essential for the
-	 * canvas itself
-	 * 
-	 * @return the volatile state manager of this canvas
-	 */
-	public CanvasStateRepository getCanvasStateRepository()
-	{
-		return canvasStateRepository;
 	}
 
 	public boolean isAlternative(String edge)
@@ -610,16 +619,17 @@ public class Canvas extends GraphScene.StringGraph implements PropertyChangeList
 	{
 		if (event.getSource() instanceof CanvasStateRepository)
 		{
-			if (event.getPropertyName().equals("object_state"))
+			switch (event.getPropertyName())
 			{
-				this.currentCanvasState = (CanvasState) event.getNewValue();
-				this.updateState(this.currentCanvasState);
-				this.revalidate();
-			}
-			if (event.getPropertyName().equals("writing"))
-			{
-				this.currentCanvasState.reloadFromCanvas(this);
+				case "object_state":
+					this.currentCanvasState = (CanvasState) event.getNewValue();
+					this.updateState(this.currentCanvasState);
+					this.revalidate();
+					break;
 
+				case "writing":
+					this.currentCanvasState.reloadFromCanvas(this);
+					break;
 			}
 		}
 		this.monitor.firePropertyChange(event);
@@ -860,10 +870,5 @@ public class Canvas extends GraphScene.StringGraph implements PropertyChangeList
 
 		setActiveTool(CanvasResource.SELECT);
 		validate();
-	}
-
-	public ExtendedActionFactory getActionFactory()
-	{
-		return actionFactory;
 	}
 }

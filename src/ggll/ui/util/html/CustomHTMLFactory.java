@@ -10,11 +10,12 @@ import javax.swing.text.html.HTMLEditorKit.HTMLFactory;
 public class CustomHTMLFactory extends HTMLFactory implements ViewFactory
 {
 	private String applicationImagePath;
-	
+
 	public CustomHTMLFactory(String applicationImagePath)
 	{
 		this.applicationImagePath = applicationImagePath;
 	}
+
 	@Override
 	public View create(Element elem)
 	{

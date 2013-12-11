@@ -1,9 +1,10 @@
 package ggll.ui.core.semantics;
 
+import ggll.ui.canvas.Canvas;
 import ggll.ui.file.SemanticFile;
 import ggll.ui.util.Log;
 
-import java.beans.PropertyChangeSupport;
+import java.beans.PropertyChangeEvent;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileWriter;
@@ -14,12 +15,12 @@ public class SemFileManager
 {
 
 	private SemanticFile file;
-	private PropertyChangeSupport monitor;
+	private Canvas canvas;
 
-	public SemFileManager(SemanticFile file, PropertyChangeSupport monitor)
+	public SemFileManager(SemanticFile file, Canvas canvas)
 	{
+		this.canvas = canvas;
 		this.file = file;
-		this.monitor = monitor;
 	}
 
 	private boolean addToFile(String name, String code)
@@ -171,7 +172,7 @@ public class SemFileManager
 
 	public boolean InsertRoutine(String name, String code, String widgetName)
 	{
-		monitor.firePropertyChange("undoable", null, "AddRoutine");
+		canvas.propertyChange(new PropertyChangeEvent(this, "undoable", null, "AddRoutine"));
 		code = getFormatedCode(name, code);
 		addToFile(name, code);
 		return true;

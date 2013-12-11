@@ -1,10 +1,10 @@
 package ggll.ui.project;
 
 import ggll.core.list.ExtendedList;
+import ggll.ui.director.GGLLDirector;
 import ggll.ui.file.FileNames;
 import ggll.ui.icon.IconFactory;
 import ggll.ui.icon.IconFactory.IconType;
-import ggll.ui.main.MainWindow;
 import ggll.ui.tab.TabWindowList.TabPlace;
 import ggll.ui.util.Log;
 import ggll.ui.view.AbstractView;
@@ -12,6 +12,7 @@ import ggll.ui.view.component.AbstractComponent;
 import ggll.ui.view.component.AbstractFileComponent;
 import ggll.ui.view.component.GrammarComponent;
 import ggll.ui.view.component.TextAreaComponent;
+import ggll.ui.window.MainWindow;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,8 +26,8 @@ public class FileManager
 
 	public FileManager()
 	{
-		project = Context.getProject();
-		mainWindow = Context.getMainWindow();
+		project = GGLLDirector.getProject();
+		mainWindow = GGLLDirector.getMainWindow();
 	}
 
 	public void closeFile(String fileName)
@@ -167,7 +168,7 @@ public class FileManager
 	{
 		if (component instanceof AbstractFileComponent)
 		{
-			AbstractFileComponent fileComponent = (AbstractFileComponent)component;
+			AbstractFileComponent fileComponent = (AbstractFileComponent) component;
 			String path = fileComponent.saveFile();
 			if (mainWindow != null)
 			{

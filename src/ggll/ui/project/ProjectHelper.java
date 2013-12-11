@@ -62,12 +62,12 @@ public class ProjectHelper
 		ExtendedList<GrammarFile> gramFiles = new ExtendedList<GrammarFile>();
 		SemanticFile semFile = null;
 		LexicalFile lexFile = null;
-		
-		if(!projectRootPath.endsWith("/"))
+
+		if (!projectRootPath.endsWith("/"))
 		{
 			projectRootPath += "/";
-		}			
-		
+		}
+
 		try
 		{
 			File projectRoot = new File(projectRootPath);

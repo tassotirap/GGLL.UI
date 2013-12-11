@@ -1,8 +1,8 @@
 package ggll.ui.project.tree;
 
+import ggll.ui.director.GGLLDirector;
 import ggll.ui.icon.IconFactory;
 import ggll.ui.icon.IconFactory.IconType;
-import ggll.ui.project.Context;
 
 import java.awt.Component;
 import java.awt.Dimension;
@@ -131,11 +131,11 @@ public class Tree implements TreeModelListener
 		CustomTreeCellRenderer renderer = new CustomTreeCellRenderer();
 		tree.setCellRenderer(renderer);
 		tree.setEditable(true);
-		tree.setModel(getFileSystemModel(Context.getProject().getProjectDir().getAbsolutePath()));
+		tree.setModel(getFileSystemModel(GGLLDirector.getProject().getProjectDir().getAbsolutePath()));
 		tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 		tree.addTreeSelectionListener(new FileTreeSelectionListener());
 		tree.addMouseListener(new FileTreeMouseListener());
-		getFileSystemModel(Context.getProject().getProjectDir().getAbsolutePath()).addTreeModelListener(this);
+		getFileSystemModel(GGLLDirector.getProject().getProjectDir().getAbsolutePath()).addTreeModelListener(this);
 	}
 
 	private static TreeFileModel getFileSystemModel(String rootPath)
@@ -199,7 +199,7 @@ public class Tree implements TreeModelListener
 		if (node.isFile())
 		{
 			String path = node.getAbsolutePath();
-			Context.openFile(path);
+			GGLLDirector.openFile(path);
 		}
 	}
 

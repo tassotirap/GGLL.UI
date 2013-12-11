@@ -1,10 +1,11 @@
-package ggll.ui.main;
+package ggll.ui.window.adapter;
 
-import ggll.ui.project.Context;
+import ggll.ui.director.GGLLDirector;
 import ggll.ui.view.AbstractView;
 import ggll.ui.view.component.AbstractComponent;
 import ggll.ui.view.component.AbstractFileComponent;
 import ggll.ui.view.component.EmptyComponent;
+import ggll.ui.window.MainWindow;
 
 import javax.swing.JOptionPane;
 
@@ -17,21 +18,21 @@ import net.infonode.docking.View;
 public class WindowAdapter extends DockingWindowAdapter
 {
 
-	private IMainWindow window;
+	private MainWindow window;
 
 	public WindowAdapter()
 	{
-		this.window = Context.getMainWindow();
+		this.window = GGLLDirector.getMainWindow();
 	}
 
 	@Override
-	public void viewFocusChanged(View ov, View nv)
+	public void viewFocusChanged(View oldView, View newView)
 	{
-		super.viewFocusChanged(ov, nv);
-		if (nv instanceof AbstractView)
+		super.viewFocusChanged(oldView, newView);
+		if (newView instanceof AbstractView)
 		{
-			AbstractComponent comp = ((AbstractView) nv).getComponentModel();
-			window.updateFocusedComponent(comp);
+			AbstractComponent component = ((AbstractView) newView).getComponentModel();
+			window.updateFocusedComponent(component);
 		}
 	}
 
@@ -61,7 +62,7 @@ public class WindowAdapter extends DockingWindowAdapter
 			AbstractView view = (AbstractView) dWindow;
 			if (view.getComponentModel() instanceof AbstractFileComponent)
 			{
-				Context.closeFile(view.getFileName());
+				GGLLDirector.closeFile(view.getFileName());
 			}
 		}
 	}
@@ -72,14 +73,12 @@ public class WindowAdapter extends DockingWindowAdapter
 		if (dWindow instanceof AbstractView)
 		{
 			AbstractView dynamicView = (AbstractView) dWindow;
-			if (Context.hasUnsavedView(dynamicView))
+			if (GGLLDirector.hasUnsavedView(dynamicView))
 			{
-				int option = JOptionPane.showConfirmDialog(window.getFrame(), "Would you like to save '" + dWindow.getTitle().replace(IMainWindow.UNSAVED_PREFIX, "") + "' before closing?");
-				if (option == JOptionPane.CANCEL_OPTION)
-					throw new OperationAbortedException("Window close was aborted!");
+				int option = JOptionPane.showConfirmDialog(window.getFrame(), "Would you like to save '" + dWindow.getTitle().replace(MainWindow.UNSAVED_PREFIX, "") + "' before closing?");
 				if (option == JOptionPane.YES_OPTION)
 				{
-					Context.saveFile(dynamicView.getComponentModel());
+					GGLLDirector.saveFile(dynamicView.getComponentModel());
 				}
 			}
 		}

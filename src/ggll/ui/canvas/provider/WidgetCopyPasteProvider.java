@@ -11,7 +11,7 @@ import ggll.ui.util.clipboard.ClipboardHelper;
 import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.PointerInfo;
-import java.beans.PropertyChangeSupport;
+import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
@@ -22,13 +22,10 @@ public class WidgetCopyPasteProvider
 {
 
 	private Canvas canvas;
-	private PropertyChangeSupport monitor;
 
 	public WidgetCopyPasteProvider(Canvas canvas)
 	{
 		this.canvas = canvas;
-		monitor = new PropertyChangeSupport(this);
-		monitor.addPropertyChangeListener(canvas.getCanvasStateRepository());
 	}
 
 	/** copy all selected widgets to clipboard **/
@@ -186,7 +183,7 @@ public class WidgetCopyPasteProvider
 			n.setLocation(p);
 			p = null;
 			canvas.getCurrentCanvasState().reloadFromCanvas(canvas);
-			monitor.firePropertyChange("undoable", null, "Add");
+			canvas.getCanvasStateRepository().propertyChange(new PropertyChangeEvent(this, "undoable", null, "Add"));
 		}
 		for (Connection c : connections.getAll())
 		{
@@ -207,7 +204,7 @@ public class WidgetCopyPasteProvider
 			}
 			while (canvas.findWidget(c.getName()) != null);
 			canvas.getCurrentCanvasState().reloadFromCanvas(canvas);
-			monitor.firePropertyChange("undoable", null, "Connection");
+			canvas.getCanvasStateRepository().propertyChange(new PropertyChangeEvent(this, "undoable", null, "Add"));
 		}
 		canvas.updateState(canvas.getCurrentCanvasState());
 		for (String name : oldNewNames.values())

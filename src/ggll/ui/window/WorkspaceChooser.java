@@ -1,4 +1,4 @@
-package ggll.ui.main;
+package ggll.ui.window;
 
 import ggll.ui.exceptions.WarningException;
 import ggll.ui.project.ProjectHelper;

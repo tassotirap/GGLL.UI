@@ -16,7 +16,6 @@ public class CanvasStateRepository implements PropertyChangeListener
 	public class CanvasStateSerialized
 	{
 		public byte[] serializedObject;
-		
 
 		public CanvasStateSerialized(CanvasState canvasState)
 		{
@@ -52,14 +51,14 @@ public class CanvasStateRepository implements PropertyChangeListener
 	private Canvas canvas;
 
 	private PropertyChangeSupport monitor;
-		
+
 	public CanvasStateRepository(Canvas canvas)
 	{
 		this.canvas = canvas;
 		this.states.add(new CanvasStateSerialized(canvas.getCurrentCanvasState()));
-		
+
 		this.index++;
-		
+
 		monitor = new PropertyChangeSupport(this);
 		monitor.addPropertyChangeListener("object_state", canvas);
 		monitor.addPropertyChangeListener("writing", canvas);
@@ -79,23 +78,25 @@ public class CanvasStateRepository implements PropertyChangeListener
 	@Override
 	public void propertyChange(PropertyChangeEvent event)
 	{
-		if (event.getPropertyName().equals("undoable"))
+		switch (event.getPropertyName())
 		{
-			try
-			{
-				monitor.firePropertyChange("writing", null, canvas.getCurrentCanvasState());
-				int size = states.size();
-				for (int i = size - 1; i > index; i--)
+			case "undoable":
+				try
 				{
-					states.remove(i);
+					monitor.firePropertyChange("writing", null, canvas.getCurrentCanvasState());
+					int size = states.size();
+					for (int i = size - 1; i > index; i--)
+					{
+						states.remove(i);
+					}
+					states.add(new CanvasStateSerialized(canvas.getCurrentCanvasState()));
+					index++;
 				}
-				states.add(new CanvasStateSerialized(canvas.getCurrentCanvasState()));
-				index++;
-			}
-			catch (Exception e)
-			{
-				e.printStackTrace();
-			}
+				catch (Exception e)
+				{
+					e.printStackTrace();
+				}
+				break;
 		}
 	}
 
@@ -109,9 +110,9 @@ public class CanvasStateRepository implements PropertyChangeListener
 		try
 		{
 			CanvasState nobject = states.get(index + 1).toCanvasState();
-			CanvasState object = states.get(index).toCanvasState();
-			monitor.firePropertyChange("object_state", object, nobject);			
+			CanvasState object = states.get(index).toCanvasState();			
 			index++;
+			monitor.firePropertyChange("object_state", object, nobject);
 		}
 		catch (Exception e)
 		{
@@ -130,8 +131,8 @@ public class CanvasStateRepository implements PropertyChangeListener
 		{
 			CanvasState nobject = states.get(index - 1).toCanvasState();
 			CanvasState object = states.get(index).toCanvasState();
-			monitor.firePropertyChange("object_state", object, nobject);			
 			index--;
+			monitor.firePropertyChange("object_state", object, nobject);
 		}
 		catch (Exception e)
 		{

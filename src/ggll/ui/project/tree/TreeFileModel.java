@@ -28,7 +28,7 @@ public class TreeFileModel implements TreeModel
 	public void fireTreeNodesChanged(TreePath parentPath, int[] indices, Object[] children)
 	{
 		TreeModelEvent event = new TreeModelEvent(this, parentPath, indices, children);
-		for(TreeModelListener treeModelListener : listeners.getAll())
+		for (TreeModelListener treeModelListener : listeners.getAll())
 		{
 			treeModelListener.treeNodesChanged(event);
 		}
@@ -37,8 +37,8 @@ public class TreeFileModel implements TreeModel
 	public void fireTreeStructureChanged(Object source, TreePath path)
 	{
 		TreeModelEvent event = new TreeModelEvent(source, path);
-		for(TreeModelListener treeModelListener : listeners.getAll())
-		{			
+		for (TreeModelListener treeModelListener : listeners.getAll())
+		{
 			treeModelListener.treeStructureChanged(event);
 		}
 	}

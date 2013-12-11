@@ -1,4 +1,4 @@
-package ggll.ui.toolbar;
+package ggll.ui.window.toolbar;
 
 import ggll.ui.canvas.Canvas;
 import ggll.ui.resource.CanvasResource;

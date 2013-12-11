@@ -13,7 +13,7 @@ import org.netbeans.api.visual.widget.Widget;
 public class NodeSelectProvider extends CanvasSelectProvider
 {
 	private Canvas canvas;
-	
+
 	public NodeSelectProvider(Canvas canvas)
 	{
 		super(canvas);

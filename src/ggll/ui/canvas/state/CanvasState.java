@@ -11,7 +11,6 @@ import ggll.ui.resource.CanvasResource;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -33,7 +32,6 @@ public class CanvasState implements Serializable, PropertyChangeListener
 	private HashMap<String, Connection> connections = new HashMap<String, Connection>();
 	private HashMap<String, Node> nodes = new HashMap<String, Node>();
 	private Preferences preferences = new Preferences();
-	private PropertyChangeSupport monitor;
 
 	private int lastTerminalId = 0;
 	private int lastNTerminalId = 0;
@@ -42,6 +40,84 @@ public class CanvasState implements Serializable, PropertyChangeListener
 	private int lastSTART = 0;
 	private int lastCustomNode = 0;
 	private String file;
+
+	private CanvasState(String file)
+	{
+		this.file = file;
+	}
+
+	public static CanvasState read(String file) throws IOException, ClassNotFoundException
+	{
+		CanvasState canvasState = null;
+		if (file.length() > 0)
+		{
+			try
+			{
+				FileInputStream fileInputStream = new FileInputStream(file);
+				ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+				canvasState = (CanvasState) objectInputStream.readObject();
+				objectInputStream.close();
+				fileInputStream.close();
+			}
+			catch (Exception e)
+			{
+				canvasState = new CanvasState(file);
+			}
+		}
+		return canvasState;
+	}
+
+	public void addConnection(Canvas canvas, String object)
+	{
+		Widget widget = canvas.findWidget(object);
+		if (widget instanceof ConnectionWidget)
+		{
+			ConnectionWidget connectionWidget = (ConnectionWidget) widget;
+			Connection connection = new Connection();
+			connection.setName(object);
+			connection.setSource(canvas.getEdgeSource(object));
+			connection.setTarget(canvas.getEdgeTarget(object));
+			if (canvas.isAlternative(object))
+			{
+				connection.setType(CanvasResource.ALTERNATIVE);
+			}
+			else if (canvas.isSuccessor(object))
+			{
+				connection.setType(CanvasResource.SUCCESSOR);
+			}
+			connection.setPoints(connectionWidget.getControlPoints());
+			connections.put(connection.getName(), connection);
+		}
+	}
+
+	public void addNode(Canvas canvas, String object)
+	{
+		Widget widget = canvas.findWidget(object);
+		Node node = new Node();
+		if (widget instanceof LabelWidget)
+		{
+			LabelWidget labelWidget = (LabelWidget) widget;
+			node.setName(object);
+			node.setTitle(labelWidget.getLabel());
+			node.setLocation(labelWidget.getPreferredLocation());
+			if (labelWidget instanceof TypedWidget)
+			{
+				node.setType(((LabelWidgetExt) labelWidget).getType());
+			}
+		}
+		else if (widget instanceof IconNodeWidgetExt)
+		{
+			IconNodeWidgetExt iconNodeWidget = (IconNodeWidgetExt) widget;
+			node.setName(object);
+			node.setLocation(iconNodeWidget.getPreferredLocation());
+			node.setType(iconNodeWidget.getType());
+		}
+		if (widget instanceof MarkedWidget)
+		{
+			node.setMark(((MarkedWidget) widget).getMark());
+		}
+		nodes.put(node.getName(), node);
+	}
 
 	public Connection findConnection(Object conn)
 	{
@@ -67,6 +143,11 @@ public class CanvasState implements Serializable, PropertyChangeListener
 		list.addAll(connections.keySet());
 		Collections.sort(list.getAll());
 		return list.getAll();
+	}
+
+	public String getFile()
+	{
+		return file;
 	}
 
 	public int getLastCustomNode()
@@ -164,60 +245,6 @@ public class CanvasState implements Serializable, PropertyChangeListener
 			}
 		}
 	}
-	
-	public void addNode(Canvas canvas, String object)
-	{
-		Widget widget = canvas.findWidget(object);
-		if (widget instanceof LabelWidget)
-		{
-			LabelWidget labelWidget = (LabelWidget) widget;
-			Node node = new Node();
-			node.setName(object);
-			node.setTitle(labelWidget.getLabel());
-			node.setLocation(labelWidget.getPreferredLocation());
-			if (labelWidget instanceof TypedWidget)
-			{
-				node.setType(((LabelWidgetExt) labelWidget).getType());
-			}
-			if (labelWidget instanceof MarkedWidget)
-			{
-				node.setMark(((MarkedWidget) labelWidget).getMark());
-			}
-			nodes.put(node.getName(), node);
-		}
-		else if (widget instanceof IconNodeWidgetExt)
-		{
-			IconNodeWidgetExt iconNodeWidget = (IconNodeWidgetExt) widget;
-			Node node = new Node();
-			node.setName(object);
-			node.setLocation(iconNodeWidget.getPreferredLocation());
-			node.setType(iconNodeWidget.getType());
-			nodes.put(node.getName(), node);
-		}
-	}
-	
-	public void addConnection(Canvas canvas, String object)
-	{
-		Widget widget = canvas.findWidget(object);
-		if (widget instanceof ConnectionWidget)
-		{
-			ConnectionWidget connectionWidget = (ConnectionWidget) widget;
-			Connection connection = new Connection();
-			connection.setName(object);
-			connection.setSource(canvas.getEdgeSource(object));
-			connection.setTarget(canvas.getEdgeTarget(object));
-			if (canvas.isAlternative(object))
-			{
-				connection.setType(CanvasResource.ALTERNATIVE);
-			}
-			else if (canvas.isSuccessor(object))
-			{
-				connection.setType(CanvasResource.SUCCESSOR);
-			}
-			connection.setPoints(connectionWidget.getControlPoints());
-			connections.put(connection.getName(), connection);
-		}
-	}
 
 	public void reloadFromCanvas(Canvas canvas)
 	{
@@ -233,49 +260,14 @@ public class CanvasState implements Serializable, PropertyChangeListener
 		}
 	}
 
-	public String getFile()
-	{
-		return file;
-	}
-
 	public void setFile(String file)
-	{
-		this.file = file;
-	}
-
-	public static CanvasState read(String file) throws IOException, ClassNotFoundException
-	{
-		CanvasState canvasState = null;
-		if (file.length() > 0)
-		{
-			try
-			{
-				FileInputStream fileInputStream = new FileInputStream(file);
-				ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
-				canvasState = (CanvasState) objectInputStream.readObject();
-				objectInputStream.close();
-				fileInputStream.close();				
-			}
-			catch (Exception e)
-			{
-				canvasState = new CanvasState(file);
-			}
-		}
-		if (canvasState.monitor == null)
-		{
-			canvasState.monitor = new PropertyChangeSupport(canvasState);
-		}
-		return canvasState;
-	}
-
-	private CanvasState(String file)
 	{
 		this.file = file;
 	}
 
 	public void write() throws IOException
 	{
-		monitor.firePropertyChange("writing", null, this);
+		propertyChange(new PropertyChangeEvent(this, "writing", null, this));
 		FileOutputStream fileOutputStream = new FileOutputStream(file);
 		ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
 		objectOutputStream.writeObject(this);

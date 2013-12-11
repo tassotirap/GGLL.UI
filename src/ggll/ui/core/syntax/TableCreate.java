@@ -15,7 +15,6 @@ import java.io.StringReader;
  */
 public class TableCreate
 {
-
 	private BufferedReader in;
 	private int nlines;
 	private String tab[][];

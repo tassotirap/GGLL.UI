@@ -44,7 +44,6 @@ public class Preferences implements Serializable
 		return showGrid;
 	}
 
-
 	/**
 	 * @return the showLines
 	 */

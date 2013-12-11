@@ -15,6 +15,7 @@ import org.netbeans.modules.visual.action.MoveAction;
 public class MoveTracker extends Observable
 {
 	private Canvas canvas;
+
 	public MoveTracker(Canvas canvas)
 	{
 		this.canvas = canvas;
@@ -42,7 +43,7 @@ public class MoveTracker extends Observable
 	{
 		setChanged();
 		super.notifyObservers(obj);
-		canvas.getActionFactory().setActiveMoveAction((String)obj);
+		canvas.getActionFactory().setActiveMoveAction((String) obj);
 		WidgetAction activeMovement = canvas.getActionFactory().getAction("Move");
 		for (String nodes : canvas.getNodes())
 		{

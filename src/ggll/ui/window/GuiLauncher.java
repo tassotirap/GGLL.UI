@@ -1,7 +1,7 @@
-package ggll.ui.main;
+package ggll.ui.window;
 
+import ggll.ui.director.GGLLDirector;
 import ggll.ui.lib.SplashWindow;
-import ggll.ui.project.Context;
 
 import javax.swing.JFrame;
 
@@ -16,12 +16,6 @@ import javax.swing.JFrame;
 public class GuiLauncher
 {
 	private final static String SPLASH_SCREEN_PNG = "/ggll/ui/images/splash_screen.png";
-
-	public static void main(String[] args)
-	{
-		GuiLauncher guiLauncher = new GuiLauncher();
-		guiLauncher.startApp();
-	}
 
 	private void showFrame(final JFrame frame)
 	{
@@ -47,7 +41,7 @@ public class GuiLauncher
 		});
 	}
 
-	private void startApp()
+	public void start()
 	{
 		WorkspaceChooser workspaceChooser = startWorkspaceChooser();
 		if (workspaceChooser.isDone())
@@ -58,10 +52,10 @@ public class GuiLauncher
 		}
 	}
 
-	private IMainWindow startMainWindow(WorkspaceChooser workspaceChooser)
+	private MainWindow startMainWindow(WorkspaceChooser workspaceChooser)
 	{
 		MainWindow mainWindow = new MainWindow();
-		Context.Start(mainWindow, workspaceChooser.getWorkspaceDir());
+		GGLLDirector.Start(mainWindow, workspaceChooser.getWorkspaceDir());
 		showFrame(mainWindow);
 		return mainWindow;
 	}

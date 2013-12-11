@@ -15,10 +15,10 @@ import ggll.core.syntax.parser.GGLLTable;
 import ggll.core.syntax.parser.Parser;
 import ggll.core.syntax.parser.ParserOutput;
 import ggll.ui.core.syntax.SyntacticLoader;
+import ggll.ui.director.GGLLDirector;
 import ggll.ui.output.AppOutput;
 import ggll.ui.output.HtmlViewer.TOPIC;
 import ggll.ui.output.Output;
-import ggll.ui.project.Context;
 import ggll.ui.util.Log;
 
 import java.io.File;
@@ -60,26 +60,26 @@ public class ParsingEditor
 			AppOutput.displayText("<font color='red'>Expression can't be recognized.</font>", TOPIC.Output);
 			for (Exception error : analyzer.getErrorList().getAll())
 			{
-				if(error instanceof SintaticException)
+				if (error instanceof SintaticException)
 				{
-					SintaticException sintaticException = (SintaticException)error;
+					SintaticException sintaticException = (SintaticException) error;
 					AppOutput.displayText("<font color='red'>Sintatic Error: " + sintaticException.getToken() + "</font>", TOPIC.Output);
 				}
-				else if(error instanceof ErrorRecoveryException)
+				else if (error instanceof ErrorRecoveryException)
 				{
-					ErrorRecoveryException errorRecoveryException = (ErrorRecoveryException)error;
+					ErrorRecoveryException errorRecoveryException = (ErrorRecoveryException) error;
 					AppOutput.displayText("<font color='red'>Erro Recovery: " + errorRecoveryException.getMessage() + "</font>", TOPIC.Output);
 				}
-				else if(error instanceof LexicalException)
+				else if (error instanceof LexicalException)
 				{
-					LexicalException lexicalException = (LexicalException)error;
+					LexicalException lexicalException = (LexicalException) error;
 					AppOutput.displayText("<font color='red'>Lexical Error: " + lexicalException.getToken() + "</font>", TOPIC.Output);
 				}
-				else if(error instanceof SemanticException)
+				else if (error instanceof SemanticException)
 				{
-					SemanticException semanticException = (SemanticException)error;
+					SemanticException semanticException = (SemanticException) error;
 					AppOutput.displayText("<font color='red'>Semantic Error: " + semanticException.getMessage() + "</font>", TOPIC.Output);
-				}				
+				}
 			}
 		}
 		analyzer = null;
@@ -102,8 +102,8 @@ public class ParsingEditor
 		try
 		{
 			Compiler compiler = new Compiler();
-			compiler.compile(Context.getProject().getSemanticFile().getPath());
-			ClassLoader<SemanticRoutineClass> classLoader = new ClassLoader<SemanticRoutineClass>(Context.getProject().getSemanticFile());
+			compiler.compile(GGLLDirector.getProject().getSemanticFile().getPath());
+			ClassLoader<SemanticRoutineClass> classLoader = new ClassLoader<SemanticRoutineClass>(GGLLDirector.getProject().getSemanticFile());
 			analyzer = new Parser(new GGLLTable(syntacticLoader.tabGraph(), syntacticLoader.tabNt(), syntacticLoader.tabT()), yylex, classLoader.getInstance(), stepping);
 			analyzer.setParserOutput(new ParserOutput()
 			{

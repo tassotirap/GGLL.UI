@@ -1,9 +1,10 @@
 package ggll.ui.canvas.provider;
 
 import ggll.ui.canvas.Canvas;
+import ggll.ui.canvas.state.CanvasStateRepository;
 
 import java.awt.Point;
-import java.beans.PropertyChangeSupport;
+import java.beans.PropertyChangeEvent;
 import java.util.List;
 
 import org.netbeans.api.visual.action.MoveControlPointProvider;
@@ -11,22 +12,21 @@ import org.netbeans.api.visual.widget.ConnectionWidget;
 
 public class FreeMoveControl implements MoveControlPointProvider
 {
-	private PropertyChangeSupport monitor;
-	MoveControlPointProvider moveProvider;
+	private CanvasStateRepository canvasStateRepository;
+	private MoveControlPointProvider moveProvider;
 
 	public FreeMoveControl(Canvas canvas)
 	{
-		monitor = new PropertyChangeSupport(this);
-		monitor.addPropertyChangeListener(canvas.getCanvasStateRepository());
+		this.canvasStateRepository = canvas.getCanvasStateRepository();
 		moveProvider = org.netbeans.api.visual.action.ActionFactory.createFreeMoveControlPointProvider();
 	}
 
 	@Override
-	public List<Point> locationSuggested(ConnectionWidget arg0, int arg1, Point arg2)
+	public List<Point> locationSuggested(ConnectionWidget connectionWidget, int arg1, Point point)
 	{
-		List<Point> points = moveProvider.locationSuggested(arg0, arg1, arg2);
-		arg0.setControlPoints(points, true);
-		monitor.firePropertyChange("undoable", null, "Move");
+		List<Point> points = moveProvider.locationSuggested(connectionWidget, arg1, point);
+		connectionWidget.setControlPoints(points, true);
+		canvasStateRepository.propertyChange(new PropertyChangeEvent(this, "undoable", null, "Move"));
 		return points;
 	}
 

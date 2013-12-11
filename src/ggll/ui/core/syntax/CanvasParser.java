@@ -5,33 +5,15 @@ import ggll.ui.canvas.state.CanvasState;
 import ggll.ui.canvas.state.Node;
 import ggll.ui.core.syntax.grammar.model.AbstractNode;
 import ggll.ui.core.syntax.grammar.model.Connection;
-import ggll.ui.core.syntax.grammar.model.NodeLabel;
 import ggll.ui.core.syntax.grammar.model.SimpleNode;
 import ggll.ui.core.syntax.grammar.model.SyntaxDefinitions;
 import ggll.ui.core.syntax.grammar.model.SyntaxElement;
 import ggll.ui.core.syntax.grammar.model.SyntaxModel;
 import ggll.ui.core.syntax.grammar.model.SyntaxSubpart;
 
-import java.util.List;
-
-public class AsinEditor
+public class CanvasParser
 {
-
-	private transient static AsinEditor instance;
-	private SyntaxModel logicDiagram = new SyntaxModel();
-
-	private AsinEditor()
-	{
-	}
-
-	public static AsinEditor getInstance()
-	{
-		if (instance == null)
-		{
-			instance = new AsinEditor();
-		}
-		return instance;
-	}
+	private SyntaxModel syntaxModel = new SyntaxModel();
 
 	private void add(String target, String context)
 	{
@@ -39,24 +21,18 @@ public class AsinEditor
 		{
 			SimpleNode node = new SimpleNode(context, target);
 			node.setID(target);
-			logicDiagram.addChild(node);
+			syntaxModel.addChild(node);
 		}
 	}
 
-	private void addAndRenameNode(CanvasState canvasState, String name, String type)
+	private void add(String target, String name, String context)
 	{
-		Node node = canvasState.findNode(name);
-		if (node != null)
+		if (context.equals(AbstractNode.NTERMINAL) || context.equals(AbstractNode.TERMINAL) || context.equals(AbstractNode.LEFTSIDE) || context.equals(AbstractNode.LAMBDA_ALTERNATIVE) || context.equals(AbstractNode.START))
 		{
-			String context = type;
-			add(name, context);
-
-			rename(name, name, node.getTitle());
-
-			if (node.getMark() != null && !node.getMark().equals(""))
-			{
-				addRoutine(name, node.getMark());
-			}
+			SimpleNode node = new SimpleNode(context, target);
+			node.setID(target);
+			node.getLabel().setLabelContents(name);
+			syntaxModel.addChild(node);
 		}
 	}
 
@@ -69,14 +45,27 @@ public class AsinEditor
 		}
 	}
 
+	private void addNode(CanvasState canvasState, String name, String type)
+	{
+		Node node = canvasState.findNode(name);
+		if (node != null)
+		{
+			String context = type;
+			add(name, node.getTitle(), context);
+			if (node.getMark() != null && !node.getMark().equals(""))
+			{
+				addRoutine(name, node.getMark());
+			}
+		}
+	}
+
 	private void addRoutine(String target, String routineName)
 	{
-
 		SimpleNode routineNode = new SimpleNode(AbstractNode.SEMANTIC_ROUTINE, routineName);
 
 		String name = target;
-		SyntaxElement se = logicDiagram.findElement(name);
-		if (logicDiagram.isNode(se) && se instanceof SyntaxModel)
+		SyntaxElement se = syntaxModel.findElement(name);
+		if (syntaxModel.isNode(se) && se instanceof SyntaxModel)
 		{
 			((SyntaxModel) se).setSemanticNode(routineNode);
 		}
@@ -86,16 +75,16 @@ public class AsinEditor
 	{
 		if (type.equals(SyntaxDefinitions.SucConnection) || type.equals(SyntaxDefinitions.AltConnection))
 		{
-			SyntaxElement sourceElement = logicDiagram.findElement(source);
-			SyntaxElement targetElement = logicDiagram.findElement(targe);
-			if (logicDiagram.isNode(sourceElement) && logicDiagram.isNode(targetElement))
+			SyntaxElement sourceElement = syntaxModel.findElement(source);
+			SyntaxElement targetElement = syntaxModel.findElement(targe);
+			if (syntaxModel.isNode(sourceElement) && syntaxModel.isNode(targetElement))
 			{
 				SyntaxSubpart sourceSyntaxSubpart = (SyntaxSubpart) sourceElement;
 				SyntaxSubpart targetSyntaxSubpart = (SyntaxSubpart) targetElement;
 				Connection connection = new Connection(connector);
 				connection.setSource(sourceSyntaxSubpart);
 				connection.setTarget(targetSyntaxSubpart);
-				logicDiagram.addChild(connection);
+				syntaxModel.addChild(connection);
 				connection.attachTarget(type);
 				connection.attachSource();
 			}
@@ -105,21 +94,21 @@ public class AsinEditor
 	private void recreateDiagram(Canvas canvas)
 	{
 		CanvasState canvasState = canvas.getCurrentCanvasState();
-		logicDiagram = new SyntaxModel();
+		syntaxModel = new SyntaxModel();
 
 		for (String name : canvas.getTerminals().getAll())
 		{
-			addAndRenameNode(canvasState, name, SyntaxDefinitions.Terminal);
+			addNode(canvasState, name, SyntaxDefinitions.Terminal);
 		}
 
 		for (String name : canvas.getNterminals().getAll())
 		{
-			addAndRenameNode(canvasState, name, SyntaxDefinitions.NTerminal);
+			addNode(canvasState, name, SyntaxDefinitions.NTerminal);
 		}
 
 		for (String name : canvas.getLeftSides().getAll())
 		{
-			addAndRenameNode(canvasState, name, SyntaxDefinitions.LeftSide);
+			addNode(canvasState, name, SyntaxDefinitions.LeftSide);
 		}
 
 		for (String name : canvas.getLambdas().getAll())
@@ -139,7 +128,7 @@ public class AsinEditor
 
 		for (String name : canvas.getStart().getAll())
 		{
-			addAndRenameNode(canvasState, name, SyntaxDefinitions.Start);
+			addNode(canvasState, name, SyntaxDefinitions.Start);
 		}
 
 		for (String name : canvas.getSuccessors().getAll())
@@ -153,26 +142,9 @@ public class AsinEditor
 		}
 	}
 
-	private void rename(String source, String oldName, String newName)
-	{
-		SyntaxElement syntaxElement = logicDiagram.findElement(source);
-		if (logicDiagram.isNode(syntaxElement))
-		{
-			SyntaxModel syntaxModel = (SyntaxModel) syntaxElement;
-			List<NodeLabel> labels = syntaxModel.getChildrenAsLabels().getAll();
-			for (int i = 0; i < labels.size(); i++)
-			{
-				if (labels.get(i).getLabelContents().equals(oldName))
-				{
-					labels.get(i).setLabelContents(newName);
-				}
-			}
-		}
-	}
-
 	public SyntaxModel getLogicDiagram(Canvas canvas)
 	{
 		recreateDiagram(canvas);
-		return logicDiagram;
+		return syntaxModel;
 	}
 }

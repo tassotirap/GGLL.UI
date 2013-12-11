@@ -24,13 +24,14 @@ import org.netbeans.api.visual.widget.Widget;
 
 public class CanvasDecorator
 {
-	protected  AlternativeConnectorDecorator connectDecoratorAlternative;
-	
-	protected  SuccessorConnectorDecorator connectDecoratorSuccessor;
+	protected AlternativeConnectorDecorator connectDecoratorAlternative;
+
+	protected SuccessorConnectorDecorator connectDecoratorSuccessor;
 
 	private String[] iconName = new String[]{ CanvasResource.N_TERMINAL, CanvasResource.TERMINAL, CanvasResource.LEFT_SIDE, CanvasResource.LAMBDA, CanvasResource.START };
 
 	private URL[] icons = new URL[]{ getClass().getResource(GGLLImages.ICON_N_TERMINAL), getClass().getResource(GGLLImages.ICON_TERMINAL), getClass().getResource(GGLLImages.ICON_LEFT_SIDE), getClass().getResource(GGLLImages.ICON_LAMBDA), getClass().getResource(GGLLImages.ICON_START) };
+
 	public CanvasDecorator(Canvas canvas)
 	{
 		connectDecoratorAlternative = new AlternativeConnectorDecorator(canvas);

@@ -9,7 +9,7 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.font.FontRenderContext;
 import java.awt.font.TextLayout;
-import java.beans.PropertyChangeSupport;
+import java.beans.PropertyChangeEvent;
 
 import org.netbeans.api.visual.widget.Widget;
 
@@ -25,7 +25,6 @@ public class LineWidget extends Widget
 
 	public final static Font NUMBER_FONT = new Font("Arial", Font.PLAIN, 12);
 	private Canvas canvas;
-	private PropertyChangeSupport monitor;
 	private Integer number;
 	protected int height;
 	protected int width;
@@ -34,7 +33,6 @@ public class LineWidget extends Widget
 	{
 		super(canvas);
 		this.canvas = canvas;
-		monitor = new PropertyChangeSupport(this);
 	}
 
 	@Override
@@ -54,18 +52,13 @@ public class LineWidget extends Widget
 		textlayout.draw(g, LINE_NUMBER_SPACE, (height / 2) + (NUMBER_FONT.getSize() / 2));
 		g.setColor(LINE_COLOR);
 		g.drawLine(0, height, width, height);
-		monitor.firePropertyChange(LINE_PAINTED_EVENT, null, number);
+		canvas.getCanvasStateRepository().propertyChange(new PropertyChangeEvent(this, LINE_PAINTED_EVENT, null, number));
 	}
 
 	@Override
 	public Rectangle calculateClientArea()
 	{
 		return new Rectangle(width, height);
-	}
-
-	public PropertyChangeSupport getMonitor()
-	{
-		return monitor;
 	}
 
 	/**

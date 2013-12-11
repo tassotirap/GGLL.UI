@@ -3,8 +3,8 @@ package ggll.ui.view.component;
 import ggll.ui.canvas.Canvas;
 import ggll.ui.canvas.CanvasRepository;
 import ggll.ui.canvas.state.CanvasState;
-import ggll.ui.toolbar.ToolBarGrammar;
 import ggll.ui.util.Log;
+import ggll.ui.window.toolbar.ToolBarGrammar;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -63,6 +63,11 @@ public class GrammarComponent extends AbstractFileComponent implements PropertyC
 		}
 	}
 
+	public Canvas getCanvas()
+	{
+		return canvas;
+	}
+
 	@Override
 	public String getPath()
 	{
@@ -94,10 +99,5 @@ public class GrammarComponent extends AbstractFileComponent implements PropertyC
 	{
 		canvas = CanvasRepository.getInstance(path);
 		this.path = path;
-	}
-
-	public Canvas getCanvas()
-	{
-		return canvas;
 	}
 }

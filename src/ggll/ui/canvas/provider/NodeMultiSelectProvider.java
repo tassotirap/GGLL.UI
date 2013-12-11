@@ -12,7 +12,7 @@ import org.netbeans.api.visual.widget.Widget;
 public final class NodeMultiSelectProvider implements SelectProvider
 {
 	private Canvas canvas;
-	
+
 	public NodeMultiSelectProvider(Canvas canvas)
 	{
 		this.canvas = canvas;

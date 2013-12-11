@@ -1,13 +1,13 @@
 package ggll.ui.wizard;
 
+import ggll.ui.canvas.Canvas;
 import ggll.ui.canvas.widget.MarkedWidget;
 import ggll.ui.core.semantics.SemFileManager;
-import ggll.ui.project.Context;
+import ggll.ui.director.GGLLDirector;
 import ggll.ui.util.Log;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.beans.PropertyChangeSupport;
 
 import javax.swing.WindowConstants;
 
@@ -26,13 +26,13 @@ public class RoutineWizard
 	 * @param widget
 	 *            , the Widget that will receive the semantic routine
 	 */
-	public RoutineWizard(String widgetName, MarkedWidget widget, String routineName, PropertyChangeSupport monitor)
+	public RoutineWizard(String widgetName, MarkedWidget widget, String routineName, Canvas canvas)
 	{
 
 		this.widget = widget;
 		this.widgetName = widgetName;
 		this.routineName = routineName;
-		semFileManager = new SemFileManager(Context.getProject().getSemanticFile(), monitor);
+		semFileManager = new SemFileManager(GGLLDirector.getProject().getSemanticFile(), canvas);
 		if (widgetName != null && widget != null)
 		{
 			initWindow();

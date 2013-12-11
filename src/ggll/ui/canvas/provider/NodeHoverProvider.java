@@ -11,7 +11,7 @@ import org.netbeans.api.visual.widget.Widget;
 public class NodeHoverProvider implements TwoStateHoverProvider
 {
 	Canvas canvas;
-	
+
 	public NodeHoverProvider(Canvas canvas)
 	{
 		this.canvas = canvas;

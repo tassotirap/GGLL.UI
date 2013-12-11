@@ -35,12 +35,6 @@ public class TabWindowList
 		return tabWindowList.get(TabPlace.CENTER_LEFT_TABS.ordinal());
 	}
 
-	public TabWindow getTopTab()
-	{
-
-		return tabWindowList.get(TabPlace.TOP_TABS.ordinal());
-	}
-
 	public TabWindow getCenterRightTab()
 	{
 		return tabWindowList.get(TabPlace.CENTER_RIGHT_TABS.ordinal());
@@ -54,5 +48,11 @@ public class TabWindowList
 	public TabWindow getTabWindow(TabPlace place)
 	{
 		return tabWindowList.get(place.ordinal());
+	}
+
+	public TabWindow getTopTab()
+	{
+
+		return tabWindowList.get(TabPlace.TOP_TABS.ordinal());
 	}
 }

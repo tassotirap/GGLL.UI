@@ -8,7 +8,7 @@ public abstract class AbstractComponent
 {
 	protected ExtendedList<ComponentListener> listeners = new ExtendedList<ComponentListener>();
 	protected JComponent jComponent;
-	
+
 	public void addComponentListener(ComponentListener listener)
 	{
 		if (!listeners.contains(listener))

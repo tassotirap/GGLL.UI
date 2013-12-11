@@ -5,8 +5,6 @@ import ggll.ui.canvas.widget.GuideLineWidget;
 import ggll.ui.canvas.widget.LineWidget;
 
 import java.awt.Point;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.HashMap;
 
 /**
@@ -15,7 +13,7 @@ import java.util.HashMap;
  * @author Gustavo H. Braga
  * 
  */
-public class LineProvider implements PropertyChangeListener
+public class LineProvider
 {
 
 	private static HashMap<Canvas, LineProvider> lineProviders = new HashMap<Canvas, LineProvider>();
@@ -25,10 +23,7 @@ public class LineProvider implements PropertyChangeListener
 	private LineWidget guideLine;
 	private LineWidget lastLine;
 	private int lastYPos;
-
 	private HashMap<Integer, LineWidget> lines;
-
-	private boolean populated = false;
 
 	private LineProvider(Canvas canvas)
 	{
@@ -169,11 +164,6 @@ public class LineProvider implements PropertyChangeListener
 		lWidget.setNumber(lineNumber);
 		lines.put(yPos, lWidget);
 		lastYPos = yPos + LineWidget.DEFAULT_HEIGHT + LINE_OFFSET;
-		if (lastLine != null)
-		{
-			lastLine.getMonitor().removePropertyChangeListener(this);
-		}
-		lWidget.getMonitor().addPropertyChangeListener(this);
 		lastLine = lWidget;
 		return lastLine;
 	}
@@ -225,40 +215,7 @@ public class LineProvider implements PropertyChangeListener
 			yPos += LineWidget.DEFAULT_HEIGHT + LINE_OFFSET;
 			linesToInsert--;
 		}
-		populated = true;
 		canvas.repaint();
-	}
-
-	@Override
-	public void propertyChange(PropertyChangeEvent evt)
-	{
-		if (populated)
-		{
-			if (evt.getSource() instanceof LineWidget)
-			{
-				if (evt.getPropertyName().equals(LineWidget.LINE_PAINTED_EVENT))
-				{
-					int lineNumber = (Integer) evt.getNewValue();
-					if (lineNumber == lineCnt())
-					{
-						Thread t1 = new Thread()
-						{
-							@Override
-							public void run()
-							{
-								while (linesToFillCanvas() > 0)
-								{
-									insertLine(null, null);
-								}
-								canvas.repaint();
-								canvas.validate();
-							}
-						};
-						t1.start();
-					}
-				}
-			}
-		}
 	}
 
 	/**
@@ -268,11 +225,9 @@ public class LineProvider implements PropertyChangeListener
 	{
 		for (LineWidget lw : lines.values())
 		{
-			lw.getMonitor().removePropertyChangeListener(this);
 			canvas.removeNodeSafely(LineWidget.class.getCanonicalName() + lw.getNumber());
 		}
 		lines.clear();
-		populated = false;
 	}
 
 	/**

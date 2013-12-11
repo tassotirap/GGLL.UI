@@ -8,7 +8,7 @@ import javax.swing.JScrollPane;
 public class ProjectsComponent extends AbstractComponent
 {
 	Tree fileTree;
-	
+
 	public ProjectsComponent(Project project)
 	{
 		fileTree = new Tree();

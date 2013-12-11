@@ -16,7 +16,7 @@ public class UnidirectionalAnchor extends Anchor
 
 	public UnidirectionalAnchor(Canvas canvas, Widget widget, Direction kind)
 	{
-		this(canvas, widget, kind, null, null);		
+		this(canvas, widget, kind, null, null);
 	}
 
 	public UnidirectionalAnchor(Canvas canvas, Widget widget, Direction kind, String connection, Direction preferredDirection)
@@ -30,12 +30,12 @@ public class UnidirectionalAnchor extends Anchor
 
 	private boolean isFirstConnection(Object[] edges)
 	{
-		for(int i = 0; i < edges.length; i++)
+		for (int i = 0; i < edges.length; i++)
 		{
-			String edge = (String)edges[i];
-			if(edge.equalsIgnoreCase(connection))
+			String edge = (String) edges[i];
+			if (edge.equalsIgnoreCase(connection))
 			{
-				if(i > 0)
+				if (i > 0)
 				{
 					return false;
 				}
@@ -43,7 +43,7 @@ public class UnidirectionalAnchor extends Anchor
 		}
 		return true;
 	}
-	
+
 	@Override
 	@SuppressWarnings("unchecked")
 	public Result compute(Entry entry)
@@ -54,14 +54,14 @@ public class UnidirectionalAnchor extends Anchor
 		{
 			return null;
 		}
-		
+
 		Object obj = canvas.findObject(widget);
-		Object[] edges = canvas.findNodeEdges((String)obj, false, true).toArray();		
-		if(preferredDirection != null && !isFirstConnection(edges))
+		Object[] edges = canvas.findNodeEdges((String) obj, false, true).toArray();
+		if (preferredDirection != null && !isFirstConnection(edges))
 		{
 			kind = preferredDirection;
 		}
-		
+
 		Rectangle bounds;
 		Point center;
 		bounds = widget.convertLocalToScene(widget.getBounds());

@@ -180,6 +180,11 @@ public class ExtendedActionFactory
 		return new DeleteAction(wdp);
 	}
 
+	private WidgetAction createEditorAction(TextFieldInplaceEditor editor)
+	{
+		return createInplaceEditorAction(editor, null);
+	}
+
 	private MoveStrategy createFreeMoveStrategy()
 	{
 		return new MoveStrategy()
@@ -200,11 +205,6 @@ public class ExtendedActionFactory
 	private <T extends JComponent> WidgetAction createInplaceEditorAction(InplaceEditorProvider<T> provider)
 	{
 		return new InplaceEditorAction<T>(provider);
-	}
-
-	private WidgetAction createEditorAction(TextFieldInplaceEditor editor)
-	{
-		return createInplaceEditorAction(editor, null);
 	}
 
 	private WidgetAction createInplaceEditorAction(TextFieldInplaceEditor editor, EnumSet<InplaceEditorProvider.ExpansionDirection> expansionDirections)

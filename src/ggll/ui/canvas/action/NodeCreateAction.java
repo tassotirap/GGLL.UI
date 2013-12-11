@@ -5,21 +5,18 @@ import ggll.ui.canvas.CanvasRepository;
 import ggll.ui.resource.CanvasResource;
 
 import java.awt.event.MouseEvent;
-import java.beans.PropertyChangeSupport;
+import java.beans.PropertyChangeEvent;
 
 import org.netbeans.api.visual.action.WidgetAction;
 import org.netbeans.api.visual.widget.Widget;
 
 public class NodeCreateAction extends WidgetAction.Adapter
 {
-	private PropertyChangeSupport monitor;
 	private Canvas canvas;
 
 	public NodeCreateAction(Canvas canvas)
 	{
 		this.canvas = canvas;
-		monitor = new PropertyChangeSupport(this);
-		monitor.addPropertyChangeListener(canvas.getCanvasStateRepository());
 	}
 
 	private String createDefaultName()
@@ -60,14 +57,14 @@ public class NodeCreateAction extends WidgetAction.Adapter
 
 	@Override
 	public State mousePressed(Widget widget, WidgetMouseEvent event)
-	{		
+	{
 		if (event.getClickCount() == 1)
 		{
 			if (event.getButton() == MouseEvent.BUTTON1 && isNode(canvas))
 			{
 				String name = createDefaultName();
 				canvas.addNode(name).setPreferredLocation(widget.convertLocalToScene(event.getPoint()));
-				monitor.firePropertyChange("undoable", null, "Add");
+				canvas.getCanvasStateRepository().propertyChange(new PropertyChangeEvent(this, "undoable", null, "Add"));
 			}
 		}
 		return State.REJECTED;

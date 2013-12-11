@@ -4,7 +4,6 @@ import ggll.core.list.ExtendedList;
 import ggll.ui.file.GrammarFile;
 import ggll.ui.file.LexicalFile;
 import ggll.ui.file.SemanticFile;
-import ggll.ui.main.ThemeManager.Theme;
 
 import java.io.File;
 import java.io.Serializable;
@@ -25,7 +24,7 @@ public class Project implements Serializable
 	private ExtendedList<File> openedFiles;
 
 	private File projectDir;
-	private Theme theme = Theme.DefaultDockingTheme;
+	//private Theme theme = Theme.DefaultDockingTheme;
 
 	private File yyLexFile;
 
@@ -35,7 +34,7 @@ public class Project implements Serializable
 	}
 
 	public Project(String projectsRootPath, ExtendedList<File> openedFiles)
-	{		
+	{
 		this.projectDir = new File(projectsRootPath);
 		this.grammarFile = new ExtendedList<GrammarFile>();
 		try
@@ -65,7 +64,6 @@ public class Project implements Serializable
 		return lexicalFile;
 	}
 
-
 	public ExtendedList<File> getOpenedFiles()
 	{
 		return openedFiles;
@@ -86,10 +84,10 @@ public class Project implements Serializable
 		return semanticFile;
 	}
 
-	public Theme getTheme()
-	{
-		return this.theme;
-	}
+//	public Theme getTheme()
+//	{
+//		return this.theme;
+//	}
 
 	public File getYyLexFile()
 	{
@@ -98,13 +96,13 @@ public class Project implements Serializable
 
 	public void setGrammarFile(ExtendedList<GrammarFile> grammarFiles)
 	{
-		
+
 		this.grammarFile = grammarFiles;
 	}
-	
+
 	public void setGrammarFile(GrammarFile grammarFile)
 	{
-		if(!this.grammarFile.contains(grammarFile))
+		if (!this.grammarFile.contains(grammarFile))
 		{
 			this.grammarFile.append(grammarFile);
 		}
@@ -125,10 +123,10 @@ public class Project implements Serializable
 		this.semanticFile = semFile;
 	}
 
-	public void setTheme(Theme theme)
-	{
-		this.theme = theme;
-	}
+//	public void setTheme(Theme theme)
+//	{
+//		this.theme = theme;
+//	}
 
 	public void setYyLexFile(File yyLexFile)
 	{

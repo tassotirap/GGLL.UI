@@ -3,7 +3,7 @@ package ggll.ui.canvas.provider;
 import ggll.ui.canvas.Canvas;
 
 import java.awt.Point;
-import java.beans.PropertyChangeSupport;
+import java.beans.PropertyChangeEvent;
 
 import org.netbeans.api.visual.action.ConnectorState;
 import org.netbeans.api.visual.action.ReconnectProvider;
@@ -15,7 +15,6 @@ public class NodeReconnectProvider implements ReconnectProvider
 {
 
 	private String edge;
-	private PropertyChangeSupport monitor;
 	private String originalNode;
 	private String replacementNode;
 	private Canvas canvas;
@@ -23,8 +22,6 @@ public class NodeReconnectProvider implements ReconnectProvider
 	public NodeReconnectProvider(Canvas canvas)
 	{
 		this.canvas = canvas;
-		monitor = new PropertyChangeSupport(this);
-		monitor.addPropertyChangeListener(canvas.getCanvasStateRepository());
 	}
 
 	@Override
@@ -73,20 +70,20 @@ public class NodeReconnectProvider implements ReconnectProvider
 		if (replacementWidget == null)
 		{
 			canvas.removeEdge(edge);
-			monitor.firePropertyChange("undoable", null, "Disconnect");
+			canvas.getCanvasStateRepository().propertyChange(new PropertyChangeEvent(this, "undoable", null, "Disconnect"));
 		}
 		else if (reconnectingSource)
 		{
 
 			canvas.setEdgeSource(edge, replacementNode);
-			monitor.firePropertyChange("undoable", null, "Connection");
+			canvas.getCanvasStateRepository().propertyChange(new PropertyChangeEvent(this, "undoable", null, "Connection"));
 
 		}
 		else
 		{
 
 			canvas.setEdgeTarget(edge, replacementNode);
-			monitor.firePropertyChange("undoable", null, "Connection");
+			canvas.getCanvasStateRepository().propertyChange(new PropertyChangeEvent(this, "undoable", null, "Connection"));
 
 		}
 	}

@@ -60,6 +60,7 @@ public final class CanvasRectangularSelectProvider implements RectangularSelectP
 {
 
 	private Canvas canvas;
+
 	public CanvasRectangularSelectProvider(Canvas canvas)
 	{
 		this.canvas = canvas;

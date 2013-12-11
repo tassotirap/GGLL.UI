@@ -1,9 +1,9 @@
 package ggll.ui.view;
 
 import ggll.core.list.ExtendedList;
+import ggll.ui.director.GGLLDirector;
 import ggll.ui.icon.IconFactory;
 import ggll.ui.icon.IconFactory.IconType;
-import ggll.ui.project.Context;
 import ggll.ui.tab.TabWindowList.TabPlace;
 import ggll.ui.view.component.AbstractComponent;
 import ggll.ui.view.component.GeneratedGrammarComponent;
@@ -20,8 +20,8 @@ import net.infonode.docking.util.ViewMap;
 public class ViewRepository
 {
 	private static int DEFAULT_LAYOUT = 4;
-	
-	private ExtendedList<TabWindow> tabWindowList;	
+
+	private ExtendedList<TabWindow> tabWindowList;
 	private ExtendedList<AbstractView> views;
 	private IconFactory iconFactory;
 	private ViewMap viewMap;
@@ -41,49 +41,49 @@ public class ViewRepository
 
 	private void createFilesView()
 	{
-		AbstractView abstractView = new AbstractView("Files", iconFactory.getIcon(IconType.PROJECT_ICON), new ProjectsComponent(Context.getProject()), getNextViewId());
+		AbstractView abstractView = new AbstractView("Files", iconFactory.getIcon(IconType.PROJECT_ICON), new ProjectsComponent(GGLLDirector.getProject()), getNextViewId());
 		tabWindowList.get(TabPlace.CENTER_RIGHT_TABS.ordinal()).addTab(abstractView);
 		viewMap.addView(0, abstractView);
 	}
 
 	private void createGrammarView()
 	{
-		AbstractView abstractView = new AbstractView("Grammar", iconFactory.getIcon(IconType.GRAMMAR_ICON), new GeneratedGrammarComponent(Context.getActiveScene()), getNextViewId());
+		AbstractView abstractView = new AbstractView("Grammar", iconFactory.getIcon(IconType.GRAMMAR_ICON), new GeneratedGrammarComponent(GGLLDirector.getActiveScene()), getNextViewId());
 		tabWindowList.get(TabPlace.BOTTOM_TABS.ordinal()).addTab(abstractView);
 		viewMap.addView(2, abstractView);
 	}
 
 	private void createOutputView()
 	{
-		AbstractView abstractView = new AbstractView("Output", iconFactory.getIcon(IconType.ACTIVE_OUTPUT_ICON), new OutputComponent(Context.getActiveScene()), getNextViewId());
+		AbstractView abstractView = new AbstractView("Output", iconFactory.getIcon(IconType.ACTIVE_OUTPUT_ICON), new OutputComponent(GGLLDirector.getActiveScene()), getNextViewId());
 		tabWindowList.get(TabPlace.BOTTOM_TABS.ordinal()).addTab(abstractView);
 		viewMap.addView(5, abstractView);
 	}
 
 	private void createParserView()
 	{
-		AbstractView abstractView = new AbstractView("Parser", iconFactory.getIcon(IconType.PARSER_ICON), new ParserComponent(Context.getProject().getProjectsRootPath()), getNextViewId());
+		AbstractView abstractView = new AbstractView("Parser", iconFactory.getIcon(IconType.PARSER_ICON), new ParserComponent(GGLLDirector.getProject().getProjectsRootPath()), getNextViewId());
 		tabWindowList.get(TabPlace.CENTER_RIGHT_TABS.ordinal()).addTab(abstractView);
 		viewMap.addView(6, abstractView);
 	}
 
 	private void createSemanticStackView()
 	{
-		AbstractView abstractView = new AbstractView("Semantic Stack", iconFactory.getIcon(IconType.SEMANTIC_STACK_ICON), new SemanticStackComponent(Context.getActiveScene()), getNextViewId());
+		AbstractView abstractView = new AbstractView("Semantic Stack", iconFactory.getIcon(IconType.SEMANTIC_STACK_ICON), new SemanticStackComponent(GGLLDirector.getActiveScene()), getNextViewId());
 		tabWindowList.get(TabPlace.BOTTOM_TABS.ordinal()).addTab(abstractView);
 		viewMap.addView(4, abstractView);
 	}
 
 	private void createSyntaxStackView()
 	{
-		AbstractView abstractView = new AbstractView("Syntax Stack", iconFactory.getIcon(IconType.SYNTACTIC_STACK_ICON), new SyntaxStackComponent(Context.getActiveScene()), getNextViewId());
+		AbstractView abstractView = new AbstractView("Syntax Stack", iconFactory.getIcon(IconType.SYNTACTIC_STACK_ICON), new SyntaxStackComponent(GGLLDirector.getActiveScene()), getNextViewId());
 		tabWindowList.get(TabPlace.BOTTOM_TABS.ordinal()).addTab(abstractView);
 		viewMap.addView(3, abstractView);
 	}
 
 	private void createViewView()
 	{
-		AbstractView abstractView = new AbstractView("View", iconFactory.getIcon(IconType.OVERVIEW_CON), new OutlineComponent(Context.getActiveScene()), getNextViewId());
+		AbstractView abstractView = new AbstractView("View", iconFactory.getIcon(IconType.OVERVIEW_CON), new OutlineComponent(GGLLDirector.getActiveScene()), getNextViewId());
 		tabWindowList.get(TabPlace.CENTER_RIGHT_TABS.ordinal()).addTab(abstractView);
 		viewMap.addView(1, abstractView);
 	}
@@ -144,17 +144,15 @@ public class ViewRepository
 
 		createParserView();
 		createFilesView();
-		createViewView();		
+		createViewView();
 		tabWindowList.get(TabPlace.CENTER_RIGHT_TABS.ordinal()).setSelectedTab(0);
-		
-		
+
 		createOutputView();
 		createGrammarView();
 		createSyntaxStackView();
 		createSemanticStackView();
-		tabWindowList.get(TabPlace.BOTTOM_TABS.ordinal()).setSelectedTab(0);		
+		tabWindowList.get(TabPlace.BOTTOM_TABS.ordinal()).setSelectedTab(0);
 	}
-	
 
 	public int getNextViewId()
 	{

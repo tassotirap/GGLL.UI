@@ -4,7 +4,7 @@ import ggll.ui.canvas.Canvas;
 import ggll.ui.core.syntax.grammar.model.SyntaxDefinitions;
 
 import java.awt.Point;
-import java.beans.PropertyChangeSupport;
+import java.beans.PropertyChangeEvent;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,15 +14,12 @@ import org.netbeans.api.visual.widget.Widget;
 public class MultiMoveProvider implements MoveProvider
 {
 	private Canvas canvas;
-	private PropertyChangeSupport monitor;
 	private Point originalLocation;
 	private HashMap<Widget, Point> targets = new HashMap<Widget, Point>();
 
 	public MultiMoveProvider(Canvas canvas)
 	{
 		this.canvas = canvas;
-		monitor = new PropertyChangeSupport(this);
-		monitor.addPropertyChangeListener(canvas.getCanvasStateRepository());
 	}
 
 	@Override
@@ -48,7 +45,7 @@ public class MultiMoveProvider implements MoveProvider
 		originalLocation = null;
 		if (context != null)
 		{
-			monitor.firePropertyChange("undoable", null, "Move");
+			canvas.getCanvasStateRepository().propertyChange(new PropertyChangeEvent(this, "undoable", null, "Move"));
 		}
 	}
 
