@@ -87,7 +87,6 @@ public class ParsingEditor
 
 	private void startParse(boolean stepping, String text)
 	{
-
 		Output.getInstance().displayTextExt("<< " + text.replace(">", "&gt;").replace("<", "&lt;"), TOPIC.Parser);
 		StringReader stringReader = new StringReader(text);
 		try

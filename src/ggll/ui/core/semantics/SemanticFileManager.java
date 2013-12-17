@@ -1,25 +1,20 @@
 package ggll.ui.core.semantics;
 
-import ggll.ui.canvas.Canvas;
 import ggll.ui.file.SemanticFile;
 import ggll.ui.util.Log;
 
-import java.beans.PropertyChangeEvent;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 
-public class SemFileManager
+public class SemanticFileManager
 {
-
 	private SemanticFile file;
-	private Canvas canvas;
 
-	public SemFileManager(SemanticFile file, Canvas canvas)
+	public SemanticFileManager(SemanticFile file)
 	{
-		this.canvas = canvas;
 		this.file = file;
 	}
 
@@ -33,17 +28,15 @@ public class SemFileManager
 			String currentFile = "";
 			while (line != null)
 			{
-				currentFile += line + "\n";
-				if (line.equals(SemanticFile.BEGIN_SEMANTIC_ROUTINES))
+				if (line.equals(SemanticFile.END))
 				{
-					currentFile += SemanticFile.BEGIN_ROUTINE + name + " */ \n";
+					currentFile += String.format(SemanticFile.ROUTINE_FORMAT, name) + "\n";
 					currentFile += code + "\n";
-					currentFile += SemanticFile.END_ROUTINE + name + " */ \n";
 				}
+				currentFile += line + "\n";
 				line = bufferedReader.readLine();
 			}
 			bufferedReader.close();
-
 			FileWriter fileWriter = new FileWriter(file);
 			PrintWriter printWriter = new PrintWriter(fileWriter);
 			printWriter.println(currentFile);
@@ -60,16 +53,16 @@ public class SemFileManager
 
 	private String getFormatedCode(String name, String code)
 	{
-		if (!code.trim().startsWith("public void " + "name"))
+		String[] codeLines = code.split("\n");
+		code = "public void " + name + "()";
+        code +=	"\n";
+        code += "{";
+        code += "\n";
+		for (String line : codeLines)
 		{
-			String[] codeLines = code.split("\n");
-			code = "public void " + name + "() {\n";
-			for (String line : codeLines)
-			{
-				code += "\t" + line + "\n";
-			}
-			code += "}";
+			code += "\t" + line + "\n";
 		}
+		code += "}";
 		return code;
 	}
 
@@ -78,7 +71,7 @@ public class SemFileManager
 		return file.getCode(routine) == null;
 	}
 
-	public void editRouine(String name, String code)
+	public void editRoutine(String name, String code)
 	{
 		try
 		{
@@ -87,30 +80,18 @@ public class SemFileManager
 			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(fileInputStream));
 			String line = bufferedReader.readLine();
 			String currentFile = "";
+			String routine = String.format(SemanticFile.ROUTINE_FORMAT, name);
 
-			// HEAD
 			while (line != null)
 			{
 				currentFile += line + "\n";
-				if (line.equals(SemanticFile.BEGIN_SEMANTIC_ROUTINES))
-				{
-					line = bufferedReader.readLine();
-					break;
-				}
-				line = bufferedReader.readLine();
-			}
-
-			//
-			while (line != null)
-			{
-				currentFile += line + "\n";
-				if (line.contains(SemanticFile.BEGIN_ROUTINE + name))
+				if (line.contains(routine))
 				{
 					currentFile += code + "\n";
 					line = bufferedReader.readLine();
 					while (line != null)
 					{
-						if (line.contains(SemanticFile.END_ROUTINE + name))
+						if (line.matches(SemanticFile.ROUTINE_PATTERN) || line.contains(SemanticFile.END))
 						{
 							currentFile += line + "\n";
 							break;
@@ -170,21 +151,10 @@ public class SemFileManager
 		return code;
 	}
 
-	public boolean InsertRoutine(String name, String code, String widgetName)
+	public boolean insertRoutine(String name, String code, String widgetName)
 	{
-		canvas.propertyChange(new PropertyChangeEvent(this, "undoable", null, "AddRoutine"));
 		code = getFormatedCode(name, code);
 		addToFile(name, code);
-		return true;
-	}
-
-	/**
-	 * Validates the content of the NewRoutineWizard form.
-	 * 
-	 * @return true if the content is in a valid format, false otherwise.
-	 */
-	public boolean isValid()
-	{
 		return true;
 	}
 }

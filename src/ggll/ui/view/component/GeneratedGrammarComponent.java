@@ -9,8 +9,7 @@ public class GeneratedGrammarComponent extends AbstractComponent
 {
 	public GeneratedGrammarComponent(Canvas canvas)
 	{
-		GeneratedGrammar gg = GeneratedGrammar.getInstance();
-		jComponent = new JScrollPane(gg.getView(canvas));
+		jComponent = new JScrollPane(GeneratedGrammar.getInstance().getView(canvas));
 	}
 
 	@Override

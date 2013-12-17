@@ -9,8 +9,10 @@ import org.openide.windows.TopComponent;
 /**
  * Top component which displays something.
  */
-public final class OutlineTopComponent extends TopComponent
+public class OutlineTopComponent extends TopComponent
 {
+
+	private static OutlineTopComponent instance;
 
 	class ResolvableHelper implements Serializable
 	{
@@ -25,13 +27,16 @@ public final class OutlineTopComponent extends TopComponent
 
 	private static final String PREFERRED_ID = "janelaTopComponent";
 
-	public OutlineTopComponent(GraphScene scene)
+	private OutlineTopComponent()
 	{
 		initComponents();
-
-		add(scene.createSatelliteView(), BorderLayout.CENTER);
-
 		setSize(900, 700);
+	}
+
+	public void setCanvas(GraphScene scene)
+	{
+		removeAll();
+		add(scene.createSatelliteView(), BorderLayout.CENTER);
 	}
 
 	private void initComponents()
@@ -65,5 +70,14 @@ public final class OutlineTopComponent extends TopComponent
 	public Object writeReplace()
 	{
 		return new ResolvableHelper();
+	}
+
+	public static OutlineTopComponent getInstance()
+	{
+		if (instance == null)
+		{
+			instance = new OutlineTopComponent();
+		}
+		return instance;
 	}
 }

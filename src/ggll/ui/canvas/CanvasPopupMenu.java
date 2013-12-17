@@ -10,7 +10,7 @@ import ggll.ui.core.syntax.grammar.Controller;
 import ggll.ui.director.GGLLDirector;
 import ggll.ui.resource.CanvasResource;
 import ggll.ui.view.AbstractView;
-import ggll.ui.wizard.RoutineWizard;
+import ggll.ui.wizard.RoutineWindow;
 
 import java.awt.Cursor;
 import java.awt.Point;
@@ -383,7 +383,7 @@ public class CanvasPopupMenu extends WidgetAction.Adapter implements PopupMenuPr
 				}
 				if (semFile != null)
 				{
-					new RoutineWizard((String) canvas.findObject(widget), markedWidget, null, canvas);
+					new RoutineWindow((String) canvas.findObject(widget), markedWidget, null, canvas);
 				}
 			}
 		});
@@ -428,7 +428,7 @@ public class CanvasPopupMenu extends WidgetAction.Adapter implements PopupMenuPr
 						}
 						else
 						{
-							new RoutineWizard((String) canvas.findObject(widget), markedWidget, markedWidget.getMark(), canvas);
+							new RoutineWindow((String) canvas.findObject(widget), markedWidget, markedWidget.getMark(), canvas);
 						}
 					}
 				}

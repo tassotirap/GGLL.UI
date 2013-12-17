@@ -2,11 +2,5 @@ import ggll.core.semantics.SemanticRoutineClass;
 
 public class PROJECT_NAME extends SemanticRoutineClass
 {
-/*-------------- SEMANTIC ROUTINES ESPECIFICATION ------------*/
-/* you can modify the lines bellow */
-/* BEGIN SEMANTIC ROUTINES */
-
-/* END SEMANTIC ROUTINES */
-/* do not modify the lines bellow */
-/*-------------- SELF GENERATED METHODS -------------*/
+/* END */
 }

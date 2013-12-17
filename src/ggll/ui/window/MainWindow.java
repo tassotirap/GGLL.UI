@@ -1,9 +1,16 @@
 package ggll.ui.window;
 
+import ggll.ui.canvas.Canvas;
 import ggll.ui.canvas.CanvasRepository;
+import ggll.ui.canvas.OutlineTopComponent;
+import ggll.ui.core.syntax.grammar.Grammar;
 import ggll.ui.director.GGLLDirector;
 import ggll.ui.file.GrammarFile;
 import ggll.ui.icon.IconView;
+import ggll.ui.output.GeneratedGrammar;
+import ggll.ui.output.Output;
+import ggll.ui.output.SemanticStack;
+import ggll.ui.output.SyntaxStack;
 import ggll.ui.tab.TabWindowList;
 import ggll.ui.tab.TabWindowList.TabPlace;
 import ggll.ui.view.AbstractView;
@@ -357,13 +364,20 @@ public class MainWindow implements ComponentListener
 			{
 				if (component instanceof GrammarComponent)
 				{
-					GrammarComponent grammar = (GrammarComponent) component;
+					GrammarComponent grammarComponent = (GrammarComponent) component;
+					Canvas canvas = grammarComponent.getCanvas();
+					
+					GGLLDirector.setActiveScene(canvas);
+					Output.getInstance().setActiveScene(canvas);
+					SemanticStack.getInstance().setActiveScene(canvas);
+					SyntaxStack.getInstance().setActiveScene(canvas);
+					OutlineTopComponent.getInstance().setCanvas(canvas);
+					GeneratedGrammar.getInstance().setActiveScene(canvas);					
+					
 					model.setZoomIn(true);
 					model.setZoomOut(true);
-					GGLLDirector.setActiveScene(grammar.getCanvas());
-					addToolBar(toolBarFactory.createToolBar(grammar, true, true), true, true);
-					addMenuBar(menuBarFactory.createMenuBar(grammar, model), true, true);
-
+					addToolBar(toolBarFactory.createToolBar(grammarComponent, true, true), true, true);
+					addMenuBar(menuBarFactory.createMenuBar(grammarComponent, model), true, true);
 				}
 			}
 		}

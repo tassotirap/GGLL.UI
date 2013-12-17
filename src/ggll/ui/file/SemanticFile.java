@@ -13,15 +13,15 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class SemanticFile extends File
 {
 	private static final String ORG_GRVIEW_PROJECT_EMPTY_SEMMANTIC = "/ggll/ui/file/template/empty_semmantic";
-	public static final String BEGIN_ROUTINE = "/* BEGIN ROUTINE: ";
-	public static final String BEGIN_SEMANTIC_ROUTINES = "/* BEGIN SEMANTIC ROUTINES */";
-	public static final String END_ROUTINE = "/* END ROUTINE: ";
-	public static final String END_SEMANTIC_ROUTINES = "/* END SEMANTIC ROUTINES */";
-
+	public static final String ROUTINE_FORMAT = "/* [%s] */";
+	public static final String ROUTINE_PATTERN = "/\\* \\[(.*)\\] \\*/";
+	public static final String END = "/* END */";
 	private static final long serialVersionUID = 1L;
 
 	public SemanticFile(String pathname)
@@ -31,7 +31,13 @@ public class SemanticFile extends File
 
 	private String getRoutineName(String line)
 	{
-		return line.substring(line.indexOf(BEGIN_ROUTINE) + BEGIN_ROUTINE.length()).replace("*/", "").trim();
+		Pattern pattern = Pattern.compile(ROUTINE_PATTERN);
+		Matcher matcher = pattern.matcher(line);
+		if (matcher.find())
+		{
+			return matcher.group(1);
+		}
+		return null;
 	}
 
 	private String readFile(String filename)
@@ -94,38 +100,26 @@ public class SemanticFile extends File
 			String line = bufferedReader.readLine();
 			while (line != null)
 			{
-				if (line.equals(BEGIN_SEMANTIC_ROUTINES))
+				if (line.matches(ROUTINE_PATTERN))
 				{
+					String name = getRoutineName(line);
+					String code = "";
 					line = bufferedReader.readLine();
 					while (line != null)
 					{
-						if (line.contains(BEGIN_ROUTINE))
+						if (line.matches(ROUTINE_PATTERN) || line.contains(END))
 						{
-							String name = getRoutineName(line);
-							String code = "";
-							line = bufferedReader.readLine();
-							while (line != null)
-							{
-								if (line.contains((END_ROUTINE + name)))
-								{
-									break;
-								}
-								else
-								{
-									code += line + "\n";
-									line = bufferedReader.readLine();
-								}
-							}
 							routineCode.put(name, code);
-						}
-						if (line.equals(END_SEMANTIC_ROUTINES))
-						{
 							break;
 						}
-						line = bufferedReader.readLine();
+						else
+						{
+							code += line + "\n";
+							line = bufferedReader.readLine();
+						}
 					}
+					continue;
 				}
-
 				line = bufferedReader.readLine();
 			}
 			bufferedReader.close();

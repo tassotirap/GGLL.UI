@@ -2,11 +2,8 @@ package ggll.ui.output;
 
 import ggll.ui.output.HtmlViewer.TOPIC;
 
-import org.netbeans.api.visual.widget.Widget;
-
 public abstract class AppOutput
 {
-	// static public Text outview;
 
 	public static void clearGeneratedGrammar()
 	{
@@ -101,17 +98,6 @@ public abstract class AppOutput
 
 	public static void showAndSelectNode(String flag)
 	{
-		// TODO selecting, but not really showing
 		Output.getInstance().getActiveScene().select(flag);
 	}
-
-	public abstract void createPartControl(Widget parent);
-
-	public void setFocus()
-	{
-		// set focus to my widget. For a label, this doesn't
-		// make much sense, but for more complex sets of widgets
-		// you would decide which one gets the focus.
-	}
-
 }

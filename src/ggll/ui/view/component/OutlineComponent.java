@@ -7,7 +7,8 @@ public class OutlineComponent extends AbstractComponent
 {
 	public OutlineComponent(Canvas canvas)
 	{
-		jComponent = new OutlineTopComponent(canvas);
+		OutlineTopComponent.getInstance().setCanvas(canvas);		
+		jComponent = OutlineTopComponent.getInstance();
 	}
 
 	@Override
