@@ -55,9 +55,9 @@ public class SemanticFileManager
 	{
 		String[] codeLines = code.split("\n");
 		code = "public void " + name + "()";
-        code +=	"\n";
-        code += "{";
-        code += "\n";
+		code += "\n";
+		code += "{";
+		code += "\n";
 		for (String line : codeLines)
 		{
 			code += "\t" + line + "\n";

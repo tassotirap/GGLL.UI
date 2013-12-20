@@ -30,9 +30,9 @@ import javax.swing.WindowConstants;
 public class RoutineWindow extends JFrame
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	private static final String INSERT_CODE_HERE = "/* insert code here */";
-	
+
 	private JButton btnCanvel = null;
 	private JButton btnInsert = null;
 	private JPanel pnlContent = null;
@@ -40,15 +40,14 @@ public class RoutineWindow extends JFrame
 	private JLabel lblName = null;
 	private JTextField txtName = null;
 	private TextAreaComponent txtCode = null;
-	
+
 	private String widgetName;
 	private MarkedWidget widget;
 	private String routineName;
 	private SemanticFileManager semFileManager;
 
 	private Canvas canvas;
-	
-	
+
 	public RoutineWindow(String widgetName, MarkedWidget widget, String routineName, Canvas canvas)
 	{
 		super();
@@ -59,7 +58,7 @@ public class RoutineWindow extends JFrame
 		this.semFileManager = new SemanticFileManager(GGLLDirector.getProject().getSemanticFile());
 		initialize();
 		addListener();
-		
+
 		if (routineName != null)
 		{
 			setTitle("Edit " + routineName);
@@ -76,9 +75,9 @@ public class RoutineWindow extends JFrame
 			setTitle("Create new semantic routine");
 		}
 		setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
-		setVisible(true);		
+		setVisible(true);
 	}
-	
+
 	private void addListener()
 	{
 		btnInsert.addActionListener(new ActionListener()
@@ -122,7 +121,7 @@ public class RoutineWindow extends JFrame
 				setVisible(false);
 			}
 		});
-		
+
 		btnCanvel.addActionListener(new ActionListener()
 		{
 
@@ -132,7 +131,7 @@ public class RoutineWindow extends JFrame
 				setVisible(false);
 			}
 		});
-		
+
 		txtCode.getTextArea().addFocusListener(new FocusListener()
 		{
 			@Override
@@ -165,53 +164,6 @@ public class RoutineWindow extends JFrame
 			pnlButtons.add(getInsertButton());
 		}
 		return pnlButtons;
-	}
-
-	private JPanel getJContentPane()
-	{
-		if (pnlContent == null)
-		{
-			GridBagConstraints gridBagConstraints4 = new GridBagConstraints();
-			gridBagConstraints4.gridx = 1;
-			gridBagConstraints4.gridy = 2;
-			gridBagConstraints4.fill = GridBagConstraints.BOTH;
-			gridBagConstraints4.insets = new Insets(10, 10, 10, 0);
-			GridBagConstraints gridBagConstraints2 = new GridBagConstraints();
-			gridBagConstraints2.fill = GridBagConstraints.BOTH;
-			gridBagConstraints2.gridy = 1;
-			gridBagConstraints2.weightx = 1.0;
-			gridBagConstraints2.weighty = 1.0;
-			gridBagConstraints2.gridx = 0;
-			gridBagConstraints2.gridwidth = 2;
-			gridBagConstraints2.insets = new Insets(10, 10, 0, 10);
-			GridBagConstraints gridBagConstraints1 = new GridBagConstraints();
-			gridBagConstraints1.fill = GridBagConstraints.BOTH;
-			gridBagConstraints1.gridy = 0;
-			gridBagConstraints1.weightx = 0.9;
-			gridBagConstraints1.gridx = 1;
-			gridBagConstraints1.insets = new Insets(10, 10, 0, 10);
-			GridBagConstraints gridBagConstraints = new GridBagConstraints();
-			gridBagConstraints.gridx = 0;
-			gridBagConstraints.gridy = 0;
-			gridBagConstraints.insets = new Insets(10, 10, 0, 0);
-			lblName = new JLabel();
-			lblName.setText("Routine name:");
-			pnlContent = new JPanel();
-			pnlContent.setLayout(new GridBagLayout());
-			pnlContent.add(lblName, gridBagConstraints);
-			pnlContent.add(getNameTextField(), gridBagConstraints1);
-			pnlContent.add(getCodeTextArea(), gridBagConstraints2);
-			pnlContent.add(getButtonsPanel(), gridBagConstraints4);
-		}
-		return pnlContent;
-	}
-
-	private void initialize()
-	{
-		this.setSize(550, 500);
-		Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
-		this.setLocation((dimension.width - 550) / 2, (dimension.height - 500) / 2);
-		this.setContentPane(getJContentPane());
 	}
 
 	private JButton getCancelButton()
@@ -265,6 +217,45 @@ public class RoutineWindow extends JFrame
 		return btnInsert;
 	}
 
+	private JPanel getJContentPane()
+	{
+		if (pnlContent == null)
+		{
+			GridBagConstraints gridBagConstraints4 = new GridBagConstraints();
+			gridBagConstraints4.gridx = 1;
+			gridBagConstraints4.gridy = 2;
+			gridBagConstraints4.fill = GridBagConstraints.BOTH;
+			gridBagConstraints4.insets = new Insets(10, 10, 10, 0);
+			GridBagConstraints gridBagConstraints2 = new GridBagConstraints();
+			gridBagConstraints2.fill = GridBagConstraints.BOTH;
+			gridBagConstraints2.gridy = 1;
+			gridBagConstraints2.weightx = 1.0;
+			gridBagConstraints2.weighty = 1.0;
+			gridBagConstraints2.gridx = 0;
+			gridBagConstraints2.gridwidth = 2;
+			gridBagConstraints2.insets = new Insets(10, 10, 0, 10);
+			GridBagConstraints gridBagConstraints1 = new GridBagConstraints();
+			gridBagConstraints1.fill = GridBagConstraints.BOTH;
+			gridBagConstraints1.gridy = 0;
+			gridBagConstraints1.weightx = 0.9;
+			gridBagConstraints1.gridx = 1;
+			gridBagConstraints1.insets = new Insets(10, 10, 0, 10);
+			GridBagConstraints gridBagConstraints = new GridBagConstraints();
+			gridBagConstraints.gridx = 0;
+			gridBagConstraints.gridy = 0;
+			gridBagConstraints.insets = new Insets(10, 10, 0, 0);
+			lblName = new JLabel();
+			lblName.setText("Routine name:");
+			pnlContent = new JPanel();
+			pnlContent.setLayout(new GridBagLayout());
+			pnlContent.add(lblName, gridBagConstraints);
+			pnlContent.add(getNameTextField(), gridBagConstraints1);
+			pnlContent.add(getCodeTextArea(), gridBagConstraints2);
+			pnlContent.add(getButtonsPanel(), gridBagConstraints4);
+		}
+		return pnlContent;
+	}
+
 	private JTextField getNameTextField()
 	{
 		if (txtName == null)
@@ -272,6 +263,14 @@ public class RoutineWindow extends JFrame
 			txtName = new JTextField();
 		}
 		return txtName;
+	}
+
+	private void initialize()
+	{
+		this.setSize(550, 500);
+		Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
+		this.setLocation((dimension.width - 550) / 2, (dimension.height - 500) / 2);
+		this.setContentPane(getJContentPane());
 	}
 
 }

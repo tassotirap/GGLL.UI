@@ -15,6 +15,15 @@ public class MenuFactory
 	{
 	}
 
+	private JMenuBar getDefaultMenuBar(MenuModel model)
+	{
+		if (defaultMenuBar == null)
+		{
+			defaultMenuBar = createMenuBarExt(null, model);
+		}
+		return defaultMenuBar;
+	}
+
 	@SuppressWarnings("rawtypes")
 	public JMenuBar createMenuBar(final AbstractComponent context, MenuModel model)
 	{
@@ -27,15 +36,6 @@ public class MenuFactory
 			menuBars.put(context, createMenuBarExt(context, model));
 		}
 		return menuBars.get(context);
-	}
-	
-	private JMenuBar getDefaultMenuBar(MenuModel model)
-	{
-		if (defaultMenuBar == null)
-		{
-			defaultMenuBar = createMenuBarExt(null, model);			
-		}
-		return defaultMenuBar;
 	}
 
 	@SuppressWarnings("rawtypes")

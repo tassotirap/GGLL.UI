@@ -48,14 +48,14 @@ public class ViewRepository
 
 	private void createGrammarView()
 	{
-		AbstractView abstractView = new AbstractView("Grammar", iconFactory.getIcon(IconType.GRAMMAR_ICON), new GeneratedGrammarComponent(GGLLDirector.getActiveScene()), getNextViewId());
+		AbstractView abstractView = new AbstractView("Grammar", iconFactory.getIcon(IconType.GRAMMAR_ICON), new GeneratedGrammarComponent(GGLLDirector.getActiveCanvas()), getNextViewId());
 		tabWindowList.get(TabPlace.BOTTOM_TABS.ordinal()).addTab(abstractView);
 		viewMap.addView(2, abstractView);
 	}
 
 	private void createOutputView()
 	{
-		AbstractView abstractView = new AbstractView("Output", iconFactory.getIcon(IconType.ACTIVE_OUTPUT_ICON), new OutputComponent(GGLLDirector.getActiveScene()), getNextViewId());
+		AbstractView abstractView = new AbstractView("Output", iconFactory.getIcon(IconType.ACTIVE_OUTPUT_ICON), new OutputComponent(GGLLDirector.getActiveCanvas()), getNextViewId());
 		tabWindowList.get(TabPlace.BOTTOM_TABS.ordinal()).addTab(abstractView);
 		viewMap.addView(5, abstractView);
 	}
@@ -69,21 +69,21 @@ public class ViewRepository
 
 	private void createSemanticStackView()
 	{
-		AbstractView abstractView = new AbstractView("Semantic Stack", iconFactory.getIcon(IconType.SEMANTIC_STACK_ICON), new SemanticStackComponent(GGLLDirector.getActiveScene()), getNextViewId());
+		AbstractView abstractView = new AbstractView("Semantic Stack", iconFactory.getIcon(IconType.SEMANTIC_STACK_ICON), new SemanticStackComponent(GGLLDirector.getActiveCanvas()), getNextViewId());
 		tabWindowList.get(TabPlace.BOTTOM_TABS.ordinal()).addTab(abstractView);
 		viewMap.addView(4, abstractView);
 	}
 
 	private void createSyntaxStackView()
 	{
-		AbstractView abstractView = new AbstractView("Syntax Stack", iconFactory.getIcon(IconType.SYNTACTIC_STACK_ICON), new SyntaxStackComponent(GGLLDirector.getActiveScene()), getNextViewId());
+		AbstractView abstractView = new AbstractView("Syntax Stack", iconFactory.getIcon(IconType.SYNTACTIC_STACK_ICON), new SyntaxStackComponent(GGLLDirector.getActiveCanvas()), getNextViewId());
 		tabWindowList.get(TabPlace.BOTTOM_TABS.ordinal()).addTab(abstractView);
 		viewMap.addView(3, abstractView);
 	}
 
 	private void createViewView()
 	{
-		AbstractView abstractView = new AbstractView("View", iconFactory.getIcon(IconType.OVERVIEW_CON), new OutlineComponent(GGLLDirector.getActiveScene()), getNextViewId());
+		AbstractView abstractView = new AbstractView("View", iconFactory.getIcon(IconType.OVERVIEW_CON), new OutlineComponent(GGLLDirector.getActiveCanvas()), getNextViewId());
 		tabWindowList.get(TabPlace.CENTER_RIGHT_TABS.ordinal()).addTab(abstractView);
 		viewMap.addView(1, abstractView);
 	}

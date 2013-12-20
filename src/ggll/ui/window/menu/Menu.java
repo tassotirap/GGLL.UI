@@ -22,11 +22,11 @@ import javax.swing.KeyStroke;
 public class Menu extends JMenuBar
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	public final static String DOTS = "...";
 	public final static String FILE = "File";
 	public final static String HELP = "Help";
-	
+
 	AbstractComponent context;
 	ExtendedList<String> menus;
 	MenuModel model;
@@ -156,7 +156,6 @@ public class Menu extends JMenuBar
 		helpMenu.setEnabled(false);
 		return helpMenu;
 	}
-
 
 	public void build()
 	{

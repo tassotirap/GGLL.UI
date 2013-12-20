@@ -75,11 +75,11 @@ public class Canvas extends GraphScene.StringGraph implements PropertyChangeList
 	private String moveStrategy;
 
 	private AbstractMap<String, Cursor> cursors = new HashMap<String, Cursor>();
-	
-	//Decorator
+
+	// Decorator
 	private CanvasDecorator decorator = new CanvasDecorator(this);
-	
-	//Components
+
+	// Components
 	private ExtendedList<String> alternatives = new ExtendedList<String>();
 	private ExtendedList<String> labels = new ExtendedList<String>();
 	private ExtendedList<String> lambdas = new ExtendedList<String>();
@@ -119,7 +119,6 @@ public class Canvas extends GraphScene.StringGraph implements PropertyChangeList
 			getActions().addAction(actionFactory.getAction(ExtendedActionFactory.PAN));
 			getActions().addAction(actionFactory.getAction(ExtendedActionFactory.RECTANGULAR_SELECT));
 			getActions().addAction(actionFactory.getAction(ExtendedActionFactory.DELETE));
-			getActions().addAction(actionFactory.getAction(ExtendedActionFactory.COPY_PASTE));
 			setActiveTool(cursor);
 
 			if (currentCanvasState.getPreferences().getConnectionStrategy() != null)

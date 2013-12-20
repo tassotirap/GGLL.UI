@@ -41,17 +41,6 @@ public class GuiLauncher
 		});
 	}
 
-	public void start()
-	{
-		WorkspaceChooser workspaceChooser = startWorkspaceChooser();
-		if (workspaceChooser.isDone())
-		{
-			SplashWindow.splash(GuiLauncher.class.getResource(SPLASH_SCREEN_PNG));
-			startMainWindow(workspaceChooser);
-			SplashWindow.disposeSplash();
-		}
-	}
-
 	private MainWindow startMainWindow(WorkspaceChooser workspaceChooser)
 	{
 		MainWindow mainWindow = new MainWindow();
@@ -76,5 +65,16 @@ public class GuiLauncher
 			}
 		}
 		return workspaceChooser;
+	}
+
+	public void start()
+	{
+		WorkspaceChooser workspaceChooser = startWorkspaceChooser();
+		if (workspaceChooser.isDone())
+		{
+			SplashWindow.splash(GuiLauncher.class.getResource(SPLASH_SCREEN_PNG));
+			startMainWindow(workspaceChooser);
+			SplashWindow.disposeSplash();
+		}
 	}
 }

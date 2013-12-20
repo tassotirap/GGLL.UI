@@ -12,8 +12,6 @@ import org.openide.windows.TopComponent;
 public class OutlineTopComponent extends TopComponent
 {
 
-	private static OutlineTopComponent instance;
-
 	class ResolvableHelper implements Serializable
 	{
 
@@ -25,6 +23,8 @@ public class OutlineTopComponent extends TopComponent
 		}
 	}
 
+	private static OutlineTopComponent instance;
+
 	private static final String PREFERRED_ID = "janelaTopComponent";
 
 	private OutlineTopComponent()
@@ -33,10 +33,13 @@ public class OutlineTopComponent extends TopComponent
 		setSize(900, 700);
 	}
 
-	public void setCanvas(GraphScene scene)
+	public static OutlineTopComponent getInstance()
 	{
-		removeAll();
-		add(scene.createSatelliteView(), BorderLayout.CENTER);
+		if (instance == null)
+		{
+			instance = new OutlineTopComponent();
+		}
+		return instance;
 	}
 
 	private void initComponents()
@@ -66,18 +69,15 @@ public class OutlineTopComponent extends TopComponent
 		return TopComponent.PERSISTENCE_NEVER;
 	}
 
+	public void setCanvas(GraphScene scene)
+	{
+		removeAll();
+		add(scene.createSatelliteView(), BorderLayout.CENTER);
+	}
+
 	@Override
 	public Object writeReplace()
 	{
 		return new ResolvableHelper();
-	}
-
-	public static OutlineTopComponent getInstance()
-	{
-		if (instance == null)
-		{
-			instance = new OutlineTopComponent();
-		}
-		return instance;
 	}
 }

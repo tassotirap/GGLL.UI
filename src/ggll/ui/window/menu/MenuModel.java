@@ -22,19 +22,9 @@ public class MenuModel
 		return copy;
 	}
 
-	public void setCopy(boolean copy)
-	{
-		this.copy = copy;
-	}
-
 	public boolean isCut()
 	{
 		return cut;
-	}
-
-	public void setCut(boolean cut)
-	{
-		this.cut = cut;
 	}
 
 	public boolean isEbnfExport()
@@ -42,19 +32,9 @@ public class MenuModel
 		return ebnfExport;
 	}
 
-	public void setEbnfExport(boolean ebnfExport)
-	{
-		this.ebnfExport = ebnfExport;
-	}
-
 	public boolean isFind()
 	{
 		return find;
-	}
-
-	public void setFind(boolean find)
-	{
-		this.find = find;
 	}
 
 	public boolean isPaste()
@@ -62,19 +42,9 @@ public class MenuModel
 		return paste;
 	}
 
-	public void setPaste(boolean paste)
-	{
-		this.paste = paste;
-	}
-
 	public boolean isPngExport()
 	{
 		return pngExport;
-	}
-
-	public void setPngExport(boolean pngExport)
-	{
-		this.pngExport = pngExport;
 	}
 
 	public boolean isPrint()
@@ -82,19 +52,9 @@ public class MenuModel
 		return print;
 	}
 
-	public void setPrint(boolean print)
-	{
-		this.print = print;
-	}
-
 	public boolean isRedo()
 	{
 		return redo;
-	}
-
-	public void setRedo(boolean redo)
-	{
-		this.redo = redo;
 	}
 
 	public boolean isSave()
@@ -102,19 +62,9 @@ public class MenuModel
 		return save;
 	}
 
-	public void setSave(boolean save)
-	{
-		this.save = save;
-	}
-
 	public boolean isSaveAll()
 	{
 		return saveAll;
-	}
-
-	public void setSaveAll(boolean saveAll)
-	{
-		this.saveAll = saveAll;
 	}
 
 	public boolean isSaveAs()
@@ -122,19 +72,9 @@ public class MenuModel
 		return saveAs;
 	}
 
-	public void setSaveAs(boolean saveAs)
-	{
-		this.saveAs = saveAs;
-	}
-
 	public boolean isUndo()
 	{
 		return undo;
-	}
-
-	public void setUndo(boolean undo)
-	{
-		this.undo = undo;
 	}
 
 	public boolean isZoomIn()
@@ -142,14 +82,74 @@ public class MenuModel
 		return zoomIn;
 	}
 
-	public void setZoomIn(boolean zoomIn)
-	{
-		this.zoomIn = zoomIn;
-	}
-
 	public boolean isZoomOut()
 	{
 		return zoomOut;
+	}
+
+	public void setCopy(boolean copy)
+	{
+		this.copy = copy;
+	}
+
+	public void setCut(boolean cut)
+	{
+		this.cut = cut;
+	}
+
+	public void setEbnfExport(boolean ebnfExport)
+	{
+		this.ebnfExport = ebnfExport;
+	}
+
+	public void setFind(boolean find)
+	{
+		this.find = find;
+	}
+
+	public void setPaste(boolean paste)
+	{
+		this.paste = paste;
+	}
+
+	public void setPngExport(boolean pngExport)
+	{
+		this.pngExport = pngExport;
+	}
+
+	public void setPrint(boolean print)
+	{
+		this.print = print;
+	}
+
+	public void setRedo(boolean redo)
+	{
+		this.redo = redo;
+	}
+
+	public void setSave(boolean save)
+	{
+		this.save = save;
+	}
+
+	public void setSaveAll(boolean saveAll)
+	{
+		this.saveAll = saveAll;
+	}
+
+	public void setSaveAs(boolean saveAs)
+	{
+		this.saveAs = saveAs;
+	}
+
+	public void setUndo(boolean undo)
+	{
+		this.undo = undo;
+	}
+
+	public void setZoomIn(boolean zoomIn)
+	{
+		this.zoomIn = zoomIn;
 	}
 
 	public void setZoomOut(boolean zoomOut)

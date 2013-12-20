@@ -2,7 +2,6 @@ package ggll.ui.canvas;
 
 import ggll.ui.canvas.provider.GridProvider;
 import ggll.ui.canvas.provider.LineProvider;
-import ggll.ui.canvas.provider.WidgetCopyPasteProvider;
 import ggll.ui.canvas.provider.WidgetDeleteProvider;
 import ggll.ui.canvas.state.CanvasStateRepository;
 import ggll.ui.canvas.widget.MarkedWidget;
@@ -65,51 +64,6 @@ public class CanvasPopupMenu extends WidgetAction.Adapter implements PopupMenuPr
 		return grammarMenu;
 	}
 
-	private JMenuItem createCopyMenu()
-	{
-		JMenuItem copyMenu = new JMenuItem("Copy");
-		copyMenu.addActionListener(new ActionListener()
-		{
-			@Override
-			public void actionPerformed(ActionEvent e)
-			{
-				WidgetCopyPasteProvider wcpp = new WidgetCopyPasteProvider(canvas);
-				if (widget.getState().isSelected())
-				{
-					wcpp.copySelected();
-				}
-				else
-				{
-					wcpp.copyThese(widget);
-				}
-			}
-		});
-		return copyMenu;
-	}
-
-	private JMenuItem createCutMenu()
-	{
-		JMenuItem cutMenu = new JMenuItem("Cut");
-		cutMenu.addActionListener(new ActionListener()
-		{
-
-			@Override
-			public void actionPerformed(ActionEvent e)
-			{
-				WidgetCopyPasteProvider wcpp = new WidgetCopyPasteProvider(canvas);
-				WidgetDeleteProvider wdp = new WidgetDeleteProvider(canvas);
-				if (widget.getState().isSelected() && wdp.isDeletionAllowed())
-				{
-					wcpp.cutSelected(wdp);
-				}
-				else if (wdp.isDeletionAllowed(widget))
-				{
-					wcpp.cutThese(wdp, widget);
-				}
-			}
-		});
-		return cutMenu;
-	}
 
 	private JMenuItem createDeleteMenu()
 	{
@@ -197,22 +151,6 @@ public class CanvasPopupMenu extends WidgetAction.Adapter implements PopupMenuPr
 			}
 		});
 		return movingMenu;
-	}
-
-	private JMenuItem createPasteMenu(final Point localLocation)
-	{
-		JMenuItem pasteMenu = new JMenuItem("Paste");
-		pasteMenu.addActionListener(new ActionListener()
-		{
-
-			@Override
-			public void actionPerformed(ActionEvent e)
-			{
-				WidgetCopyPasteProvider widgetCopyPasteProvider = new WidgetCopyPasteProvider(canvas);
-				widgetCopyPasteProvider.paste(localLocation);
-			}
-		});
-		return pasteMenu;
 	}
 
 	private JMenuItem createRedoMenu()
@@ -551,9 +489,6 @@ public class CanvasPopupMenu extends WidgetAction.Adapter implements PopupMenuPr
 		if (activeWidget != null && !canvas.isLabel(focusedWidget) && activeWidget instanceof MarkedWidget)
 		{
 			this.widget = activeWidget;
-			popup.add(createCopyMenu());
-			popup.add(createCutMenu());
-			popup.add(new JSeparator());
 			popup.add(createDeleteMenu());
 			popup.add(new JSeparator());
 
@@ -562,8 +497,6 @@ public class CanvasPopupMenu extends WidgetAction.Adapter implements PopupMenuPr
 		}
 		popup.add(createUndoMenu());
 		popup.add(createRedoMenu());
-		popup.add(new JSeparator());
-		popup.add(createPasteMenu(localLocation));
 		popup.add(new JSeparator());
 		popup.add(createBuildAndParseMenu());
 		popup.add(new JSeparator());

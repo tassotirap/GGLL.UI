@@ -15,7 +15,6 @@ import ggll.ui.canvas.provider.NodeHoverProvider;
 import ggll.ui.canvas.provider.NodeMultiSelectProvider;
 import ggll.ui.canvas.provider.NodeReconnectProvider;
 import ggll.ui.canvas.provider.NodeSelectProvider;
-import ggll.ui.canvas.provider.WidgetCopyPasteProvider;
 import ggll.ui.canvas.provider.WidgetDeleteProvider;
 import ggll.ui.canvas.widget.GridWidget;
 import ggll.ui.canvas.widget.LabelTextFieldEditor;
@@ -74,7 +73,6 @@ public class ExtendedActionFactory
 	public final static String ADD_REMOVE_CP = "AddRemoveCP";
 	public final static String ALTERNATIVE = "Alternative";
 	public final static String CONN_SELECT = "ConnSelect";
-	public final static String COPY_PASTE = "CopyPaste";
 	public final static String CREATE_NODE = "Create";
 	public final static String DELETE = "Delete";
 	public final static String EDITOR = "Editor";
@@ -116,11 +114,6 @@ public class ExtendedActionFactory
 	private ConnectAction createConnectAction(ConnectDecorator decorator, LayerWidget interractionLayer, ConnectProvider provider)
 	{
 		return new ConnectAction(decorator != null ? decorator : createDefaultConnectDecorator(), interractionLayer, provider);
-	}
-
-	private CopyPasteAction createCopyPasteAction(WidgetCopyPasteProvider wcpp)
-	{
-		return new CopyPasteAction(wcpp);
 	}
 
 	private AlignWithMoveDecorator createDefaultAlignWithMoveDecorator()
@@ -382,8 +375,6 @@ public class ExtendedActionFactory
 				return createMoveAction();
 			case DELETE:
 				return createDeleteAction(new WidgetDeleteProvider(canvas));
-			case COPY_PASTE:
-				return createCopyPasteAction(new WidgetCopyPasteProvider(canvas));
 			default:
 				return null;
 

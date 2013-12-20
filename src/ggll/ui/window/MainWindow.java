@@ -3,7 +3,6 @@ package ggll.ui.window;
 import ggll.ui.canvas.Canvas;
 import ggll.ui.canvas.CanvasRepository;
 import ggll.ui.canvas.OutlineTopComponent;
-import ggll.ui.core.syntax.grammar.Grammar;
 import ggll.ui.director.GGLLDirector;
 import ggll.ui.file.GrammarFile;
 import ggll.ui.icon.IconView;
@@ -94,7 +93,7 @@ public class MainWindow implements ComponentListener
 	private void createDefaultViews()
 	{
 		GrammarFile grammarFile = GGLLDirector.getProject().getGrammarFile().get(0);
-		GGLLDirector.setActiveScene(CanvasRepository.getInstance(grammarFile.getAbsolutePath()));
+		GGLLDirector.setActiveCanvas(CanvasRepository.getInstance(grammarFile.getAbsolutePath()));
 		viewRepository.createDefaultViews();
 	}
 
@@ -245,7 +244,7 @@ public class MainWindow implements ComponentListener
 			AbstractView view = new AbstractView(title, icon, componentModel, fileName, 2);
 			if (componentModel instanceof GrammarComponent)
 			{
-				GGLLDirector.setActiveScene(CanvasRepository.getInstance(fileName));
+				GGLLDirector.setActiveCanvas(CanvasRepository.getInstance(fileName));
 			}
 
 			componentModel.addComponentListener(this);
@@ -263,6 +262,7 @@ public class MainWindow implements ComponentListener
 		emptyDynamicView = addComponent(emptyComponent, "Empty Page", null, VIEW_ICON, TabPlace.CENTER_LEFT_TABS);
 	}
 
+	@Override
 	public void ContentChanged(AbstractComponent source)
 	{
 		if (viewRepository.containsView(source))
@@ -366,14 +366,14 @@ public class MainWindow implements ComponentListener
 				{
 					GrammarComponent grammarComponent = (GrammarComponent) component;
 					Canvas canvas = grammarComponent.getCanvas();
-					
-					GGLLDirector.setActiveScene(canvas);
+
+					GGLLDirector.setActiveCanvas(canvas);
 					Output.getInstance().setActiveScene(canvas);
 					SemanticStack.getInstance().setActiveScene(canvas);
 					SyntaxStack.getInstance().setActiveScene(canvas);
 					OutlineTopComponent.getInstance().setCanvas(canvas);
-					GeneratedGrammar.getInstance().setActiveScene(canvas);					
-					
+					GeneratedGrammar.getInstance().setActiveScene(canvas);
+
 					model.setZoomIn(true);
 					model.setZoomOut(true);
 					addToolBar(toolBarFactory.createToolBar(grammarComponent, true, true), true, true);

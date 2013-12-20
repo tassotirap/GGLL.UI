@@ -55,6 +55,15 @@ public class ToolBarFactory
 		return toolBarFile;
 	}
 
+	private JComponent getDefaultToolBar(final AbstractComponent reference, ToolBarFactory toolBarFactory)
+	{
+		if (defaultToolBar == null)
+		{
+			defaultToolBar = toolBarFactory.createToolBarExt(reference);
+		}
+		return defaultToolBar;
+	}
+
 	@SuppressWarnings("rawtypes")
 	public JComponent createToolBar(final AbstractComponent component, boolean enableToolBarFile, boolean enableToolBarCanvas)
 	{
@@ -68,14 +77,5 @@ public class ToolBarFactory
 			toolBars.put(component, toolBarFactory.createToolBarExt(component));
 		}
 		return toolBars.get(component);
-	}
-
-	private JComponent getDefaultToolBar(final AbstractComponent reference, ToolBarFactory toolBarFactory)
-	{
-		if (defaultToolBar == null)
-		{
-			defaultToolBar = toolBarFactory.createToolBarExt(reference);
-		}
-		return defaultToolBar;
 	}
 }

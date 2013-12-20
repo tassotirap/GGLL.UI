@@ -110,7 +110,7 @@ public class CanvasStateRepository implements PropertyChangeListener
 		try
 		{
 			CanvasState nobject = states.get(index + 1).toCanvasState();
-			CanvasState object = states.get(index).toCanvasState();			
+			CanvasState object = states.get(index).toCanvasState();
 			index++;
 			monitor.firePropertyChange("object_state", object, nobject);
 		}

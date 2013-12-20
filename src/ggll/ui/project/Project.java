@@ -24,7 +24,7 @@ public class Project implements Serializable
 	private ExtendedList<File> openedFiles;
 
 	private File projectDir;
-	//private Theme theme = Theme.DefaultDockingTheme;
+	// private Theme theme = Theme.DefaultDockingTheme;
 
 	private File yyLexFile;
 
@@ -84,10 +84,10 @@ public class Project implements Serializable
 		return semanticFile;
 	}
 
-//	public Theme getTheme()
-//	{
-//		return this.theme;
-//	}
+	// public Theme getTheme()
+	// {
+	// return this.theme;
+	// }
 
 	public File getYyLexFile()
 	{
@@ -123,10 +123,10 @@ public class Project implements Serializable
 		this.semanticFile = semFile;
 	}
 
-//	public void setTheme(Theme theme)
-//	{
-//		this.theme = theme;
-//	}
+	// public void setTheme(Theme theme)
+	// {
+	// this.theme = theme;
+	// }
 
 	public void setYyLexFile(File yyLexFile)
 	{

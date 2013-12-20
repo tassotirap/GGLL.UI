@@ -14,6 +14,8 @@ import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
+import java.io.Serializable;
+import java.util.ArrayList;
 
 import org.netbeans.api.visual.widget.ConnectionWidget;
 import org.netbeans.api.visual.widget.LabelWidget;
@@ -21,6 +23,7 @@ import org.netbeans.api.visual.widget.Widget;
 
 public class SelectionAction implements ClipboardOwner, Transferable
 {
+	private ArrayList<Serializable> elements = new ArrayList<Serializable>();
 	private Canvas canvas;
 
 	public SelectionAction(Canvas canvas)
@@ -31,62 +34,64 @@ public class SelectionAction implements ClipboardOwner, Transferable
 	public SelectionAction(Widget[] widgets, Canvas canvas)
 	{
 		this.canvas = canvas;
-		for (Widget w : widgets)
+		for (Widget widget : widgets)
 		{
-			addSelection(w);
+			addSelection(widget);
 		}
 	}
 
-	public void addSelection(Widget w)
+	public void addSelection(Widget widget)
 	{
-		if (w instanceof LabelWidget)
+		if (widget instanceof LabelWidget)
 		{
 			Node node = new Node();
-			Object object = canvas.findObject(w);
+			Object object = canvas.findObject(widget);
 			if (object != null)
 			{
 				node.setName((String) object);
 			}
 			else
 			{
-				node.setName(((LabelWidget) w).getLabel());
+				node.setName(((LabelWidget) widget).getLabel());
 			}
-			node.setTitle(((LabelWidget) w).getLabel());
-			node.setLocation(w.getPreferredLocation());
-			if (w instanceof TypedWidget)
+			node.setTitle(((LabelWidget) widget).getLabel());
+			node.setLocation(widget.getPreferredLocation());
+			if (widget instanceof TypedWidget)
 			{
-				node.setType(((LabelWidgetExt) w).getType());
+				node.setType(((LabelWidgetExt) widget).getType());
 			}
-			if (w instanceof MarkedWidget)
+			if (widget instanceof MarkedWidget)
 			{
-				node.setMark(((MarkedWidget) w).getMark());
+				node.setMark(((MarkedWidget) widget).getMark());
 			}
+			elements.add(node);
 		}
-		else if (w instanceof ConnectionWidget)
+		else if (widget instanceof ConnectionWidget)
 		{
-			Connection c = new Connection();
-			Object object = canvas.findObject(w);
+			Connection conn = new Connection();
+			Object object = canvas.findObject(widget);
 			if (object != null)
 			{
-				c.setName((String) object);
-				c.setSource(canvas.getEdgeSource((String) object));
-				c.setTarget(canvas.getEdgeTarget((String) object));
+				conn.setName((String) object);
+				conn.setSource(canvas.getEdgeSource((String) object));
+				conn.setTarget(canvas.getEdgeTarget((String) object));
 				if (canvas.isAlternative((String) object))
 				{
-					c.setType(CanvasResource.ALTERNATIVE);
+					conn.setType(CanvasResource.ALTERNATIVE);
 				}
 				else if (canvas.isSuccessor((String) object))
 				{
-					c.setType(CanvasResource.SUCCESSOR);
+					conn.setType(CanvasResource.SUCCESSOR);
 				}
 			}
+			elements.add(conn);
 		}
 	}
 
 	@Override
 	public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException
 	{
-		return null;
+		return elements;
 	}
 
 	@Override

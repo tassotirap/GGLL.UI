@@ -11,6 +11,7 @@ import ggll.ui.util.print.TextPrinter;
 import ggll.ui.view.AbstractView;
 import ggll.ui.view.UnsavedViewRepository;
 import ggll.ui.view.component.AbstractComponent;
+import ggll.ui.view.component.GrammarComponent;
 import ggll.ui.view.component.TextAreaComponent;
 import ggll.ui.window.MainWindow;
 
@@ -25,7 +26,7 @@ public final class GGLLDirector
 	private static Project project;
 	private static FileManager fileManager;
 	private static UnsavedViewRepository unViewManager;
-	private static Canvas activeScene;
+	private static Canvas activeCanvas;
 
 	public static void closeFile(String fileName)
 	{
@@ -54,14 +55,14 @@ public final class GGLLDirector
 		System.exit(0);
 	}
 
-	public static Canvas getActiveScene()
+	public static Canvas getActiveCanvas()
 	{
-		return activeScene;
+		return activeCanvas;
 	}
 
 	public static MainWindow getMainWindow()
 	{
-		return GGLLDirector.mainWindow;
+		return mainWindow;
 	}
 
 	public static ExtendedList<File> getOpenedFiles()
@@ -69,39 +70,39 @@ public final class GGLLDirector
 		ExtendedList<File> filesOpened = project.getOpenedFiles();
 		if (filesOpened.count() == 0)
 		{
-			GGLLDirector.project.getOpenedFiles().append(project.getGrammarFile().get(0));
+			project.getOpenedFiles().append(project.getGrammarFile().get(0));
 		}
 		return filesOpened;
 	}
 
 	public static Project getProject()
 	{
-		return GGLLDirector.project;
+		return project;
 	}
 
 	public static AbstractView getUnsavedView(String file)
 	{
-		return GGLLDirector.unViewManager.getUnsavedView(file);
+		return unViewManager.getUnsavedView(file);
 	}
 
 	public static boolean hasUnsavedView(AbstractView view)
 	{
-		return GGLLDirector.unViewManager.hasUnsavedView(view);
+		return unViewManager.hasUnsavedView(view);
 	}
 
 	public static boolean hasUnsavedView(String file)
 	{
-		return GGLLDirector.unViewManager.hasUnsavedView(file);
+		return unViewManager.hasUnsavedView(file);
 	}
 
 	public static boolean isFileOpen(String absolutePath)
 	{
-		return GGLLDirector.fileManager.isFileOpen(absolutePath);
+		return fileManager.isFileOpen(absolutePath);
 	}
 
 	public static void openFile(String path)
 	{
-		GGLLDirector.fileManager.openFile(path);
+		fileManager.openFile(path);
 	}
 
 	public static void openFile(String path, boolean verifyOpen)
@@ -115,35 +116,36 @@ public final class GGLLDirector
 		{
 			TextPrinter.printText(((TextAreaComponent) object).getText());
 		}
-		else if (object instanceof Canvas)
+		else if (object instanceof GrammarComponent)
 		{
-			ComponentPrinter.printWidget((Canvas) object);
+			GrammarComponent grammarComponent = (GrammarComponent) object;
+			ComponentPrinter.printWidget(grammarComponent.getCanvas());
 		}
 	}
 
 	public static void removeUnsavedView(String path)
 	{
-		GGLLDirector.unViewManager.removeUnsavedView(path);
+		unViewManager.removeUnsavedView(path);
 	}
 
 	public static void saveAllFiles()
 	{
-		GGLLDirector.fileManager.saveAllFiles(unViewManager.getUnsavedViews());
+		fileManager.saveAllFiles(unViewManager.getUnsavedViews());
 	}
 
 	public static void saveFile(AbstractComponent object)
 	{
-		GGLLDirector.fileManager.saveFileObject(object);
+		fileManager.saveFileObject(object);
 	}
 
-	public static void setActiveScene(Canvas activeScene)
+	public static void setActiveCanvas(Canvas canvas)
 	{
-		GGLLDirector.activeScene = activeScene;
+		activeCanvas = canvas;
 	}
 
 	public static void setUnsavedView(String path, AbstractView view)
 	{
-		GGLLDirector.unViewManager.setUnsavedView(path, view);
+		unViewManager.setUnsavedView(path, view);
 	}
 
 	public static void Start(MainWindow mainWindow, String projectPath)

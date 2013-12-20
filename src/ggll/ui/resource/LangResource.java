@@ -16,7 +16,7 @@ public interface LangResource
 	String left_hand = "Left Hand";
 	String n_terminal = "Non Terminal";
 	String new_file = "New File";
-	String new_gram = "Grammar Graph File";
+	String new_gram = "New Grammar Graph File";
 	String new_gram_desc = "Used to store a graph that represents a grammar.";
 	String new_in = "Input Adapter";
 	String new_in_desc = "An adapter that translates calls from an external component to the equivalent parser inputs.";
