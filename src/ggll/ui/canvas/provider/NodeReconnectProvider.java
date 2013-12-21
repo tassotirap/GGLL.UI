@@ -17,7 +17,7 @@ public class NodeReconnectProvider implements ReconnectProvider
 	private String edge;
 	private String originalNode;
 	private String replacementNode;
-	private Canvas canvas;
+	private final Canvas canvas;
 
 	public NodeReconnectProvider(Canvas canvas)
 	{
@@ -33,9 +33,9 @@ public class NodeReconnectProvider implements ReconnectProvider
 	@Override
 	public ConnectorState isReplacementWidget(ConnectionWidget connectionWidget, Widget replacementWidget, boolean reconnectingSource)
 	{
-		Object object = canvas.findObject(replacementWidget);
-		replacementNode = canvas.isNode(object) ? (String) object : null;
-		if (replacementNode != null && edge != null)
+		final Object object = this.canvas.findObject(replacementWidget);
+		this.replacementNode = this.canvas.isNode(object) ? (String) object : null;
+		if (this.replacementNode != null && this.edge != null)
 		{
 			return ConnectorState.ACCEPT;
 		}
@@ -58,10 +58,10 @@ public class NodeReconnectProvider implements ReconnectProvider
 	@Override
 	public boolean isTargetReconnectable(ConnectionWidget connectionWidget)
 	{
-		Object object = canvas.findObject(connectionWidget);
-		edge = canvas.isEdge(object) ? (String) object : null;
-		originalNode = edge != null ? canvas.getEdgeTarget(edge) : null;
-		return originalNode != null;
+		final Object object = this.canvas.findObject(connectionWidget);
+		this.edge = this.canvas.isEdge(object) ? (String) object : null;
+		this.originalNode = this.edge != null ? this.canvas.getEdgeTarget(this.edge) : null;
+		return this.originalNode != null;
 	}
 
 	@Override
@@ -69,21 +69,21 @@ public class NodeReconnectProvider implements ReconnectProvider
 	{
 		if (replacementWidget == null)
 		{
-			canvas.removeEdge(edge);
-			canvas.getCanvasStateRepository().propertyChange(new PropertyChangeEvent(this, "undoable", null, "Disconnect"));
+			this.canvas.removeEdge(this.edge);
+			this.canvas.getCanvasStateRepository().propertyChange(new PropertyChangeEvent(this, "undoable", null, "Disconnect"));
 		}
 		else if (reconnectingSource)
 		{
 
-			canvas.setEdgeSource(edge, replacementNode);
-			canvas.getCanvasStateRepository().propertyChange(new PropertyChangeEvent(this, "undoable", null, "Connection"));
+			this.canvas.setEdgeSource(this.edge, this.replacementNode);
+			this.canvas.getCanvasStateRepository().propertyChange(new PropertyChangeEvent(this, "undoable", null, "Connection"));
 
 		}
 		else
 		{
 
-			canvas.setEdgeTarget(edge, replacementNode);
-			canvas.getCanvasStateRepository().propertyChange(new PropertyChangeEvent(this, "undoable", null, "Connection"));
+			this.canvas.setEdgeTarget(this.edge, this.replacementNode);
+			this.canvas.getCanvasStateRepository().propertyChange(new PropertyChangeEvent(this, "undoable", null, "Connection"));
 
 		}
 	}

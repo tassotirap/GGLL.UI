@@ -9,7 +9,7 @@ import javax.swing.JMenuBar;
 public class MenuFactory
 {
 	private JMenuBar defaultMenuBar;
-	private HashMap<AbstractComponent, JMenuBar> menuBars = new HashMap<AbstractComponent, JMenuBar>();
+	private final HashMap<AbstractComponent, JMenuBar> menuBars = new HashMap<AbstractComponent, JMenuBar>();
 
 	public MenuFactory()
 	{
@@ -17,11 +17,11 @@ public class MenuFactory
 
 	private JMenuBar getDefaultMenuBar(MenuModel model)
 	{
-		if (defaultMenuBar == null)
+		if (this.defaultMenuBar == null)
 		{
-			defaultMenuBar = createMenuBarExt(null, model);
+			this.defaultMenuBar = createMenuBarExt(null, model);
 		}
-		return defaultMenuBar;
+		return this.defaultMenuBar;
 	}
 
 	@SuppressWarnings("rawtypes")
@@ -31,17 +31,17 @@ public class MenuFactory
 		{
 			return getDefaultMenuBar(model);
 		}
-		if (!menuBars.containsKey(context))
+		if (!this.menuBars.containsKey(context))
 		{
-			menuBars.put(context, createMenuBarExt(context, model));
+			this.menuBars.put(context, createMenuBarExt(context, model));
 		}
-		return menuBars.get(context);
+		return this.menuBars.get(context);
 	}
 
 	@SuppressWarnings("rawtypes")
 	public JMenuBar createMenuBarExt(AbstractComponent context, MenuModel model)
 	{
-		Menu menu = new Menu(new String[]{ Menu.FILE, Menu.HELP }, context, model);
+		final Menu menu = new Menu(new String[]{ Menu.FILE, Menu.HELP }, context, model);
 		menu.build();
 		return menu;
 	}

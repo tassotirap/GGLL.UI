@@ -24,7 +24,7 @@ public class LineWidget extends Widget
 	public final static Color NUMBER_COLOR = new Color(100, 100, 100);
 
 	public final static Font NUMBER_FONT = new Font("Arial", Font.PLAIN, 12);
-	private Canvas canvas;
+	private final Canvas canvas;
 	private Integer number;
 	protected int height;
 	protected int width;
@@ -38,27 +38,27 @@ public class LineWidget extends Widget
 	@Override
 	protected void paintWidget()
 	{
-		width = (canvas.getBounds() == null) ? canvas.getView().getParent().getWidth() : canvas.getBounds().width;
-		height = DEFAULT_HEIGHT;
-		Font f = NUMBER_FONT;
-		String s = new String(number.toString());
-		Graphics2D g = getGraphics();
+		this.width = this.canvas.getBounds() == null ? this.canvas.getView().getParent().getWidth() : this.canvas.getBounds().width;
+		this.height = DEFAULT_HEIGHT;
+		final Font f = NUMBER_FONT;
+		final String s = new String(this.number.toString());
+		final Graphics2D g = getGraphics();
 		g.setStroke(new BasicStroke());
 		g.setColor(LINE_COLOR);
-		g.drawLine(0, 0, width, 0);
-		FontRenderContext frc = g.getFontRenderContext();
-		TextLayout textlayout = new TextLayout(s, f, frc);
+		g.drawLine(0, 0, this.width, 0);
+		final FontRenderContext frc = g.getFontRenderContext();
+		final TextLayout textlayout = new TextLayout(s, f, frc);
 		g.setColor(NUMBER_COLOR);
-		textlayout.draw(g, LINE_NUMBER_SPACE, (height / 2) + (NUMBER_FONT.getSize() / 2));
+		textlayout.draw(g, LINE_NUMBER_SPACE, this.height / 2 + NUMBER_FONT.getSize() / 2);
 		g.setColor(LINE_COLOR);
-		g.drawLine(0, height, width, height);
-		canvas.getCanvasStateRepository().propertyChange(new PropertyChangeEvent(this, LINE_PAINTED_EVENT, null, number));
+		g.drawLine(0, this.height, this.width, this.height);
+		this.canvas.getCanvasStateRepository().propertyChange(new PropertyChangeEvent(this, LINE_PAINTED_EVENT, null, this.number));
 	}
 
 	@Override
 	public Rectangle calculateClientArea()
 	{
-		return new Rectangle(width, height);
+		return new Rectangle(this.width, this.height);
 	}
 
 	/**
@@ -66,7 +66,7 @@ public class LineWidget extends Widget
 	 */
 	public int getNumber()
 	{
-		return number;
+		return this.number;
 	}
 
 	@Override

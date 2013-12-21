@@ -6,47 +6,47 @@ import java.util.HashMap;
 
 public class UnsavedViewRepository
 {
-	private HashMap<String, AbstractView> unsavedViews;
+	private final HashMap<String, AbstractView> unsavedViews;
 
 	public UnsavedViewRepository()
 	{
-		unsavedViews = new HashMap<String, AbstractView>();
+		this.unsavedViews = new HashMap<String, AbstractView>();
 	}
 
 	public AbstractView getUnsavedView(String key)
 	{
-		if (!unsavedViews.containsKey(key))
+		if (!this.unsavedViews.containsKey(key))
 		{
-			return unsavedViews.get(key);
+			return this.unsavedViews.get(key);
 		}
 		return null;
 	}
 
 	public ExtendedList<AbstractView> getUnsavedViews()
 	{
-		return new ExtendedList<AbstractView>(unsavedViews.values());
+		return new ExtendedList<AbstractView>(this.unsavedViews.values());
 	}
 
 	public boolean hasUnsavedView(AbstractView value)
 	{
-		return unsavedViews.containsValue(value);
+		return this.unsavedViews.containsValue(value);
 	}
 
 	public boolean hasUnsavedView(String key)
 	{
-		return unsavedViews.containsKey(key);
+		return this.unsavedViews.containsKey(key);
 	}
 
 	public void removeUnsavedView(String key)
 	{
-		unsavedViews.remove(key);
+		this.unsavedViews.remove(key);
 	}
 
 	public void setUnsavedView(String key, AbstractView value)
 	{
-		if (!unsavedViews.containsKey(key))
+		if (!this.unsavedViews.containsKey(key))
 		{
-			unsavedViews.put(key, value);
+			this.unsavedViews.put(key, value);
 		}
 	}
 

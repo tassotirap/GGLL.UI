@@ -11,7 +11,7 @@ import org.netbeans.api.visual.widget.Widget;
 
 public final class NodeMultiSelectProvider implements SelectProvider
 {
-	private Canvas canvas;
+	private final Canvas canvas;
 
 	public NodeMultiSelectProvider(Canvas canvas)
 	{
@@ -27,27 +27,27 @@ public final class NodeMultiSelectProvider implements SelectProvider
 	@Override
 	public boolean isSelectionAllowed(Widget widget, Point localLocation, boolean invertSelection)
 	{
-		return canvas.findObject(widget) != null;
+		return this.canvas.findObject(widget) != null;
 	}
 
 	@Override
 	public void select(Widget widget, Point localLocation, boolean invertSelection)
 	{
-		Object object = canvas.findObject(widget);
-		canvas.setFocusedObject(object);
+		final Object object = this.canvas.findObject(widget);
+		this.canvas.setFocusedObject(object);
 		if (object != null)
 		{
-			if (!invertSelection && canvas.getSelectedObjects().contains(object))
+			if (!invertSelection && this.canvas.getSelectedObjects().contains(object))
 			{
 				widget.setForeground(Color.WHITE);
 				widget.setBackground(Color.BLUE);
 				return;
 			}
-			canvas.userSelectionSuggested(Collections.singleton(object), invertSelection);
+			this.canvas.userSelectionSuggested(Collections.singleton(object), invertSelection);
 		}
 		else
 		{
-			canvas.userSelectionSuggested(Collections.emptySet(), invertSelection);
+			this.canvas.userSelectionSuggested(Collections.emptySet(), invertSelection);
 		}
 	}
 }

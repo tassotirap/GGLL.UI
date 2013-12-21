@@ -40,17 +40,17 @@ public class Menu extends JMenuBar
 
 	private JMenu createFileMenu()
 	{
-		JMenu mFile = new JMenu(FILE);
+		final JMenu mFile = new JMenu(FILE);
 		final ExtendedList<String> PMbuttons = new ExtendedList<String>();
 		final ExtendedList<String> Ebuttons = new ExtendedList<String>();
 
-		JMenuItem grammar = new JMenuItem(LangResource.new_gram);
+		final JMenuItem grammar = new JMenuItem(LangResource.new_gram);
 		grammar.addActionListener(new ActionListener()
 		{
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				String fileName = JOptionPane.showInputDialog("New Gramma Graph File name?");
+				final String fileName = JOptionPane.showInputDialog("New Gramma Graph File name?");
 				if (fileName != null && !fileName.equals(""))
 				{
 					try
@@ -58,7 +58,7 @@ public class Menu extends JMenuBar
 						GGLLDirector.createFile(fileName, new FileNames(FileNames.GRAM_EXTENSION));
 						Tree.reload(GGLLDirector.getProject().getProjectsRootPath());
 					}
-					catch (IOException e1)
+					catch (final IOException e1)
 					{
 						e1.printStackTrace();
 					}
@@ -66,18 +66,18 @@ public class Menu extends JMenuBar
 			}
 		});
 
-		JMenuItem save = new JMenuItem(LangResource.save);
+		final JMenuItem save = new JMenuItem(LangResource.save);
 		save.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK));
 		save.addActionListener(new ActionListener()
 		{
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				GGLLDirector.saveFile(context);
+				GGLLDirector.saveFile(Menu.this.context);
 			}
 		});
 
-		JMenuItem saveAll = new JMenuItem(LangResource.save_all);
+		final JMenuItem saveAll = new JMenuItem(LangResource.save_all);
 		saveAll.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK + ActionEvent.SHIFT_MASK));
 		saveAll.addActionListener(new ActionListener()
 		{
@@ -88,36 +88,36 @@ public class Menu extends JMenuBar
 			}
 		});
 
-		JMenuItem print = new JMenuItem(LangResource.print + DOTS);
+		final JMenuItem print = new JMenuItem(LangResource.print + DOTS);
 		print.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, ActionEvent.CTRL_MASK));
 		print.addActionListener(new ActionListener()
 		{
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				GGLLDirector.print(context);
+				GGLLDirector.print(Menu.this.context);
 			}
 		});
 
-		JMenu exportAs = new JMenu("Export As");
-		JMenuItem png = new JMenuItem("PNG File" + DOTS);
+		final JMenu exportAs = new JMenu("Export As");
+		final JMenuItem png = new JMenuItem("PNG File" + DOTS);
 		png.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F11, ActionEvent.CTRL_MASK));
 
-		JMenuItem ebnf = new JMenuItem("Extended BNF" + DOTS);
+		final JMenuItem ebnf = new JMenuItem("Extended BNF" + DOTS);
 		ebnf.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F12, ActionEvent.CTRL_MASK));
 
 		exportAs.add(png);
 		exportAs.add(ebnf);
 
-		png.setEnabled(model.isPngExport());
-		ebnf.setEnabled(model.isEbnfExport());
-		if (!model.isPngExport() && !model.isEbnfExport())
+		png.setEnabled(this.model.isPngExport());
+		ebnf.setEnabled(this.model.isEbnfExport());
+		if (!this.model.isPngExport() && !this.model.isEbnfExport())
 		{
 			exportAs.setEnabled(false);
 		}
-		save.setEnabled(model.isSave());
-		print.setEnabled(model.isPrint());
-		JMenuItem quit = new JMenuItem("Quit");
+		save.setEnabled(this.model.isSave());
+		print.setEnabled(this.model.isPrint());
+		final JMenuItem quit = new JMenuItem("Quit");
 		quit.setEnabled(true);
 
 		quit.addActionListener(new ActionListener()
@@ -152,14 +152,14 @@ public class Menu extends JMenuBar
 
 	private JMenu createHelpMenu()
 	{
-		JMenu helpMenu = new JMenu(HELP);
+		final JMenu helpMenu = new JMenu(HELP);
 		helpMenu.setEnabled(false);
 		return helpMenu;
 	}
 
 	public void build()
 	{
-		for (String menu : menus.getAll())
+		for (final String menu : this.menus.getAll())
 		{
 			if (menu.equals(FILE))
 			{

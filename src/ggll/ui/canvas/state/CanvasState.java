@@ -29,9 +29,9 @@ import org.netbeans.api.visual.widget.Widget;
 public class CanvasState implements Serializable, PropertyChangeListener
 {
 	private static final long serialVersionUID = -7729464439313780001L;
-	private HashMap<String, Connection> connections = new HashMap<String, Connection>();
-	private HashMap<String, Node> nodes = new HashMap<String, Node>();
-	private Preferences preferences = new Preferences();
+	private final HashMap<String, Connection> connections = new HashMap<String, Connection>();
+	private final HashMap<String, Node> nodes = new HashMap<String, Node>();
+	private final Preferences preferences = new Preferences();
 
 	private int lastTerminalId = 0;
 	private int lastNTerminalId = 0;
@@ -53,13 +53,13 @@ public class CanvasState implements Serializable, PropertyChangeListener
 		{
 			try
 			{
-				FileInputStream fileInputStream = new FileInputStream(file);
-				ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+				final FileInputStream fileInputStream = new FileInputStream(file);
+				final ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
 				canvasState = (CanvasState) objectInputStream.readObject();
 				objectInputStream.close();
 				fileInputStream.close();
 			}
-			catch (Exception e)
+			catch (final Exception e)
 			{
 				canvasState = new CanvasState(file);
 			}
@@ -69,11 +69,11 @@ public class CanvasState implements Serializable, PropertyChangeListener
 
 	public void addConnection(Canvas canvas, String object)
 	{
-		Widget widget = canvas.findWidget(object);
+		final Widget widget = canvas.findWidget(object);
 		if (widget instanceof ConnectionWidget)
 		{
-			ConnectionWidget connectionWidget = (ConnectionWidget) widget;
-			Connection connection = new Connection();
+			final ConnectionWidget connectionWidget = (ConnectionWidget) widget;
+			final Connection connection = new Connection();
 			connection.setName(object);
 			connection.setSource(canvas.getEdgeSource(object));
 			connection.setTarget(canvas.getEdgeTarget(object));
@@ -86,17 +86,17 @@ public class CanvasState implements Serializable, PropertyChangeListener
 				connection.setType(CanvasResource.SUCCESSOR);
 			}
 			connection.setPoints(connectionWidget.getControlPoints());
-			connections.put(connection.getName(), connection);
+			this.connections.put(connection.getName(), connection);
 		}
 	}
 
 	public void addNode(Canvas canvas, String object)
 	{
-		Widget widget = canvas.findWidget(object);
-		Node node = new Node();
+		final Widget widget = canvas.findWidget(object);
+		final Node node = new Node();
 		if (widget instanceof LabelWidget)
 		{
-			LabelWidget labelWidget = (LabelWidget) widget;
+			final LabelWidget labelWidget = (LabelWidget) widget;
 			node.setName(object);
 			node.setTitle(labelWidget.getLabel());
 			node.setLocation(labelWidget.getPreferredLocation());
@@ -107,7 +107,7 @@ public class CanvasState implements Serializable, PropertyChangeListener
 		}
 		else if (widget instanceof IconNodeWidgetExt)
 		{
-			IconNodeWidgetExt iconNodeWidget = (IconNodeWidgetExt) widget;
+			final IconNodeWidgetExt iconNodeWidget = (IconNodeWidgetExt) widget;
 			node.setName(object);
 			node.setLocation(iconNodeWidget.getPreferredLocation());
 			node.setType(iconNodeWidget.getType());
@@ -116,89 +116,89 @@ public class CanvasState implements Serializable, PropertyChangeListener
 		{
 			node.setMark(((MarkedWidget) widget).getMark());
 		}
-		nodes.put(node.getName(), node);
+		this.nodes.put(node.getName(), node);
 	}
 
 	public Connection findConnection(Object conn)
 	{
-		if (connections.containsKey(conn))
+		if (this.connections.containsKey(conn))
 		{
-			return connections.get(conn);
+			return this.connections.get(conn);
 		}
 		return null;
 	}
 
 	public Node findNode(Object node)
 	{
-		if (nodes.containsKey(node))
+		if (this.nodes.containsKey(node))
 		{
-			return nodes.get(node);
+			return this.nodes.get(node);
 		}
 		return null;
 	}
 
 	public List<String> getConnections()
 	{
-		ExtendedList<String> list = new ExtendedList<String>();
-		list.addAll(connections.keySet());
+		final ExtendedList<String> list = new ExtendedList<String>();
+		list.addAll(this.connections.keySet());
 		Collections.sort(list.getAll());
 		return list.getAll();
 	}
 
 	public String getFile()
 	{
-		return file;
+		return this.file;
 	}
 
 	public int getLastCustomNode()
 	{
-		return lastCustomNode;
+		return this.lastCustomNode;
 	}
 
 	public int getLastLAMBDA()
 	{
-		return lastLAMBDA;
+		return this.lastLAMBDA;
 	}
 
 	public int getLastLeftSides()
 	{
-		return lastLeftSides;
+		return this.lastLeftSides;
 	}
 
 	public int getLastNTerminalId()
 	{
-		return lastNTerminalId;
+		return this.lastNTerminalId;
 	}
 
 	public int getLastSTART()
 	{
-		return lastSTART;
+		return this.lastSTART;
 	}
 
 	public int getLastTerminalId()
 	{
-		return lastTerminalId;
+		return this.lastTerminalId;
 	}
 
 	public Set<String> getNodes()
 	{
-		return nodes.keySet();
+		return this.nodes.keySet();
 	}
 
 	public Preferences getPreferences()
 	{
-		return preferences;
+		return this.preferences;
 	}
 
 	public String getType(Object obj)
 	{
-		if (nodes.containsKey(obj))
+		if (this.nodes.containsKey(obj))
 		{
-			return nodes.get(obj).getType();
+			return this.nodes.get(obj).getType();
 		}
-		if (connections.containsKey(obj))
+		if (this.connections.containsKey(obj))
 		{
-			return connections.get(obj).getType();
+			return this.connections.get(obj).getType();
 		}
 		return null;
 	}
@@ -238,7 +238,7 @@ public class CanvasState implements Serializable, PropertyChangeListener
 	{
 		if (evt.getPropertyName().equals("writing"))
 		{
-			Canvas canvas = CanvasRepository.getInstance(file);
+			final Canvas canvas = CanvasRepository.getInstance(this.file);
 			if (canvas != null)
 			{
 				reloadFromCanvas(canvas);
@@ -248,13 +248,13 @@ public class CanvasState implements Serializable, PropertyChangeListener
 
 	public void reloadFromCanvas(Canvas canvas)
 	{
-		nodes.clear();
-		connections.clear();
-		for (String object : canvas.getNodes())
+		this.nodes.clear();
+		this.connections.clear();
+		for (final String object : canvas.getNodes())
 		{
 			addNode(canvas, object);
 		}
-		for (String object : canvas.getEdges())
+		for (final String object : canvas.getEdges())
 		{
 			addConnection(canvas, object);
 		}
@@ -268,8 +268,8 @@ public class CanvasState implements Serializable, PropertyChangeListener
 	public void write() throws IOException
 	{
 		propertyChange(new PropertyChangeEvent(this, "writing", null, this));
-		FileOutputStream fileOutputStream = new FileOutputStream(file);
-		ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+		final FileOutputStream fileOutputStream = new FileOutputStream(this.file);
+		final ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
 		objectOutputStream.writeObject(this);
 		objectOutputStream.close();
 		fileOutputStream.close();

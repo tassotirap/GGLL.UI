@@ -49,22 +49,22 @@ public class ParserComponent extends AbstractComponent
 
 	private void createLayout(final ParsingEditor parser)
 	{
-		btBarRight = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		btBarRight.add(open);
-		btBarRight.add(parseNextStep);
-		btBarRight.add(parse);
-		btBar = new JPanel(new BorderLayout());
-		btBar.add(btBarRight, BorderLayout.EAST);
-		jComponent = new JPanel(new BorderLayout());
-		jComponent.add(btBar, BorderLayout.NORTH);
+		this.btBarRight = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		this.btBarRight.add(this.open);
+		this.btBarRight.add(this.parseNextStep);
+		this.btBarRight.add(this.parse);
+		this.btBar = new JPanel(new BorderLayout());
+		this.btBar.add(this.btBarRight, BorderLayout.EAST);
+		this.jComponent = new JPanel(new BorderLayout());
+		this.jComponent.add(this.btBar, BorderLayout.NORTH);
 
-		textArea = new TextAreaComponent();
-		jComponent.add(textArea.getJComponent(), BorderLayout.CENTER);
+		this.textArea = new TextAreaComponent();
+		this.jComponent.add(this.textArea.getJComponent(), BorderLayout.CENTER);
 	}
 
 	private void createListener(final ParsingEditor parser)
 	{
-		open.addActionListener(new ActionListener()
+		this.open.addActionListener(new ActionListener()
 		{
 
 			@Override
@@ -73,60 +73,60 @@ public class ParserComponent extends AbstractComponent
 				open();
 			}
 		});
-		parse.addActionListener(new ActionListener()
+		this.parse.addActionListener(new ActionListener()
 		{
 
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				parser.run(false, textArea.getText());
+				parser.run(false, ParserComponent.this.textArea.getText());
 			}
 		});
-		parseNextStep.addActionListener(new ActionListener()
+		this.parseNextStep.addActionListener(new ActionListener()
 		{
 
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				parser.stepRun(textArea.getText());
+				parser.stepRun(ParserComponent.this.textArea.getText());
 			}
 		});
 	}
 
 	private void createNextStepButton()
 	{
-		parseNextStep = new JButton(new ImageIcon(getClass().getResource(GGLLImages.ICON_PARSER_STEP)));
-		parseNextStep.setOpaque(false);
-		parseNextStep.setBorder(new EmptyBorder(0, 0, 0, 0));
-		parseNextStep.setRolloverEnabled(true);
-		parseNextStep.setSelectedIcon(new ImageIcon(ColorFilter.createDarkerImage(((ImageIcon) parseNextStep.getIcon()).getImage())));
-		parseNextStep.setRolloverIcon(new ImageIcon(ColorFilter.createBrighterImage(((ImageIcon) parseNextStep.getIcon()).getImage())));
-		parseNextStep.setDisabledIcon(new ImageIcon(GrayFilter.createDisabledImage(((ImageIcon) parseNextStep.getIcon()).getImage())));
-		parseNextStep.setToolTipText("Parse Next Step");
+		this.parseNextStep = new JButton(new ImageIcon(getClass().getResource(GGLLImages.ICON_PARSER_STEP)));
+		this.parseNextStep.setOpaque(false);
+		this.parseNextStep.setBorder(new EmptyBorder(0, 0, 0, 0));
+		this.parseNextStep.setRolloverEnabled(true);
+		this.parseNextStep.setSelectedIcon(new ImageIcon(ColorFilter.createDarkerImage(((ImageIcon) this.parseNextStep.getIcon()).getImage())));
+		this.parseNextStep.setRolloverIcon(new ImageIcon(ColorFilter.createBrighterImage(((ImageIcon) this.parseNextStep.getIcon()).getImage())));
+		this.parseNextStep.setDisabledIcon(new ImageIcon(GrayFilter.createDisabledImage(((ImageIcon) this.parseNextStep.getIcon()).getImage())));
+		this.parseNextStep.setToolTipText("Parse Next Step");
 	}
 
 	private void createOpenButton()
 	{
-		open = new JButton(new ImageIcon(getClass().getResource(GGLLImages.ICON_PARSER_OPEN)));
-		open.setOpaque(false);
-		open.setBorder(new EmptyBorder(0, 0, 0, 0));
-		open.setRolloverEnabled(true);
-		open.setSelectedIcon(new ImageIcon(ColorFilter.createDarkerImage(((ImageIcon) open.getIcon()).getImage())));
-		open.setRolloverIcon(new ImageIcon(ColorFilter.createBrighterImage(((ImageIcon) open.getIcon()).getImage())));
-		open.setDisabledIcon(new ImageIcon(GrayFilter.createDisabledImage(((ImageIcon) open.getIcon()).getImage())));
-		open.setToolTipText("Open File With Expression");
+		this.open = new JButton(new ImageIcon(getClass().getResource(GGLLImages.ICON_PARSER_OPEN)));
+		this.open.setOpaque(false);
+		this.open.setBorder(new EmptyBorder(0, 0, 0, 0));
+		this.open.setRolloverEnabled(true);
+		this.open.setSelectedIcon(new ImageIcon(ColorFilter.createDarkerImage(((ImageIcon) this.open.getIcon()).getImage())));
+		this.open.setRolloverIcon(new ImageIcon(ColorFilter.createBrighterImage(((ImageIcon) this.open.getIcon()).getImage())));
+		this.open.setDisabledIcon(new ImageIcon(GrayFilter.createDisabledImage(((ImageIcon) this.open.getIcon()).getImage())));
+		this.open.setToolTipText("Open File With Expression");
 	}
 
 	private void createParseButton()
 	{
-		parse = new JButton(new ImageIcon(getClass().getResource(GGLLImages.ICON_PARSER_PARSE)));
-		parse.setOpaque(false);
-		parse.setBorder(new EmptyBorder(0, 0, 0, 0));
-		parse.setRolloverEnabled(true);
-		parse.setSelectedIcon(new ImageIcon(ColorFilter.createDarkerImage(((ImageIcon) parse.getIcon()).getImage())));
-		parse.setRolloverIcon(new ImageIcon(ColorFilter.createBrighterImage(((ImageIcon) parse.getIcon()).getImage())));
-		parse.setDisabledIcon(new ImageIcon(GrayFilter.createDisabledImage(((ImageIcon) parse.getIcon()).getImage())));
-		parse.setToolTipText("Parse Expression");
+		this.parse = new JButton(new ImageIcon(getClass().getResource(GGLLImages.ICON_PARSER_PARSE)));
+		this.parse.setOpaque(false);
+		this.parse.setBorder(new EmptyBorder(0, 0, 0, 0));
+		this.parse.setRolloverEnabled(true);
+		this.parse.setSelectedIcon(new ImageIcon(ColorFilter.createDarkerImage(((ImageIcon) this.parse.getIcon()).getImage())));
+		this.parse.setRolloverIcon(new ImageIcon(ColorFilter.createBrighterImage(((ImageIcon) this.parse.getIcon()).getImage())));
+		this.parse.setDisabledIcon(new ImageIcon(GrayFilter.createDisabledImage(((ImageIcon) this.parse.getIcon()).getImage())));
+		this.parse.setToolTipText("Parse Expression");
 	}
 
 	@Override
@@ -136,17 +136,17 @@ public class ParserComponent extends AbstractComponent
 
 	public TextAreaComponent getTextArea()
 	{
-		return textArea;
+		return this.textArea;
 	}
 
 	public void open()
 	{
-		JFileChooser c = new JFileChooser();
-		int rVal = c.showOpenDialog(jComponent);
+		final JFileChooser c = new JFileChooser();
+		final int rVal = c.showOpenDialog(this.jComponent);
 		if (rVal == JFileChooser.APPROVE_OPTION)
 		{
-			File file = c.getSelectedFile();
-			textArea.setText(file.getAbsolutePath(), true);
+			final File file = c.getSelectedFile();
+			this.textArea.setText(file.getAbsolutePath(), true);
 		}
 		else if (rVal == JFileChooser.CANCEL_OPTION)
 		{

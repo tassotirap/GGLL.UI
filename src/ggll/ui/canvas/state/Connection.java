@@ -22,7 +22,7 @@ public class Connection implements Comparable<Connection>, Serializable
 
 	public String getName()
 	{
-		return name;
+		return this.name;
 	}
 
 	public List<Point> getPoints()
@@ -32,17 +32,17 @@ public class Connection implements Comparable<Connection>, Serializable
 
 	public String getSource()
 	{
-		return source;
+		return this.source;
 	}
 
 	public String getTarget()
 	{
-		return target;
+		return this.target;
 	}
 
 	public String getType()
 	{
-		return type;
+		return this.type;
 	}
 
 	public void setName(String name)

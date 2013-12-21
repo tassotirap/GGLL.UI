@@ -11,9 +11,9 @@ public abstract class AbstractComponent
 
 	public void addComponentListener(ComponentListener listener)
 	{
-		if (!listeners.contains(listener))
+		if (!this.listeners.contains(listener))
 		{
-			listeners.append(listener);
+			this.listeners.append(listener);
 		}
 	}
 
@@ -21,14 +21,14 @@ public abstract class AbstractComponent
 
 	public JComponent getJComponent()
 	{
-		return jComponent;
+		return this.jComponent;
 	}
 
 	public void removeComponentListener(ComponentListener listener)
 	{
-		if (listeners.contains(listener))
+		if (this.listeners.contains(listener))
 		{
-			listeners.remove(listener);
+			this.listeners.remove(listener);
 		}
 	}
 }

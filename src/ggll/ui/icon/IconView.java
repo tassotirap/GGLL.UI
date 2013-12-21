@@ -25,7 +25,7 @@ public class IconView extends Icon
 	@Override
 	public void paintIcon(Component c, Graphics g, int x, int y)
 	{
-		Color oldColor = g.getColor();
+		final Color oldColor = g.getColor();
 
 		g.setColor(new Color(70, 70, 70));
 		g.fillRect(x, y, ICON_SIZE, ICON_SIZE);

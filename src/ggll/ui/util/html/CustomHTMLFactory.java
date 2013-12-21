@@ -9,7 +9,7 @@ import javax.swing.text.html.HTMLEditorKit.HTMLFactory;
 
 public class CustomHTMLFactory extends HTMLFactory implements ViewFactory
 {
-	private String applicationImagePath;
+	private final String applicationImagePath;
 
 	public CustomHTMLFactory(String applicationImagePath)
 	{
@@ -19,13 +19,13 @@ public class CustomHTMLFactory extends HTMLFactory implements ViewFactory
 	@Override
 	public View create(Element elem)
 	{
-		Object o = elem.getAttributes().getAttribute(StyleConstants.NameAttribute);
+		final Object o = elem.getAttributes().getAttribute(StyleConstants.NameAttribute);
 		if (o instanceof HTML.Tag)
 		{
-			HTML.Tag kind = (HTML.Tag) o;
+			final HTML.Tag kind = (HTML.Tag) o;
 			if (kind == HTML.Tag.IMG)
 			{
-				return new CustomImageView(elem, applicationImagePath);
+				return new CustomImageView(elem, this.applicationImagePath);
 			}
 		}
 		return super.create(elem);

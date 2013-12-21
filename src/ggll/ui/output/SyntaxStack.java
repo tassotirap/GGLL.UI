@@ -22,7 +22,7 @@ public class SyntaxStack extends Output
 
 	public void clearStack()
 	{
-		lastLine = 0;
+		this.lastLine = 0;
 		clear();
 	}
 
@@ -30,7 +30,7 @@ public class SyntaxStack extends Output
 	{
 		if (showLine)
 		{
-			displayTextExt(String.format("<b>%d.&nbsp;&nbsp;</b>%s", ++lastLine, str), TOPIC.SyntaxStack);
+			displayTextExt(String.format("<b>%d.&nbsp;&nbsp;</b>%s", ++this.lastLine, str), TOPIC.SyntaxStack);
 		}
 		else
 		{

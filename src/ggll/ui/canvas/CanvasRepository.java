@@ -28,7 +28,7 @@ public class CanvasRepository
 
 		if (!instances.containsKey(file))
 		{
-			Canvas canvasFactory = new Canvas(defaultCursor, connStrategy, moveStrategy, file);
+			final Canvas canvasFactory = new Canvas(defaultCursor, connStrategy, moveStrategy, file);
 			GGLLDirector.getProject().setGrammarFile(new GrammarFile(file));
 			instances.put(file, canvasFactory);
 		}
@@ -45,7 +45,7 @@ public class CanvasRepository
 	public static int getLastCustomNode()
 	{
 		int lastCustomNode = 0;
-		for (Canvas canvas : getInstances())
+		for (final Canvas canvas : getInstances())
 		{
 			lastCustomNode += canvas.getCurrentCanvasState().getLastCustomNode();
 		}
@@ -55,7 +55,7 @@ public class CanvasRepository
 	public static int getLastLAMBDA()
 	{
 		int lastLAMBDA = 0;
-		for (Canvas canvas : getInstances())
+		for (final Canvas canvas : getInstances())
 		{
 			lastLAMBDA += canvas.getCurrentCanvasState().getLastLAMBDA();
 		}
@@ -65,7 +65,7 @@ public class CanvasRepository
 	public static int getLastLeftSides()
 	{
 		int lastLeftSides = 0;
-		for (Canvas canvas : getInstances())
+		for (final Canvas canvas : getInstances())
 		{
 			lastLeftSides += canvas.getCurrentCanvasState().getLastLeftSides();
 		}
@@ -75,7 +75,7 @@ public class CanvasRepository
 	public static int getLastNTerminalId()
 	{
 		int lastNTerminalId = 0;
-		for (Canvas canvas : getInstances())
+		for (final Canvas canvas : getInstances())
 		{
 			lastNTerminalId += canvas.getCurrentCanvasState().getLastNTerminalId();
 		}
@@ -85,7 +85,7 @@ public class CanvasRepository
 	public static int getLastSTART()
 	{
 		int lastSTART = 0;
-		for (Canvas canvas : getInstances())
+		for (final Canvas canvas : getInstances())
 		{
 			lastSTART += canvas.getCurrentCanvasState().getLastSTART();
 		}
@@ -95,7 +95,7 @@ public class CanvasRepository
 	public static int getLastTerminalId()
 	{
 		int lastTerminalId = 0;
-		for (Canvas canvas : getInstances())
+		for (final Canvas canvas : getInstances())
 		{
 			lastTerminalId += canvas.getCurrentCanvasState().getLastTerminalId();
 		}
@@ -104,7 +104,7 @@ public class CanvasRepository
 
 	public static void refresh()
 	{
-		for (GrammarFile grammar : GGLLDirector.getProject().getGrammarFile().getAll())
+		for (final GrammarFile grammar : GGLLDirector.getProject().getGrammarFile().getAll())
 		{
 			getInstance(grammar.getAbsolutePath());
 		}

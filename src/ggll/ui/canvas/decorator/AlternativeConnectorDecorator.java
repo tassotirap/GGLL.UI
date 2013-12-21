@@ -17,7 +17,7 @@ import org.netbeans.api.visual.widget.Widget;
 
 public class AlternativeConnectorDecorator implements ConnectDecorator
 {
-	private Canvas canvas;
+	private final Canvas canvas;
 
 	public AlternativeConnectorDecorator(Canvas canvas)
 	{
@@ -27,7 +27,7 @@ public class AlternativeConnectorDecorator implements ConnectDecorator
 	@Override
 	public ConnectionWidget createConnectionWidget(Scene scene)
 	{
-		ConnectionWidget widget = new ConnectionWidget(scene);
+		final ConnectionWidget widget = new ConnectionWidget(scene);
 		widget.setTargetAnchorShape(AnchorShape.TRIANGLE_FILLED);
 		widget.setLineColor(Color.RED);
 		return widget;
@@ -42,17 +42,17 @@ public class AlternativeConnectorDecorator implements ConnectDecorator
 	@Override
 	public Anchor createSourceAnchor(Widget sourceWidget)
 	{
-		return new UnidirectionalAnchor(canvas, sourceWidget, Direction.BOTTOM);
+		return new UnidirectionalAnchor(this.canvas, sourceWidget, Direction.BOTTOM);
 	}
 
 	@Override
 	public Anchor createTargetAnchor(Widget targetWidget)
 	{
-		return new UnidirectionalAnchor(canvas, targetWidget, Direction.TOP);
+		return new UnidirectionalAnchor(this.canvas, targetWidget, Direction.TOP);
 	}
 
 	public Anchor createTargetAnchor(Widget targetWidget, String edge)
 	{
-		return new UnidirectionalAnchor(canvas, targetWidget, Direction.TOP, edge, Direction.LEFT);
+		return new UnidirectionalAnchor(this.canvas, targetWidget, Direction.TOP, edge, Direction.LEFT);
 	}
 }

@@ -26,15 +26,15 @@ import org.fife.ui.rtextarea.RTextScrollPane;
 
 public class TextAreaComponent extends AbstractFileComponent implements HyperlinkListener, SyntaxConstants
 {
-	private RSyntaxTextArea textArea;
+	private final RSyntaxTextArea textArea;
 	private String path;
 
 	public TextAreaComponent()
 	{
-		textArea = createTextArea();
-		textArea.setSyntaxEditingStyle(SYNTAX_STYLE_JAVA);
+		this.textArea = createTextArea();
+		this.textArea.setSyntaxEditingStyle(SYNTAX_STYLE_JAVA);
 		SetTheme();
-		jComponent = new RTextScrollPane(textArea, true);
+		this.jComponent = new RTextScrollPane(this.textArea, true);
 	}
 
 	public TextAreaComponent(String path)
@@ -42,7 +42,7 @@ public class TextAreaComponent extends AbstractFileComponent implements Hyperlin
 		this();
 		this.path = path;
 		setText(path, true);
-		textArea.getDocument().addDocumentListener(new DocumentListener()
+		this.textArea.getDocument().addDocumentListener(new DocumentListener()
 		{
 			@Override
 			public void changedUpdate(DocumentEvent arg0)
@@ -67,7 +67,7 @@ public class TextAreaComponent extends AbstractFileComponent implements Hyperlin
 
 	private RSyntaxTextArea createTextArea()
 	{
-		RSyntaxTextArea textArea = new RSyntaxTextArea(25, 70);
+		final RSyntaxTextArea textArea = new RSyntaxTextArea(25, 70);
 		textArea.setTabSize(3);
 		textArea.setCaretPosition(0);
 		textArea.addHyperlinkListener(this);
@@ -80,13 +80,13 @@ public class TextAreaComponent extends AbstractFileComponent implements Hyperlin
 
 	private void SetTheme()
 	{
-		InputStream in = getClass().getResourceAsStream("/eclipse.xml");
+		final InputStream in = getClass().getResourceAsStream("/eclipse.xml");
 		try
 		{
-			Theme theme = Theme.load(in);
-			theme.apply(textArea);
+			final Theme theme = Theme.load(in);
+			theme.apply(this.textArea);
 		}
-		catch (IOException ioe)
+		catch (final IOException ioe)
 		{
 			ioe.printStackTrace();
 		}
@@ -95,7 +95,7 @@ public class TextAreaComponent extends AbstractFileComponent implements Hyperlin
 	@Override
 	public void fireContentChanged()
 	{
-		for (ComponentListener listener : listeners.getAll())
+		for (final ComponentListener listener : this.listeners.getAll())
 		{
 			listener.ContentChanged(this);
 		}
@@ -104,17 +104,17 @@ public class TextAreaComponent extends AbstractFileComponent implements Hyperlin
 	@Override
 	public String getPath()
 	{
-		return path;
+		return this.path;
 	}
 
 	public String getText()
 	{
-		return textArea.getText();
+		return this.textArea.getText();
 	}
 
 	public JTextArea getTextArea()
 	{
-		return textArea;
+		return this.textArea;
 	}
 
 	@Override
@@ -122,14 +122,14 @@ public class TextAreaComponent extends AbstractFileComponent implements Hyperlin
 	{
 		if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED)
 		{
-			URL url = e.getURL();
+			final URL url = e.getURL();
 			if (url == null)
 			{
 				UIManager.getLookAndFeel().provideErrorFeedback(null);
 			}
 			else
 			{
-				JOptionPane.showMessageDialog(textArea, "URL clicked:\n" + url.toString());
+				JOptionPane.showMessageDialog(this.textArea, "URL clicked:\n" + url.toString());
 			}
 		}
 	}
@@ -137,14 +137,14 @@ public class TextAreaComponent extends AbstractFileComponent implements Hyperlin
 	@Override
 	public String saveFile()
 	{
-		File file = new File(path);
+		final File file = new File(this.path);
 		try
 		{
-			FileWriter fw = new FileWriter(file);
-			fw.write(textArea.getText());
+			final FileWriter fw = new FileWriter(file);
+			fw.write(this.textArea.getText());
 			fw.close();
 		}
-		catch (IOException e)
+		catch (final IOException e)
 		{
 			Log.log(Log.ERROR, null, "Could not save file!", e);
 		}
@@ -159,23 +159,23 @@ public class TextAreaComponent extends AbstractFileComponent implements Hyperlin
 			try
 			{
 				r = new BufferedReader(new InputStreamReader(new FileInputStream(resource), "UTF-8"));
-				textArea.read(r, null);
+				this.textArea.read(r, null);
 				r.close();
-				textArea.setCaretPosition(0);
-				textArea.discardAllEdits();
+				this.textArea.setCaretPosition(0);
+				this.textArea.discardAllEdits();
 			}
-			catch (RuntimeException re)
+			catch (final RuntimeException re)
 			{
 				throw re;
 			}
-			catch (Exception e)
+			catch (final Exception e)
 			{
-				textArea.setText("Type here to see syntax highlighting");
+				this.textArea.setText("Type here to see syntax highlighting");
 			}
 		}
 		else
 		{
-			textArea.setText(resource);
+			this.textArea.setText(resource);
 		}
 	}
 }

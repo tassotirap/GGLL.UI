@@ -9,7 +9,7 @@ import org.netbeans.api.visual.widget.Widget;
 
 public abstract class CanvasSelectProvider implements SelectProvider
 {
-	private Canvas canvas;
+	private final Canvas canvas;
 
 	public CanvasSelectProvider(Canvas canvas)
 	{
@@ -19,7 +19,7 @@ public abstract class CanvasSelectProvider implements SelectProvider
 	@Override
 	public void select(Widget arg0, Point arg1, boolean arg2)
 	{
-		canvas.setFocused();
+		this.canvas.setFocused();
 	}
 
 }

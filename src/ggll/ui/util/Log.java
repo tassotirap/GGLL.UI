@@ -74,8 +74,10 @@ public class Log
 		// {{{ update() method
 		void update(final int lineCount, final boolean oldWrap)
 		{
-			if (lineCount == 0 || listeners.isEmpty())
+			if (lineCount == 0 || this.listeners.isEmpty())
+			{
 				return;
+			}
 
 			SwingUtilities.invokeLater(new Runnable()
 			{
@@ -85,7 +87,9 @@ public class Log
 					if (wrap)
 					{
 						if (oldWrap)
+						{
 							fireIntervalRemoved(0, lineCount - 1);
+						}
 						else
 						{
 							fireIntervalRemoved(0, logLineCount);
@@ -103,9 +107,9 @@ public class Log
 		// {{{ fireIntervalAdded() method
 		private void fireIntervalAdded(int index1, int index2)
 		{
-			for (int i = 0; i < listeners.size(); i++)
+			for (int i = 0; i < this.listeners.size(); i++)
 			{
-				ListDataListener listener = listeners.get(i);
+				final ListDataListener listener = this.listeners.get(i);
 				listener.intervalAdded(new ListDataEvent(this, ListDataEvent.INTERVAL_ADDED, index1, index2));
 			}
 		} // }}}
@@ -113,9 +117,9 @@ public class Log
 		// {{{ fireIntervalRemoved() method
 		private void fireIntervalRemoved(int index1, int index2)
 		{
-			for (int i = 0; i < listeners.size(); i++)
+			for (int i = 0; i < this.listeners.size(); i++)
 			{
-				ListDataListener listener = listeners.get(i);
+				final ListDataListener listener = this.listeners.get(i);
 				listener.intervalRemoved(new ListDataEvent(this, ListDataEvent.INTERVAL_REMOVED, index1, index2));
 			}
 		} // }}}
@@ -124,7 +128,7 @@ public class Log
 		@Override
 		public void addListDataListener(ListDataListener listener)
 		{
-			listeners.add(listener);
+			this.listeners.add(listener);
 		} // }}}
 
 		// {{{ getElementAt() method
@@ -134,12 +138,18 @@ public class Log
 			if (wrap)
 			{
 				if (index < MAXLINES - logLineCount)
+				{
 					return log[index + logLineCount];
+				}
 				else
+				{
 					return log[index - MAXLINES + logLineCount];
+				}
 			}
 			else
+			{
 				return log[index];
+			}
 		} // }}}
 
 		// {{{ getSize() method
@@ -147,16 +157,20 @@ public class Log
 		public int getSize()
 		{
 			if (wrap)
+			{
 				return MAXLINES;
+			}
 			else
+			{
 				return logLineCount;
+			}
 		} // }}}
 
 		// {{{ removeListDataListener() method
 		@Override
 		public void removeListDataListener(ListDataListener listener)
 		{
-			listeners.remove(listener);
+			this.listeners.remove(listener);
 		} // }}}
 	} // }}}
 
@@ -177,15 +191,15 @@ public class Log
 		@Override
 		public synchronized void write(byte[] b, int off, int len)
 		{
-			String str = new String(b, off, len);
-			log(urgency, source, str);
+			final String str = new String(b, off, len);
+			log(this.urgency, this.source, str);
 		} // }}}
 
 		// {{{ write() method
 		@Override
 		public synchronized void write(int b)
 		{
-			byte[] barray = { (byte) b };
+			final byte[] barray = { (byte) b };
 			write(barray, 0, 1);
 		} // }}}
 	} // }}}
@@ -207,8 +221,8 @@ public class Log
 		LogPrintStream(int urgency, Object source)
 		{
 			super(new LogOutputStream(urgency, source));
-			buffer = new ByteArrayOutputStream();
-			orig = out;
+			this.buffer = new ByteArrayOutputStream();
+			this.orig = this.out;
 		} // }}}
 
 		// {{{ printf() method
@@ -223,25 +237,25 @@ public class Log
 		@Override
 		public PrintStream printf(String format, Object... args)
 		{
-			synchronized (orig)
+			synchronized (this.orig)
 			{
-				buffer.reset();
-				out = buffer;
+				this.buffer.reset();
+				this.out = this.buffer;
 				super.printf(format, args);
 
 				try
 				{
-					byte[] data = buffer.toByteArray();
-					orig.write(data, 0, data.length);
-					out = orig;
+					final byte[] data = this.buffer.toByteArray();
+					this.orig.write(data, 0, data.length);
+					this.out = this.orig;
 				}
-				catch (IOException ioe)
+				catch (final IOException ioe)
 				{
 					// don't do anything?
 				}
 				finally
 				{
-					buffer.reset();
+					this.buffer.reset();
 				}
 			}
 			return this;
@@ -336,7 +350,7 @@ public class Log
 
 	private static void _log(int urgency, String source, String message)
 	{
-		String fullMessage = timeFormat.format(new Date()) + " [" + Thread.currentThread().getName() + "] [" + urgencyToString(urgency) + "] " + source + ": " + message;
+		final String fullMessage = timeFormat.format(new Date()) + " [" + Thread.currentThread().getName() + "] [" + urgencyToString(urgency) + "] " + source + ": " + message;
 
 		try
 		{
@@ -353,7 +367,7 @@ public class Log
 				stream.write(lineSep);
 			}
 		}
-		catch (Exception e)
+		catch (final Exception e)
 		{
 			e.printStackTrace(realErr);
 		}
@@ -361,16 +375,20 @@ public class Log
 		if (urgency >= level)
 		{
 			if (urgency == ERROR)
+			{
 				realErr.println(fullMessage);
+			}
 			else
+			{
 				realOut.println(fullMessage);
+			}
 		}
 	} // }}}
 		// {{{ _logException() method
 
 	private static void _logException(final int urgency, final Object source, final Throwable message)
 	{
-		PrintStream out = createPrintStream(urgency, source);
+		final PrintStream out = createPrintStream(urgency, source);
 		if (urgency >= level)
 		{
 			synchronized (throwables)
@@ -429,7 +447,7 @@ public class Log
 				stream.close();
 				stream = null;
 			}
-			catch (IOException io)
+			catch (final IOException io)
 			{
 				io.printStackTrace(realErr);
 			}
@@ -450,7 +468,7 @@ public class Log
 			{
 				stream.flush();
 			}
-			catch (IOException io)
+			catch (final IOException io)
 			{
 				io.printStackTrace(realErr);
 			}
@@ -494,10 +512,10 @@ public class Log
 
 		// Log some stuff
 		log(MESSAGE, Log.class, "When reporting bugs, please" + " include the following information:");
-		String[] props = { "java.version", "java.vm.version", "java.runtime.version", "java.vendor", "java.compiler", "os.name", "os.version", "os.arch", "user.home", "java.home", "java.class.path", };
-		for (int i = 0; i < props.length; i++)
+		final String[] props = { "java.version", "java.vm.version", "java.runtime.version", "java.vendor", "java.compiler", "os.name", "os.version", "os.arch", "user.home", "java.home", "java.class.path", };
+		for (final String prop : props)
 		{
-			log(MESSAGE, Log.class, props[i] + '=' + System.getProperty(props[i]));
+			log(MESSAGE, Log.class, prop + '=' + System.getProperty(prop));
 		}
 	} // }}}
 
@@ -546,12 +564,18 @@ public class Log
 			}
 		}
 		else if (source instanceof Class)
+		{
 			_source = ((Class) source).getName();
+		}
 		else
+		{
 			_source = source.getClass().getName();
-		int index = _source.lastIndexOf('.');
+		}
+		final int index = _source.lastIndexOf('.');
 		if (index != -1)
+		{
 			_source = _source.substring(index + 1);
+		}
 
 		if (message instanceof Throwable)
 		{
@@ -559,14 +583,14 @@ public class Log
 		}
 		else
 		{
-			String _message = String.valueOf(message);
+			final String _message = String.valueOf(message);
 			// If multiple threads log stuff, we don't want
 			// the output to get mixed up
 			synchronized (LOCK)
 			{
-				StringTokenizer st = new StringTokenizer(_message, "\r\n");
+				final StringTokenizer st = new StringTokenizer(_message, "\r\n");
 				int lineCount = 0;
-				boolean oldWrap = wrap;
+				final boolean oldWrap = wrap;
 				while (st.hasMoreTokens())
 				{
 					lineCount++;
@@ -632,7 +656,7 @@ public class Log
 
 				stream.flush();
 			}
-			catch (Exception e)
+			catch (final Exception e)
 			{
 				// do nothing, who cares
 			}

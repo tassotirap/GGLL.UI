@@ -28,14 +28,14 @@ public class CanvasDecorator
 
 	protected SuccessorConnectorDecorator connectDecoratorSuccessor;
 
-	private String[] iconName = new String[]{ CanvasResource.N_TERMINAL, CanvasResource.TERMINAL, CanvasResource.LEFT_SIDE, CanvasResource.LAMBDA, CanvasResource.START };
+	private final String[] iconName = new String[]{ CanvasResource.N_TERMINAL, CanvasResource.TERMINAL, CanvasResource.LEFT_SIDE, CanvasResource.LAMBDA, CanvasResource.START };
 
-	private URL[] icons = new URL[]{ getClass().getResource(GGLLImages.ICON_N_TERMINAL), getClass().getResource(GGLLImages.ICON_TERMINAL), getClass().getResource(GGLLImages.ICON_LEFT_SIDE), getClass().getResource(GGLLImages.ICON_LAMBDA), getClass().getResource(GGLLImages.ICON_START) };
+	private final URL[] icons = new URL[]{ getClass().getResource(GGLLImages.ICON_N_TERMINAL), getClass().getResource(GGLLImages.ICON_TERMINAL), getClass().getResource(GGLLImages.ICON_LEFT_SIDE), getClass().getResource(GGLLImages.ICON_LAMBDA), getClass().getResource(GGLLImages.ICON_START) };
 
 	public CanvasDecorator(Canvas canvas)
 	{
-		connectDecoratorAlternative = new AlternativeConnectorDecorator(canvas);
-		connectDecoratorSuccessor = new SuccessorConnectorDecorator(canvas);
+		this.connectDecoratorAlternative = new AlternativeConnectorDecorator(canvas);
+		this.connectDecoratorSuccessor = new SuccessorConnectorDecorator(canvas);
 	}
 
 	public ConnectionWidget drawConnection(String type, Canvas canvas, String label)
@@ -43,11 +43,11 @@ public class CanvasDecorator
 		ConnectionWidget connection = null;
 		if (type.equals(CanvasResource.SUCCESSOR))
 		{
-			connection = connectDecoratorSuccessor.createConnectionWidget(canvas.getMainLayer().getScene());
+			connection = this.connectDecoratorSuccessor.createConnectionWidget(canvas.getMainLayer().getScene());
 		}
 		else
 		{
-			connection = connectDecoratorAlternative.createConnectionWidget(canvas.getMainLayer().getScene());
+			connection = this.connectDecoratorAlternative.createConnectionWidget(canvas.getMainLayer().getScene());
 		}
 
 		connection.setTargetAnchorShape(AnchorShape.TRIANGLE_FILLED);
@@ -63,7 +63,7 @@ public class CanvasDecorator
 		Widget widget;
 		if (type.equals(CanvasResource.LAMBDA))
 		{
-			IconNodeWidgetExt iwidget = new IconNodeWidgetExt(canvas.getMainLayer().getScene(), TextOrientation.RIGHT_CENTER);
+			final IconNodeWidgetExt iwidget = new IconNodeWidgetExt(canvas.getMainLayer().getScene(), TextOrientation.RIGHT_CENTER);
 
 			iwidget.setImage(new ImageIcon(findIconPath(type)).getImage());
 
@@ -73,7 +73,7 @@ public class CanvasDecorator
 		}
 		else
 		{
-			LabelWidgetExt lwidget = new LabelWidgetExt(canvas.getMainLayer().getScene(), text);
+			final LabelWidgetExt lwidget = new LabelWidgetExt(canvas.getMainLayer().getScene(), text);
 			try
 			{
 				lwidget.setOpaque(true);
@@ -83,7 +83,7 @@ public class CanvasDecorator
 				lwidget.repaint();
 				widget = lwidget;
 			}
-			catch (Exception e)
+			catch (final Exception e)
 			{
 				throw e;
 			}
@@ -105,11 +105,11 @@ public class CanvasDecorator
 
 	public URL findIconPath(String type)
 	{
-		for (int i = 0; i < icons.length && i < iconName.length; i++)
+		for (int i = 0; i < this.icons.length && i < this.iconName.length; i++)
 		{
-			if (iconName[i].equals(type))
+			if (this.iconName[i].equals(type))
 			{
-				return icons[i];
+				return this.icons[i];
 			}
 		}
 		return null;
@@ -117,12 +117,12 @@ public class CanvasDecorator
 
 	public AlternativeConnectorDecorator getConnectDecoratorAlternative()
 	{
-		return connectDecoratorAlternative;
+		return this.connectDecoratorAlternative;
 	}
 
 	public SuccessorConnectorDecorator getConnectDecoratorSuccessor()
 	{
-		return connectDecoratorSuccessor;
+		return this.connectDecoratorSuccessor;
 	}
 
 	public Border getIconBorder(String type)

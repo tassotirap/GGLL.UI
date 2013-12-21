@@ -22,7 +22,7 @@ public class SemanticStack extends Output
 
 	public void clearStack()
 	{
-		lastLine = 0;
+		this.lastLine = 0;
 		clear();
 	}
 
@@ -30,7 +30,7 @@ public class SemanticStack extends Output
 	{
 		if (showLine)
 		{
-			displayTextExt(String.format("<b>%d.&nbsp;&nbsp;</b>%s", ++lastLine, str), TOPIC.SemanticStack);
+			displayTextExt(String.format("<b>%d.&nbsp;&nbsp;</b>%s", ++this.lastLine, str), TOPIC.SemanticStack);
 		}
 		else
 		{

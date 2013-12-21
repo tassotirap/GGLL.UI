@@ -14,9 +14,9 @@ public class CustomFileFilter extends FileFilter
 	public CustomFileFilter(String[] filters, String description)
 	{
 		this.filters = new Hashtable(filters.length);
-		for (int i = 0; i < filters.length; i++)
+		for (final String filter : filters)
 		{
-			this.filters.put(filters[i].toLowerCase(), this);
+			this.filters.put(filter.toLowerCase(), this);
 		}
 		this.description = description;
 	}
@@ -30,8 +30,8 @@ public class CustomFileFilter extends FileFilter
 			{
 				return true;
 			}
-			String extension = getExtension(f);
-			if (extension != null && filters.get(getExtension(f)) != null)
+			final String extension = getExtension(f);
+			if (extension != null && this.filters.get(getExtension(f)) != null)
 			{
 				return true;
 			}
@@ -44,10 +44,10 @@ public class CustomFileFilter extends FileFilter
 	public String getDescription()
 	{
 		String fullDescription;
-		if (description == null)
+		if (this.description == null)
 		{
-			fullDescription = description == null ? "(" : description + " (";
-			Enumeration extensions = filters.keys();
+			fullDescription = this.description == null ? "(" : this.description + " (";
+			final Enumeration extensions = this.filters.keys();
 			if (extensions != null)
 			{
 				fullDescription += "." + (String) extensions.nextElement();
@@ -60,7 +60,7 @@ public class CustomFileFilter extends FileFilter
 		}
 		else
 		{
-			fullDescription = description;
+			fullDescription = this.description;
 		}
 		return fullDescription;
 	}
@@ -69,8 +69,8 @@ public class CustomFileFilter extends FileFilter
 	{
 		if (f != null)
 		{
-			String filename = f.getName();
-			int i = filename.lastIndexOf('.');
+			final String filename = f.getName();
+			final int i = filename.lastIndexOf('.');
 			if (i > 0 && i < filename.length() - 1)
 			{
 				return filename.substring(i + 1).toLowerCase();

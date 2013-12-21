@@ -9,8 +9,8 @@ public class GrammarData
 
 	public GrammarData()
 	{
-		name = "-1";
-		semanticRoutine = "-1";
+		this.name = "-1";
+		this.semanticRoutine = "-1";
 	}
 
 }

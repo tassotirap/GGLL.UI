@@ -11,12 +11,12 @@ public class SimpleTextAreaComponent extends AbstractComponent
 {
 	public SimpleTextAreaComponent(String fileName)
 	{
-		StringBuffer sb = new StringBuffer();
-		File f = new File(fileName);
+		final StringBuffer sb = new StringBuffer();
+		final File f = new File(fileName);
 		try
 		{
-			FileReader fileReader = new FileReader(f);
-			BufferedReader bufferedReader = new BufferedReader(fileReader);
+			final FileReader fileReader = new FileReader(f);
+			final BufferedReader bufferedReader = new BufferedReader(fileReader);
 			String line;
 			while ((line = bufferedReader.readLine()) != null)
 			{
@@ -24,11 +24,11 @@ public class SimpleTextAreaComponent extends AbstractComponent
 			}
 			bufferedReader.close();
 		}
-		catch (Exception e)
+		catch (final Exception e)
 		{
 			e.printStackTrace();
 		}
-		jComponent = new JScrollPane(new JTextArea(sb.toString()));
+		this.jComponent = new JScrollPane(new JTextArea(sb.toString()));
 	}
 
 	@Override

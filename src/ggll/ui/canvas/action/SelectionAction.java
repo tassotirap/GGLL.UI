@@ -23,8 +23,8 @@ import org.netbeans.api.visual.widget.Widget;
 
 public class SelectionAction implements ClipboardOwner, Transferable
 {
-	private ArrayList<Serializable> elements = new ArrayList<Serializable>();
-	private Canvas canvas;
+	private final ArrayList<Serializable> elements = new ArrayList<Serializable>();
+	private final Canvas canvas;
 
 	public SelectionAction(Canvas canvas)
 	{
@@ -34,7 +34,7 @@ public class SelectionAction implements ClipboardOwner, Transferable
 	public SelectionAction(Widget[] widgets, Canvas canvas)
 	{
 		this.canvas = canvas;
-		for (Widget widget : widgets)
+		for (final Widget widget : widgets)
 		{
 			addSelection(widget);
 		}
@@ -44,8 +44,8 @@ public class SelectionAction implements ClipboardOwner, Transferable
 	{
 		if (widget instanceof LabelWidget)
 		{
-			Node node = new Node();
-			Object object = canvas.findObject(widget);
+			final Node node = new Node();
+			final Object object = this.canvas.findObject(widget);
 			if (object != null)
 			{
 				node.setName((String) object);
@@ -64,34 +64,34 @@ public class SelectionAction implements ClipboardOwner, Transferable
 			{
 				node.setMark(((MarkedWidget) widget).getMark());
 			}
-			elements.add(node);
+			this.elements.add(node);
 		}
 		else if (widget instanceof ConnectionWidget)
 		{
-			Connection conn = new Connection();
-			Object object = canvas.findObject(widget);
+			final Connection conn = new Connection();
+			final Object object = this.canvas.findObject(widget);
 			if (object != null)
 			{
 				conn.setName((String) object);
-				conn.setSource(canvas.getEdgeSource((String) object));
-				conn.setTarget(canvas.getEdgeTarget((String) object));
-				if (canvas.isAlternative((String) object))
+				conn.setSource(this.canvas.getEdgeSource((String) object));
+				conn.setTarget(this.canvas.getEdgeTarget((String) object));
+				if (this.canvas.isAlternative((String) object))
 				{
 					conn.setType(CanvasResource.ALTERNATIVE);
 				}
-				else if (canvas.isSuccessor((String) object))
+				else if (this.canvas.isSuccessor((String) object))
 				{
 					conn.setType(CanvasResource.SUCCESSOR);
 				}
 			}
-			elements.add(conn);
+			this.elements.add(conn);
 		}
 	}
 
 	@Override
 	public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException
 	{
-		return elements;
+		return this.elements;
 	}
 
 	@Override

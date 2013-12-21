@@ -17,7 +17,7 @@ public class Preferences implements Serializable
 	 */
 	public String getConnectionStrategy()
 	{
-		return connectionStrategy;
+		return this.connectionStrategy;
 	}
 
 	/**
@@ -25,7 +25,7 @@ public class Preferences implements Serializable
 	 */
 	public String getMoveStrategy()
 	{
-		return moveStrategy;
+		return this.moveStrategy;
 	}
 
 	/**
@@ -33,7 +33,7 @@ public class Preferences implements Serializable
 	 */
 	public int getShowStatus()
 	{
-		return showStatus;
+		return this.showStatus;
 	}
 
 	/**
@@ -41,7 +41,7 @@ public class Preferences implements Serializable
 	 */
 	public boolean isShowGrid()
 	{
-		return showGrid;
+		return this.showGrid;
 	}
 
 	/**
@@ -49,7 +49,7 @@ public class Preferences implements Serializable
 	 */
 	public boolean isShowLines()
 	{
-		return showLines;
+		return this.showLines;
 	}
 
 	/**

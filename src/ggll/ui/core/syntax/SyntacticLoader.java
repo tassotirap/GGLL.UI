@@ -36,18 +36,18 @@ public class SyntacticLoader
 
 	public SyntacticLoader(TableCreate argTab)
 	{
-		MaxT = 0;
-		MaxNt = 0;
-		IndPrim = 1;
-		NoMax = 0;
-		TableCreate t = argTab;
-		String tab[][] = t.getTab();
-		TabT = new TableNode[t.getNLines() + 1];
-		TabNt = new TableNode[t.getNLines() + 1];
-		TabGraph = new TableGraphNode[t.getNLines() + 1];
+		this.MaxT = 0;
+		this.MaxNt = 0;
+		this.IndPrim = 1;
+		this.NoMax = 0;
+		final TableCreate t = argTab;
+		final String tab[][] = t.getTab();
+		this.TabT = new TableNode[t.getNLines() + 1];
+		this.TabNt = new TableNode[t.getNLines() + 1];
+		this.TabGraph = new TableGraphNode[t.getNLines() + 1];
 		int registrosLidos;
 		int iterator;
-		int indicesTabNtEncontrados[] = new int[t.getNLines() + 1];
+		final int indicesTabNtEncontrados[] = new int[t.getNLines() + 1];
 		int indiceEncontrado;
 		/*
 		 * 2 Para todos os registros (linhas )presentes na tabela de entrada,
@@ -55,13 +55,13 @@ public class SyntacticLoader
 		 */
 		for (registrosLidos = 0; registrosLidos < t.getNLines(); registrosLidos++)
 		{
-			Flag = tab[registrosLidos][0];
-			Tipo = tab[registrosLidos][1].toCharArray()[0];
-			Nomer = tab[registrosLidos][2];
-			NumNo = Integer.parseInt(tab[registrosLidos][3]);
-			AltR = Integer.parseInt(tab[registrosLidos][4]);
-			SucR = Integer.parseInt(tab[registrosLidos][5]);
-			SemR = tab[registrosLidos][6];
+			this.Flag = tab[registrosLidos][0];
+			this.Tipo = tab[registrosLidos][1].toCharArray()[0];
+			this.Nomer = tab[registrosLidos][2];
+			this.NumNo = Integer.parseInt(tab[registrosLidos][3]);
+			this.AltR = Integer.parseInt(tab[registrosLidos][4]);
+			this.SucR = Integer.parseInt(tab[registrosLidos][5]);
+			this.SemR = tab[registrosLidos][6];
 
 			/*
 			 * A tabela indicesTabNtEncontrados será util mais adiante, porém,
@@ -72,7 +72,7 @@ public class SyntacticLoader
 				indicesTabNtEncontrados[i] = -1;
 			}
 			/* 2 Se Tipo for igual Cabeça: */
-			if (Tipo == 'H')
+			if (this.Tipo == 'H')
 			{
 				/*
 				 * Para facilitar a busca, faço todos os valores de
@@ -80,9 +80,9 @@ public class SyntacticLoader
 				 */
 
 				/* 2 Faço IndPrim <- IndPrim + NoMax, */
-				IndPrim = IndPrim + NoMax;
+				this.IndPrim = this.IndPrim + this.NoMax;
 				/* 2 NoMax <- 0 */
-				NoMax = 0;
+				this.NoMax = 0;
 				/* 2 verifico se Nomer se encontra em TABNT */
 				/*
 				 * iterador e aux serão uteis apenas para a localização de um
@@ -91,10 +91,10 @@ public class SyntacticLoader
 				iterator = 1;
 				int aux = 0;
 				/* enquanto existir entradas em TABNT */
-				while (TabNt[iterator] != null)
+				while (this.TabNt[iterator] != null)
 				{
 					/* Se eu encontrar um simbolo igual à Nomer... */
-					if ((TabNt[iterator].getName()).equals(Nomer))
+					if (this.TabNt[iterator].getName().equals(this.Nomer))
 					{
 						/*
 						 * Guardo o indice do simbolo encontrado em uma tabela
@@ -108,9 +108,9 @@ public class SyntacticLoader
 				/* 2 se Nomer não se encontra na TABNT */
 				if (indicesTabNtEncontrados[0] == -1)
 				{
-					MaxNt = MaxNt + 1;
+					this.MaxNt = this.MaxNt + 1;
 					/* 2 Coloco na TABNT um o não-terminal TabNT */
-					TabNt[MaxNt] = new TableNode(Flag, Nomer, IndPrim);
+					this.TabNt[this.MaxNt] = new TableNode(this.Flag, this.Nomer, this.IndPrim);
 				}
 				else
 				{
@@ -118,18 +118,22 @@ public class SyntacticLoader
 					 * 2 Se existe E tal que 1<=E<=MaxNt e TabNt[E].name() =
 					 * Nomer
 					 */
-					for (int j = 0; j < MaxNt; j++)
+					for (int j = 0; j < this.MaxNt; j++)
 					{
 						if (indicesTabNtEncontrados[j] != -1)
+						{
 							/* 2 TabNt[E]->prim = 0 ? */
-							if (TabNt[indicesTabNtEncontrados[j]].getFirstNode() == 0)
+							if (this.TabNt[indicesTabNtEncontrados[j]].getFirstNode() == 0)
+							{
 								/* 2 Se sim */
-								TabNt[indicesTabNtEncontrados[j]].setFirstNode(IndPrim);
+								this.TabNt[indicesTabNtEncontrados[j]].setFirstNode(this.IndPrim);
+							}
 							else
 							{
 								/* 2 Se não */
 								System.out.println("Erro!!Duas cabeças para um mesmo não-terminal");
 							}
+						}
 					}
 				} // } else {...
 			} // if(Tipo == 'H')...
@@ -137,26 +141,26 @@ public class SyntacticLoader
 			else
 			{
 				/* 2 I <- IndPrim + NumNo -1 */
-				int I = IndPrim + NumNo - 1;
+				final int I = this.IndPrim + this.NumNo - 1;
 				/* O nó que será inserido em TabGraph é criado agora */
-				TabGraph[I] = new TableGraphNode();
+				this.TabGraph[I] = new TableGraphNode();
 				/*
 				 * IndiceEncontrado será utilizado na localização de uma simbolo
 				 * na Tabela de simbolos Terminais
 				 */
 				indiceEncontrado = -1;
 				/* 2 se Tipo for igual a T e Nomer não for um lambda-nó */
-				if (Tipo == 'T')
+				if (this.Tipo == 'T')
 				{
-					TabGraph[I].setIsTerminal(true);
+					this.TabGraph[I].setIsTerminal(true);
 
-					if (!Nomer.equals(new String("-1")) && !Nomer.equals(SyntaxDefinitions.EmptyNodeLabel))
+					if (!this.Nomer.equals(new String("-1")) && !this.Nomer.equals(SyntaxDefinitions.EmptyNodeLabel))
 					{
 						iterator = 1;
 						/* 2 verifico se Nomer se encontra em TABT */
-						while (TabT[iterator] != null)
+						while (this.TabT[iterator] != null)
 						{
-							if ((TabT[iterator].getName()).equals(Nomer))
+							if (this.TabT[iterator].getName().equals(this.Nomer))
 							{
 								indiceEncontrado = iterator;
 								break;
@@ -169,20 +173,20 @@ public class SyntacticLoader
 							 * 2 Se não foi encontrado, a entrada na tabela de
 							 * simbolos terminais terá de ser criada
 							 */
-							MaxT = MaxT + 1;
-							TabT[MaxT] = new TableNode(Flag, Nomer);
-							indiceEncontrado = MaxT;
+							this.MaxT = this.MaxT + 1;
+							this.TabT[this.MaxT] = new TableNode(this.Flag, this.Nomer);
+							indiceEncontrado = this.MaxT;
 						}
 					}
 				}
 				/* 2 Se Tipo for igoal a N */
-				else if (Tipo == 'N')
+				else if (this.Tipo == 'N')
 				{
 					iterator = 1;
 					/* 2 verifico se Nomer se encontra em TABT */
-					while (TabNt[iterator] != null)
+					while (this.TabNt[iterator] != null)
 					{
-						if ((TabNt[iterator].getName()).equals(Nomer))
+						if (this.TabNt[iterator].getName().equals(this.Nomer))
 						{
 							indiceEncontrado = iterator;
 							break;
@@ -195,57 +199,59 @@ public class SyntacticLoader
 						 * 2 Se não for encontrado, uma entrada na tabela TabNt,
 						 * será criada
 						 */
-						MaxNt = MaxNt + 1;
-						TabNt[MaxNt] = new TableNode(Flag, Nomer, 0);
-						indiceEncontrado = MaxNt;
+						this.MaxNt = this.MaxNt + 1;
+						this.TabNt[this.MaxNt] = new TableNode(this.Flag, this.Nomer, 0);
+						indiceEncontrado = this.MaxNt;
 					}
-					TabGraph[I].setIsTerminal(false);
+					this.TabGraph[I].setIsTerminal(false);
 				}
-				if (Nomer.equals("-1") || Nomer.equals(SyntaxDefinitions.EmptyNodeLabel))
+				if (this.Nomer.equals("-1") || this.Nomer.equals(SyntaxDefinitions.EmptyNodeLabel))
 				{
-					TabGraph[I].setNodeReference(0);
-				}
-				else
-				{
-					TabGraph[I].setNodeReference(indiceEncontrado);
-				}
-				if (AltR != 0)
-				{
-					TabGraph[I].setAlternativeIndex(IndPrim + AltR - 1);
+					this.TabGraph[I].setNodeReference(0);
 				}
 				else
 				{
-					TabGraph[I].setAlternativeIndex(0);
+					this.TabGraph[I].setNodeReference(indiceEncontrado);
 				}
-				if (SucR != 0)
+				if (this.AltR != 0)
 				{
-					TabGraph[I].setSucessorIndex(IndPrim + SucR - 1);
+					this.TabGraph[I].setAlternativeIndex(this.IndPrim + this.AltR - 1);
 				}
 				else
 				{
-					TabGraph[I].setSucessorIndex(0);
+					this.TabGraph[I].setAlternativeIndex(0);
+				}
+				if (this.SucR != 0)
+				{
+					this.TabGraph[I].setSucessorIndex(this.IndPrim + this.SucR - 1);
+				}
+				else
+				{
+					this.TabGraph[I].setSucessorIndex(0);
 				}
 				/* Colocando o valor da rotina semantica */
-				TabGraph[I].setSemanticRoutine(SemR);
+				this.TabGraph[I].setSemanticRoutine(this.SemR);
 
-				if (NoMax < NumNo)
-					NoMax = NumNo;
+				if (this.NoMax < this.NumNo)
+				{
+					this.NoMax = this.NumNo;
+				}
 			}
 		} // while (registrosLidos < t.linhas()) ...
 	} // public CarregadorSintatico() ...
 
 	public TableGraphNode[] tabGraph()
 	{
-		return TabGraph;
+		return this.TabGraph;
 	}
 
 	public TableNode[] tabNt()
 	{
-		return TabNt;
+		return this.TabNt;
 	}
 
 	public TableNode[] tabT()
 	{
-		return TabT;
+		return this.TabT;
 	}
 }

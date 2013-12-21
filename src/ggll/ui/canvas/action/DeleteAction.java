@@ -21,9 +21,9 @@ public class DeleteAction extends Adapter
 	{
 		if (event.getKeyCode() == KeyEvent.VK_DELETE)
 		{
-			if (widgetDeleteProvider.isDeletionAllowed())
+			if (this.widgetDeleteProvider.isDeletionAllowed())
 			{
-				widgetDeleteProvider.deleteSelected();
+				this.widgetDeleteProvider.deleteSelected();
 			}
 		}
 		return State.REJECTED;

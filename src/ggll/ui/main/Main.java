@@ -10,7 +10,7 @@ public class Main
 	 */
 	public static void main(String[] args)
 	{
-		GuiLauncher guiLauncher = new GuiLauncher();
+		final GuiLauncher guiLauncher = new GuiLauncher();
 		guiLauncher.start();
 	}
 

@@ -7,7 +7,7 @@ public class CustomHTMLEditorKit extends HTMLEditorKit
 {
 	private static final long serialVersionUID = 1L;
 
-	private String applicationImagePath;
+	private final String applicationImagePath;
 
 	public CustomHTMLEditorKit(String ApplicationImagePath)
 	{
@@ -17,6 +17,6 @@ public class CustomHTMLEditorKit extends HTMLEditorKit
 	@Override
 	public ViewFactory getViewFactory()
 	{
-		return new CustomHTMLFactory(applicationImagePath);
+		return new CustomHTMLFactory(this.applicationImagePath);
 	}
 }

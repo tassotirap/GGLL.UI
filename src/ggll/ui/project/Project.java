@@ -23,7 +23,7 @@ public class Project implements Serializable
 
 	private ExtendedList<File> openedFiles;
 
-	private File projectDir;
+	private final File projectDir;
 	// private Theme theme = Theme.DefaultDockingTheme;
 
 	private File yyLexFile;
@@ -48,7 +48,7 @@ public class Project implements Serializable
 				this.openedFiles = openedFiles;
 			}
 		}
-		catch (Exception e)
+		catch (final Exception e)
 		{
 			e.printStackTrace();
 		}
@@ -56,32 +56,32 @@ public class Project implements Serializable
 
 	public ExtendedList<GrammarFile> getGrammarFile()
 	{
-		return grammarFile;
+		return this.grammarFile;
 	}
 
 	public LexicalFile getLexicalFile()
 	{
-		return lexicalFile;
+		return this.lexicalFile;
 	}
 
 	public ExtendedList<File> getOpenedFiles()
 	{
-		return openedFiles;
+		return this.openedFiles;
 	}
 
 	public File getProjectDir()
 	{
-		return projectDir;
+		return this.projectDir;
 	}
 
 	public String getProjectsRootPath()
 	{
-		return projectDir.getAbsolutePath();
+		return this.projectDir.getAbsolutePath();
 	}
 
 	public SemanticFile getSemanticFile()
 	{
-		return semanticFile;
+		return this.semanticFile;
 	}
 
 	// public Theme getTheme()
@@ -91,7 +91,7 @@ public class Project implements Serializable
 
 	public File getYyLexFile()
 	{
-		return yyLexFile;
+		return this.yyLexFile;
 	}
 
 	public void setGrammarFile(ExtendedList<GrammarFile> grammarFiles)

@@ -13,7 +13,7 @@ public class Connection extends SyntaxElement
 
 	public Connection()
 	{
-		this.id = this.toString();
+		this.id = toString();
 	}
 
 	public Connection(String id)
@@ -39,16 +39,16 @@ public class Connection extends SyntaxElement
 	 */
 	public void attachTarget(Object context)
 	{
-		if (target == null || source == null)
+		if (this.target == null || this.source == null)
 		{
 			return;
 		}
-		Object e = this.getTarget();
+		final Object e = getTarget();
 		if (e instanceof SimpleNode)
 		{
 			if (getSource() instanceof SyntaxModel)
 			{
-				SyntaxModel l = (SyntaxModel) getSource();
+				final SyntaxModel l = (SyntaxModel) getSource();
 				if (context.equals(SyntaxDefinitions.SucConnection))
 				{
 					l.setSucessor((SyntaxSubpart) e);
@@ -66,7 +66,9 @@ public class Connection extends SyntaxElement
 	public void detachSource()
 	{
 		if (getSource() == null)
+		{
 			return;
+		}
 		getSource().disconnectOutput(this);
 	}
 
@@ -74,14 +76,16 @@ public class Connection extends SyntaxElement
 	public void detachTarget()
 	{
 		if (getTarget() == null)
+		{
 			return;
+		}
 
-		SyntaxSubpart e = this.getTarget();
+		final SyntaxSubpart e = getTarget();
 		if (e instanceof SimpleNode)
 		{
 			if (getSource() instanceof SyntaxModel)
 			{
-				SyntaxModel l = (SyntaxModel) getSource();
+				final SyntaxModel l = (SyntaxModel) getSource();
 				if (l.getSucessor() == e)
 				{
 					l.setSucessor(null);
@@ -105,27 +109,27 @@ public class Connection extends SyntaxElement
 
 	public SyntaxSubpart getSource()
 	{
-		return source;
+		return this.source;
 	}
 
 	public String getSourceTerminal()
 	{
-		return source.getID();
+		return this.source.getID();
 	}
 
 	public SyntaxSubpart getTarget()
 	{
-		return target;
+		return this.target;
 	}
 
 	public String getTargetTerminal()
 	{
-		return target.getID();
+		return this.target.getID();
 	}
 
 	public boolean getValue()
 	{
-		return value;
+		return this.value;
 	}
 
 	@Override
@@ -136,25 +140,29 @@ public class Connection extends SyntaxElement
 
 	public void setSource(SyntaxSubpart e)
 	{
-		Object old = source;
-		source = e;
-		firePropertyChange("source", old, source);//$NON-NLS-1$
+		final Object old = this.source;
+		this.source = e;
+		firePropertyChange("source", old, this.source);//$NON-NLS-1$
 	}
 
 	public void setTarget(SyntaxSubpart e)
 	{
-		Object old = target;
-		target = e;
-		firePropertyChange("target", old, target);
+		final Object old = this.target;
+		this.target = e;
+		firePropertyChange("target", old, this.target);
 	}
 
 	public void setValue(boolean value)
 	{
 		if (value == this.value)
+		{
 			return;
+		}
 		this.value = value;
-		if (target != null)
-			target.update();
+		if (this.target != null)
+		{
+			this.target.update();
+		}
 		firePropertyChange("value", null, null);//$NON-NLS-1$
 	}
 

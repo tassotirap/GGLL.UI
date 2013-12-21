@@ -9,7 +9,7 @@ public class SyntaxStackComponent extends AbstractComponent
 {
 	public SyntaxStackComponent(Canvas canvas)
 	{
-		jComponent = new JScrollPane(SyntaxStack.getInstance().getView(canvas));
+		this.jComponent = new JScrollPane(SyntaxStack.getInstance().getView(canvas));
 	}
 
 	@Override

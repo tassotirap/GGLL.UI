@@ -19,29 +19,29 @@ abstract public class SyntaxElement extends Properties implements Serializable, 
 	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
 	{
 		in.defaultReadObject();
-		listeners = new PropertyChangeSupport(this);
+		this.listeners = new PropertyChangeSupport(this);
 	}
 
 	protected void firePropertyChange(String prop, Object old, Object newValue)
 	{
-		listeners.firePropertyChange(prop, old, newValue);
+		this.listeners.firePropertyChange(prop, old, newValue);
 	}
 
 	protected void fireStructureChange(String prop, Object child)
 	{
-		listeners.firePropertyChange(prop, null, child);
+		this.listeners.firePropertyChange(prop, null, child);
 	}
 
 	public void addPropertyChangeListener(PropertyChangeListener l)
 	{
-		listeners.addPropertyChangeListener(l);
+		this.listeners.addPropertyChangeListener(l);
 	}
 
 	public abstract String getID();
 
 	public void removePropertyChangeListener(PropertyChangeListener l)
 	{
-		listeners.removePropertyChangeListener(l);
+		this.listeners.removePropertyChangeListener(l);
 	}
 
 	public abstract void setID(String s);

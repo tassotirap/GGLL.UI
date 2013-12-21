@@ -11,10 +11,10 @@ public class InvalidGrammarException extends Exception
 	 */
 	private static final long serialVersionUID = 2582912391213112321L;
 
-	private String description;
+	private final String description;
 	private int iteratorIndex;
 
-	private ExtendedList<InvalidGrammarException> nextExceptions = new ExtendedList<InvalidGrammarException>();
+	private final ExtendedList<InvalidGrammarException> nextExceptions = new ExtendedList<InvalidGrammarException>();
 	private GrammarComponent problem;
 
 	public InvalidGrammarException(String message, String description, GrammarComponent problem)
@@ -31,26 +31,26 @@ public class InvalidGrammarException extends Exception
 
 	public boolean hasNext()
 	{
-		return iteratorIndex < nextExceptions.count();
+		return this.iteratorIndex < this.nextExceptions.count();
 	}
 
 	public void insertMoreExceptions(InvalidGrammarException ex)
 	{
-		nextExceptions.append(ex);
+		this.nextExceptions.append(ex);
 	}
 
 	public InvalidGrammarException nextException()
 	{
 		if (hasNext())
 		{
-			return nextExceptions.get(iteratorIndex++);
+			return this.nextExceptions.get(this.iteratorIndex++);
 		}
 		return null;
 	}
 
 	public void resetIterator()
 	{
-		iteratorIndex = 0;
+		this.iteratorIndex = 0;
 	}
 
 	public void setGrComp(GrammarComponent problem)
@@ -60,12 +60,12 @@ public class InvalidGrammarException extends Exception
 
 	public String whereId()
 	{
-		return problem.getId().toString();
+		return this.problem.getId().toString();
 	}
 
 	public String whereLabel()
 	{
-		return problem.getContents().toString();
+		return this.problem.getContents().toString();
 	}
 
 }

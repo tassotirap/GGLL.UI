@@ -38,13 +38,13 @@ public class SyntaxModel extends SyntaxSubpart
 
 	public void addChild(SyntaxElement child, int index)
 	{
-		children.insertAt(index, child);
+		this.children.insertAt(index, child);
 		fireStructureChange(CHILDREN, child);
 	}
 
 	public SyntaxElement findElement(String id)
 	{
-		for (SyntaxElement e : children.getAll())
+		for (final SyntaxElement e : this.children.getAll())
 		{
 			if (e.getID().equals(id))
 			{
@@ -56,13 +56,13 @@ public class SyntaxModel extends SyntaxSubpart
 
 	public ExtendedList<SyntaxElement> getChildren()
 	{
-		return children;
+		return this.children;
 	}
 
 	public ExtendedList<NodeLabel> getChildrenAsLabels()
 	{
-		ExtendedList<NodeLabel> lNodes = new ExtendedList<NodeLabel>();
-		for (SyntaxElement e : children.getAll())
+		final ExtendedList<NodeLabel> lNodes = new ExtendedList<NodeLabel>();
+		for (final SyntaxElement e : this.children.getAll())
 		{
 			if (e instanceof NodeLabel)
 			{
@@ -74,8 +74,8 @@ public class SyntaxModel extends SyntaxSubpart
 
 	public ExtendedList<SyntaxElement> getChildrenConnections()
 	{
-		ExtendedList<SyntaxElement> cNodes = new ExtendedList<SyntaxElement>();
-		for (SyntaxElement e : children.getAll())
+		final ExtendedList<SyntaxElement> cNodes = new ExtendedList<SyntaxElement>();
+		for (final SyntaxElement e : this.children.getAll())
 		{
 			if (e instanceof Connection)
 			{
@@ -87,8 +87,8 @@ public class SyntaxModel extends SyntaxSubpart
 
 	public ExtendedList<SyntaxElement> getChildrenNodes()
 	{
-		ExtendedList<SyntaxElement> cNodes = new ExtendedList<SyntaxElement>();
-		for (SyntaxElement e : children.getAll())
+		final ExtendedList<SyntaxElement> cNodes = new ExtendedList<SyntaxElement>();
+		for (final SyntaxElement e : this.children.getAll())
 		{
 			if (e instanceof SimpleNode)
 			{
@@ -105,7 +105,7 @@ public class SyntaxModel extends SyntaxSubpart
 
 	public SimpleNode getSemanticNode()
 	{
-		return semanticNode;
+		return this.semanticNode;
 	}
 
 	public boolean isConnection(SyntaxElement e)
@@ -121,18 +121,20 @@ public class SyntaxModel extends SyntaxSubpart
 	public void removeChild(SyntaxElement child)
 	{
 		if (child == null)
+		{
 			return;
-		SyntaxElement[] remainingChildren = new SyntaxElement[children.count() - 1];
+		}
+		final SyntaxElement[] remainingChildren = new SyntaxElement[this.children.count() - 1];
 		int i = 0;
-		for (SyntaxElement se : children.getAll())
+		for (final SyntaxElement se : this.children.getAll())
 		{
 			if (se != child)
 			{
 				remainingChildren[i++] = se;
 			}
 		}
-		children = new ExtendedList<SyntaxElement>();
-		children.addAll(remainingChildren);
+		this.children = new ExtendedList<SyntaxElement>();
+		this.children.addAll(remainingChildren);
 		fireStructureChange(CHILDREN, child);
 	}
 

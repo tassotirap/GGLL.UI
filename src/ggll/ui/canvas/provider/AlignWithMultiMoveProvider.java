@@ -56,8 +56,8 @@ import org.netbeans.modules.visual.action.AlignWithSupport;
 
 public final class AlignWithMultiMoveProvider extends AlignWithSupport implements MoveStrategy, MoveProvider
 {
-	private MultiMoveProvider multiMoveProvider;
-	private boolean outerBounds;
+	private final MultiMoveProvider multiMoveProvider;
+	private final boolean outerBounds;
 
 	public AlignWithMultiMoveProvider(Canvas canvas, AlignWithWidgetCollector collector, LayerWidget interractionLayer, AlignWithMoveDecorator decorator, boolean outerBounds)
 	{
@@ -69,24 +69,24 @@ public final class AlignWithMultiMoveProvider extends AlignWithSupport implement
 	@Override
 	public Point getOriginalLocation(Widget widget)
 	{
-		return multiMoveProvider.getOriginalLocation(widget);
+		return this.multiMoveProvider.getOriginalLocation(widget);
 	}
 
 	@Override
 	public Point locationSuggested(Widget widget, Point originalLocation, Point suggestedLocation)
 	{
-		Point widgetLocation = widget.getLocation();
-		Rectangle widgetBounds = outerBounds ? widget.getBounds() : widget.getClientArea();
-		Rectangle bounds = widget.convertLocalToScene(widgetBounds);
+		final Point widgetLocation = widget.getLocation();
+		final Rectangle widgetBounds = this.outerBounds ? widget.getBounds() : widget.getClientArea();
+		final Rectangle bounds = widget.convertLocalToScene(widgetBounds);
 		bounds.translate(suggestedLocation.x - widgetLocation.x, suggestedLocation.y - widgetLocation.y);
-		Insets insets = widget.getBorder().getInsets();
-		if (!outerBounds)
+		final Insets insets = widget.getBorder().getInsets();
+		if (!this.outerBounds)
 		{
 			suggestedLocation.x += insets.left;
 			suggestedLocation.y += insets.top;
 		}
-		Point point = super.locationSuggested(widget, bounds, suggestedLocation, true, true, true, true);
-		if (!outerBounds)
+		final Point point = super.locationSuggested(widget, bounds, suggestedLocation, true, true, true, true);
+		if (!this.outerBounds)
 		{
 			point.x -= insets.left;
 			point.y -= insets.top;
@@ -98,20 +98,20 @@ public final class AlignWithMultiMoveProvider extends AlignWithSupport implement
 	public void movementFinished(Widget widget)
 	{
 		hide();
-		multiMoveProvider.movementFinished(widget);
+		this.multiMoveProvider.movementFinished(widget);
 	}
 
 	@Override
 	public void movementStarted(Widget widget)
 	{
 		show();
-		multiMoveProvider.movementStarted(widget);
+		this.multiMoveProvider.movementStarted(widget);
 	}
 
 	@Override
 	public void setNewLocation(Widget widget, Point location)
 	{
-		multiMoveProvider.setNewLocation(widget, location);
+		this.multiMoveProvider.setNewLocation(widget, location);
 	}
 
 }

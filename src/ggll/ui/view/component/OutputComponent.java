@@ -24,8 +24,8 @@ public class OutputComponent extends AbstractComponent
 	{
 		final JScrollPane jsp = new JScrollPane();
 		final JPanel bar = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-		JButton lastToken = new JButton(new ImageIcon(getClass().getResource(GGLLImages.ICON_TOKEN)));
-		jComponent = new JPanel(new BorderLayout());
+		final JButton lastToken = new JButton(new ImageIcon(getClass().getResource(GGLLImages.ICON_TOKEN)));
+		this.jComponent = new JPanel(new BorderLayout());
 		jsp.setViewportView(Output.getInstance().getView(canvas));
 		lastToken.addActionListener(new ActionListener()
 		{
@@ -39,7 +39,7 @@ public class OutputComponent extends AbstractComponent
 		lastToken.setRolloverEnabled(true);
 		lastToken.setBackground(bar.getBackground());
 		lastToken.setToolTipText("Tokens");
-		JButton errorReovery = new JButton(new ImageIcon(getClass().getResource(GGLLImages.ICON_ERROR_RECOVERY)));
+		final JButton errorReovery = new JButton(new ImageIcon(getClass().getResource(GGLLImages.ICON_ERROR_RECOVERY)));
 		errorReovery.addActionListener(new ActionListener()
 		{
 			@Override
@@ -52,7 +52,7 @@ public class OutputComponent extends AbstractComponent
 		errorReovery.setRolloverEnabled(true);
 		errorReovery.setBackground(bar.getBackground());
 		errorReovery.setToolTipText("Error Recovery");
-		JButton clear = new JButton(new ImageIcon(getClass().getResource(GGLLImages.ICON_ERASE)));
+		final JButton clear = new JButton(new ImageIcon(getClass().getResource(GGLLImages.ICON_ERASE)));
 		clear.addActionListener(new ActionListener()
 		{
 			@Override
@@ -67,7 +67,7 @@ public class OutputComponent extends AbstractComponent
 		clear.setRolloverEnabled(true);
 		clear.setBackground(bar.getBackground());
 		clear.setToolTipText("Clear All");
-		JButton output = new JButton(new ImageIcon(getClass().getResource(GGLLImages.ICON_OUTPUT)));
+		final JButton output = new JButton(new ImageIcon(getClass().getResource(GGLLImages.ICON_OUTPUT)));
 		output.addActionListener(new ActionListener()
 		{
 			@Override
@@ -80,7 +80,7 @@ public class OutputComponent extends AbstractComponent
 		output.setRolloverEnabled(true);
 		output.setBackground(bar.getBackground());
 		output.setToolTipText("Output");
-		JButton saveReport = new JButton(new ImageIcon(getClass().getResource(GGLLImages.ICON_HTML_REPORT)));
+		final JButton saveReport = new JButton(new ImageIcon(getClass().getResource(GGLLImages.ICON_HTML_REPORT)));
 		saveReport.addActionListener(new ActionListener()
 		{
 
@@ -99,8 +99,8 @@ public class OutputComponent extends AbstractComponent
 		bar.add(lastToken);
 		bar.add(clear);
 		bar.add(saveReport);
-		jComponent.add(bar, BorderLayout.NORTH);
-		jComponent.add(jsp, BorderLayout.CENTER);
+		this.jComponent.add(bar, BorderLayout.NORTH);
+		this.jComponent.add(jsp, BorderLayout.CENTER);
 	}
 
 	@Override

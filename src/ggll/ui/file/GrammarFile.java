@@ -18,8 +18,10 @@ public class GrammarFile extends File
 
 	public void create() throws IOException
 	{
-		if (!this.exists() && !this.createNewFile())
+		if (!exists() && !createNewFile())
+		{
 			throw new IOException("Could not create Grammar File");
+		}
 
 		IOHelper.copyFileFromInputSteam(Project.class.getResourceAsStream(ORG_GRVIEW_PROJECT_EMPTY_GRAMMAR), this);
 	}

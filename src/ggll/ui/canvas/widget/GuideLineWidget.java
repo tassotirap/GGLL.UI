@@ -13,7 +13,7 @@ public class GuideLineWidget extends LineWidget
 	public static final int DEFAULT_WIDTH = 1;
 	public static final int DEFAULT_X_POS = 120;
 	public static final Color GUIDE_LINE_COLOR = new Color(240, 100, 100);
-	private Canvas canvas;
+	private final Canvas canvas;
 
 	public GuideLineWidget(Canvas canvas)
 	{
@@ -24,22 +24,22 @@ public class GuideLineWidget extends LineWidget
 	@Override
 	protected void paintWidget()
 	{
-		height = (canvas.getBounds() == null) ? canvas.getView().getParent().getHeight() : canvas.getBounds().height;
-		width = DEFAULT_WIDTH;
-		Graphics2D g = getGraphics();
-		g.setStroke(new BasicStroke(width));
+		this.height = this.canvas.getBounds() == null ? this.canvas.getView().getParent().getHeight() : this.canvas.getBounds().height;
+		this.width = DEFAULT_WIDTH;
+		final Graphics2D g = getGraphics();
+		g.setStroke(new BasicStroke(this.width));
 		g.setColor(GUIDE_LINE_COLOR);
-		g.drawLine(0, 0, 0, height);
+		g.drawLine(0, 0, 0, this.height);
 	}
 
 	@Override
 	public Rectangle calculateClientArea()
 	{
-		if (width == 0 || height == 0)
+		if (this.width == 0 || this.height == 0)
 		{
-			height = (canvas.getBounds() == null) ? canvas.getView().getParent().getHeight() : canvas.getBounds().height;
-			width = DEFAULT_WIDTH;
+			this.height = this.canvas.getBounds() == null ? this.canvas.getView().getParent().getHeight() : this.canvas.getBounds().height;
+			this.width = DEFAULT_WIDTH;
 		}
-		return new Rectangle(width, height);
+		return new Rectangle(this.width, this.height);
 	}
 }

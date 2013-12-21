@@ -25,99 +25,99 @@ abstract public class SyntaxSubpart extends SyntaxElement
 
 	public void connectInput(Connection w)
 	{
-		inputs.addElement(w);
+		this.inputs.addElement(w);
 		update();
 		fireStructureChange(INPUTS, w);
 	}
 
 	public void connectOutput(Connection w)
 	{
-		outputs.addElement(w);
+		this.outputs.addElement(w);
 		update();
 		fireStructureChange(OUTPUTS, w);
 	}
 
 	public void disconnectInput(Connection w)
 	{
-		inputs.remove(w);
+		this.inputs.remove(w);
 		update();
 		fireStructureChange(INPUTS, w);
 	}
 
 	public void disconnectOutput(Connection w)
 	{
-		outputs.removeElement(w);
+		this.outputs.removeElement(w);
 		update();
 		fireStructureChange(OUTPUTS, w);
 	}
 
 	public SyntaxSubpart getAlternative()
 	{
-		return Alternative;
+		return this.Alternative;
 	}
 
 	public Vector<Connection> getConnections()
 	{
-		Vector<Connection> v = new Vector<Connection>();
-		v.addAll(outputs);
-		v.addAll(inputs);
+		final Vector<Connection> v = new Vector<Connection>();
+		v.addAll(this.outputs);
+		v.addAll(this.inputs);
 		return v;
 	}
 
 	public boolean getFlag()
 	{
-		return flag;
+		return this.flag;
 	}
 
 	@Override
 	public String getID()
 	{
-		return id;
+		return this.id;
 	}
 
 	public int getNumber()
 	{
-		return number;
+		return this.number;
 	}
 
 	public Vector<Connection> getSourceConnections()
 	{
-		return outputs;
+		return this.outputs;
 	}
 
 	public SyntaxSubpart getSucessor()
 	{
-		return Sucessor;
+		return this.Sucessor;
 	}
 
 	public Vector<Connection> getTargetConnections()
 	{
-		return inputs;
+		return this.inputs;
 	}
 
 	public void setAlternative(SyntaxSubpart e)
 	{
-		Alternative = e;
+		this.Alternative = e;
 	}
 
 	public void setFlag(boolean b)
 	{
-		flag = b;
+		this.flag = b;
 	}
 
 	@Override
 	public void setID(String s)
 	{
-		id = s;
+		this.id = s;
 	}
 
 	public void setNumber(int n)
 	{
-		number = n;
+		this.number = n;
 	}
 
 	public void setSucessor(SyntaxSubpart e)
 	{
-		Sucessor = e;
+		this.Sucessor = e;
 	}
 }

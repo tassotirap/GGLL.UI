@@ -11,7 +11,7 @@ import org.netbeans.api.visual.widget.Widget;
 
 public class LabelHoverProvider implements TwoStateHoverProvider
 {
-	private Canvas canvas;
+	private final Canvas canvas;
 
 	public LabelHoverProvider(Canvas canvas)
 	{
@@ -32,7 +32,7 @@ public class LabelHoverProvider implements TwoStateHoverProvider
 	{
 		if (widget != null)
 		{
-			if (!canvas.getSelectedObjects().contains(canvas.findObject(widget)))
+			if (!this.canvas.getSelectedObjects().contains(this.canvas.findObject(widget)))
 			{
 				((LabelWidget) widget).setBorder(BorderFactory.createEmptyBorder());
 			}

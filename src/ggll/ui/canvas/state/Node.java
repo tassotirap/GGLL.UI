@@ -15,27 +15,27 @@ public class Node implements Serializable
 
 	public Point getLocation()
 	{
-		return location;
+		return this.location;
 	}
 
 	public String getMark()
 	{
-		return mark;
+		return this.mark;
 	}
 
 	public String getName()
 	{
-		return name;
+		return this.name;
 	}
 
 	public String getTitle()
 	{
-		return title;
+		return this.title;
 	}
 
 	public String getType()
 	{
-		return type;
+		return this.type;
 	}
 
 	public void setLocation(Point location)

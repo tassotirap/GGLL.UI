@@ -19,7 +19,7 @@ public class NodeConnectProvider implements ConnectProvider
 
 	private String source = null;
 	private String target = null;
-	private Canvas canvas;
+	private final Canvas canvas;
 
 	public NodeConnectProvider(Canvas canvas)
 	{
@@ -31,7 +31,7 @@ public class NodeConnectProvider implements ConnectProvider
 	{
 		String edge = "";
 		int numEdges = 0;
-		Collection<String> edges = canvas.getEdges();
+		final Collection<String> edges = this.canvas.getEdges();
 		if (edges != null)
 		{
 			numEdges = edges.size();
@@ -40,11 +40,11 @@ public class NodeConnectProvider implements ConnectProvider
 		int i = numEdges;
 		do
 		{
-			if (canvas.getCanvasActiveTool().equals(CanvasResource.SUCCESSOR))
+			if (this.canvas.getCanvasActiveTool().equals(CanvasResource.SUCCESSOR))
 			{
 				edge = CanvasResource.SUC_LBL + String.format("%02d", i);
 			}
-			else if (canvas.getCanvasActiveTool().equals(CanvasResource.ALTERNATIVE))
+			else if (this.canvas.getCanvasActiveTool().equals(CanvasResource.ALTERNATIVE))
 			{
 				edge = CanvasResource.ALT_LBL + String.format("%02d", i);
 			}
@@ -56,10 +56,10 @@ public class NodeConnectProvider implements ConnectProvider
 		}
 		while (edges.contains(edge));
 
-		canvas.addEdge(edge);
-		canvas.setEdgeSource(edge, source);
-		canvas.setEdgeTarget(edge, target);
-		canvas.getCanvasStateRepository().propertyChange(new PropertyChangeEvent(this, "undoable", null, "Connection"));
+		this.canvas.addEdge(edge);
+		this.canvas.setEdgeSource(edge, this.source);
+		this.canvas.setEdgeTarget(edge, this.target);
+		this.canvas.getCanvasStateRepository().propertyChange(new PropertyChangeEvent(this, "undoable", null, "Connection"));
 	}
 
 	@Override
@@ -71,31 +71,31 @@ public class NodeConnectProvider implements ConnectProvider
 	@Override
 	public boolean isSourceWidget(Widget sourceWidget)
 	{
-		Object object = canvas.findObject(sourceWidget);
-		source = canvas.isNode(object) ? (String) object : null;
-		if (source != null)
+		final Object object = this.canvas.findObject(sourceWidget);
+		this.source = this.canvas.isNode(object) ? (String) object : null;
+		if (this.source != null)
 		{
-			if (canvas.getCanvasActiveTool().equals(CanvasResource.ALTERNATIVE) && sourceWidget instanceof LabelWidgetExt)
+			if (this.canvas.getCanvasActiveTool().equals(CanvasResource.ALTERNATIVE) && sourceWidget instanceof LabelWidgetExt)
 			{
-				LabelWidgetExt labelWidgetExt = (LabelWidgetExt) sourceWidget;
+				final LabelWidgetExt labelWidgetExt = (LabelWidgetExt) sourceWidget;
 				if (labelWidgetExt.getType().equals(CanvasResource.LEFT_SIDE) || labelWidgetExt.getType().equals(CanvasResource.START))
 				{
 					return false;
 				}
 			}
 
-			Collection<String> edges = canvas.findNodeEdges(source, true, false);
+			final Collection<String> edges = this.canvas.findNodeEdges(this.source, true, false);
 			if (edges.size() >= 2)
 			{
 				return false;
 			}
-			for (String e : edges)
+			for (final String e : edges)
 			{
-				if (canvas.getCanvasActiveTool().equals(CanvasResource.SUCCESSOR) && canvas.isSuccessor(e))
+				if (this.canvas.getCanvasActiveTool().equals(CanvasResource.SUCCESSOR) && this.canvas.isSuccessor(e))
 				{
 					return false;
 				}
-				if (canvas.getCanvasActiveTool().equals(CanvasResource.ALTERNATIVE) && canvas.isAlternative(e))
+				if (this.canvas.getCanvasActiveTool().equals(CanvasResource.ALTERNATIVE) && this.canvas.isAlternative(e))
 				{
 					return false;
 				}
@@ -108,13 +108,13 @@ public class NodeConnectProvider implements ConnectProvider
 	@Override
 	public ConnectorState isTargetWidget(Widget sourceWidget, Widget targetWidget)
 	{
-		Object object = canvas.findObject(targetWidget);
-		target = canvas.isNode(object) ? (String) object : null;
-		if (target != null)
+		final Object object = this.canvas.findObject(targetWidget);
+		this.target = this.canvas.isNode(object) ? (String) object : null;
+		if (this.target != null)
 		{
 			if (targetWidget instanceof LabelWidgetExt)
 			{
-				LabelWidgetExt labelWidgetExt = (LabelWidgetExt) targetWidget;
+				final LabelWidgetExt labelWidgetExt = (LabelWidgetExt) targetWidget;
 				if (labelWidgetExt.getType().equals(CanvasResource.TERMINAL) || labelWidgetExt.getType().equals(CanvasResource.N_TERMINAL))
 				{
 					return ConnectorState.ACCEPT;
@@ -122,7 +122,7 @@ public class NodeConnectProvider implements ConnectProvider
 			}
 			else if (targetWidget.getParentWidget() != null && targetWidget.getParentWidget() instanceof IconNodeWidgetExt)
 			{
-				IconNodeWidgetExt iconNodeWidgetExt = (IconNodeWidgetExt) targetWidget.getParentWidget();
+				final IconNodeWidgetExt iconNodeWidgetExt = (IconNodeWidgetExt) targetWidget.getParentWidget();
 				if (iconNodeWidgetExt.getType().equals(CanvasResource.LAMBDA))
 				{
 					return ConnectorState.ACCEPT;

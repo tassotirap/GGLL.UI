@@ -24,7 +24,7 @@ public class GrammarComponent
 
 	public Object getContents()
 	{
-		return contents;
+		return this.contents;
 	}
 
 	public Object getId()
@@ -34,27 +34,27 @@ public class GrammarComponent
 
 	public boolean isHead()
 	{
-		return head;
+		return this.head;
 	}
 
 	public boolean isLambda()
 	{
-		return lambda;
+		return this.lambda;
 	}
 
 	public boolean isLeftHand()
 	{
-		return leftHand;
+		return this.leftHand;
 	}
 
 	public boolean isNonterminal()
 	{
-		return nonterminal;
+		return this.nonterminal;
 	}
 
 	public boolean isTerminal()
 	{
-		return terminal;
+		return this.terminal;
 	}
 
 	public void setContents(Object contents)

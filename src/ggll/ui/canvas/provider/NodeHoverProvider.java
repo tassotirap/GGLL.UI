@@ -30,9 +30,9 @@ public class NodeHoverProvider implements TwoStateHoverProvider
 	@Override
 	public void unsetHovering(Widget widget)
 	{
-		Object object = canvas.findObject(widget);
+		final Object object = this.canvas.findObject(widget);
 
-		if (object != null & widget != null && !canvas.getSelectedObjects().contains(object))
+		if (object != null & widget != null && !this.canvas.getSelectedObjects().contains(object))
 		{
 			if (widget instanceof MarkedWidget)
 			{

@@ -12,7 +12,7 @@ public class FileNames
 	public final static String TXT_EXTENSION = ".txt";
 	public final static String XML_EXTENSION = ".xml";
 
-	private String extension;
+	private final String extension;
 
 	public FileNames(String extension)
 	{
@@ -21,6 +21,6 @@ public class FileNames
 
 	public String getExtension()
 	{
-		return extension;
+		return this.extension;
 	}
 }

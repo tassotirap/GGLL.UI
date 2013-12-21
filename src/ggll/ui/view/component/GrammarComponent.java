@@ -24,17 +24,17 @@ public class GrammarComponent extends AbstractFileComponent implements PropertyC
 
 	public GrammarComponent(Canvas canvas)
 	{
-		path = canvas.getFile();
+		this.path = canvas.getFile();
 
 		this.canvas = canvas;
-		JComponent view = canvas.createView();
+		final JComponent view = canvas.createView();
 
-		JScrollPane jsp = new JScrollPane();
+		final JScrollPane jsp = new JScrollPane();
 		jsp.setViewportView(view);
 
-		JPanel canvasPanel = new JPanel();
+		final JPanel canvasPanel = new JPanel();
 
-		ToolBarGrammar toolBarGrammar = new ToolBarGrammar(canvas);
+		final ToolBarGrammar toolBarGrammar = new ToolBarGrammar(canvas);
 		toolBarGrammar.setLayout(new BoxLayout(toolBarGrammar, BoxLayout.PAGE_AXIS));
 
 		canvasPanel.setLayout(new BorderLayout());
@@ -46,7 +46,7 @@ public class GrammarComponent extends AbstractFileComponent implements PropertyC
 		canvas.getMonitor().addPropertyChangeListener("writing", this);
 
 		GrammarFactory.addGramComponent(this, canvas.getFile());
-		jComponent = canvasPanel;
+		this.jComponent = canvasPanel;
 	}
 
 	public GrammarComponent(String fileName)
@@ -57,7 +57,7 @@ public class GrammarComponent extends AbstractFileComponent implements PropertyC
 	@Override
 	public void fireContentChanged()
 	{
-		for (ComponentListener listener : listeners.getAll())
+		for (final ComponentListener listener : this.listeners.getAll())
 		{
 			listener.ContentChanged(this);
 		}
@@ -65,13 +65,13 @@ public class GrammarComponent extends AbstractFileComponent implements PropertyC
 
 	public Canvas getCanvas()
 	{
-		return canvas;
+		return this.canvas;
 	}
 
 	@Override
 	public String getPath()
 	{
-		return path;
+		return this.path;
 	}
 
 	@Override
@@ -83,12 +83,12 @@ public class GrammarComponent extends AbstractFileComponent implements PropertyC
 	@Override
 	public String saveFile()
 	{
-		CanvasState canvasState = canvas.getCurrentCanvasState();
+		final CanvasState canvasState = this.canvas.getCurrentCanvasState();
 		try
 		{
 			canvasState.write();
 		}
-		catch (IOException e)
+		catch (final IOException e)
 		{
 			Log.log(Log.ERROR, this, "Could not save file!", e);
 		}
@@ -97,7 +97,7 @@ public class GrammarComponent extends AbstractFileComponent implements PropertyC
 
 	public void setPath(String path)
 	{
-		canvas = CanvasRepository.getInstance(path);
+		this.canvas = CanvasRepository.getInstance(path);
 		this.path = path;
 	}
 }

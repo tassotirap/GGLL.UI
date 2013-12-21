@@ -43,7 +43,7 @@ public class GuiLauncher
 
 	private MainWindow startMainWindow(WorkspaceChooser workspaceChooser)
 	{
-		MainWindow mainWindow = new MainWindow();
+		final MainWindow mainWindow = new MainWindow();
 		GGLLDirector.Start(mainWindow, workspaceChooser.getWorkspaceDir());
 		showFrame(mainWindow);
 		return mainWindow;
@@ -51,7 +51,7 @@ public class GuiLauncher
 
 	private WorkspaceChooser startWorkspaceChooser()
 	{
-		WorkspaceChooser workspaceChooser = new WorkspaceChooser();
+		final WorkspaceChooser workspaceChooser = new WorkspaceChooser();
 		showFrame(workspaceChooser);
 		while (!workspaceChooser.isCanceled() && !workspaceChooser.isDone())
 		{
@@ -59,7 +59,7 @@ public class GuiLauncher
 			{
 				Thread.sleep(500);
 			}
-			catch (InterruptedException e)
+			catch (final InterruptedException e)
 			{
 				e.printStackTrace();
 			}
@@ -69,7 +69,7 @@ public class GuiLauncher
 
 	public void start()
 	{
-		WorkspaceChooser workspaceChooser = startWorkspaceChooser();
+		final WorkspaceChooser workspaceChooser = startWorkspaceChooser();
 		if (workspaceChooser.isDone())
 		{
 			SplashWindow.splash(GuiLauncher.class.getResource(SPLASH_SCREEN_PNG));

@@ -12,7 +12,7 @@ import org.netbeans.api.visual.widget.Widget;
 public class LabelTextFieldEditor implements TextFieldInplaceEditor
 {
 
-	private Canvas canvas;
+	private final Canvas canvas;
 
 	public LabelTextFieldEditor(Canvas canvas)
 	{
@@ -28,7 +28,7 @@ public class LabelTextFieldEditor implements TextFieldInplaceEditor
 	@Override
 	public boolean isEnabled(Widget widget)
 	{
-		if (canvas.getActiveTool().equals(CanvasResource.SELECT))
+		if (this.canvas.getActiveTool().equals(CanvasResource.SELECT))
 		{
 			return true;
 		}
@@ -39,6 +39,6 @@ public class LabelTextFieldEditor implements TextFieldInplaceEditor
 	public void setText(Widget widget, String text)
 	{
 		((LabelWidget) widget).setLabel(text);
-		canvas.getCanvasStateRepository().propertyChange(new PropertyChangeEvent(this, "undoable", null, "Rename"));
+		this.canvas.getCanvasStateRepository().propertyChange(new PropertyChangeEvent(this, "undoable", null, "Rename"));
 	}
 }

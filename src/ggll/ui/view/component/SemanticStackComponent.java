@@ -9,7 +9,7 @@ public class SemanticStackComponent extends AbstractComponent
 {
 	public SemanticStackComponent(Canvas canvas)
 	{
-		jComponent = new JScrollPane(SemanticStack.getInstance().getView(canvas));
+		this.jComponent = new JScrollPane(SemanticStack.getInstance().getView(canvas));
 	}
 
 	@Override

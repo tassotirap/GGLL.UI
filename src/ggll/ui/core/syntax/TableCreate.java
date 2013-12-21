@@ -36,14 +36,14 @@ public class TableCreate
 		File fileIn = null;
 		BufferedReader aux = null;
 		int nLines = 0;
-		String path = grammarFile;
+		final String path = grammarFile;
 		fileIn = new File(path);
 		try
 		{
-			in = new BufferedReader(new FileReader(fileIn));
+			this.in = new BufferedReader(new FileReader(fileIn));
 			aux = new BufferedReader(new FileReader(fileIn));
 		}
-		catch (FileNotFoundException e)
+		catch (final FileNotFoundException e)
 		{
 			System.out.println("File not found");
 		}
@@ -53,10 +53,12 @@ public class TableCreate
 			if (aux != null)
 			{
 				while (aux.readLine() != null)
+				{
 					++nLines;
+				}
 			}
 		}
-		catch (IOException e)
+		catch (final IOException e)
 		{
 			System.out.println("Erro de leitura");
 		}
@@ -66,7 +68,7 @@ public class TableCreate
 			{
 				aux.close();
 			}
-			catch (IOException e)
+			catch (final IOException e)
 			{
 			}
 		}
@@ -77,14 +79,16 @@ public class TableCreate
 	{
 		BufferedReader aux = null;
 		int nLines = 0;
-		in = new BufferedReader(new StringReader(grammar));
+		this.in = new BufferedReader(new StringReader(grammar));
 		aux = new BufferedReader(new StringReader(grammar));
 		try
 		{
 			while (aux.readLine() != null)
+			{
 				++nLines;
+			}
 		}
-		catch (IOException e)
+		catch (final IOException e)
 		{
 			System.out.println("Erro, leitura de string");
 		}
@@ -104,12 +108,12 @@ public class TableCreate
 		 * caracteres em branco seguidos...
 		 */
 		boolean firstTime = false;
-		tab = new String[nlines][20];
+		this.tab = new String[nlines][20];
 		lin = col = 0;
 		try
 		{
 			/* lê o primeiro caractere */
-			reading = in.read();
+			reading = this.in.read();
 			cReading = (char) reading;
 			str = new String();
 			while (reading != -1)
@@ -121,7 +125,7 @@ public class TableCreate
 					if (firstTime)
 					{
 						// System.out.print(str);
-						tab[lin][col] = str;
+						this.tab[lin][col] = str;
 						++col;
 					}
 					firstTime = false;
@@ -134,7 +138,7 @@ public class TableCreate
 						if (firstTime)
 						{
 							// System.out.print(str);
-							tab[lin][col] = str;
+							this.tab[lin][col] = str;
 							++lin;
 							col = 0;
 						}
@@ -147,11 +151,11 @@ public class TableCreate
 						firstTime = true;
 					}
 				}
-				reading = in.read();
+				reading = this.in.read();
 				cReading = (char) reading;
 			}
 		}
-		catch (IOException e)
+		catch (final IOException e)
 		{
 			System.out.println("\nERRO NA LEITURA\n");
 		}
@@ -159,12 +163,12 @@ public class TableCreate
 
 	public int getNLines()
 	{
-		return nlines;
+		return this.nlines;
 	}
 
 	public String[][] getTab()
 	{
-		return tab;
+		return this.tab;
 	}
 
 	public void TabCreateFromFile(String grammarFile)

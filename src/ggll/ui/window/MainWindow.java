@@ -71,7 +71,7 @@ public class MainWindow implements ComponentListener
 	public final static String UNSAVED_PREFIX = "* ";
 	public final static Icon VIEW_ICON = new IconView();
 
-	private ViewMap perspectiveMap = new ViewMap();
+	private final ViewMap perspectiveMap = new ViewMap();
 	private RootWindowProperties rootWindowProperties;
 
 	private AbstractView emptyDynamicView = null;
@@ -92,36 +92,36 @@ public class MainWindow implements ComponentListener
 
 	private void createDefaultViews()
 	{
-		GrammarFile grammarFile = GGLLDirector.getProject().getGrammarFile().get(0);
+		final GrammarFile grammarFile = GGLLDirector.getProject().getGrammarFile().get(0);
 		GGLLDirector.setActiveCanvas(CanvasRepository.getInstance(grammarFile.getAbsolutePath()));
-		viewRepository.createDefaultViews();
+		this.viewRepository.createDefaultViews();
 	}
 
 	private void createDynamicViewMenu(View view)
 	{
-		MenuModel model = new MenuModel();
+		final MenuModel model = new MenuModel();
 		if (((AbstractView) view).getTitle().equals("Parser"))
 		{
-			ParserComponent parserComponent = (ParserComponent) ((AbstractView) view).getComponentModel();
-			addToolBar(toolBarFactory.createToolBar(parserComponent.getTextArea(), true, false), true, true);
-			addMenuBar(menuBarFactory.createMenuBar(parserComponent.getTextArea(), model), true, true);
+			final ParserComponent parserComponent = (ParserComponent) ((AbstractView) view).getComponentModel();
+			addToolBar(this.toolBarFactory.createToolBar(parserComponent.getTextArea(), true, false), true, true);
+			addMenuBar(this.menuBarFactory.createMenuBar(parserComponent.getTextArea(), model), true, true);
 		}
 		else
 		{
-			addToolBar(toolBarFactory.createToolBar(null, false, false), true, true);
-			addMenuBar(menuBarFactory.createMenuBar(null, model), true, true);
+			addToolBar(this.toolBarFactory.createToolBar(null, false, false), true, true);
+			addMenuBar(this.menuBarFactory.createMenuBar(null, model), true, true);
 		}
 	}
 
 	private void createRootWindow()
 	{
 
-		MixedViewHandler handler = new MixedViewHandler(perspectiveMap, new ViewSerializer()
+		final MixedViewHandler handler = new MixedViewHandler(this.perspectiveMap, new ViewSerializer()
 		{
 			@Override
 			public View readView(ObjectInputStream in) throws IOException
 			{
-				return viewRepository.getView(in.readInt());
+				return MainWindow.this.viewRepository.getView(in.readInt());
 			}
 
 			@Override
@@ -131,12 +131,12 @@ public class MainWindow implements ComponentListener
 			}
 		});
 
-		rootWindowProperties.addSuperObject(new DefaultDockingTheme().getRootWindowProperties());
-		rootWindow = DockingUtil.createRootWindow(perspectiveMap, handler, true);
-		rootWindow.getRootWindowProperties().addSuperObject(rootWindowProperties);
-		rootWindow.getWindowBar(Direction.DOWN).setEnabled(true);
-		rootWindow.addListener(new WindowAdapter());
-		rootWindow.addTabMouseButtonListener(DockingWindowActionMouseButtonListener.MIDDLE_BUTTON_CLOSE_LISTENER);
+		this.rootWindowProperties.addSuperObject(new DefaultDockingTheme().getRootWindowProperties());
+		this.rootWindow = DockingUtil.createRootWindow(this.perspectiveMap, handler, true);
+		this.rootWindow.getRootWindowProperties().addSuperObject(this.rootWindowProperties);
+		this.rootWindow.getWindowBar(Direction.DOWN).setEnabled(true);
+		this.rootWindow.addListener(new WindowAdapter());
+		this.rootWindow.addTabMouseButtonListener(DockingWindowActionMouseButtonListener.MIDDLE_BUTTON_CLOSE_LISTENER);
 	}
 
 	private void init()
@@ -146,17 +146,17 @@ public class MainWindow implements ComponentListener
 
 	private void init(String title)
 	{
-		frame = new JFrame(title);
-		frame.setName(DEFAULT_NAME);
-		frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+		this.frame = new JFrame(title);
+		this.frame.setName(DEFAULT_NAME);
+		this.frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
 		this.tabWindow = new TabWindowList();
-		this.viewRepository = new ViewRepository(perspectiveMap);
+		this.viewRepository = new ViewRepository(this.perspectiveMap);
 	}
 
 	private void openFiles()
 	{
-		List<File> filesToOpen = GGLLDirector.getOpenedFiles().getAll();
+		final List<File> filesToOpen = GGLLDirector.getOpenedFiles().getAll();
 		for (int i = 0; i < filesToOpen.size(); i++)
 		{
 			GGLLDirector.openFile(filesToOpen.get(i).getAbsolutePath(), false);
@@ -165,12 +165,12 @@ public class MainWindow implements ComponentListener
 
 	private void setDefaultLayout()
 	{
-		for (TabWindow tab : viewRepository.getTabWindowList().getAll())
+		for (final TabWindow tab : this.viewRepository.getTabWindowList().getAll())
 		{
 			tab.getTabWindowProperties().getCloseButtonProperties().setVisible(false);
-			tabWindow.add(tab);
+			this.tabWindow.add(tab);
 		}
-		rootWindow.setWindow(new SplitWindow(false, 0.75f, new SplitWindow(true, 0.70f, getTabWindowList().getCenterLeftTab(), getTabWindowList().getCenterRightTab()), getTabWindowList().getBottonTab()));
+		this.rootWindow.setWindow(new SplitWindow(false, 0.75f, new SplitWindow(true, 0.70f, getTabWindowList().getCenterLeftTab(), getTabWindowList().getCenterRightTab()), getTabWindowList().getBottonTab()));
 	}
 
 	private void setLookAndFeel()
@@ -179,7 +179,7 @@ public class MainWindow implements ComponentListener
 		{
 			UIManager.setLookAndFeel(new javax.swing.plaf.metal.MetalLookAndFeel());
 		}
-		catch (UnsupportedLookAndFeelException e)
+		catch (final UnsupportedLookAndFeelException e)
 		{
 			e.printStackTrace();
 		}
@@ -187,31 +187,31 @@ public class MainWindow implements ComponentListener
 
 	protected void addMenuBar(JMenuBar menuBar, boolean replace, boolean repaint)
 	{
-		if (currentMenuBar != null)
+		if (this.currentMenuBar != null)
 		{
-			frame.setMenuBar(null);
+			this.frame.setMenuBar(null);
 		}
-		currentMenuBar = menuBar;
-		frame.setJMenuBar(menuBar);
+		this.currentMenuBar = menuBar;
+		this.frame.setJMenuBar(menuBar);
 		if (repaint)
 		{
-			frame.validate();
-			frame.repaint();
+			this.frame.validate();
+			this.frame.repaint();
 		}
 	}
 
 	protected void addToolBar(JComponent toolBar, boolean replace, boolean repaint)
 	{
-		if (replace && currentToolBar != null)
+		if (replace && this.currentToolBar != null)
 		{
-			frame.getContentPane().remove(currentToolBar);
+			this.frame.getContentPane().remove(this.currentToolBar);
 		}
-		currentToolBar = toolBar;
-		frame.getContentPane().add(toolBar, BorderLayout.NORTH);
+		this.currentToolBar = toolBar;
+		this.frame.getContentPane().add(toolBar, BorderLayout.NORTH);
 		if (repaint)
 		{
-			frame.validate();
-			frame.repaint();
+			this.frame.validate();
+			this.frame.repaint();
 		}
 	}
 
@@ -228,20 +228,20 @@ public class MainWindow implements ComponentListener
 		setDefaultLayout();
 		openFiles();
 
-		frame.getContentPane().add(rootWindow, BorderLayout.CENTER);
-		frame.setSize(1024, 768);
-		frame.setExtendedState(frame.getExtendedState() | Frame.MAXIMIZED_BOTH);
-		Dimension screenDim = Toolkit.getDefaultToolkit().getScreenSize();
-		frame.setLocation((screenDim.width - frame.getWidth()) / 2, (screenDim.height - frame.getHeight()) / 2);
-		frame.setVisible(true);
-		frame.addWindowListener(new WindowClosingAdapter());
+		this.frame.getContentPane().add(this.rootWindow, BorderLayout.CENTER);
+		this.frame.setSize(1024, 768);
+		this.frame.setExtendedState(this.frame.getExtendedState() | Frame.MAXIMIZED_BOTH);
+		final Dimension screenDim = Toolkit.getDefaultToolkit().getScreenSize();
+		this.frame.setLocation((screenDim.width - this.frame.getWidth()) / 2, (screenDim.height - this.frame.getHeight()) / 2);
+		this.frame.setVisible(true);
+		this.frame.addWindowListener(new WindowClosingAdapter());
 	}
 
 	public AbstractView addComponent(AbstractComponent componentModel, String title, String fileName, Icon icon, TabPlace place)
 	{
 		if (componentModel != null)
 		{
-			AbstractView view = new AbstractView(title, icon, componentModel, fileName, 2);
+			final AbstractView view = new AbstractView(title, icon, componentModel, fileName, 2);
 			if (componentModel instanceof GrammarComponent)
 			{
 				GGLLDirector.setActiveCanvas(CanvasRepository.getInstance(fileName));
@@ -258,56 +258,58 @@ public class MainWindow implements ComponentListener
 
 	public void addEmptyDynamicView()
 	{
-		EmptyComponent emptyComponent = new EmptyComponent();
-		emptyDynamicView = addComponent(emptyComponent, "Empty Page", null, VIEW_ICON, TabPlace.CENTER_LEFT_TABS);
+		final EmptyComponent emptyComponent = new EmptyComponent();
+		this.emptyDynamicView = addComponent(emptyComponent, "Empty Page", null, VIEW_ICON, TabPlace.CENTER_LEFT_TABS);
 	}
 
 	@Override
 	public void ContentChanged(AbstractComponent source)
 	{
-		if (viewRepository.containsView(source))
+		if (this.viewRepository.containsView(source))
 		{
-			AbstractView view = viewRepository.getView(source);
+			final AbstractView view = this.viewRepository.getView(source);
 			if (!view.getTitle().startsWith(UNSAVED_PREFIX))
+			{
 				view.getViewProperties().setTitle(UNSAVED_PREFIX + view.getTitle());
+			}
 			GGLLDirector.setUnsavedView(((AbstractFileComponent) source).getPath(), view);
 		}
 	}
 
 	public JFrame getFrame()
 	{
-		return frame;
+		return this.frame;
 	}
 
 	public ViewMap getPerspectiveMap()
 	{
-		return perspectiveMap;
+		return this.perspectiveMap;
 	}
 
 	public TabWindowList getTabs()
 	{
-		return tabWindow;
+		return this.tabWindow;
 	}
 
 	public TabWindowList getTabWindowList()
 	{
-		return tabWindow;
+		return this.tabWindow;
 	}
 
 	public void removeEmptyDynamicView()
 	{
-		if (emptyDynamicView != null)
+		if (this.emptyDynamicView != null)
 		{
-			emptyDynamicView.close();
-			emptyDynamicView = null;
+			this.emptyDynamicView.close();
+			this.emptyDynamicView = null;
 		}
 	}
 
 	public void setSaved(String path)
 	{
-		if (viewRepository.containsView(path))
+		if (this.viewRepository.containsView(path))
 		{
-			AbstractView dynamicView = viewRepository.getView(path);
+			final AbstractView dynamicView = this.viewRepository.getView(path);
 
 			if (GGLLDirector.hasUnsavedView(dynamicView))
 			{
@@ -328,22 +330,22 @@ public class MainWindow implements ComponentListener
 	{
 		if (component == null)
 		{
-			View view = rootWindow.getFocusedView();
+			final View view = this.rootWindow.getFocusedView();
 			if (view instanceof AbstractView)
 			{
 				createDynamicViewMenu(view);
 			}
 			else
 			{
-				MenuModel model = new MenuModel();
-				addToolBar(toolBarFactory.createToolBar(null, false, false), true, true);
-				addMenuBar(menuBarFactory.createMenuBar(null, model), true, true);
+				final MenuModel model = new MenuModel();
+				addToolBar(this.toolBarFactory.createToolBar(null, false, false), true, true);
+				addMenuBar(this.menuBarFactory.createMenuBar(null, model), true, true);
 			}
 			return;
 		}
 		if (component instanceof AbstractFileComponent)
 		{
-			MenuModel model = new MenuModel();
+			final MenuModel model = new MenuModel();
 			model.setSave(true);
 			model.setSaveAs(true);
 			model.setSaveAll(true);
@@ -356,16 +358,16 @@ public class MainWindow implements ComponentListener
 			model.setFind(true);
 			if (component instanceof TextAreaComponent)
 			{
-				TextAreaComponent textArea = (TextAreaComponent) component;
-				addToolBar(toolBarFactory.createToolBar(textArea, true, false), true, true);
-				addMenuBar(menuBarFactory.createMenuBar(textArea, model), true, true);
+				final TextAreaComponent textArea = (TextAreaComponent) component;
+				addToolBar(this.toolBarFactory.createToolBar(textArea, true, false), true, true);
+				addMenuBar(this.menuBarFactory.createMenuBar(textArea, model), true, true);
 			}
 			else
 			{
 				if (component instanceof GrammarComponent)
 				{
-					GrammarComponent grammarComponent = (GrammarComponent) component;
-					Canvas canvas = grammarComponent.getCanvas();
+					final GrammarComponent grammarComponent = (GrammarComponent) component;
+					final Canvas canvas = grammarComponent.getCanvas();
 
 					GGLLDirector.setActiveCanvas(canvas);
 					Output.getInstance().setActiveScene(canvas);
@@ -376,8 +378,8 @@ public class MainWindow implements ComponentListener
 
 					model.setZoomIn(true);
 					model.setZoomOut(true);
-					addToolBar(toolBarFactory.createToolBar(grammarComponent, true, true), true, true);
-					addMenuBar(menuBarFactory.createMenuBar(grammarComponent, model), true, true);
+					addToolBar(this.toolBarFactory.createToolBar(grammarComponent, true, true), true, true);
+					addMenuBar(this.menuBarFactory.createMenuBar(grammarComponent, model), true, true);
 				}
 			}
 		}
@@ -385,6 +387,6 @@ public class MainWindow implements ComponentListener
 
 	public void updateWindow(DockingWindow window, boolean added)
 	{
-		viewRepository.updateViews(window, added);
+		this.viewRepository.updateViews(window, added);
 	}
 }

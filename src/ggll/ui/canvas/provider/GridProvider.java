@@ -9,7 +9,7 @@ public class GridProvider
 {
 
 	private static HashMap<Canvas, GridProvider> gridProviders = new HashMap<Canvas, GridProvider>();
-	private Canvas canvas;
+	private final Canvas canvas;
 	private GridWidget grid;
 
 	private GridProvider(Canvas canvas)
@@ -28,24 +28,24 @@ public class GridProvider
 
 	public boolean isVisible()
 	{
-		if (grid == null)
+		if (this.grid == null)
 		{
 			return false;
 		}
-		return grid.isVisible();
+		return this.grid.isVisible();
 	}
 
 	public void setVisible(boolean visible)
 	{
-		if (grid != null)
+		if (this.grid != null)
 		{
-			grid.setVisible(visible);
-			canvas.setShowingGrid(visible);
+			this.grid.setVisible(visible);
+			this.canvas.setShowingGrid(visible);
 		}
 		else if (visible)
 		{
-			grid = (GridWidget) canvas.addNode(GridWidget.class.getCanonicalName());
+			this.grid = (GridWidget) this.canvas.addNode(GridWidget.class.getCanonicalName());
 		}
-		canvas.repaint();
+		this.canvas.repaint();
 	}
 }

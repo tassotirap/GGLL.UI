@@ -13,7 +13,7 @@ import javax.swing.JPanel;
 
 public class ToolBarFactory
 {
-	private HashMap<AbstractComponent, JComponent> toolBars = new HashMap<AbstractComponent, JComponent>();
+	private final HashMap<AbstractComponent, JComponent> toolBars = new HashMap<AbstractComponent, JComponent>();
 	private JComponent defaultToolBar;
 
 	public ToolBarFactory()
@@ -22,7 +22,7 @@ public class ToolBarFactory
 
 	private ToolBarCanvas createToolBarCanvas(final Canvas canvas)
 	{
-		ToolBarCanvas toolBarCanvas = new ToolBarCanvas(canvas);
+		final ToolBarCanvas toolBarCanvas = new ToolBarCanvas(canvas);
 		toolBarCanvas.setLayout(new BoxLayout(toolBarCanvas, BoxLayout.LINE_AXIS));
 		return toolBarCanvas;
 	}
@@ -30,18 +30,18 @@ public class ToolBarFactory
 	@SuppressWarnings("rawtypes")
 	private JComponent createToolBarExt(final AbstractComponent component)
 	{
-		JPanel panel = new JPanel();
+		final JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.LINE_AXIS));
 
 		if (component instanceof TextAreaComponent || component instanceof GrammarComponent)
 		{
-			ToolBarDefault toolBarFile = createToolBarFile(component);
+			final ToolBarDefault toolBarFile = createToolBarFile(component);
 			panel.add(toolBarFile);
 		}
 		if (component instanceof GrammarComponent)
 		{
-			GrammarComponent grammarComponent = (GrammarComponent) component;
-			ToolBarCanvas toolBarCanvas = createToolBarCanvas(grammarComponent.getCanvas());
+			final GrammarComponent grammarComponent = (GrammarComponent) component;
+			final ToolBarCanvas toolBarCanvas = createToolBarCanvas(grammarComponent.getCanvas());
 			panel.add(toolBarCanvas);
 		}
 		return panel;
@@ -50,32 +50,32 @@ public class ToolBarFactory
 
 	private ToolBarDefault createToolBarFile(final Object ref)
 	{
-		ToolBarDefault toolBarFile = new ToolBarDefault(ref);
+		final ToolBarDefault toolBarFile = new ToolBarDefault(ref);
 		toolBarFile.setLayout(new BoxLayout(toolBarFile, BoxLayout.LINE_AXIS));
 		return toolBarFile;
 	}
 
 	private JComponent getDefaultToolBar(final AbstractComponent reference, ToolBarFactory toolBarFactory)
 	{
-		if (defaultToolBar == null)
+		if (this.defaultToolBar == null)
 		{
-			defaultToolBar = toolBarFactory.createToolBarExt(reference);
+			this.defaultToolBar = toolBarFactory.createToolBarExt(reference);
 		}
-		return defaultToolBar;
+		return this.defaultToolBar;
 	}
 
 	@SuppressWarnings("rawtypes")
 	public JComponent createToolBar(final AbstractComponent component, boolean enableToolBarFile, boolean enableToolBarCanvas)
 	{
-		ToolBarFactory toolBarFactory = new ToolBarFactory();
+		final ToolBarFactory toolBarFactory = new ToolBarFactory();
 		if (component == null)
 		{
 			return getDefaultToolBar(component, toolBarFactory);
 		}
-		if (!toolBars.containsKey(component))
+		if (!this.toolBars.containsKey(component))
 		{
-			toolBars.put(component, toolBarFactory.createToolBarExt(component));
+			this.toolBars.put(component, toolBarFactory.createToolBarExt(component));
 		}
-		return toolBars.get(component);
+		return this.toolBars.get(component);
 	}
 }

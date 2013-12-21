@@ -27,13 +27,13 @@ public abstract class HtmlViewer implements HyperlinkListener
 
 		String getContent()
 		{
-			return content.toString();
+			return this.content.toString();
 		}
 
 		void write(String text)
 		{
-			String newText = text;
-			content.insert(content.length() - TAIL.length(), newText);
+			final String newText = text;
+			this.content.insert(this.content.length() - TAIL.length(), newText);
 		}
 	}
 
@@ -52,44 +52,44 @@ public abstract class HtmlViewer implements HyperlinkListener
 
 	public final static boolean USE_CSSFILE = false;
 	private Canvas activeScene;
-	private StyleSheet cssSheet = new StyleSheet();
+	private final StyleSheet cssSheet = new StyleSheet();
 
-	private JEditorPane editorPane = new JEditorPane();
+	private final JEditorPane editorPane = new JEditorPane();
 
-	private HTMLEditorKit kit = new CustomHTMLEditorKit(ApplicationImagePath);
+	private final HTMLEditorKit kit = new CustomHTMLEditorKit(ApplicationImagePath);
 
 	public HtmlViewer()
 	{
 		try
 		{
-			cssSheet.loadRules(new InputStreamReader(HtmlViewer.class.getResourceAsStream("/ggll/ui/output/output.css")), null);
+			this.cssSheet.loadRules(new InputStreamReader(HtmlViewer.class.getResourceAsStream("/ggll/ui/output/output.css")), null);
 		}
-		catch (IOException e)
+		catch (final IOException e)
 		{
 			e.printStackTrace();
 		}
 		;
 		if (USE_CSSFILE)
 		{
-			kit.setStyleSheet(cssSheet);
+			this.kit.setStyleSheet(this.cssSheet);
 		}
-		kit.setLinkCursor(new Cursor(Cursor.HAND_CURSOR));
+		this.kit.setLinkCursor(new Cursor(Cursor.HAND_CURSOR));
 		setSystemImagePath(SystemImagePath);
-		editorPane.setEditorKit(kit);
-		Document doc = editorPane.getDocument();
-		StringReader reader = new StringReader(new Page().getContent());
+		this.editorPane.setEditorKit(this.kit);
+		final Document doc = this.editorPane.getDocument();
+		final StringReader reader = new StringReader(new Page().getContent());
 		try
 		{
-			kit.read(reader, doc, 0);
+			this.kit.read(reader, doc, 0);
 		}
-		catch (Exception e)
+		catch (final Exception e)
 		{
 			e.printStackTrace();
 		}
-		editorPane.setDoubleBuffered(true);
-		editorPane.setEditable(false);
-		editorPane.setContentType("text/html");
-		editorPane.addHyperlinkListener(this);
+		this.editorPane.setDoubleBuffered(true);
+		this.editorPane.setEditable(false);
+		this.editorPane.setContentType("text/html");
+		this.editorPane.addHyperlinkListener(this);
 	}
 
 	void displayTextExt(String st, String font, String size, String cssClass, TOPIC topic)
@@ -98,7 +98,7 @@ public abstract class HtmlViewer implements HyperlinkListener
 
 	public void clear()
 	{
-		editorPane.setText("");
+		this.editorPane.setText("");
 	}
 
 	public void displayHorizontalLineExt(TOPIC topic)
@@ -112,22 +112,22 @@ public abstract class HtmlViewer implements HyperlinkListener
 
 	public Canvas getActiveScene()
 	{
-		return activeScene;
+		return this.activeScene;
 	}
 
 	public StyleSheet getCssSheet()
 	{
-		return cssSheet;
+		return this.cssSheet;
 	}
 
 	public JEditorPane getEditorPane()
 	{
-		return editorPane;
+		return this.editorPane;
 	}
 
 	public HTMLEditorKit getKit()
 	{
-		return kit;
+		return this.kit;
 	}
 
 	@Override
@@ -135,13 +135,13 @@ public abstract class HtmlViewer implements HyperlinkListener
 	{
 		if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED)
 		{
-			activeScene.select(e.getDescription());
+			this.activeScene.select(e.getDescription());
 		}
 	}
 
 	public void setActiveScene(Canvas canvas)
 	{
-		activeScene = canvas;
+		this.activeScene = canvas;
 	}
 
 	public void setSystemImagePath(String path)

@@ -19,72 +19,72 @@ public class MenuModel
 
 	public boolean isCopy()
 	{
-		return copy;
+		return this.copy;
 	}
 
 	public boolean isCut()
 	{
-		return cut;
+		return this.cut;
 	}
 
 	public boolean isEbnfExport()
 	{
-		return ebnfExport;
+		return this.ebnfExport;
 	}
 
 	public boolean isFind()
 	{
-		return find;
+		return this.find;
 	}
 
 	public boolean isPaste()
 	{
-		return paste;
+		return this.paste;
 	}
 
 	public boolean isPngExport()
 	{
-		return pngExport;
+		return this.pngExport;
 	}
 
 	public boolean isPrint()
 	{
-		return print;
+		return this.print;
 	}
 
 	public boolean isRedo()
 	{
-		return redo;
+		return this.redo;
 	}
 
 	public boolean isSave()
 	{
-		return save;
+		return this.save;
 	}
 
 	public boolean isSaveAll()
 	{
-		return saveAll;
+		return this.saveAll;
 	}
 
 	public boolean isSaveAs()
 	{
-		return saveAs;
+		return this.saveAs;
 	}
 
 	public boolean isUndo()
 	{
-		return undo;
+		return this.undo;
 	}
 
 	public boolean isZoomIn()
 	{
-		return zoomIn;
+		return this.zoomIn;
 	}
 
 	public boolean isZoomOut()
 	{
-		return zoomOut;
+		return this.zoomOut;
 	}
 
 	public void setCopy(boolean copy)

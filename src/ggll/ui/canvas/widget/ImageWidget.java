@@ -22,7 +22,7 @@ public class ImageWidget extends org.netbeans.api.visual.widget.ImageWidget impl
 	@Override
 	public String getType()
 	{
-		return type;
+		return this.type;
 	}
 
 	@Override

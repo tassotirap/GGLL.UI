@@ -35,7 +35,7 @@ public class ParsingEditor
 	private Yylex yylex;
 	private Parser analyzer;
 
-	private String rootPath;
+	private final String rootPath;
 
 	public ParsingEditor(SyntacticLoader syntacticLoader, String rootPath)
 	{
@@ -51,70 +51,70 @@ public class ParsingEditor
 
 	private void endParser()
 	{
-		if (analyzer.isSucess())
+		if (this.analyzer.isSucess())
 		{
 			AppOutput.displayText("<font color='green'>Expression Successfully recognized.</font>", TOPIC.Output);
 		}
 		else
 		{
 			AppOutput.displayText("<font color='red'>Expression can't be recognized.</font>", TOPIC.Output);
-			for (Exception error : analyzer.getErrorList().getAll())
+			for (final Exception error : this.analyzer.getErrorList().getAll())
 			{
 				if (error instanceof SintaticException)
 				{
-					SintaticException sintaticException = (SintaticException) error;
+					final SintaticException sintaticException = (SintaticException) error;
 					AppOutput.displayText("<font color='red'>Sintatic Error: " + sintaticException.getToken() + "</font>", TOPIC.Output);
 				}
 				else if (error instanceof ErrorRecoveryException)
 				{
-					ErrorRecoveryException errorRecoveryException = (ErrorRecoveryException) error;
+					final ErrorRecoveryException errorRecoveryException = (ErrorRecoveryException) error;
 					AppOutput.displayText("<font color='red'>Erro Recovery: " + errorRecoveryException.getMessage() + "</font>", TOPIC.Output);
 				}
 				else if (error instanceof LexicalException)
 				{
-					LexicalException lexicalException = (LexicalException) error;
+					final LexicalException lexicalException = (LexicalException) error;
 					AppOutput.displayText("<font color='red'>Lexical Error: " + lexicalException.getToken() + "</font>", TOPIC.Output);
 				}
 				else if (error instanceof SemanticException)
 				{
-					SemanticException semanticException = (SemanticException) error;
+					final SemanticException semanticException = (SemanticException) error;
 					AppOutput.displayText("<font color='red'>Semantic Error: " + semanticException.getMessage() + "</font>", TOPIC.Output);
 				}
 			}
 		}
-		analyzer = null;
+		this.analyzer = null;
 	}
 
 	private void startParse(boolean stepping, String text)
 	{
 		Output.getInstance().displayTextExt("<< " + text.replace(">", "&gt;").replace("<", "&lt;"), TOPIC.Parser);
-		StringReader stringReader = new StringReader(text);
+		final StringReader stringReader = new StringReader(text);
 		try
 		{
-			yylex.yyreset(stringReader);
+			this.yylex.yyreset(stringReader);
 		}
-		catch (IOException e1)
+		catch (final IOException e1)
 		{
 			Log.log(Log.ERROR, this, "An internal error has occurred!", e1);
 		}
 
 		try
 		{
-			Compiler compiler = new Compiler();
+			final Compiler compiler = new Compiler();
 			compiler.compile(GGLLDirector.getProject().getSemanticFile().getPath());
-			ClassLoader<SemanticRoutineClass> classLoader = new ClassLoader<SemanticRoutineClass>(GGLLDirector.getProject().getSemanticFile());
-			analyzer = new Parser(new GGLLTable(syntacticLoader.tabGraph(), syntacticLoader.tabNt(), syntacticLoader.tabT()), yylex, classLoader.getInstance(), stepping);
-			analyzer.setParserOutput(new ParserOutput()
+			final ClassLoader<SemanticRoutineClass> classLoader = new ClassLoader<SemanticRoutineClass>(GGLLDirector.getProject().getSemanticFile());
+			this.analyzer = new Parser(new GGLLTable(this.syntacticLoader.tabGraph(), this.syntacticLoader.tabNt(), this.syntacticLoader.tabT()), this.yylex, classLoader.getInstance(), stepping);
+			this.analyzer.setParserOutput(new ParserOutput()
 			{
 				@Override
 				public void Output()
 				{
-					printStack(analyzer.getParserStacks().getParseStack());
+					printStack(ParsingEditor.this.analyzer.getParserStacks().getParseStack());
 
 				}
 			});
 		}
-		catch (Exception e)
+		catch (final Exception e)
 		{
 			e.printStackTrace();
 		}
@@ -125,10 +125,10 @@ public class ParsingEditor
 	{
 		try
 		{
-			yylex = YyFactory.getYylex(new File(rootPath + "/export/Yylex.java"));
+			this.yylex = YyFactory.getYylex(new File(this.rootPath + "/export/Yylex.java"));
 			return instance;
 		}
-		catch (Exception e)
+		catch (final Exception e)
 		{
 			e.printStackTrace();
 			return null;
@@ -137,7 +137,7 @@ public class ParsingEditor
 
 	public void printStack(ParseStack parseStackNode)
 	{
-		Iterator<ParseNode> iterator = parseStackNode.iterator();
+		final Iterator<ParseNode> iterator = parseStackNode.iterator();
 		ParseNode parseStackNodeTemp = null;
 		String lineSyntax = "";
 		String lineSemantic = "";
@@ -148,7 +148,7 @@ public class ParsingEditor
 			lineSemantic += parseStackNodeTemp.getSemanticSymbol() + "&nbsp;";
 		}
 
-		AppOutput.showAndSelectNode((parseStackNode.peek()).getFlag());
+		AppOutput.showAndSelectNode(parseStackNode.peek().getFlag());
 		AppOutput.printlnSyntaxStack(lineSyntax, true);
 		AppOutput.printlnSemanticStack(lineSemantic, true);
 	}
@@ -157,13 +157,13 @@ public class ParsingEditor
 	{
 		try
 		{
-			if (analyzer != null)
+			if (this.analyzer != null)
 			{
-				analyzer.nextToEnd();
+				this.analyzer.nextToEnd();
 				endParser();
 				return;
 			}
-			if (syntacticLoader == null)
+			if (this.syntacticLoader == null)
 			{
 				return;
 			}
@@ -176,13 +176,13 @@ public class ParsingEditor
 			startParse(stepping, text);
 
 			AppOutput.clearStacks();
-			analyzer.run();
+			this.analyzer.run();
 			if (!stepping)
 			{
 				endParser();
 			}
 		}
-		catch (Exception e)
+		catch (final Exception e)
 		{
 			e.printStackTrace();
 		}
@@ -197,20 +197,20 @@ public class ParsingEditor
 	{
 		try
 		{
-			if (analyzer == null)
+			if (this.analyzer == null)
 			{
 				run(true, text);
 			}
-			if (analyzer == null)
+			if (this.analyzer == null)
 			{
 				return;
 			}
-			if (!analyzer.next())
+			if (!this.analyzer.next())
 			{
 				endParser();
 			}
 		}
-		catch (Exception e)
+		catch (final Exception e)
 		{
 			e.printStackTrace();
 		}

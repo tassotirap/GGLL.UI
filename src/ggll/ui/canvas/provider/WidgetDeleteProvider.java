@@ -13,19 +13,19 @@ public class WidgetDeleteProvider
 {
 
 	PropertyChangeSupport monitor;
-	private Canvas canvas;
+	private final Canvas canvas;
 
 	public WidgetDeleteProvider(Canvas canvas)
 	{
 		this.canvas = canvas;
-		monitor = new PropertyChangeSupport(this);
-		monitor.addPropertyChangeListener(canvas.getCanvasStateRepository());
+		this.monitor = new PropertyChangeSupport(this);
+		this.monitor.addPropertyChangeListener(canvas.getCanvasStateRepository());
 	}
 
 	/** delete all selected widgets **/
 	public void deleteSelected()
 	{
-		deleteThese(canvas.getSelectedObjects());
+		deleteThese(this.canvas.getSelectedObjects());
 	}
 
 	/**
@@ -36,26 +36,26 @@ public class WidgetDeleteProvider
 	 */
 	public void deleteThese(Object... widgets)
 	{
-		ExtendedList<Object> toRemove = new ExtendedList<Object>();
-		for (Object w : widgets)
+		final ExtendedList<Object> toRemove = new ExtendedList<Object>();
+		for (final Object w : widgets)
 		{
 			if (w instanceof Set<?>)
 			{
-				for (Object obj : ((Set<?>) w))
+				for (final Object obj : (Set<?>) w)
 				{
 					toRemove.append(obj);
 				}
 			}
 			else if (w instanceof Collection<?>)
 			{
-				for (Object obj : ((Collection<?>) w))
+				for (final Object obj : (Collection<?>) w)
 				{
 					toRemove.append(obj);
 				}
 			}
 			else if (w instanceof Widget)
 			{
-				Object obj = canvas.findObject((Widget) w);
+				final Object obj = this.canvas.findObject((Widget) w);
 				if (obj != null)
 				{
 					toRemove.append(obj);
@@ -66,31 +66,31 @@ public class WidgetDeleteProvider
 				toRemove.append(w);
 			}
 		}
-		Object[] objs = toRemove.toArray();
-		for (int i = 0; i < objs.length; i++)
+		final Object[] objs = toRemove.toArray();
+		for (final Object obj : objs)
 		{
-			if (canvas.isNode(objs[i]) || canvas.isLabel(objs[i]))
+			if (this.canvas.isNode(obj) || this.canvas.isLabel(obj))
 			{
-				Collection<String> edges = canvas.findNodeEdges(objs[i].toString(), true, true);
+				final Collection<String> edges = this.canvas.findNodeEdges(obj.toString(), true, true);
 				deleteThese(edges);
-				canvas.removeNodeSafely((String) objs[i]);
-				monitor.firePropertyChange("undoable", null, "Delete");
+				this.canvas.removeNodeSafely((String) obj);
+				this.monitor.firePropertyChange("undoable", null, "Delete");
 			}
-			else if (canvas.isEdge(objs[i]))
+			else if (this.canvas.isEdge(obj))
 			{
-				canvas.removeEdgeSafely((String) objs[i]);
-				monitor.firePropertyChange("undoable", null, "Delete");
+				this.canvas.removeEdgeSafely((String) obj);
+				this.monitor.firePropertyChange("undoable", null, "Delete");
 			}
 		}
 	}
 
 	public boolean isDeletionAllowed()
 	{
-		return isDeletionAllowed(canvas.getSelectedObjects());
+		return isDeletionAllowed(this.canvas.getSelectedObjects());
 	}
 
 	public boolean isDeletionAllowed(Object... widgets)
 	{
-		return (widgets != null && widgets.length >= 1);
+		return widgets != null && widgets.length >= 1;
 	}
 }

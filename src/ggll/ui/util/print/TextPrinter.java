@@ -38,10 +38,10 @@ public class TextPrinter implements Printable
 	private String[] body;
 	private String[] header;
 	private PrinterJob job;
-	private Font typeFont;
-	private Font typeFontBold;
-	private String typeName;
-	private int typeSize;
+	private final Font typeFont;
+	private final Font typeFontBold;
+	private final String typeName;
+	private final int typeSize;
 
 	/**
 	 * Create a TextPrinter object with the default type font and size.
@@ -61,11 +61,11 @@ public class TextPrinter implements Printable
 		{
 			throw new IllegalArgumentException("Type size out of range");
 		}
-		typeName = name;
-		typeSize = size;
-		typeFont = new Font(typeName, Font.PLAIN, typeSize);
-		typeFontBold = new Font(typeName, Font.BOLD, typeSize);
-		job = null;
+		this.typeName = name;
+		this.typeSize = size;
+		this.typeFont = new Font(this.typeName, Font.PLAIN, this.typeSize);
+		this.typeFontBold = new Font(this.typeName, Font.BOLD, this.typeSize);
+		this.job = null;
 	}
 
 	public static void printText(String text)
@@ -73,12 +73,12 @@ public class TextPrinter implements Printable
 		TextPrinter tp;
 		tp = new TextPrinter();
 		tp.getCharsPerLine();
-		String body[] = text.split("\n");
+		final String body[] = text.split("\n");
 		try
 		{
 			tp.doPrint(null, body, true);
 		}
-		catch (PrinterException e)
+		catch (final PrinterException e)
 		{
 			e.printStackTrace();
 		}
@@ -89,7 +89,7 @@ public class TextPrinter implements Printable
 	 */
 	protected void init()
 	{
-		job = PrinterJob.getPrinterJob();
+		this.job = PrinterJob.getPrinterJob();
 	}
 
 	/**
@@ -105,14 +105,15 @@ public class TextPrinter implements Printable
 	 */
 	public boolean doPrint(String[] header, String[] body, boolean interactive) throws PrinterException
 	{
-		if (job == null)
+		if (this.job == null)
 		{
 			init();
 		}
 		if (interactive)
+		{
 			try
 			{
-				if (job.printDialog())
+				if (this.job.printDialog())
 				{
 					// we are going to print
 				}
@@ -122,17 +123,18 @@ public class TextPrinter implements Printable
 					return false;
 				}
 			}
-			catch (Exception pe)
+			catch (final Exception pe)
 			{
 				System.err.println("Could not pop up print dialog");
 				// assume user wants to print anyway...
 			}
+		}
 
-		job.setPrintable(this);
+		this.job.setPrintable(this);
 		this.header = header;
 		this.body = body;
-		job.print();
-		job = null; // we are no longer initialized
+		this.job.print();
+		this.job = null; // we are no longer initialized
 		return true;
 	}
 
@@ -143,17 +145,17 @@ public class TextPrinter implements Printable
 	 */
 	public int getCharsPerLine()
 	{
-		if (job == null)
+		if (this.job == null)
 		{
 			init();
 		}
 		PageFormat pf;
-		pf = job.defaultPage();
-		double width = pf.getImageableWidth(); // in 72nd of a pt
-		double ptsize = typeFont.getSize();
-		double ptwid = ptsize * 3 / 4;
-		double cnt = (width / ptwid);
-		return (int) (Math.round(cnt));
+		pf = this.job.defaultPage();
+		final double width = pf.getImageableWidth(); // in 72nd of a pt
+		final double ptsize = this.typeFont.getSize();
+		final double ptwid = ptsize * 3 / 4;
+		final double cnt = width / ptwid;
+		return (int) Math.round(cnt);
 	}
 
 	/**
@@ -169,7 +171,7 @@ public class TextPrinter implements Printable
 			return NO_SUCH_PAGE;
 		}
 		FontMetrics fm;
-		graphics.setFont(typeFont);
+		graphics.setFont(this.typeFont);
 		graphics.setColor(Color.black);
 		fm = graphics.getFontMetrics();
 
@@ -180,23 +182,23 @@ public class TextPrinter implements Printable
 		y = pageFormat.getImageableY() + fm.getMaxAscent();
 
 		// do the headings
-		if (header != null)
+		if (this.header != null)
 		{
-			graphics.setFont(typeFontBold);
-			for (i = 0; i < header.length; i++)
+			graphics.setFont(this.typeFontBold);
+			for (i = 0; i < this.header.length; i++)
 			{
-				graphics.drawString(header[i], (int) x, (int) y);
+				graphics.drawString(this.header[i], (int) x, (int) y);
 				y += fm.getHeight();
 			}
 		}
 
 		// do the body
-		if (body != null)
+		if (this.body != null)
 		{
-			graphics.setFont(typeFont);
-			for (i = 0; i < body.length; i++)
+			graphics.setFont(this.typeFont);
+			for (i = 0; i < this.body.length; i++)
 			{
-				graphics.drawString(body[i], (int) x, (int) y);
+				graphics.drawString(this.body[i], (int) x, (int) y);
 				y += fm.getHeight();
 			}
 		}

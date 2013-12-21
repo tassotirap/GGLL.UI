@@ -20,7 +20,7 @@ public class ClipboardHelper
 	public static Object getClipboardContents()
 	{
 		Object result = null;
-		Transferable contents = clipboard.getContents(null);
+		final Transferable contents = clipboard.getContents(null);
 		if (contents != null)
 		{
 			try
@@ -34,7 +34,7 @@ public class ClipboardHelper
 					result = contents.getTransferData(null);
 				}
 			}
-			catch (Exception e)
+			catch (final Exception e)
 			{
 			}
 		}

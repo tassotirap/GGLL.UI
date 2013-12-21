@@ -21,19 +21,19 @@ public class TreePopupMenu extends JPopupMenu
 
 	public void initialize()
 	{
-		final TreePath node = fileTree.getSelectedNode();
+		final TreePath node = this.fileTree.getSelectedNode();
 		if (node != null && node.getLastPathComponent() instanceof TreeFile)
 		{
-			TreeFile tFile = (TreeFile) node.getLastPathComponent();
+			final TreeFile tFile = (TreeFile) node.getLastPathComponent();
 			if (tFile.isFile())
 			{
-				JMenuItem open = new JMenuItem("Open");
+				final JMenuItem open = new JMenuItem("Open");
 				open.addActionListener(new ActionListener()
 				{
 					@Override
 					public void actionPerformed(ActionEvent e)
 					{
-						fileTree.open(node);
+						TreePopupMenu.this.fileTree.open(node);
 					}
 				});
 				add(open);

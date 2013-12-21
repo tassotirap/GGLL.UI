@@ -14,18 +14,18 @@ public class ProjectHelper
 {
 	public static void createNewProject(File projectRoot) throws IOException
 	{
-		String basePath = projectRoot.getAbsoluteFile() + "/";
-		String name = projectRoot.getName();
+		final String basePath = projectRoot.getAbsoluteFile() + "/";
+		final String name = projectRoot.getName();
 
-		GrammarFile gramFile = new GrammarFile(basePath + name + FileNames.GRAM_EXTENSION);
-		SemanticFile semFile = new SemanticFile(basePath + name + FileNames.SEM_EXTENSION);
-		LexicalFile lexFile = new LexicalFile(basePath + name + FileNames.LEX_EXTENSION);
+		final GrammarFile gramFile = new GrammarFile(basePath + name + FileNames.GRAM_EXTENSION);
+		final SemanticFile semFile = new SemanticFile(basePath + name + FileNames.SEM_EXTENSION);
+		final LexicalFile lexFile = new LexicalFile(basePath + name + FileNames.LEX_EXTENSION);
 
 		gramFile.create();
 		semFile.create();
 		lexFile.create();
 
-		Project project = new Project(projectRoot.getAbsolutePath());
+		final Project project = new Project(projectRoot.getAbsolutePath());
 		project.setGrammarFile(gramFile);
 		project.setSemamticFile(semFile);
 		project.setLexicalFile(lexFile);
@@ -38,7 +38,7 @@ public class ProjectHelper
 		boolean hasSemanticFile = false;
 		boolean hasLexicalFile = false;
 
-		for (File file : projectRoot.listFiles())
+		for (final File file : projectRoot.listFiles())
 		{
 			if (file.getName().endsWith(FileNames.GRAM_EXTENSION))
 			{
@@ -59,7 +59,7 @@ public class ProjectHelper
 	public static Project openProject(String projectRootPath)
 	{
 		Project project = null;
-		ExtendedList<GrammarFile> gramFiles = new ExtendedList<GrammarFile>();
+		final ExtendedList<GrammarFile> gramFiles = new ExtendedList<GrammarFile>();
 		SemanticFile semFile = null;
 		LexicalFile lexFile = null;
 
@@ -70,8 +70,8 @@ public class ProjectHelper
 
 		try
 		{
-			File projectRoot = new File(projectRootPath);
-			for (File file : projectRoot.listFiles())
+			final File projectRoot = new File(projectRootPath);
+			for (final File file : projectRoot.listFiles())
 			{
 				if (file.getName().endsWith(FileNames.GRAM_EXTENSION))
 				{
@@ -97,7 +97,7 @@ public class ProjectHelper
 				return project;
 			}
 		}
-		catch (Exception e)
+		catch (final Exception e)
 		{
 			e.printStackTrace();
 		}

@@ -25,9 +25,9 @@ public class IconNodeWidgetExt extends Widget implements MarkedWidget, TypedWidg
 
 	}
 
-	private ImageWidget imageWidget;
+	private final ImageWidget imageWidget;
 
-	private LabelWidget labelWidget;
+	private final LabelWidget labelWidget;
 	private Paint markBackground;
 
 	private Color markForeground;
@@ -57,7 +57,7 @@ public class IconNodeWidgetExt extends Widget implements MarkedWidget, TypedWidg
 	public IconNodeWidgetExt(Scene scene, TextOrientation orientation)
 	{
 		super(scene);
-		LookFeel lookFeel = getScene().getLookFeel();
+		final LookFeel lookFeel = getScene().getLookFeel();
 
 		switch (orientation)
 		{
@@ -69,12 +69,12 @@ public class IconNodeWidgetExt extends Widget implements MarkedWidget, TypedWidg
 				break;
 		}
 
-		imageWidget = new ImageWidget(scene);
-		addChild(imageWidget);
+		this.imageWidget = new ImageWidget(scene);
+		addChild(this.imageWidget);
 
-		labelWidget = new LabelWidget(scene);
-		labelWidget.setFont(scene.getDefaultFont().deriveFont(14.0f));
-		addChild(labelWidget);
+		this.labelWidget = new LabelWidget(scene);
+		this.labelWidget.setFont(scene.getDefaultFont().deriveFont(14.0f));
+		addChild(this.labelWidget);
 
 		setState(ObjectState.createNormal());
 	}
@@ -86,7 +86,7 @@ public class IconNodeWidgetExt extends Widget implements MarkedWidget, TypedWidg
 	 */
 	public final ImageWidget getImageWidget()
 	{
-		return imageWidget;
+		return this.imageWidget;
 	}
 
 	/**
@@ -96,7 +96,7 @@ public class IconNodeWidgetExt extends Widget implements MarkedWidget, TypedWidg
 	 */
 	public final LabelWidget getLabelWidget()
 	{
-		return labelWidget;
+		return this.labelWidget;
 	}
 
 	@Override
@@ -108,20 +108,20 @@ public class IconNodeWidgetExt extends Widget implements MarkedWidget, TypedWidg
 	public Paint getMarkBackground()
 	{
 		// to make sure i'm telling the truth:
-		getLabelWidget().setBackground((markBackground == null) ? DEFAULT_MARK_BACKGROUND : markBackground);
+		getLabelWidget().setBackground(this.markBackground == null ? DEFAULT_MARK_BACKGROUND : this.markBackground);
 		return getLabelWidget().getBackground();
 	}
 
 	public Color getMarkForeground()
 	{
-		getLabelWidget().setForeground((markForeground == null) ? DEFAULT_MARK_FOREGROUND : markForeground);
+		getLabelWidget().setForeground(this.markForeground == null ? this.DEFAULT_MARK_FOREGROUND : this.markForeground);
 		return getLabelWidget().getForeground();
 	}
 
 	@Override
 	public String getType()
 	{
-		return type;
+		return this.type;
 	}
 
 	/**
@@ -135,9 +135,9 @@ public class IconNodeWidgetExt extends Widget implements MarkedWidget, TypedWidg
 	@Override
 	public void notifyStateChanged(ObjectState previousState, ObjectState state)
 	{
-		LookFeel lookFeel = getScene().getLookFeel();
-		labelWidget.setBorder(lookFeel.getBorder(state));
-		labelWidget.setForeground(lookFeel.getForeground(state));
+		final LookFeel lookFeel = getScene().getLookFeel();
+		this.labelWidget.setBorder(lookFeel.getBorder(state));
+		this.labelWidget.setForeground(lookFeel.getForeground(state));
 	}
 
 	/**
@@ -148,7 +148,7 @@ public class IconNodeWidgetExt extends Widget implements MarkedWidget, TypedWidg
 	 */
 	public final void setImage(Image image)
 	{
-		imageWidget.setImage(image);
+		this.imageWidget.setImage(image);
 	}
 
 	/**
@@ -159,8 +159,8 @@ public class IconNodeWidgetExt extends Widget implements MarkedWidget, TypedWidg
 	 */
 	public final void setLabel(String label)
 	{
-		labelWidget.setLabel(label);
-		labelWidget.setForeground((markForeground == null) ? DEFAULT_MARK_FOREGROUND : markForeground);
+		this.labelWidget.setLabel(label);
+		this.labelWidget.setForeground(this.markForeground == null ? this.DEFAULT_MARK_FOREGROUND : this.markForeground);
 	}
 
 	@Override
@@ -173,7 +173,7 @@ public class IconNodeWidgetExt extends Widget implements MarkedWidget, TypedWidg
 	public void setMarkBackground(Paint p)
 	{
 		this.markBackground = p;
-		getLabelWidget().setBackground(markBackground);
+		getLabelWidget().setBackground(this.markBackground);
 	}
 
 	@Override

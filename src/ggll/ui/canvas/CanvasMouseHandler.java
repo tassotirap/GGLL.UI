@@ -30,7 +30,7 @@ public class CanvasMouseHandler implements MouseListener
 	@Override
 	public void mousePressed(MouseEvent event)
 	{
-		canvas.setFocused();
+		this.canvas.setFocused();
 	}
 
 	@Override

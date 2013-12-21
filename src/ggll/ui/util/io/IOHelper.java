@@ -68,7 +68,7 @@ public class IOHelper
 			{
 				closeable.close();
 			}
-			catch (IOException e)
+			catch (final IOException e)
 			{
 				// ignore
 			}
@@ -91,7 +91,7 @@ public class IOHelper
 			{
 				in.close();
 			}
-			catch (IOException e)
+			catch (final IOException e)
 			{
 				// ignore
 			}
@@ -113,7 +113,7 @@ public class IOHelper
 			{
 				out.close();
 			}
-			catch (IOException e)
+			catch (final IOException e)
 			{
 				// ignore
 			}
@@ -136,7 +136,7 @@ public class IOHelper
 			{
 				r.close();
 			}
-			catch (IOException e)
+			catch (final IOException e)
 			{
 				// ignore
 			}
@@ -163,7 +163,7 @@ public class IOHelper
 	{
 		boolean ok = false;
 
-		if ((dest.exists() && dest.canWrite()) || (!dest.exists() && dest.getParentFile().canWrite()))
+		if (dest.exists() && dest.canWrite() || !dest.exists() && dest.getParentFile().canWrite())
 		{
 			OutputStream fos = null;
 			InputStream fis = null;
@@ -173,7 +173,7 @@ public class IOHelper
 				fis = new FileInputStream(source);
 				ok = copyStream(32768, fis, fos, false);
 			}
-			catch (IOException ioe)
+			catch (final IOException ioe)
 			{
 				Log.log(Log.WARNING, IOHelper.class, "Error coping file: " + ioe + " : " + ioe.getMessage());
 			}
@@ -188,7 +188,7 @@ public class IOHelper
 
 	public static void copyFileAndUpdateString(File source, File dest, String string, String string2)
 	{
-		if ((dest.exists() && dest.canWrite()) || (!dest.exists() && dest.getParentFile().canWrite()))
+		if (dest.exists() && dest.canWrite() || !dest.exists() && dest.getParentFile().canWrite())
 		{
 			OutputStream fos = null;
 			InputStream fis = null;
@@ -203,7 +203,7 @@ public class IOHelper
 				osw = new OutputStreamWriter(fos);
 				br = new BufferedReader(isr);
 				String line;
-				StringBuffer sb = new StringBuffer();
+				final StringBuffer sb = new StringBuffer();
 				while ((line = br.readLine()) != null)
 				{
 					line = line.replace(string, string2);
@@ -211,7 +211,7 @@ public class IOHelper
 				}
 				osw.write(sb.toString());
 			}
-			catch (IOException ioe)
+			catch (final IOException ioe)
 			{
 				Log.log(Log.WARNING, IOHelper.class, "Error moving file: " + ioe + " : " + ioe.getMessage());
 			}
@@ -231,16 +231,16 @@ public class IOHelper
 	{
 		boolean ok = false;
 
-		if ((dest.exists() && dest.canWrite()) || (!dest.exists() && dest.getParentFile().canWrite()))
+		if (dest.exists() && dest.canWrite() || !dest.exists() && dest.getParentFile().canWrite())
 		{
 			OutputStream fos = null;
-			InputStream fis = null;
+			final InputStream fis = null;
 			try
 			{
 				fos = new FileOutputStream(dest);
 				ok = copyStream(32768, in, fos, false);
 			}
-			catch (IOException ioe)
+			catch (final IOException ioe)
 			{
 				Log.log(Log.WARNING, IOHelper.class, "Error coping file: " + ioe + " : " + ioe.getMessage());
 			}
@@ -295,13 +295,15 @@ public class IOHelper
 	 */
 	public static boolean copyStream(int bufferSize, InputStream in, OutputStream out, boolean canStop) throws IOException
 	{
-		byte[] buffer = new byte[bufferSize];
+		final byte[] buffer = new byte[bufferSize];
 		int n;
 		while (-1 != (n = in.read(buffer)))
 		{
 			out.write(buffer, 0, n);
 			if (canStop && Thread.interrupted())
+			{
 				return false;
+			}
 		}
 		return true;
 	}
@@ -321,13 +323,15 @@ public class IOHelper
 	{
 		long length = 0L;
 		if (file.isFile())
+		{
 			length = file.length();
+		}
 		else if (file.isDirectory())
 		{
-			File[] files = file.listFiles();
-			for (int i = 0; i < files.length; i++)
+			final File[] files = file.listFiles();
+			for (final File file2 : files)
 			{
-				length += fileLength(files[i]);
+				length += fileLength(file2);
 			}
 		}
 		return length;
@@ -354,7 +358,7 @@ public class IOHelper
 	{
 		boolean ok = false;
 
-		if ((dest.exists() && dest.canWrite()) || (!dest.exists() && dest.getParentFile().canWrite()))
+		if (dest.exists() && dest.canWrite() || !dest.exists() && dest.getParentFile().canWrite())
 		{
 			OutputStream fos = null;
 			InputStream fis = null;
@@ -364,7 +368,7 @@ public class IOHelper
 				fis = new FileInputStream(source);
 				ok = copyStream(32768, fis, fos, false);
 			}
-			catch (IOException ioe)
+			catch (final IOException ioe)
 			{
 				Log.log(Log.WARNING, IOHelper.class, "Error moving file: " + ioe + " : " + ioe.getMessage());
 			}
@@ -375,7 +379,9 @@ public class IOHelper
 			}
 
 			if (ok)
+			{
 				source.delete();
+			}
 		}
 		return ok;
 	} // }}}
@@ -383,12 +389,12 @@ public class IOHelper
 	public static String readInputStreamAsString(InputStream in) throws IOException
 	{
 
-		BufferedInputStream bis = new BufferedInputStream(in);
-		ByteArrayOutputStream buf = new ByteArrayOutputStream();
+		final BufferedInputStream bis = new BufferedInputStream(in);
+		final ByteArrayOutputStream buf = new ByteArrayOutputStream();
 		int result = bis.read();
 		while (result != -1)
 		{
-			byte b = (byte) result;
+			final byte b = (byte) result;
 			buf.write(b);
 			result = bis.read();
 		}

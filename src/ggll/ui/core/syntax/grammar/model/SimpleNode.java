@@ -17,7 +17,7 @@ public class SimpleNode extends SyntaxModel implements AbstractNode
 
 	private static final long serialVersionUID = 1L;
 
-	private NodeLabel label;
+	private final NodeLabel label;
 
 	/**
 	 * determines the type of this node (ex: a terminal, a non terminal, etc...)
@@ -52,7 +52,7 @@ public class SimpleNode extends SyntaxModel implements AbstractNode
 
 	public NodeLabel getLabel()
 	{
-		return label;
+		return this.label;
 	}
 
 	/*----------------------------- getters, setters ---------------------*/
@@ -60,7 +60,7 @@ public class SimpleNode extends SyntaxModel implements AbstractNode
 	@Override
 	public String getType()
 	{
-		return type;
+		return this.type;
 	}
 
 	public void setType(String type)
@@ -71,7 +71,7 @@ public class SimpleNode extends SyntaxModel implements AbstractNode
 	@Override
 	public String toString()
 	{
-		return type + " #" + getID();
+		return this.type + " #" + getID();
 	}
 
 }

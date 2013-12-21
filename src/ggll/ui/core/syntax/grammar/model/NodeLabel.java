@@ -29,13 +29,13 @@ public class NodeLabel extends SyntaxSubpart
 
 	public String getLabelContents()
 	{
-		return text;
+		return this.text;
 	}
 
 	public void setLabelContents(String s)
 	{
-		text = s;
-		firePropertyChange("labelContents", "", text);
+		this.text = s;
+		firePropertyChange("labelContents", "", this.text);
 	}
 
 	@Override

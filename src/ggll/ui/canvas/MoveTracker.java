@@ -14,7 +14,7 @@ import org.netbeans.modules.visual.action.MoveAction;
 
 public class MoveTracker extends Observable
 {
-	private Canvas canvas;
+	private final Canvas canvas;
 
 	public MoveTracker(Canvas canvas)
 	{
@@ -23,15 +23,15 @@ public class MoveTracker extends Observable
 
 	private void removeAllMoveAction(Chain chainActions)
 	{
-		ExtendedList<WidgetAction> tmpActions = new ExtendedList<WidgetAction>();
-		for (WidgetAction action : chainActions.getActions())
+		final ExtendedList<WidgetAction> tmpActions = new ExtendedList<WidgetAction>();
+		for (final WidgetAction action : chainActions.getActions())
 		{
 			if (action instanceof MoveAction)
 			{
 				tmpActions.append(action);
 			}
 		}
-		for (WidgetAction action : tmpActions.getAll())
+		for (final WidgetAction action : tmpActions.getAll())
 		{
 			chainActions.removeAction(action);
 		}
@@ -43,14 +43,14 @@ public class MoveTracker extends Observable
 	{
 		setChanged();
 		super.notifyObservers(obj);
-		canvas.getActionFactory().setActiveMoveAction((String) obj);
-		WidgetAction activeMovement = canvas.getActionFactory().getAction("Move");
-		for (String nodes : canvas.getNodes())
+		this.canvas.getActionFactory().setActiveMoveAction((String) obj);
+		final WidgetAction activeMovement = this.canvas.getActionFactory().getAction("Move");
+		for (final String nodes : this.canvas.getNodes())
 		{
-			Object obecjtWidget = canvas.findWidget(nodes);
+			final Object obecjtWidget = this.canvas.findWidget(nodes);
 			if (obecjtWidget != null)
 			{
-				Widget widget = (Widget) obecjtWidget;
+				final Widget widget = (Widget) obecjtWidget;
 				if (widget instanceof LabelWidgetExt || widget instanceof IconNodeWidgetExt)
 				{
 					removeAllMoveAction(widget.getActions(CanvasResource.SELECT));

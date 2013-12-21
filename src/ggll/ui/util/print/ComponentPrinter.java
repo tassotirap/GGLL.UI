@@ -36,13 +36,13 @@ public class ComponentPrinter implements Printable
 
 	public static void disableDoubleBuffering(Component c)
 	{
-		RepaintManager currentManager = RepaintManager.currentManager(c);
+		final RepaintManager currentManager = RepaintManager.currentManager(c);
 		currentManager.setDoubleBufferingEnabled(false);
 	}
 
 	public static void enableDoubleBuffering(Component c)
 	{
-		RepaintManager currentManager = RepaintManager.currentManager(c);
+		final RepaintManager currentManager = RepaintManager.currentManager(c);
 		currentManager.setDoubleBufferingEnabled(true);
 	}
 
@@ -58,17 +58,19 @@ public class ComponentPrinter implements Printable
 
 	public void print()
 	{
-		PrinterJob printJob = PrinterJob.getPrinterJob();
+		final PrinterJob printJob = PrinterJob.getPrinterJob();
 		printJob.setPrintable(this);
 		if (printJob.printDialog())
+		{
 			try
 			{
 				printJob.print();
 			}
-			catch (PrinterException pe)
+			catch (final PrinterException pe)
 			{
 				System.out.println("Error printing: " + pe);
 			}
+		}
 	}
 
 	@Override
@@ -76,23 +78,23 @@ public class ComponentPrinter implements Printable
 	{
 		if (pageIndex > 0)
 		{
-			return (NO_SUCH_PAGE);
+			return NO_SUCH_PAGE;
 		}
 		else
 		{
-			Graphics2D g2d = (Graphics2D) g;
+			final Graphics2D g2d = (Graphics2D) g;
 			g2d.translate(pageFormat.getImageableX(), pageFormat.getImageableY());
-			disableDoubleBuffering(componentToBePrinted);
-			if (componentToBePrinted != null)
+			disableDoubleBuffering(this.componentToBePrinted);
+			if (this.componentToBePrinted != null)
 			{
-				componentToBePrinted.paint(g2d);
+				this.componentToBePrinted.paint(g2d);
 			}
-			else if (widgetToBePrinted != null)
+			else if (this.widgetToBePrinted != null)
 			{
-				widgetToBePrinted.getScene().paint(g2d);
+				this.widgetToBePrinted.getScene().paint(g2d);
 			}
-			enableDoubleBuffering(componentToBePrinted);
-			return (PAGE_EXISTS);
+			enableDoubleBuffering(this.componentToBePrinted);
+			return PAGE_EXISTS;
 		}
 	}
 }

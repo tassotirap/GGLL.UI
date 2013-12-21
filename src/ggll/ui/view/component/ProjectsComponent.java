@@ -11,8 +11,8 @@ public class ProjectsComponent extends AbstractComponent
 
 	public ProjectsComponent(Project project)
 	{
-		fileTree = new Tree();
-		jComponent = new JScrollPane(fileTree.getTree());
+		this.fileTree = new Tree();
+		this.jComponent = new JScrollPane(this.fileTree.getTree());
 	}
 
 	@Override

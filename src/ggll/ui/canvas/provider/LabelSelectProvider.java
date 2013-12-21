@@ -12,7 +12,7 @@ import org.netbeans.api.visual.widget.Widget;
 
 public class LabelSelectProvider extends CanvasSelectProvider
 {
-	private Canvas canvas;
+	private final Canvas canvas;
 
 	public LabelSelectProvider(Canvas canvas)
 	{
@@ -29,45 +29,45 @@ public class LabelSelectProvider extends CanvasSelectProvider
 	@Override
 	public boolean isSelectionAllowed(Widget widget, Point arg1, boolean arg2)
 	{
-		return canvas.findObject(widget) != null;
+		return this.canvas.findObject(widget) != null;
 	}
 
 	@Override
 	public void select(Widget widget, Point localLocation, boolean invertSelection)
 	{
 		super.select(widget, localLocation, invertSelection);
-		Object object = canvas.findObject(widget);
-		canvas.setFocusedObject(object);
+		final Object object = this.canvas.findObject(widget);
+		this.canvas.setFocusedObject(object);
 		if (object != null)
 		{
-			if (!invertSelection && canvas.getSelectedObjects().contains(object))
+			if (!invertSelection && this.canvas.getSelectedObjects().contains(object))
 			{
 				return;
 			}
-			canvas.userSelectionSuggested(Collections.singleton(object), invertSelection);
+			this.canvas.userSelectionSuggested(Collections.singleton(object), invertSelection);
 		}
 		else
 		{
-			canvas.userSelectionSuggested(Collections.emptySet(), invertSelection);
+			this.canvas.userSelectionSuggested(Collections.emptySet(), invertSelection);
 		}
-		for (Object o : canvas.getLabels())
+		for (final Object o : this.canvas.getLabels())
 		{
-			LabelWidget lw = ((LabelWidget) canvas.findWidget(o));
+			final LabelWidget lw = (LabelWidget) this.canvas.findWidget(o);
 			lw.setBorder(BorderFactory.createEmptyBorder());
 		}
-		for (Object o : canvas.getNodes())
+		for (final Object o : this.canvas.getNodes())
 		{
-			LabelWidget lw = ((LabelWidget) canvas.findWidget(o));
+			final LabelWidget lw = (LabelWidget) this.canvas.findWidget(o);
 			lw.setBackground(Color.WHITE);
 			lw.setForeground(Color.BLACK);
 		}
-		for (Object o : canvas.getSelectedObjects())
+		for (final Object o : this.canvas.getSelectedObjects())
 		{
-			if (canvas.isLabel(o))
+			if (this.canvas.isLabel(o))
 			{
-				LabelWidget lw = ((LabelWidget) canvas.findWidget(o));
+				final LabelWidget lw = (LabelWidget) this.canvas.findWidget(o);
 				lw.setForeground(Color.BLUE);
-				((LabelWidget) canvas.findWidget(o)).setBorder(BorderFactory.createLineBorder(1, Color.BLUE));
+				((LabelWidget) this.canvas.findWidget(o)).setBorder(BorderFactory.createLineBorder(1, Color.BLUE));
 			}
 		}
 	}

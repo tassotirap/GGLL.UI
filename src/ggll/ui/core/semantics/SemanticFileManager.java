@@ -11,7 +11,7 @@ import java.io.PrintWriter;
 
 public class SemanticFileManager
 {
-	private SemanticFile file;
+	private final SemanticFile file;
 
 	public SemanticFileManager(SemanticFile file)
 	{
@@ -22,8 +22,8 @@ public class SemanticFileManager
 	{
 		try
 		{
-			FileInputStream fileInputStream = new FileInputStream(file);
-			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(fileInputStream));
+			final FileInputStream fileInputStream = new FileInputStream(this.file);
+			final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(fileInputStream));
 			String line = bufferedReader.readLine();
 			String currentFile = "";
 			while (line != null)
@@ -37,13 +37,13 @@ public class SemanticFileManager
 				line = bufferedReader.readLine();
 			}
 			bufferedReader.close();
-			FileWriter fileWriter = new FileWriter(file);
-			PrintWriter printWriter = new PrintWriter(fileWriter);
+			final FileWriter fileWriter = new FileWriter(this.file);
+			final PrintWriter printWriter = new PrintWriter(fileWriter);
 			printWriter.println(currentFile);
 			printWriter.close();
 
 		}
-		catch (Exception e)
+		catch (final Exception e)
 		{
 			Log.log(Log.ERROR, this, "Could not create new routine", e);
 			return false;
@@ -53,12 +53,12 @@ public class SemanticFileManager
 
 	private String getFormatedCode(String name, String code)
 	{
-		String[] codeLines = code.split("\n");
+		final String[] codeLines = code.split("\n");
 		code = "public void " + name + "()";
 		code += "\n";
 		code += "{";
 		code += "\n";
-		for (String line : codeLines)
+		for (final String line : codeLines)
 		{
 			code += "\t" + line + "\n";
 		}
@@ -68,7 +68,7 @@ public class SemanticFileManager
 
 	public boolean canInsert(String routine)
 	{
-		return file.getCode(routine) == null;
+		return this.file.getCode(routine) == null;
 	}
 
 	public void editRoutine(String name, String code)
@@ -76,11 +76,11 @@ public class SemanticFileManager
 		try
 		{
 			code = getFormatedCode(name, code);
-			FileInputStream fileInputStream = new FileInputStream(file);
-			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(fileInputStream));
+			final FileInputStream fileInputStream = new FileInputStream(this.file);
+			final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(fileInputStream));
 			String line = bufferedReader.readLine();
 			String currentFile = "";
-			String routine = String.format(SemanticFile.ROUTINE_FORMAT, name);
+			final String routine = String.format(SemanticFile.ROUTINE_FORMAT, name);
 
 			while (line != null)
 			{
@@ -105,13 +105,13 @@ public class SemanticFileManager
 			}
 			bufferedReader.close();
 
-			FileWriter fileWriter = new FileWriter(file);
-			PrintWriter printWriter = new PrintWriter(fileWriter);
+			final FileWriter fileWriter = new FileWriter(this.file);
+			final PrintWriter printWriter = new PrintWriter(fileWriter);
 			printWriter.println(currentFile);
 			printWriter.close();
 
 		}
-		catch (Exception e)
+		catch (final Exception e)
 		{
 			Log.log(Log.ERROR, this, "Could not create new routine", e);
 		}
@@ -121,7 +121,7 @@ public class SemanticFileManager
 	{
 		if (code == null)
 		{
-			code = file.getCode(routine);
+			code = this.file.getCode(routine);
 			if (code == null)
 			{
 				return null;
@@ -130,12 +130,16 @@ public class SemanticFileManager
 		code = code.replaceFirst("(\\s*\\t*)*public void(\\s*\\t*)*" + routine + "(\\s*\\t*)*\\(\\)(\\s*\\t*)*\\{", "");
 		code = code.replaceFirst("(\\s*\\t*)*\\n", "");
 		if (code.lastIndexOf("}") >= 0)
+		{
 			code = code.substring(0, code.lastIndexOf("}"));
+		}
 		if (code.lastIndexOf("\n") >= 0)
+		{
 			code = code.substring(0, code.lastIndexOf("\n"));
-		String[] lines = code.split("\n");
+		}
+		final String[] lines = code.split("\n");
 		code = "";
-		for (String line : lines)
+		for (final String line : lines)
 		{
 			if (line.startsWith("\t"))
 			{
@@ -147,7 +151,9 @@ public class SemanticFileManager
 			}
 		}
 		if (code.lastIndexOf("\n") >= 0)
+		{
 			code = code.substring(0, code.lastIndexOf("\n"));
+		}
 		return code;
 	}
 

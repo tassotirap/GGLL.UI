@@ -22,7 +22,7 @@ public class Controller
 {
 	private static void errorFound(Exception ex)
 	{
-		DefaultListModel model = new DefaultListModel();
+		final DefaultListModel model = new DefaultListModel();
 		model.addElement(ex.getMessage());
 		AppOutput.clearGeneratedGrammar();
 	}
@@ -32,7 +32,7 @@ public class Controller
 		YyFactory.createYylex(GGLLDirector.getProject().getLexicalFile().getParent(), "export", GGLLDirector.getProject().getLexicalFile().getPath());
 		AppOutput.clearOutputBuffer();
 		AppOutput.clearStacks();
-		GrammarFactory grammarFactory = new GrammarFactory();
+		final GrammarFactory grammarFactory = new GrammarFactory();
 		String grammar = null;
 		boolean validated = false;
 		try
@@ -42,22 +42,22 @@ public class Controller
 			AppOutput.displayText("<a>Run grammar generate...</a><br>", TOPIC.Output);
 
 			grammar = grammarFactory.run();
-			validated = (grammar != null && !grammar.equals(""));
+			validated = grammar != null && !grammar.equals("");
 		}
-		catch (Exception ex)
+		catch (final Exception ex)
 		{
 			validated = false;
 			errorFound(ex);
 		}
-		Grammar absGrammar = grammarFactory.getGrammar();
+		final Grammar absGrammar = grammarFactory.getGrammar();
 		if (absGrammar != null)
 		{
-			GrammarRule gr = new GSLL1Rules(absGrammar, false);
+			final GrammarRule gr = new GSLL1Rules(absGrammar, false);
 			try
 			{
 				gr.validate();
 			}
-			catch (InvalidGrammarException ex)
+			catch (final InvalidGrammarException ex)
 			{
 				validated = false;
 				errorFound(ex);
@@ -65,20 +65,20 @@ public class Controller
 		}
 		if (validated)
 		{
-			TableCreate tableCreate = new TableCreate(grammar, false);
-			SyntacticLoader syntacticLoader = new SyntacticLoader(tableCreate);
-			ParsingEditor parsingEditor = ParsingEditor.getInstance().build();
-			File dir = new File(GGLLDirector.getProject().getProjectDir().getAbsolutePath(), "export");
+			final TableCreate tableCreate = new TableCreate(grammar, false);
+			final SyntacticLoader syntacticLoader = new SyntacticLoader(tableCreate);
+			final ParsingEditor parsingEditor = ParsingEditor.getInstance().build();
+			final File dir = new File(GGLLDirector.getProject().getProjectDir().getAbsolutePath(), "export");
 			if (!dir.exists())
 			{
 				dir.mkdir();
 			}
 			parsingEditor.setSyntacticLoader(syntacticLoader);
 
-			GGLLTable analyzer = new GGLLTable(syntacticLoader.tabGraph(), syntacticLoader.tabNt(), syntacticLoader.tabT());
+			final GGLLTable analyzer = new GGLLTable(syntacticLoader.tabGraph(), syntacticLoader.tabNt(), syntacticLoader.tabT());
 			analyzer.serialize(GGLLDirector.getProject().getProjectDir().getAbsolutePath() + "\\export\\data.ggll");
 
-			File semantic = new File(GGLLDirector.getProject().getProjectDir().getAbsolutePath() + "\\" + GGLLDirector.getProject().getProjectDir().getName() + FileNames.SEM_EXTENSION);
+			final File semantic = new File(GGLLDirector.getProject().getProjectDir().getAbsolutePath() + "\\" + GGLLDirector.getProject().getProjectDir().getName() + FileNames.SEM_EXTENSION);
 			IOHelper.copyFile(semantic, new File(GGLLDirector.getProject().getProjectDir().getAbsolutePath() + "\\export\\" + GGLLDirector.getProject().getProjectDir().getName() + FileNames.SEM_EXTENSION));
 		}
 	}

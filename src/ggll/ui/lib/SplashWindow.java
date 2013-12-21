@@ -90,13 +90,13 @@ public class SplashWindow extends java.awt.Window
 		this.image = image;
 
 		// Load the image
-		MediaTracker mt = new MediaTracker(this);
+		final MediaTracker mt = new MediaTracker(this);
 		mt.addImage(image, 0);
 		try
 		{
 			mt.waitForID(0);
 		}
-		catch (InterruptedException ie)
+		catch (final InterruptedException ie)
 		{
 		}
 
@@ -107,23 +107,23 @@ public class SplashWindow extends java.awt.Window
 			System.err.println("Warning: SplashWindow couldn't load splash image.");
 			synchronized (this)
 			{
-				paintCalled = true;
+				this.paintCalled = true;
 				notifyAll();
 			}
 			return;
 		}
 
 		// Center the window on the screen
-		int imgWidth = image.getWidth(this);
-		int imgHeight = image.getHeight(this);
+		final int imgWidth = image.getWidth(this);
+		final int imgHeight = image.getHeight(this);
 		setSize(imgWidth, imgHeight);
-		Dimension screenDim = Toolkit.getDefaultToolkit().getScreenSize();
+		final Dimension screenDim = Toolkit.getDefaultToolkit().getScreenSize();
 		setLocation((screenDim.width - imgWidth) / 2, (screenDim.height - imgHeight) / 2);
 
 		// Users shall be able to close the splash window by
 		// clicking on its display area. This mouse listener
 		// listens for mouse clicks and disposes the splash window.
-		MouseAdapter disposeOnClick = new MouseAdapter()
+		final MouseAdapter disposeOnClick = new MouseAdapter()
 		{
 			@Override
 			public void mouseClicked(MouseEvent evt)
@@ -168,9 +168,9 @@ public class SplashWindow extends java.awt.Window
 		{
 			Class.forName(className).getMethod("main", new Class[]{ String[].class }).invoke(null, new Object[]{ args });
 		}
-		catch (Exception e)
+		catch (final Exception e)
 		{
-			InternalError error = new InternalError("Failed to invoke main method");
+			final InternalError error = new InternalError("Failed to invoke main method");
 			error.initCause(e);
 			throw error;
 		}
@@ -186,7 +186,7 @@ public class SplashWindow extends java.awt.Window
 	{
 		if (instance == null && image != null)
 		{
-			Frame f = new Frame();
+			final Frame f = new Frame();
 
 			// Create the splash image
 			instance = new SplashWindow(f, image);
@@ -209,7 +209,7 @@ public class SplashWindow extends java.awt.Window
 						{
 							instance.wait();
 						}
-						catch (InterruptedException e)
+						catch (final InterruptedException e)
 						{
 						}
 					}
@@ -240,15 +240,15 @@ public class SplashWindow extends java.awt.Window
 	@Override
 	public void paint(Graphics g)
 	{
-		g.drawImage(image, 0, 0, this);
+		g.drawImage(this.image, 0, 0, this);
 
 		// Notify method splash that the window
 		// has been painted.
 		// Note: To improve performance we do not enter
 		// the synchronized block unless we have to.
-		if (!paintCalled)
+		if (!this.paintCalled)
 		{
-			paintCalled = true;
+			this.paintCalled = true;
 			synchronized (this)
 			{
 				notifyAll();

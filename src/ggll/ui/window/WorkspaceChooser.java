@@ -56,7 +56,7 @@ public class WorkspaceChooser extends JFrame
 
 	private void addDirToList(String filename)
 	{
-		File file = new File(System.getProperty("java.io.tmpdir"), LIST_FILE);
+		final File file = new File(System.getProperty("java.io.tmpdir"), LIST_FILE);
 
 		try
 		{
@@ -64,10 +64,10 @@ public class WorkspaceChooser extends JFrame
 			{
 				file.createNewFile();
 			}
-			FileReader fileReader = new FileReader(file);
-			BufferedReader bufferedReader = new BufferedReader(fileReader);
+			final FileReader fileReader = new FileReader(file);
+			final BufferedReader bufferedReader = new BufferedReader(fileReader);
 
-			StringBuffer oldText = new StringBuffer();
+			final StringBuffer oldText = new StringBuffer();
 
 			String line = "";
 			while ((line = bufferedReader.readLine()) != null)
@@ -78,12 +78,12 @@ public class WorkspaceChooser extends JFrame
 				}
 			}
 			bufferedReader.close();
-			PrintWriter printWriter = new PrintWriter(file);
+			final PrintWriter printWriter = new PrintWriter(file);
 			printWriter.println(filename);
 			printWriter.print(oldText.toString());
 			printWriter.close();
 		}
-		catch (IOException e)
+		catch (final IOException e)
 		{
 			Log.log(Log.ERROR, this, "Could not load workspace list!", e);
 		}
@@ -91,29 +91,29 @@ public class WorkspaceChooser extends JFrame
 
 	private void btnBrowseActionPerformed()
 	{
-		JFileChooser fileChooser = new JFileChooser();
+		final JFileChooser fileChooser = new JFileChooser();
 		fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-		int dialogReturn = fileChooser.showOpenDialog(this);
+		final int dialogReturn = fileChooser.showOpenDialog(this);
 		if (dialogReturn == JFileChooser.APPROVE_OPTION)
 		{
-			ckbWorkspace.setSelectedItem(fileChooser.getSelectedFile().getAbsolutePath());
+			this.ckbWorkspace.setSelectedItem(fileChooser.getSelectedFile().getAbsolutePath());
 		}
 		if (dialogReturn == JFileChooser.CANCEL_OPTION)
 		{
-			ckbWorkspace.setSelectedItem("");
+			this.ckbWorkspace.setSelectedItem("");
 		}
 	}
 
 	private void btnCancelActionPerformed()
 	{
-		this.dispose();
-		canceled = true;
+		dispose();
+		this.canceled = true;
 	}
 
 	private void btnOkActionPerformed()
 	{
-		String directory = ckbWorkspace.getSelectedItem().toString();
-		File file = new File(directory);
+		final String directory = this.ckbWorkspace.getSelectedItem().toString();
+		final File file = new File(directory);
 		boolean newDirectory = false;
 		try
 		{
@@ -134,7 +134,7 @@ public class WorkspaceChooser extends JFrame
 
 			}
 		}
-		catch (WarningException e)
+		catch (final WarningException e)
 		{
 			JOptionPane.showMessageDialog(this, e.getMessage(), "Worksapce Loader", JOptionPane.ERROR_MESSAGE);
 
@@ -143,7 +143,7 @@ public class WorkspaceChooser extends JFrame
 				file.delete();
 			}
 		}
-		catch (Exception e)
+		catch (final Exception e)
 		{
 			e.printStackTrace();
 			System.exit(0);
@@ -152,7 +152,7 @@ public class WorkspaceChooser extends JFrame
 
 	private boolean createDirectory(String directory, File file) throws Exception
 	{
-		int option = JOptionPane.showConfirmDialog(this, "This directory does not exist.\nIf you continue this directory will be created and a new project will be created on this directory.\nProceed?", "Directory not found", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+		final int option = JOptionPane.showConfirmDialog(this, "This directory does not exist.\nIf you continue this directory will be created and a new project will be created on this directory.\nProceed?", "Directory not found", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 		if (option == JOptionPane.NO_OPTION)
 		{
 			return false;
@@ -169,18 +169,18 @@ public class WorkspaceChooser extends JFrame
 
 	private void initComponents()
 	{
-		imgWorkspace = new JLabel();
-		lblWorkspace = new JLabel();
-		ckbWorkspace = new JComboBox<String>();
-		btnBrowse = new JButton();
-		btnCancel = new JButton();
-		btnOk = new javax.swing.JButton();
+		this.imgWorkspace = new JLabel();
+		this.lblWorkspace = new JLabel();
+		this.ckbWorkspace = new JComboBox<String>();
+		this.btnBrowse = new JButton();
+		this.btnCancel = new JButton();
+		this.btnOk = new javax.swing.JButton();
 
-		imgWorkspace.setIcon(new ImageIcon(getClass().getResource(PROJECTS_SCREEN_PNG))); // NOI18N
-		lblWorkspace.setText("Please inform a workspace to continue:");
-		btnBrowse.setText("Browse");
+		this.imgWorkspace.setIcon(new ImageIcon(getClass().getResource(PROJECTS_SCREEN_PNG))); // NOI18N
+		this.lblWorkspace.setText("Please inform a workspace to continue:");
+		this.btnBrowse.setText("Browse");
 
-		btnBrowse.addActionListener(new java.awt.event.ActionListener()
+		this.btnBrowse.addActionListener(new java.awt.event.ActionListener()
 		{
 			@Override
 			public void actionPerformed(java.awt.event.ActionEvent evt)
@@ -189,8 +189,8 @@ public class WorkspaceChooser extends JFrame
 			}
 		});
 
-		btnCancel.setText("OK");
-		btnCancel.addActionListener(new java.awt.event.ActionListener()
+		this.btnCancel.setText("OK");
+		this.btnCancel.addActionListener(new java.awt.event.ActionListener()
 		{
 			@Override
 			public void actionPerformed(java.awt.event.ActionEvent evt)
@@ -199,8 +199,8 @@ public class WorkspaceChooser extends JFrame
 			}
 		});
 
-		btnOk.setText("Cancel");
-		btnOk.addActionListener(new java.awt.event.ActionListener()
+		this.btnOk.setText("Cancel");
+		this.btnOk.addActionListener(new java.awt.event.ActionListener()
 		{
 			@Override
 			public void actionPerformed(java.awt.event.ActionEvent evt)
@@ -209,35 +209,37 @@ public class WorkspaceChooser extends JFrame
 			}
 		});
 
-		ckbWorkspace.setEditable(true);
+		this.ckbWorkspace.setEditable(true);
 
-		GroupLayout layout = new GroupLayout(getContentPane());
-		layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.LEADING).add(layout.createSequentialGroup().addContainerGap().add(layout.createParallelGroup(GroupLayout.TRAILING).add(ckbWorkspace, GroupLayout.PREFERRED_SIZE, 305, GroupLayout.PREFERRED_SIZE).add(btnCancel, GroupLayout.PREFERRED_SIZE, 85, GroupLayout.PREFERRED_SIZE)).addPreferredGap(LayoutStyle.RELATED).add(layout.createParallelGroup(GroupLayout.TRAILING).add(btnOk, GroupLayout.DEFAULT_SIZE, 89, Short.MAX_VALUE).add(btnBrowse, GroupLayout.DEFAULT_SIZE, 89, Short.MAX_VALUE)).addContainerGap()).add(imgWorkspace).add(layout.createSequentialGroup().addContainerGap().add(lblWorkspace)));
-		layout.setVerticalGroup(layout.createParallelGroup(GroupLayout.LEADING).add(layout.createSequentialGroup().add(imgWorkspace).addPreferredGap(LayoutStyle.UNRELATED).add(lblWorkspace).addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED).add(layout.createParallelGroup(GroupLayout.BASELINE).add(ckbWorkspace, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).add(btnBrowse)).addPreferredGap(LayoutStyle.RELATED).add(layout.createParallelGroup(GroupLayout.BASELINE).add(btnOk).add(btnCancel)).addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
+		final GroupLayout layout = new GroupLayout(getContentPane());
+		layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.LEADING).add(layout.createSequentialGroup().addContainerGap().add(layout.createParallelGroup(GroupLayout.TRAILING).add(this.ckbWorkspace, GroupLayout.PREFERRED_SIZE, 305, GroupLayout.PREFERRED_SIZE).add(this.btnCancel, GroupLayout.PREFERRED_SIZE, 85, GroupLayout.PREFERRED_SIZE)).addPreferredGap(LayoutStyle.RELATED).add(layout.createParallelGroup(GroupLayout.TRAILING).add(this.btnOk, GroupLayout.DEFAULT_SIZE, 89, Short.MAX_VALUE).add(this.btnBrowse, GroupLayout.DEFAULT_SIZE, 89, Short.MAX_VALUE)).addContainerGap()).add(this.imgWorkspace).add(layout.createSequentialGroup().addContainerGap().add(this.lblWorkspace)));
+		layout.setVerticalGroup(layout.createParallelGroup(GroupLayout.LEADING).add(layout.createSequentialGroup().add(this.imgWorkspace).addPreferredGap(LayoutStyle.UNRELATED).add(this.lblWorkspace).addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED).add(layout.createParallelGroup(GroupLayout.BASELINE).add(this.ckbWorkspace, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).add(this.btnBrowse)).addPreferredGap(LayoutStyle.RELATED).add(layout.createParallelGroup(GroupLayout.BASELINE).add(this.btnOk).add(this.btnCancel)).addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
 		getContentPane().setLayout(layout);
 		pack();
 	}
 
 	private void readDirsFromList()
 	{
-		File file = new File(System.getProperty("java.io.tmpdir"), LIST_FILE);
+		final File file = new File(System.getProperty("java.io.tmpdir"), LIST_FILE);
 		try
 		{
 			if (!file.exists())
 			{
 				file.createNewFile();
 			}
-			FileReader fileReader = new FileReader(file);
-			BufferedReader bufferedReader = new BufferedReader(fileReader);
+			final FileReader fileReader = new FileReader(file);
+			final BufferedReader bufferedReader = new BufferedReader(fileReader);
 			String line = "";
 			while ((line = bufferedReader.readLine()) != null)
 			{
 				if (!line.equals(""))
-					ckbWorkspace.addItem(line);
+				{
+					this.ckbWorkspace.addItem(line);
+				}
 			}
 			bufferedReader.close();
 		}
-		catch (IOException e)
+		catch (final IOException e)
 		{
 			Log.log(Log.ERROR, this, "Could not load workspace list!", e);
 		}
@@ -245,7 +247,7 @@ public class WorkspaceChooser extends JFrame
 
 	private void setPanelLocation()
 	{
-		Dimension screenDim = Toolkit.getDefaultToolkit().getScreenSize();
+		final Dimension screenDim = Toolkit.getDefaultToolkit().getScreenSize();
 		setLocation((screenDim.width - 428) / 2, (screenDim.height - 230) / 2);
 		setResizable(false);
 	}
@@ -260,11 +262,11 @@ public class WorkspaceChooser extends JFrame
 
 	private void setupProject(String directory, File file) throws Exception
 	{
-		workspaceDir = directory;
+		this.workspaceDir = directory;
 		verifyOrCreateProject(file);
 		addDirToList(directory);
 		setVisible(false);
-		done = true;
+		this.done = true;
 	}
 
 	private void verifyOrCreateProject(File file) throws Exception
@@ -286,12 +288,12 @@ public class WorkspaceChooser extends JFrame
 
 	public boolean isCanceled()
 	{
-		return canceled;
+		return this.canceled;
 	}
 
 	public boolean isDone()
 	{
-		return done;
+		return this.done;
 	}
 
 }

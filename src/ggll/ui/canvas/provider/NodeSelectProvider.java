@@ -12,7 +12,7 @@ import org.netbeans.api.visual.widget.Widget;
 
 public class NodeSelectProvider extends CanvasSelectProvider
 {
-	private Canvas canvas;
+	private final Canvas canvas;
 
 	public NodeSelectProvider(Canvas canvas)
 	{
@@ -29,45 +29,45 @@ public class NodeSelectProvider extends CanvasSelectProvider
 	@Override
 	public boolean isSelectionAllowed(Widget widget, Point localLocation, boolean invertSelection)
 	{
-		return canvas.findObject(widget) != null;
+		return this.canvas.findObject(widget) != null;
 	}
 
 	@Override
 	public void select(Widget widget, Point localLocation, boolean invertSelection)
 	{
 		super.select(widget, localLocation, invertSelection);
-		Object object = canvas.findObject(widget);
-		canvas.setFocusedObject(object);
+		final Object object = this.canvas.findObject(widget);
+		this.canvas.setFocusedObject(object);
 		if (object != null)
 		{
-			if (!invertSelection && canvas.getSelectedObjects().contains(object))
+			if (!invertSelection && this.canvas.getSelectedObjects().contains(object))
 			{
 				return;
 			}
-			canvas.userSelectionSuggested(Collections.singleton(object), invertSelection);
-			for (Object o : canvas.getLabels())
+			this.canvas.userSelectionSuggested(Collections.singleton(object), invertSelection);
+			for (final Object o : this.canvas.getLabels())
 			{
-				LabelWidget lw = ((LabelWidget) canvas.findWidget(o));
+				final LabelWidget lw = (LabelWidget) this.canvas.findWidget(o);
 				lw.setBorder(BorderFactory.createEmptyBorder());
 			}
-			for (Object o : canvas.getNodes())
+			for (final Object o : this.canvas.getNodes())
 			{
-				Widget lw = canvas.findWidget(o);
+				final Widget lw = this.canvas.findWidget(o);
 				if (lw instanceof LabelWidget)
 				{
 					lw.setBackground(Color.WHITE);
 					lw.setForeground(Color.BLACK);
 				}
 			}
-			for (Object o : canvas.getSelectedObjects())
+			for (final Object o : this.canvas.getSelectedObjects())
 			{
-				if (canvas.isNode(o) || canvas.isLabel(o))
+				if (this.canvas.isNode(o) || this.canvas.isLabel(o))
 				{
-					Widget lw = canvas.findWidget(o);
-					if (canvas.isLabel(o))
+					final Widget lw = this.canvas.findWidget(o);
+					if (this.canvas.isLabel(o))
 					{
 						lw.setForeground(Color.BLUE);
-						((LabelWidget) canvas.findWidget(o)).setBorder(BorderFactory.createLineBorder(1, Color.BLUE));
+						((LabelWidget) this.canvas.findWidget(o)).setBorder(BorderFactory.createLineBorder(1, Color.BLUE));
 					}
 					else if (lw instanceof LabelWidget)
 					{
@@ -79,7 +79,7 @@ public class NodeSelectProvider extends CanvasSelectProvider
 		}
 		else
 		{
-			canvas.userSelectionSuggested(Collections.emptySet(), invertSelection);
+			this.canvas.userSelectionSuggested(Collections.emptySet(), invertSelection);
 		}
 	}
 }

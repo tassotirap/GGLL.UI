@@ -57,7 +57,7 @@ public class Canvas extends GraphScene.StringGraph implements PropertyChangeList
 	private CanvasState currentCanvasState;
 	private CanvasStateRepository canvasStateRepository;
 
-	private ExtendedActionFactory actionFactory = new ExtendedActionFactory(this);
+	private final ExtendedActionFactory actionFactory = new ExtendedActionFactory(this);
 
 	// Monitors
 	private PropertyChangeSupport monitor;
@@ -66,28 +66,28 @@ public class Canvas extends GraphScene.StringGraph implements PropertyChangeList
 	private boolean showingLines;
 
 	private Router activeRouter;
-	private LayerWidget backgroundLayer = new LayerWidget(this);
-	private LayerWidget connectionLayer = new LayerWidget(this);
-	private LayerWidget interractionLayer = new LayerWidget(this);
-	private LayerWidget mainLayer = new LayerWidget(this);
+	private final LayerWidget backgroundLayer = new LayerWidget(this);
+	private final LayerWidget connectionLayer = new LayerWidget(this);
+	private final LayerWidget interractionLayer = new LayerWidget(this);
+	private final LayerWidget mainLayer = new LayerWidget(this);
 
 	private String connectionStrategy;
 	private String moveStrategy;
 
-	private AbstractMap<String, Cursor> cursors = new HashMap<String, Cursor>();
+	private final AbstractMap<String, Cursor> cursors = new HashMap<String, Cursor>();
 
 	// Decorator
-	private CanvasDecorator decorator = new CanvasDecorator(this);
+	private final CanvasDecorator decorator = new CanvasDecorator(this);
 
 	// Components
-	private ExtendedList<String> alternatives = new ExtendedList<String>();
+	private final ExtendedList<String> alternatives = new ExtendedList<String>();
 	private ExtendedList<String> labels = new ExtendedList<String>();
-	private ExtendedList<String> lambdas = new ExtendedList<String>();
-	private ExtendedList<String> leftSides = new ExtendedList<String>();
-	private ExtendedList<String> nterminals = new ExtendedList<String>();
-	private ExtendedList<String> start = new ExtendedList<String>();
-	private ExtendedList<String> successors = new ExtendedList<String>();
-	private ExtendedList<String> terminals = new ExtendedList<String>();
+	private final ExtendedList<String> lambdas = new ExtendedList<String>();
+	private final ExtendedList<String> leftSides = new ExtendedList<String>();
+	private final ExtendedList<String> nterminals = new ExtendedList<String>();
+	private final ExtendedList<String> start = new ExtendedList<String>();
+	private final ExtendedList<String> successors = new ExtendedList<String>();
+	private final ExtendedList<String> terminals = new ExtendedList<String>();
 
 	private String file;
 
@@ -104,43 +104,43 @@ public class Canvas extends GraphScene.StringGraph implements PropertyChangeList
 			this.monitor = new PropertyChangeSupport(this);
 
 			createCursors();
-			addChild(backgroundLayer);
-			addChild(mainLayer);
-			addChild(connectionLayer);
-			addChild(interractionLayer);
+			addChild(this.backgroundLayer);
+			addChild(this.mainLayer);
+			addChild(this.connectionLayer);
+			addChild(this.interractionLayer);
 
-			getActions().addAction(actionFactory.getAction(ExtendedActionFactory.SELECT));
-			getActions().addAction(actionFactory.getAction(ExtendedActionFactory.SELECT_LABEL));
-			getActions().addAction(actionFactory.getAction(ExtendedActionFactory.CREATE_NODE));
-			getActions().addAction(actionFactory.getAction(ExtendedActionFactory.POPUP_MENU_MAIN));
-			getActions().addAction(actionFactory.getAction(ExtendedActionFactory.NODE_HOVER));
-			getActions().addAction(actionFactory.getAction(ExtendedActionFactory.LABEL_HOVER));
-			getActions().addAction(actionFactory.getAction(ExtendedActionFactory.MOUSE_CENTERED_ZOOM));
-			getActions().addAction(actionFactory.getAction(ExtendedActionFactory.PAN));
-			getActions().addAction(actionFactory.getAction(ExtendedActionFactory.RECTANGULAR_SELECT));
-			getActions().addAction(actionFactory.getAction(ExtendedActionFactory.DELETE));
+			getActions().addAction(this.actionFactory.getAction(ExtendedActionFactory.SELECT));
+			getActions().addAction(this.actionFactory.getAction(ExtendedActionFactory.SELECT_LABEL));
+			getActions().addAction(this.actionFactory.getAction(ExtendedActionFactory.CREATE_NODE));
+			getActions().addAction(this.actionFactory.getAction(ExtendedActionFactory.POPUP_MENU_MAIN));
+			getActions().addAction(this.actionFactory.getAction(ExtendedActionFactory.NODE_HOVER));
+			getActions().addAction(this.actionFactory.getAction(ExtendedActionFactory.LABEL_HOVER));
+			getActions().addAction(this.actionFactory.getAction(ExtendedActionFactory.MOUSE_CENTERED_ZOOM));
+			getActions().addAction(this.actionFactory.getAction(ExtendedActionFactory.PAN));
+			getActions().addAction(this.actionFactory.getAction(ExtendedActionFactory.RECTANGULAR_SELECT));
+			getActions().addAction(this.actionFactory.getAction(ExtendedActionFactory.DELETE));
 			setActiveTool(cursor);
 
-			if (currentCanvasState.getPreferences().getConnectionStrategy() != null)
+			if (this.currentCanvasState.getPreferences().getConnectionStrategy() != null)
 			{
-				setConnectionStrategy(currentCanvasState.getPreferences().getConnectionStrategy());
+				setConnectionStrategy(this.currentCanvasState.getPreferences().getConnectionStrategy());
 			}
 			else
 			{
 				setConnectionStrategy(connectionStrategy);
 			}
-			if (currentCanvasState.getPreferences().getMoveStrategy() != null)
+			if (this.currentCanvasState.getPreferences().getMoveStrategy() != null)
 			{
-				setMoveStrategy(currentCanvasState.getPreferences().getMoveStrategy());
+				setMoveStrategy(this.currentCanvasState.getPreferences().getMoveStrategy());
 			}
 			else
 			{
-				setMoveStrategy(moveStrategy);
+				setMoveStrategy(this.moveStrategy);
 			}
 
-			this.updateState(currentCanvasState);
+			updateState(this.currentCanvasState);
 		}
-		catch (Exception e)
+		catch (final Exception e)
 		{
 			e.printStackTrace();
 		}
@@ -148,16 +148,16 @@ public class Canvas extends GraphScene.StringGraph implements PropertyChangeList
 
 	private void clearWidgets()
 	{
-		Object[] edges = this.getEdges().toArray();
-		for (int i = 0; i < edges.length; i++)
+		final Object[] edges = getEdges().toArray();
+		for (final Object edge : edges)
 		{
-			this.removeEdgeSafely((String) edges[i]);
+			removeEdgeSafely((String) edge);
 		}
 
-		Object[] nodes = this.getNodes().toArray();
-		for (int i = 0; i < nodes.length; i++)
+		final Object[] nodes = getNodes().toArray();
+		for (final Object node : nodes)
 		{
-			this.removeNodeSafely((String) nodes[i]);
+			removeNodeSafely((String) node);
 		}
 
 		getTerminals().removeAll();
@@ -172,8 +172,8 @@ public class Canvas extends GraphScene.StringGraph implements PropertyChangeList
 	@Override
 	protected void attachEdgeSourceAnchor(String edge, String oldSourceNode, String sourceNode)
 	{
-		Widget widget = sourceNode != null ? findWidget(sourceNode) : null;
-		ConnectionWidget conn = ((ConnectionWidget) findWidget(edge));
+		final Widget widget = sourceNode != null ? findWidget(sourceNode) : null;
+		final ConnectionWidget conn = (ConnectionWidget) findWidget(edge);
 		if (isSuccessor(edge))
 		{
 			conn.setSourceAnchor(new UnidirectionalAnchor(this, widget, Direction.RIGHT));
@@ -191,8 +191,8 @@ public class Canvas extends GraphScene.StringGraph implements PropertyChangeList
 	@Override
 	protected void attachEdgeTargetAnchor(String edge, String oldTargetNode, String targetNode)
 	{
-		Widget widget = targetNode != null ? findWidget(targetNode) : null;
-		ConnectionWidget conn = ((ConnectionWidget) findWidget(edge));
+		final Widget widget = targetNode != null ? findWidget(targetNode) : null;
+		final ConnectionWidget conn = (ConnectionWidget) findWidget(edge);
 		if (isSuccessor(edge))
 		{
 			conn.setTargetAnchor(new UnidirectionalAnchor(this, widget, Direction.LEFT, edge, Direction.TOP));
@@ -211,18 +211,18 @@ public class Canvas extends GraphScene.StringGraph implements PropertyChangeList
 	protected Widget attachEdgeWidget(String edge)
 	{
 		ConnectionWidget connection = null;
-		String activeTool = getCanvasActiveTool();
+		final String activeTool = getCanvasActiveTool();
 
 		if (activeTool.equals(CanvasResource.SUCCESSOR) || activeTool.equals(CanvasResource.ALTERNATIVE))
 		{
-			connection = decorator.drawConnection(activeTool, this, edge);
+			connection = this.decorator.drawConnection(activeTool, this, edge);
 			connection.setRouter(getActiveRouter());
-			connection.createActions(CanvasResource.SELECT).addAction(actionFactory.getAction(ExtendedActionFactory.CONN_SELECT));
-			connection.getActions(CanvasResource.SELECT).addAction(actionFactory.getAction(ExtendedActionFactory.RECONNECT));
+			connection.createActions(CanvasResource.SELECT).addAction(this.actionFactory.getAction(ExtendedActionFactory.CONN_SELECT));
+			connection.getActions(CanvasResource.SELECT).addAction(this.actionFactory.getAction(ExtendedActionFactory.RECONNECT));
 
-			connection.getActions(CanvasResource.SELECT).addAction(actionFactory.getAction(ExtendedActionFactory.FREE_MOVE_CP));
-			connection.getActions(CanvasResource.SELECT).addAction(actionFactory.getAction(ExtendedActionFactory.ADD_REMOVE_CP));
-			connectionLayer.addChild(connection);
+			connection.getActions(CanvasResource.SELECT).addAction(this.actionFactory.getAction(ExtendedActionFactory.FREE_MOVE_CP));
+			connection.getActions(CanvasResource.SELECT).addAction(this.actionFactory.getAction(ExtendedActionFactory.ADD_REMOVE_CP));
+			this.connectionLayer.addChild(connection);
 			if (activeTool.equals(CanvasResource.SUCCESSOR))
 			{
 				if (!isSuccessor(edge))
@@ -245,88 +245,88 @@ public class Canvas extends GraphScene.StringGraph implements PropertyChangeList
 	protected Widget attachNodeWidget(String node)
 	{
 		Widget widget = null;
-		String activeTool = getCanvasActiveTool();
+		final String activeTool = getCanvasActiveTool();
 
 		if (node.startsWith(LineWidget.class.getCanonicalName()))
 		{
-			LineWidget lWidget = new LineWidget(this);
-			backgroundLayer.addChild(lWidget);
+			final LineWidget lWidget = new LineWidget(this);
+			this.backgroundLayer.addChild(lWidget);
 			widget = lWidget;
 			setShowingLines(true);
-			currentCanvasState.getPreferences().setShowLines(true);
+			this.currentCanvasState.getPreferences().setShowLines(true);
 		}
 		else if (node.startsWith(GridWidget.class.getCanonicalName()))
 		{
-			GridWidget gWidget = new GridWidget(this);
-			backgroundLayer.addChild(gWidget);
+			final GridWidget gWidget = new GridWidget(this);
+			this.backgroundLayer.addChild(gWidget);
 			widget = gWidget;
 			setShowingGrid(true);
-			currentCanvasState.getPreferences().setShowGrid(true);
+			this.currentCanvasState.getPreferences().setShowGrid(true);
 		}
 		else if (!activeTool.equals(CanvasResource.SELECT))
 		{
-			String tool = activeTool;
+			final String tool = activeTool;
 			if (tool.equals(CanvasResource.N_TERMINAL) || tool.equals(CanvasResource.TERMINAL) || tool.equals(CanvasResource.LEFT_SIDE) || tool.equals(CanvasResource.LAMBDA) || tool.equals(CanvasResource.START))
 			{
 				try
 				{
-					widget = decorator.drawIcon(activeTool, this, node);
+					widget = this.decorator.drawIcon(activeTool, this, node);
 				}
-				catch (Exception e)
+				catch (final Exception e)
 				{
 					Log.log(Log.ERROR, this, "Could not create widget!", e);
-					widget = new LabelWidgetExt(mainLayer.getScene(), node);
+					widget = new LabelWidgetExt(this.mainLayer.getScene(), node);
 				}
 				widget.createActions(CanvasResource.SELECT);
 				if (!tool.equals(CanvasResource.LAMBDA))
 				{
-					widget.getActions(CanvasResource.SELECT).addAction(actionFactory.getAction(ExtendedActionFactory.NODE_HOVER));
+					widget.getActions(CanvasResource.SELECT).addAction(this.actionFactory.getAction(ExtendedActionFactory.NODE_HOVER));
 				}
-				widget.getActions(CanvasResource.SELECT).addAction(actionFactory.getAction(ExtendedActionFactory.SELECT));
+				widget.getActions(CanvasResource.SELECT).addAction(this.actionFactory.getAction(ExtendedActionFactory.SELECT));
 				if (!tool.equals(CanvasResource.LAMBDA))
 				{
-					widget.getActions(CanvasResource.SELECT).addAction(actionFactory.getAction(ExtendedActionFactory.EDITOR));
+					widget.getActions(CanvasResource.SELECT).addAction(this.actionFactory.getAction(ExtendedActionFactory.EDITOR));
 				}
-				widget.getActions(CanvasResource.SELECT).addAction(actionFactory.getAction(ExtendedActionFactory.MOVE));
+				widget.getActions(CanvasResource.SELECT).addAction(this.actionFactory.getAction(ExtendedActionFactory.MOVE));
 				if (!tool.equals(CanvasResource.LAMBDA))
 				{
-					widget.createActions(CanvasResource.SUCCESSOR).addAction(actionFactory.getAction(ExtendedActionFactory.SUCCESSOR));
+					widget.createActions(CanvasResource.SUCCESSOR).addAction(this.actionFactory.getAction(ExtendedActionFactory.SUCCESSOR));
 				}
 				if (!tool.equals(CanvasResource.LAMBDA))
 				{
-					widget.createActions(CanvasResource.ALTERNATIVE).addAction(actionFactory.getAction(ExtendedActionFactory.ALTERNATIVE));
+					widget.createActions(CanvasResource.ALTERNATIVE).addAction(this.actionFactory.getAction(ExtendedActionFactory.ALTERNATIVE));
 				}
-				mainLayer.addChild(widget);
+				this.mainLayer.addChild(widget);
 				if (tool.equals(CanvasResource.LEFT_SIDE))
 				{
-					leftSides.append(node);
+					this.leftSides.append(node);
 				}
 				else if (tool.equals(CanvasResource.TERMINAL))
 				{
-					terminals.append(node);
+					this.terminals.append(node);
 				}
 				else if (tool.equals(CanvasResource.N_TERMINAL))
 				{
-					nterminals.append(node);
+					this.nterminals.append(node);
 				}
 				else if (tool.equals(CanvasResource.LAMBDA))
 				{
-					lambdas.append(node);
+					this.lambdas.append(node);
 				}
 				else if (tool.equals(CanvasResource.START))
 				{
-					start.append(node);
+					this.start.append(node);
 				}
 			}
 			else if (tool.equals(CanvasResource.LABEL))
 			{
-				widget = new LabelWidgetExt(mainLayer.getScene(), "Double Click Here to Edit");
-				widget.createActions(CanvasResource.SELECT).addAction(actionFactory.getAction(ExtendedActionFactory.LABEL_HOVER));
-				widget.getActions(CanvasResource.SELECT).addAction(actionFactory.getAction(ExtendedActionFactory.SELECT_LABEL));
-				widget.getActions(CanvasResource.SELECT).addAction(actionFactory.getAction(ExtendedActionFactory.EDITOR));
-				widget.getActions(CanvasResource.SELECT).addAction(actionFactory.getAction(ExtendedActionFactory.MOVE));
-				labels.append(node);
-				mainLayer.addChild(widget);
+				widget = new LabelWidgetExt(this.mainLayer.getScene(), "Double Click Here to Edit");
+				widget.createActions(CanvasResource.SELECT).addAction(this.actionFactory.getAction(ExtendedActionFactory.LABEL_HOVER));
+				widget.getActions(CanvasResource.SELECT).addAction(this.actionFactory.getAction(ExtendedActionFactory.SELECT_LABEL));
+				widget.getActions(CanvasResource.SELECT).addAction(this.actionFactory.getAction(ExtendedActionFactory.EDITOR));
+				widget.getActions(CanvasResource.SELECT).addAction(this.actionFactory.getAction(ExtendedActionFactory.MOVE));
+				this.labels.append(node);
+				this.mainLayer.addChild(widget);
 			}
 			if (widget != null)
 			{
@@ -351,59 +351,59 @@ public class Canvas extends GraphScene.StringGraph implements PropertyChangeList
 
 	public void createCursors()
 	{
-		Toolkit toolkit = Toolkit.getDefaultToolkit();
+		final Toolkit toolkit = Toolkit.getDefaultToolkit();
 
 		Image image = toolkit.getImage(Canvas.class.getResource(GGLLImages.CURSOS_LEFT_SIDE_ENABLED));
-		cursors.put(CanvasResource.LEFT_SIDE, toolkit.createCustomCursor(image, new Point(0, 0), "Left Side"));
+		this.cursors.put(CanvasResource.LEFT_SIDE, toolkit.createCustomCursor(image, new Point(0, 0), "Left Side"));
 
 		image = toolkit.getImage(Canvas.class.getResource(GGLLImages.CURSOS_TERMINAL_ENABLED));
-		cursors.put(CanvasResource.TERMINAL, toolkit.createCustomCursor(image, new Point(0, 0), "Terminal"));
+		this.cursors.put(CanvasResource.TERMINAL, toolkit.createCustomCursor(image, new Point(0, 0), "Terminal"));
 
 		image = toolkit.getImage(Canvas.class.getResource(GGLLImages.CURSOS_N_TERMINAL_ENABLED));
-		cursors.put(CanvasResource.N_TERMINAL, toolkit.createCustomCursor(image, new Point(0, 0), "Non-Terminal"));
+		this.cursors.put(CanvasResource.N_TERMINAL, toolkit.createCustomCursor(image, new Point(0, 0), "Non-Terminal"));
 
 		image = toolkit.getImage(Canvas.class.getResource(GGLLImages.CURSOS_LAMBDA_ENABLED));
-		cursors.put(CanvasResource.LAMBDA, toolkit.createCustomCursor(image, new Point(0, 0), "Lambda Alternative"));
+		this.cursors.put(CanvasResource.LAMBDA, toolkit.createCustomCursor(image, new Point(0, 0), "Lambda Alternative"));
 
 		image = toolkit.getImage(Canvas.class.getResource(GGLLImages.CURSOS_SUCCESSOR_ENABLED));
-		cursors.put(CanvasResource.SUCCESSOR, toolkit.createCustomCursor(image, new Point(0, 0), "Successor"));
+		this.cursors.put(CanvasResource.SUCCESSOR, toolkit.createCustomCursor(image, new Point(0, 0), "Successor"));
 
 		image = toolkit.getImage(Canvas.class.getResource(GGLLImages.CURSOS_ALTERNATIVE_ENABLED));
-		cursors.put(CanvasResource.ALTERNATIVE, toolkit.createCustomCursor(image, new Point(0, 0), "Alternative"));
+		this.cursors.put(CanvasResource.ALTERNATIVE, toolkit.createCustomCursor(image, new Point(0, 0), "Alternative"));
 
 		image = toolkit.getImage(Canvas.class.getResource(GGLLImages.CURSOS_LABEL_ENABLED));
-		cursors.put(CanvasResource.LABEL, toolkit.createCustomCursor(image, new Point(0, 0), "Label"));
+		this.cursors.put(CanvasResource.LABEL, toolkit.createCustomCursor(image, new Point(0, 0), "Label"));
 
 		image = toolkit.getImage(Canvas.class.getResource(GGLLImages.CURSOS_START_ENABLED));
-		cursors.put(CanvasResource.START, toolkit.createCustomCursor(image, new Point(0, 0), "Start"));
+		this.cursors.put(CanvasResource.START, toolkit.createCustomCursor(image, new Point(0, 0), "Start"));
 	}
 
 	@Override
 	public JComponent createView()
 	{
-		JComponent component = super.createView();
+		final JComponent component = super.createView();
 		component.addMouseListener(new CanvasMouseHandler(this));
 		return component;
 	}
 
 	public ExtendedActionFactory getActionFactory()
 	{
-		return actionFactory;
+		return this.actionFactory;
 	}
 
 	public Router getActiveRouter()
 	{
-		return activeRouter;
+		return this.activeRouter;
 	}
 
 	public ExtendedList<String> getAlternatives()
 	{
-		return alternatives;
+		return this.alternatives;
 	}
 
 	public LayerWidget getBackgroundLayer()
 	{
-		return backgroundLayer;
+		return this.backgroundLayer;
 	}
 
 	public String getCanvasActiveTool()
@@ -418,7 +418,7 @@ public class Canvas extends GraphScene.StringGraph implements PropertyChangeList
 
 	public CanvasDecorator getCanvasDecorator()
 	{
-		return decorator;
+		return this.decorator;
 	}
 
 	/**
@@ -429,12 +429,12 @@ public class Canvas extends GraphScene.StringGraph implements PropertyChangeList
 	 */
 	public CanvasStateRepository getCanvasStateRepository()
 	{
-		return canvasStateRepository;
+		return this.canvasStateRepository;
 	}
 
 	public LayerWidget getConnectionLayer()
 	{
-		return connectionLayer;
+		return this.connectionLayer;
 	}
 
 	public String getConnectionStrategy()
@@ -444,37 +444,37 @@ public class Canvas extends GraphScene.StringGraph implements PropertyChangeList
 
 	public CanvasState getCurrentCanvasState()
 	{
-		return currentCanvasState;
+		return this.currentCanvasState;
 	}
 
 	public String getFile()
 	{
-		return file;
+		return this.file;
 	}
 
 	public LayerWidget getInterractionLayer()
 	{
-		return interractionLayer;
+		return this.interractionLayer;
 	}
 
 	public Collection<?> getLabels()
 	{
-		return labels.getAll();
+		return this.labels.getAll();
 	}
 
 	public ExtendedList<String> getLambdas()
 	{
-		return lambdas;
+		return this.lambdas;
 	}
 
 	public ExtendedList<String> getLeftSides()
 	{
-		return leftSides;
+		return this.leftSides;
 	}
 
 	public LayerWidget getMainLayer()
 	{
-		return mainLayer;
+		return this.mainLayer;
 	}
 
 	public PropertyChangeSupport getMonitor()
@@ -484,12 +484,12 @@ public class Canvas extends GraphScene.StringGraph implements PropertyChangeList
 
 	public String getMoveStrategy()
 	{
-		return moveStrategy;
+		return this.moveStrategy;
 	}
 
 	public String getNodeType(Object node)
 	{
-		Widget w = findWidget(node);
+		final Widget w = findWidget(node);
 		if (w != null)
 		{
 			if (w instanceof LabelWidgetExt)
@@ -502,13 +502,13 @@ public class Canvas extends GraphScene.StringGraph implements PropertyChangeList
 
 	public ExtendedList<String> getNterminals()
 	{
-		return nterminals;
+		return this.nterminals;
 	}
 
 	public BufferedImage getScreenshot()
 	{
-		BufferedImage bi = new BufferedImage(this.getPreferredSize().width, this.getPreferredSize().height, BufferedImage.TYPE_4BYTE_ABGR);
-		Graphics2D graphics = bi.createGraphics();
+		final BufferedImage bi = new BufferedImage(getPreferredSize().width, getPreferredSize().height, BufferedImage.TYPE_4BYTE_ABGR);
+		final Graphics2D graphics = bi.createGraphics();
 		getScene().paint(graphics);
 		graphics.dispose();
 		return bi;
@@ -516,27 +516,27 @@ public class Canvas extends GraphScene.StringGraph implements PropertyChangeList
 
 	public ExtendedList<String> getStart()
 	{
-		return start;
+		return this.start;
 	}
 
 	public ExtendedList<String> getSuccessors()
 	{
-		return successors;
+		return this.successors;
 	}
 
 	public ExtendedList<String> getTerminals()
 	{
-		return terminals;
+		return this.terminals;
 	}
 
 	public boolean isAlternative(String edge)
 	{
-		return alternatives.contains(edge);
+		return this.alternatives.contains(edge);
 	}
 
 	public boolean isLabel(Object o)
 	{
-		return labels.contains((String) o);
+		return this.labels.contains((String) o);
 	}
 
 	public boolean isLambda(Object o)
@@ -569,7 +569,7 @@ public class Canvas extends GraphScene.StringGraph implements PropertyChangeList
 	 */
 	public boolean isShowingGrid()
 	{
-		return showingGrid;
+		return this.showingGrid;
 	}
 
 	/**
@@ -577,7 +577,7 @@ public class Canvas extends GraphScene.StringGraph implements PropertyChangeList
 	 */
 	public boolean isShowingLines()
 	{
-		return showingLines;
+		return this.showingLines;
 	}
 
 	public boolean isStart(Object o)
@@ -587,7 +587,7 @@ public class Canvas extends GraphScene.StringGraph implements PropertyChangeList
 
 	public boolean isSuccessor(String edge)
 	{
-		return successors.contains(edge);
+		return this.successors.contains(edge);
 	}
 
 	public boolean isTerminal(Object o)
@@ -601,8 +601,8 @@ public class Canvas extends GraphScene.StringGraph implements PropertyChangeList
 	@Override
 	public void paintChildren()
 	{
-		Object anti = getGraphics().getRenderingHint(RenderingHints.KEY_ANTIALIASING);
-		Object textAnti = getGraphics().getRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING);
+		final Object anti = getGraphics().getRenderingHint(RenderingHints.KEY_ANTIALIASING);
+		final Object textAnti = getGraphics().getRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING);
 
 		getGraphics().setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		getGraphics().setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
@@ -622,7 +622,7 @@ public class Canvas extends GraphScene.StringGraph implements PropertyChangeList
 			{
 				case "object_state":
 					this.currentCanvasState = (CanvasState) event.getNewValue();
-					this.updateState(this.currentCanvasState);
+					updateState(this.currentCanvasState);
 					this.revalidate();
 					break;
 
@@ -654,7 +654,7 @@ public class Canvas extends GraphScene.StringGraph implements PropertyChangeList
 	{
 		if (isLabel(node))
 		{
-			labels.remove(node);
+			this.labels.remove(node);
 		}
 		super.removeNode(node);
 		if (node.startsWith(GridWidget.class.getCanonicalName()))
@@ -677,11 +677,13 @@ public class Canvas extends GraphScene.StringGraph implements PropertyChangeList
 		Widget w;
 		if ((w = findWidget(object)) != null)
 		{
-			NodeSelectProvider nsp = new NodeSelectProvider(this);
+			final NodeSelectProvider nsp = new NodeSelectProvider(this);
 			if (!getSelectedObjects().contains(w))
 			{
 				if (nsp.isSelectionAllowed(w, null, invertSelection))
+				{
 					nsp.select(w, null, invertSelection);
+				}
 				validate();
 			}
 		}
@@ -693,11 +695,11 @@ public class Canvas extends GraphScene.StringGraph implements PropertyChangeList
 		super.setActiveTool(activeTool);
 		if (activeTool.equals(CanvasResource.SELECT))
 		{
-			this.setCursor(Cursor.getDefaultCursor());
+			setCursor(Cursor.getDefaultCursor());
 		}
 		else
 		{
-			this.setCursor(cursors.get(activeTool));
+			setCursor(this.cursors.get(activeTool));
 		}
 	}
 
@@ -705,23 +707,23 @@ public class Canvas extends GraphScene.StringGraph implements PropertyChangeList
 	{
 		if (policy != null)
 		{
-			currentCanvasState.getPreferences().setConnectionStrategy(policy);
+			this.currentCanvasState.getPreferences().setConnectionStrategy(policy);
 			if (policy.equals(CanvasResource.R_ORTHOGONAL) || policy.equals(CanvasResource.R_FREE) || policy.equals(CanvasResource.R_DIRECT))
 			{
-				if (!policy.equals(connectionStrategy) || activeRouter == null)
+				if (!policy.equals(this.connectionStrategy) || this.activeRouter == null)
 				{
-					connectionStrategy = policy;
+					this.connectionStrategy = policy;
 					if (policy.equals(CanvasResource.R_ORTHOGONAL))
 					{
-						activeRouter = RouterFactory.createOrthogonalSearchRouter(mainLayer);
+						this.activeRouter = RouterFactory.createOrthogonalSearchRouter(this.mainLayer);
 					}
 					else if (policy.equals(CanvasResource.R_DIRECT))
 					{
-						activeRouter = RouterFactory.createDirectRouter();
+						this.activeRouter = RouterFactory.createDirectRouter();
 					}
 					else if (policy.equals(CanvasResource.R_FREE))
 					{
-						activeRouter = RouterFactory.createFreeRouter();
+						this.activeRouter = RouterFactory.createFreeRouter();
 					}
 				}
 			}
@@ -734,7 +736,7 @@ public class Canvas extends GraphScene.StringGraph implements PropertyChangeList
 	public void setFocused()
 	{
 		getView().grabFocus();
-		Component component = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
+		final Component component = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
 		if (component != null)
 		{
 			if (component.getKeyListeners().length == 0)
@@ -745,7 +747,7 @@ public class Canvas extends GraphScene.StringGraph implements PropertyChangeList
 					@Override
 					public void keyPressed(KeyEvent e)
 					{
-						for (KeyListener keyListener : getView().getKeyListeners())
+						for (final KeyListener keyListener : getView().getKeyListeners())
 						{
 							keyListener.keyPressed(e);
 						}
@@ -754,7 +756,7 @@ public class Canvas extends GraphScene.StringGraph implements PropertyChangeList
 					@Override
 					public void keyReleased(KeyEvent e)
 					{
-						for (KeyListener keyListener : getView().getKeyListeners())
+						for (final KeyListener keyListener : getView().getKeyListeners())
 						{
 							keyListener.keyReleased(e);
 						}
@@ -763,7 +765,7 @@ public class Canvas extends GraphScene.StringGraph implements PropertyChangeList
 					@Override
 					public void keyTyped(KeyEvent e)
 					{
-						for (KeyListener keyListener : getView().getKeyListeners())
+						for (final KeyListener keyListener : getView().getKeyListeners())
 						{
 							keyListener.keyTyped(e);
 						}
@@ -784,15 +786,15 @@ public class Canvas extends GraphScene.StringGraph implements PropertyChangeList
 
 	public void setMoveStrategy(String strategy)
 	{
-		MoveTracker moveTracker = new MoveTracker(this);
+		final MoveTracker moveTracker = new MoveTracker(this);
 		if (strategy != null)
 		{
-			currentCanvasState.getPreferences().setMoveStrategy(strategy);
+			this.currentCanvasState.getPreferences().setMoveStrategy(strategy);
 			if (strategy.equals(CanvasResource.M_ALIGN) || strategy.equals(CanvasResource.M_SNAP) || strategy.equals(CanvasResource.M_FREE) || strategy.equals(CanvasResource.M_LINES))
 			{
-				if (moveStrategy == null || !moveStrategy.equals(strategy))
+				if (this.moveStrategy == null || !this.moveStrategy.equals(strategy))
 				{
-					moveStrategy = strategy;
+					this.moveStrategy = strategy;
 					moveTracker.notifyObservers(strategy);
 				}
 			}
@@ -822,11 +824,11 @@ public class Canvas extends GraphScene.StringGraph implements PropertyChangeList
 		setConnectionStrategy(state.getPreferences().getConnectionStrategy());
 		setMoveStrategy(state.getPreferences().getMoveStrategy());
 
-		for (String element : state.getNodes())
+		for (final String element : state.getNodes())
 		{
-			Node node = state.findNode(element);
+			final Node node = state.findNode(element);
 			setActiveTool(state.getType(element));
-			Widget widget = addNode(element);
+			final Widget widget = addNode(element);
 			if (node.getLocation() != null)
 			{
 				widget.setPreferredLocation(node.getLocation());
@@ -845,12 +847,12 @@ public class Canvas extends GraphScene.StringGraph implements PropertyChangeList
 			}
 		}
 
-		for (String element : state.getConnections())
+		for (final String element : state.getConnections())
 		{
-			Connection connection = state.findConnection(element);
+			final Connection connection = state.findConnection(element);
 			setActiveTool(state.getType(element));
-			ConnectionWidget connectionWidget = (ConnectionWidget) addEdge(element);
-			connectionWidget.setRouter(activeRouter);
+			final ConnectionWidget connectionWidget = (ConnectionWidget) addEdge(element);
+			connectionWidget.setRouter(this.activeRouter);
 			connectionWidget.setRoutingPolicy(RoutingPolicy.DISABLE_ROUTING_UNTIL_END_POINT_IS_MOVED);
 			connectionWidget.setControlPoints(connection.getPoints(), true);
 

@@ -9,16 +9,16 @@ import net.infonode.docking.View;
 public class AbstractView extends View
 {
 	private static final long serialVersionUID = 1L;
-	private AbstractComponent componentModel;
+	private final AbstractComponent componentModel;
 	private String fileName;
-	private int id;
+	private final int id;
 
 	public AbstractView(String title, Icon icon, AbstractComponent componentModel, int id)
 	{
 		super(title, icon, componentModel.getJComponent());
 		this.id = id;
 		this.componentModel = componentModel;
-		this.getWindowProperties().setCloseEnabled(false);
+		getWindowProperties().setCloseEnabled(false);
 	}
 
 	public AbstractView(String title, Icon icon, AbstractComponent componentModel, String fileName, int id)
@@ -31,16 +31,16 @@ public class AbstractView extends View
 
 	public AbstractComponent getComponentModel()
 	{
-		return componentModel;
+		return this.componentModel;
 	}
 
 	public String getFileName()
 	{
-		return fileName;
+		return this.fileName;
 	}
 
 	public int getId()
 	{
-		return id;
+		return this.id;
 	}
 }

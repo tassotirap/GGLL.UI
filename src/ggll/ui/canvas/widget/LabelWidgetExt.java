@@ -33,10 +33,12 @@ public class LabelWidgetExt extends org.netbeans.api.visual.widget.LabelWidget i
 	protected Rectangle calculateClientArea()
 	{
 		if (getLabel() == null)
+		{
 			return super.calculateClientArea();
-		Graphics2D gr = getGraphics();
-		FontMetrics fontMetrics = gr.getFontMetrics(getFont());
-		Rectangle2D stringBounds = fontMetrics.getStringBounds(((getMark() == null) ? "" : getMark() + "   ") + getLabel(), gr);
+		}
+		final Graphics2D gr = getGraphics();
+		final FontMetrics fontMetrics = gr.getFontMetrics(getFont());
+		final Rectangle2D stringBounds = fontMetrics.getStringBounds((getMark() == null ? "" : getMark() + "   ") + getLabel(), gr);
 		return GeomUtil.roundRectangle(stringBounds);
 	}
 
@@ -44,16 +46,18 @@ public class LabelWidgetExt extends org.netbeans.api.visual.widget.LabelWidget i
 	protected void paintWidget()
 	{
 		if (getLabel() == null)
+		{
 			return;
-		Graphics2D gr = getGraphics();
+		}
+		final Graphics2D gr = getGraphics();
 		gr.setFont(getFont());
 
-		FontMetrics fontMetrics = gr.getFontMetrics();
-		Rectangle clientArea = getClientArea();
+		final FontMetrics fontMetrics = gr.getFontMetrics();
+		final Rectangle clientArea = getClientArea();
 
 		int x;
-		int x1 = clientArea.x + fontMetrics.stringWidth(" ");
-		int markInc = ((getMark() == null) ? 0 : fontMetrics.stringWidth(getMark() + "   "));
+		final int x1 = clientArea.x + fontMetrics.stringWidth(" ");
+		final int markInc = getMark() == null ? 0 : fontMetrics.stringWidth(getMark() + "   ");
 		switch (getAlignment())
 		{
 			case BASELINE:
@@ -93,13 +97,13 @@ public class LabelWidgetExt extends org.netbeans.api.visual.widget.LabelWidget i
 		}
 		y1 = y;
 
-		Paint background = getBackground();
-		Paint mBackground = getMarkBackground();
-		Paint mForeground = getMarkForeground();
+		final Paint background = getBackground();
+		final Paint mBackground = getMarkBackground();
+		final Paint mForeground = getMarkForeground();
 		if (isPaintAsDisabled() && background instanceof Color)
 		{
 			// TODO paint the mark here too
-			Color color = ((Color) background);
+			final Color color = (Color) background;
 			gr.setColor(color.brighter());
 			gr.drawString(getLabel(), x + 1, y + 1);
 			gr.setColor(color.darker());
@@ -141,18 +145,18 @@ public class LabelWidgetExt extends org.netbeans.api.visual.widget.LabelWidget i
 
 	public Paint getMarkBackground()
 	{
-		return (markBackground == null) ? DEFAULT_MARK_BACKGROUND : markBackground;
+		return this.markBackground == null ? DEFAULT_MARK_BACKGROUND : this.markBackground;
 	}
 
 	public Color getMarkForeground()
 	{
-		return (markForeground == null) ? DEFAULT_MARK_FOREGROUND : markForeground;
+		return this.markForeground == null ? DEFAULT_MARK_FOREGROUND : this.markForeground;
 	}
 
 	@Override
 	public String getType()
 	{
-		return type;
+		return this.type;
 	}
 
 	@Override

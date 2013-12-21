@@ -40,13 +40,15 @@ public final class GGLLDirector
 
 	public static void exit()
 	{
-		ExtendedList<AbstractView> unsavedViews = unViewManager.getUnsavedViews();
+		final ExtendedList<AbstractView> unsavedViews = unViewManager.getUnsavedViews();
 
-		for (AbstractView dynamicView : unsavedViews.getAll())
+		for (final AbstractView dynamicView : unsavedViews.getAll())
 		{
-			int option = JOptionPane.showConfirmDialog(getMainWindow().getFrame(), "Would you like to save '" + dynamicView.getTitle().replace(MainWindow.UNSAVED_PREFIX, "") + "' before exiting?");
+			final int option = JOptionPane.showConfirmDialog(getMainWindow().getFrame(), "Would you like to save '" + dynamicView.getTitle().replace(MainWindow.UNSAVED_PREFIX, "") + "' before exiting?");
 			if (option == JOptionPane.CANCEL_OPTION)
+			{
 				return;
+			}
 			else if (option == JOptionPane.YES_OPTION)
 			{
 				saveFile(dynamicView.getComponentModel());
@@ -67,7 +69,7 @@ public final class GGLLDirector
 
 	public static ExtendedList<File> getOpenedFiles()
 	{
-		ExtendedList<File> filesOpened = project.getOpenedFiles();
+		final ExtendedList<File> filesOpened = project.getOpenedFiles();
 		if (filesOpened.count() == 0)
 		{
 			project.getOpenedFiles().append(project.getGrammarFile().get(0));
@@ -118,7 +120,7 @@ public final class GGLLDirector
 		}
 		else if (object instanceof GrammarComponent)
 		{
-			GrammarComponent grammarComponent = (GrammarComponent) object;
+			final GrammarComponent grammarComponent = (GrammarComponent) object;
 			ComponentPrinter.printWidget(grammarComponent.getCanvas());
 		}
 	}

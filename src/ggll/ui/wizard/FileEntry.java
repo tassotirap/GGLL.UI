@@ -20,20 +20,20 @@ public class FileEntry
 
 	public FileNames getExtension()
 	{
-		return extension;
+		return this.extension;
 	}
 
 	public ImageIcon getImage()
 	{
-		if (image == null)
+		if (this.image == null)
 		{
-			image = new ImageIcon(getClass().getResource(imagePath));
+			this.image = new ImageIcon(getClass().getResource(this.imagePath));
 		}
-		return image;
+		return this.image;
 	}
 
 	public String getTitle()
 	{
-		return title;
+		return this.title;
 	}
 }

@@ -12,7 +12,7 @@ import org.netbeans.api.visual.widget.Widget;
 
 public class NodeCreateAction extends WidgetAction.Adapter
 {
-	private Canvas canvas;
+	private final Canvas canvas;
 
 	public NodeCreateAction(Canvas canvas)
 	{
@@ -21,32 +21,32 @@ public class NodeCreateAction extends WidgetAction.Adapter
 
 	private String createDefaultName()
 	{
-		if (canvas.getCanvasActiveTool().equals(CanvasResource.TERMINAL))
+		if (this.canvas.getCanvasActiveTool().equals(CanvasResource.TERMINAL))
 		{
-			canvas.getCurrentCanvasState().incLastTerminalId();
+			this.canvas.getCurrentCanvasState().incLastTerminalId();
 			return String.format("Terminal%d", CanvasRepository.getLastTerminalId());
 		}
-		if (canvas.getCanvasActiveTool().equals(CanvasResource.N_TERMINAL))
+		if (this.canvas.getCanvasActiveTool().equals(CanvasResource.N_TERMINAL))
 		{
-			canvas.getCurrentCanvasState().incLastNTerminalId();
+			this.canvas.getCurrentCanvasState().incLastNTerminalId();
 			return String.format("NTerminal%d", CanvasRepository.getLastNTerminalId());
 		}
-		if (canvas.getCanvasActiveTool().equals(CanvasResource.LEFT_SIDE))
+		if (this.canvas.getCanvasActiveTool().equals(CanvasResource.LEFT_SIDE))
 		{
-			canvas.getCurrentCanvasState().incLastLeftSides();
+			this.canvas.getCurrentCanvasState().incLastLeftSides();
 			return String.format("LeftSide%d", CanvasRepository.getLastLeftSides());
 		}
-		if (canvas.getCanvasActiveTool().equals(CanvasResource.LAMBDA))
+		if (this.canvas.getCanvasActiveTool().equals(CanvasResource.LAMBDA))
 		{
-			canvas.getCurrentCanvasState().incLastLAMBDA();
+			this.canvas.getCurrentCanvasState().incLastLAMBDA();
 			return String.format("Lambda%d", CanvasRepository.getLastLAMBDA());
 		}
-		if (canvas.getCanvasActiveTool().equals(CanvasResource.START))
+		if (this.canvas.getCanvasActiveTool().equals(CanvasResource.START))
 		{
-			canvas.getCurrentCanvasState().incLastSTART();
+			this.canvas.getCurrentCanvasState().incLastSTART();
 			return String.format("S%d", CanvasRepository.getLastSTART());
 		}
-		canvas.getCurrentCanvasState().incLastCustomNode();
+		this.canvas.getCurrentCanvasState().incLastCustomNode();
 		return String.format("node%d", CanvasRepository.getLastCustomNode());
 	}
 
@@ -60,11 +60,11 @@ public class NodeCreateAction extends WidgetAction.Adapter
 	{
 		if (event.getClickCount() == 1)
 		{
-			if (event.getButton() == MouseEvent.BUTTON1 && isNode(canvas))
+			if (event.getButton() == MouseEvent.BUTTON1 && isNode(this.canvas))
 			{
-				String name = createDefaultName();
-				canvas.addNode(name).setPreferredLocation(widget.convertLocalToScene(event.getPoint()));
-				canvas.getCanvasStateRepository().propertyChange(new PropertyChangeEvent(this, "undoable", null, "Add"));
+				final String name = createDefaultName();
+				this.canvas.addNode(name).setPreferredLocation(widget.convertLocalToScene(event.getPoint()));
+				this.canvas.getCanvasStateRepository().propertyChange(new PropertyChangeEvent(this, "undoable", null, "Add"));
 			}
 		}
 		return State.REJECTED;

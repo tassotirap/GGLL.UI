@@ -25,7 +25,7 @@ public class PropertiesHelper
 	 * **/
 	public static Properties loadProperties(String fileName, boolean isXML)
 	{
-		Properties props = new Properties();
+		final Properties props = new Properties();
 		FileInputStream in = null;
 		try
 		{
@@ -40,11 +40,11 @@ public class PropertiesHelper
 
 			}
 		}
-		catch (InvalidPropertiesFormatException e)
+		catch (final InvalidPropertiesFormatException e)
 		{
 
 		}
-		catch (IOException e)
+		catch (final IOException e)
 		{
 			Log.log(Log.ERROR, JTextArea.class, e);
 		}
@@ -83,11 +83,11 @@ public class PropertiesHelper
 				properties.storeToXML(out, comments, "UTF-8");
 			}
 		}
-		catch (IOException e)
+		catch (final IOException e)
 		{
 			Log.log(Log.ERROR, JTextArea.class, e);
 		}
-		catch (Exception e)
+		catch (final Exception e)
 		{
 
 		}

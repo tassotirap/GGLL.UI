@@ -10,9 +10,9 @@ import org.netbeans.modules.visual.util.GeomUtil;
 public class UnidirectionalAnchor extends Anchor
 {
 	private Direction kind;
-	private Direction preferredDirection;
-	private String connection;
-	private Canvas canvas;
+	private final Direction preferredDirection;
+	private final String connection;
+	private final Canvas canvas;
 
 	public UnidirectionalAnchor(Canvas canvas, Widget widget, Direction kind)
 	{
@@ -32,8 +32,8 @@ public class UnidirectionalAnchor extends Anchor
 	{
 		for (int i = 0; i < edges.length; i++)
 		{
-			String edge = (String) edges[i];
-			if (edge.equalsIgnoreCase(connection))
+			final String edge = (String) edges[i];
+			if (edge.equalsIgnoreCase(this.connection))
 			{
 				if (i > 0)
 				{
@@ -48,18 +48,18 @@ public class UnidirectionalAnchor extends Anchor
 	@SuppressWarnings("unchecked")
 	public Result compute(Entry entry)
 	{
-		Widget widget = getRelatedWidget();
+		final Widget widget = getRelatedWidget();
 
 		if (widget == null)
 		{
 			return null;
 		}
 
-		Object obj = canvas.findObject(widget);
-		Object[] edges = canvas.findNodeEdges((String) obj, false, true).toArray();
-		if (preferredDirection != null && !isFirstConnection(edges))
+		final Object obj = this.canvas.findObject(widget);
+		final Object[] edges = this.canvas.findNodeEdges((String) obj, false, true).toArray();
+		if (this.preferredDirection != null && !isFirstConnection(edges))
 		{
-			kind = preferredDirection;
+			this.kind = this.preferredDirection;
 		}
 
 		Rectangle bounds;
@@ -67,16 +67,16 @@ public class UnidirectionalAnchor extends Anchor
 		bounds = widget.convertLocalToScene(widget.getBounds());
 		center = GeomUtil.center(bounds);
 
-		switch (kind)
+		switch (this.kind)
 		{
 			case LEFT:
-				return new Anchor.Result(new Point(bounds.x + 2, center.y), kind);
+				return new Anchor.Result(new Point(bounds.x + 2, center.y), this.kind);
 			case RIGHT:
-				return new Anchor.Result(new Point(bounds.x + bounds.width, center.y), kind);
+				return new Anchor.Result(new Point(bounds.x + bounds.width, center.y), this.kind);
 			case TOP:
-				return new Anchor.Result(new Point(bounds.x + 4, center.y - 3), kind);
+				return new Anchor.Result(new Point(bounds.x + 4, center.y - 3), this.kind);
 			case BOTTOM:
-				return new Anchor.Result(new Point(bounds.x + 4, center.y + 3), kind);
+				return new Anchor.Result(new Point(bounds.x + 4, center.y + 3), this.kind);
 		}
 		return null;
 	}
