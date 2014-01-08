@@ -2,9 +2,6 @@ package org.ggll.parser.syntax.grammar;
 
 import ggll.core.list.ExtendedList;
 
-import java.io.File;
-
-import org.ggll.director.GGLLDirector;
 import org.ggll.output.AppOutput;
 import org.ggll.output.HtmlViewer.TOPIC;
 import org.ggll.parser.syntax.CanvasParser;
@@ -115,7 +112,7 @@ public class GrammarFactory
 		return this.grammar;
 	}
 
-	public String run() throws Exception
+	public String run()
 	{
 		final StringBuffer returnString = new StringBuffer();
 		final CanvasParser ggllTableGenerator = new CanvasParser();
@@ -123,10 +120,9 @@ public class GrammarFactory
 		final ExtendedList<SyntaxElement> children = new ExtendedList<SyntaxElement>();
 		final ExtendedList<AbstractNode> startNodes = new ExtendedList<AbstractNode>();
 
-		for (final File grammar : GGLLDirector.getProject().getGrammarFile().getAll())
+		for (final SyntaxGraph canvas : SyntaxGraphRepository.getInstances())
 		{
-			final SyntaxGraph cavans = SyntaxGraphRepository.getInstance(grammar.getAbsolutePath());
-			children.addAll(ggllTableGenerator.getLogicDiagram(cavans).getChildrenNodes());
+			children.addAll(ggllTableGenerator.getLogicDiagram(canvas).getChildrenNodes());
 		}
 
 		startNodes.addAll(clearAndSetStartNodes(children));
@@ -135,16 +131,7 @@ public class GrammarFactory
 		{
 			this.cont = 0;
 			final SyntaxModel startSyntaxModel = (SyntaxModel) startNodes.get(i);
-			if (startSyntaxModel == null)
-			{
-				throw new Exception("Could not find the grammar start node.");
-			}
-
 			final SyntaxModel successorSyntaxSubpart = (SyntaxModel) startSyntaxModel.getSucessor();
-			if (successorSyntaxSubpart == null)
-			{
-				throw new Exception("Could not find the successor node of the grammar head.");
-			}
 			successorSyntaxSubpart.setNumber(++this.cont);
 
 			final AbstractNode startNode = startNodes.get(i);

@@ -4,11 +4,11 @@ package org.ggll.window.adapter;
 import javax.swing.JOptionPane;
 
 import org.ggll.director.GGLLDirector;
-import org.ggll.view.AbstractView;
-import org.ggll.view.component.AbstractComponent;
-import org.ggll.view.component.AbstractFileComponent;
-import org.ggll.view.component.EmptyComponent;
 import org.ggll.window.MainWindow;
+import org.ggll.window.component.AbstractComponent;
+import org.ggll.window.component.AbstractFileComponent;
+import org.ggll.window.component.EmptyComponent;
+import org.ggll.window.view.AbstractView;
 
 import net.infonode.docking.DockingWindow;
 import net.infonode.docking.DockingWindowAdapter;

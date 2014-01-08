@@ -14,12 +14,12 @@ import org.ggll.project.ProjectHelper;
 import org.ggll.syntax.graph.SyntaxGraph;
 import org.ggll.util.print.ComponentPrinter;
 import org.ggll.util.print.TextPrinter;
-import org.ggll.view.AbstractView;
-import org.ggll.view.UnsavedViewRepository;
-import org.ggll.view.component.AbstractComponent;
-import org.ggll.view.component.GrammarComponent;
-import org.ggll.view.component.TextAreaComponent;
 import org.ggll.window.MainWindow;
+import org.ggll.window.component.AbstractComponent;
+import org.ggll.window.component.GrammarComponent;
+import org.ggll.window.component.TextAreaComponent;
+import org.ggll.window.view.AbstractView;
+import org.ggll.window.view.UnsavedViewRepository;
 
 public final class GGLLDirector
 {

@@ -28,6 +28,8 @@ import org.ggll.output.Output;
 import org.ggll.output.HtmlViewer.TOPIC;
 import org.ggll.parser.syntax.SyntacticLoader;
 import org.ggll.util.Log;
+import static org.apache.commons.lang3.StringEscapeUtils.escapeHtml4;
+
 
 public class ParsingEditor
 {
@@ -87,8 +89,8 @@ public class ParsingEditor
 	}
 
 	private void startParse(boolean stepping, String text)
-	{
-		Output.getInstance().displayTextExt("<< " + text.replace(">", "&gt;").replace("<", "&lt;"), TOPIC.Parser);
+	{		
+		Output.getInstance().displayTextExt(escapeHtml4(text), TOPIC.Parser);
 		final StringReader stringReader = new StringReader(text);
 		try
 		{
@@ -111,7 +113,6 @@ public class ParsingEditor
 				public void Output()
 				{
 					printStack(ParsingEditor.this.analyzer.getParserStacks().getParseStack());
-
 				}
 			});
 		}

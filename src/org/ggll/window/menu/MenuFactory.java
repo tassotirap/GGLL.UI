@@ -5,7 +5,7 @@ import java.util.HashMap;
 
 import javax.swing.JMenuBar;
 
-import org.ggll.view.component.AbstractComponent;
+import org.ggll.window.component.AbstractComponent;
 
 public class MenuFactory
 {

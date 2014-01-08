@@ -8,9 +8,9 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 
 import org.ggll.syntax.graph.SyntaxGraph;
-import org.ggll.view.component.AbstractComponent;
-import org.ggll.view.component.GrammarComponent;
-import org.ggll.view.component.TextAreaComponent;
+import org.ggll.window.component.AbstractComponent;
+import org.ggll.window.component.GrammarComponent;
+import org.ggll.window.component.TextAreaComponent;
 
 public class ToolBarFactory
 {

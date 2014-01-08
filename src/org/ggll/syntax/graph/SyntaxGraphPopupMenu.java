@@ -17,15 +17,15 @@ import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JSeparator;
 
 import org.ggll.director.GGLLDirector;
-import org.ggll.parser.syntax.grammar.Controller;
+import org.ggll.parser.syntax.grammar.GrammarParser;
 import org.ggll.resource.CanvasResource;
 import org.ggll.syntax.graph.provider.GridProvider;
 import org.ggll.syntax.graph.provider.LineProvider;
 import org.ggll.syntax.graph.provider.WidgetDeleteProvider;
 import org.ggll.syntax.graph.state.StateHistory;
 import org.ggll.syntax.graph.widget.MarkedWidget;
-import org.ggll.view.AbstractView;
-import org.ggll.window.wizard.RoutineWindow;
+import org.ggll.window.RoutineWindow;
+import org.ggll.window.view.AbstractView;
 import org.netbeans.api.visual.action.PopupMenuProvider;
 import org.netbeans.api.visual.action.WidgetAction;
 import org.netbeans.api.visual.widget.Widget;
@@ -57,7 +57,8 @@ public class SyntaxGraphPopupMenu extends WidgetAction.Adapter implements PopupM
 			{
 				final Cursor oldCursor = SyntaxGraphPopupMenu.this.canvas.getView().getCursor();
 				SyntaxGraphPopupMenu.this.canvas.getView().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-				Controller.generateAndParseCurrentGrammar();
+				GrammarParser syntaxParser = new GrammarParser();
+				syntaxParser.parseGrammar();
 				SyntaxGraphPopupMenu.this.canvas.getView().setCursor(oldCursor);
 			}
 		});

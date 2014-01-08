@@ -18,8 +18,8 @@ import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
 import org.ggll.director.GGLLDirector;
-import org.ggll.icon.IconFactory;
-import org.ggll.icon.IconFactory.IconType;
+import org.ggll.images.IconFactory;
+import org.ggll.images.IconFactory.IconType;
 
 /**
  * Display a file system in a JTree view

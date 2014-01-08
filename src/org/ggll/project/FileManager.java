@@ -9,16 +9,16 @@ import javax.swing.JOptionPane;
 
 import org.ggll.director.GGLLDirector;
 import org.ggll.file.FileNames;
-import org.ggll.icon.IconFactory;
-import org.ggll.icon.IconFactory.IconType;
+import org.ggll.images.IconFactory;
+import org.ggll.images.IconFactory.IconType;
 import org.ggll.util.Log;
-import org.ggll.view.AbstractView;
-import org.ggll.view.component.AbstractComponent;
-import org.ggll.view.component.AbstractFileComponent;
-import org.ggll.view.component.GrammarComponent;
-import org.ggll.view.component.TextAreaComponent;
 import org.ggll.window.MainWindow;
+import org.ggll.window.component.AbstractComponent;
+import org.ggll.window.component.AbstractFileComponent;
+import org.ggll.window.component.GrammarComponent;
+import org.ggll.window.component.TextAreaComponent;
 import org.ggll.window.tab.TabWindowList.TabPlace;
+import org.ggll.window.view.AbstractView;
 
 public class FileManager
 {

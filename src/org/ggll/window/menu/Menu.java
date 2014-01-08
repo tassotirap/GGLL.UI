@@ -18,7 +18,7 @@ import org.ggll.director.GGLLDirector;
 import org.ggll.file.FileNames;
 import org.ggll.project.tree.Tree;
 import org.ggll.resource.LangResource;
-import org.ggll.view.component.AbstractComponent;
+import org.ggll.window.component.AbstractComponent;
 
 public class Menu extends JMenuBar
 {

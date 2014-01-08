@@ -17,9 +17,9 @@ import javax.swing.border.EmptyBorder;
 import org.ggll.director.GGLLDirector;
 import org.ggll.resource.LangResource;
 import org.ggll.syntax.graph.state.StateHistory;
-import org.ggll.view.component.AbstractComponent;
-import org.ggll.view.component.GrammarComponent;
-import org.ggll.view.component.TextAreaComponent;
+import org.ggll.window.component.AbstractComponent;
+import org.ggll.window.component.GrammarComponent;
+import org.ggll.window.component.TextAreaComponent;
 
 public class ToolBarDefault extends BaseToolBar implements PropertyChangeListener
 {
