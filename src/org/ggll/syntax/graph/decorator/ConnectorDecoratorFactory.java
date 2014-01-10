@@ -1,6 +1,5 @@
 package org.ggll.syntax.graph.decorator;
 
-
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Insets;
@@ -12,8 +11,8 @@ import org.ggll.images.GGLLImages;
 import org.ggll.resource.CanvasResource;
 import org.ggll.syntax.graph.SyntaxGraph;
 import org.ggll.syntax.graph.widget.IconNodeWidgetExt;
-import org.ggll.syntax.graph.widget.LabelWidgetExt;
 import org.ggll.syntax.graph.widget.IconNodeWidgetExt.TextOrientation;
+import org.ggll.syntax.graph.widget.LabelWidgetExt;
 import org.netbeans.api.visual.anchor.AnchorShape;
 import org.netbeans.api.visual.anchor.PointShape;
 import org.netbeans.api.visual.border.Border;

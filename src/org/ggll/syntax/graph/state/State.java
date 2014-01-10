@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
+import org.ggll.resource.CanvasResource;
 import org.ggll.syntax.graph.SyntaxGraph;
 import org.ggll.syntax.graph.SyntaxGraphRepository;
 
@@ -80,7 +81,7 @@ public class State implements Serializable, PropertyChangeListener
 		return null;
 	}
 
-	public StateNode findNode(Object node)
+	public StateNode findNode(String node)
 	{
 		if (this.nodes.containsKey(node))
 		{
@@ -132,6 +133,19 @@ public class State implements Serializable, PropertyChangeListener
 		return this.lastTerminalId;
 	}
 
+	public ExtendedList<StateNode> getLeftSide()
+	{
+		final ExtendedList<StateNode> leftSides = new ExtendedList<StateNode>();
+		for (final StateNode node : this.nodes.values())
+		{
+			if (node.getType().equals(CanvasResource.LEFT_SIDE))
+			{
+				leftSides.append(node);
+			}
+		}
+		return leftSides;
+	}
+
 	public Set<String> getNodes()
 	{
 		return this.nodes.keySet();
@@ -140,6 +154,45 @@ public class State implements Serializable, PropertyChangeListener
 	public StatePreferences getPreferences()
 	{
 		return this.preferences;
+	}
+
+	public ExtendedList<StateNode> getStarts()
+	{
+		final ExtendedList<StateNode> starts = new ExtendedList<StateNode>();
+		for (final StateNode node : this.nodes.values())
+		{
+			if (node.getType().equals(CanvasResource.START))
+			{
+				starts.append(node);
+			}
+		}
+		return starts;
+	}
+
+	public ExtendedList<StateConnection> getSucessors()
+	{
+		final ExtendedList<StateConnection> sucessors = new ExtendedList<StateConnection>();
+		for (final StateConnection edge : this.connections.values())
+		{
+			if (edge.getType().equals(CanvasResource.SUCCESSOR))
+			{
+				sucessors.append(edge);
+			}
+		}
+		return sucessors;
+	}
+	
+	public ExtendedList<StateConnection> getAlternatives()
+	{
+		final ExtendedList<StateConnection> alternative = new ExtendedList<StateConnection>();
+		for (final StateConnection edge : this.connections.values())
+		{
+			if (edge.getType().equals(CanvasResource.ALTERNATIVE))
+			{
+				alternative.append(edge);
+			}
+		}
+		return alternative;
 	}
 
 	public String getType(Object obj)

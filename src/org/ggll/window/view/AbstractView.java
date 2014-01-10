@@ -1,11 +1,10 @@
 package org.ggll.window.view;
 
-
 import javax.swing.Icon;
 
-import org.ggll.window.component.AbstractComponent;
-
 import net.infonode.docking.View;
+
+import org.ggll.window.component.AbstractComponent;
 
 public class AbstractView extends View
 {

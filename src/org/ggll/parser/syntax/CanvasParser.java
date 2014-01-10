@@ -11,7 +11,6 @@ import org.ggll.syntax.graph.SyntaxGraph;
 import org.ggll.syntax.graph.state.State;
 import org.ggll.syntax.graph.state.StateNode;
 
-
 public class CanvasParser
 {
 	private SyntaxModel syntaxModel = new SyntaxModel();

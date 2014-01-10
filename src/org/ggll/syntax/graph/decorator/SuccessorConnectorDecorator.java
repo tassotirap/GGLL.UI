@@ -1,6 +1,5 @@
 package org.ggll.syntax.graph.decorator;
 
-
 import java.awt.Color;
 import java.awt.Point;
 

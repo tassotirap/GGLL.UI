@@ -1,6 +1,5 @@
 package org.ggll.window.toolbar;
 
-
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -82,7 +81,7 @@ public class ToolBarCanvas extends BaseToolBar
 			@Override
 			public void actionPerformed(ActionEvent evt)
 			{
-				GrammarParser syntaxParser = new GrammarParser();
+				final GrammarParser syntaxParser = new GrammarParser();
 				syntaxParser.parseGrammar();
 			}
 		});

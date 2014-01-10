@@ -1,6 +1,5 @@
 package org.ggll.syntax.graph.state;
 
-
 import java.awt.Point;
 import java.io.Serializable;
 import java.util.List;
@@ -12,16 +11,16 @@ import org.netbeans.api.visual.widget.ConnectionWidget;
 public class StateConnection implements Serializable
 {
 	private static final long serialVersionUID = -4162245206128920310L;
-	private String id;
-	private String source;
-	private String target;
+	private final String id;
+	private final String source;
+	private final String target;
 	private String type;
-	private List<Point> points;
-	
+	private final List<Point> points;
+
 	public StateConnection(String id, SyntaxGraph canvas)
 	{
-		ConnectionWidget connectionWidget = (ConnectionWidget)canvas.findWidget(id);
-		this.id = id;		
+		final ConnectionWidget connectionWidget = (ConnectionWidget) canvas.findWidget(id);
+		this.id = id;
 		this.source = canvas.getEdgeSource(id);
 		this.target = canvas.getEdgeTarget(id);
 		this.points = connectionWidget.getControlPoints();

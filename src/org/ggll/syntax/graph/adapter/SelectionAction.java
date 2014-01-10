@@ -1,6 +1,5 @@
 package org.ggll.syntax.graph.adapter;
 
-
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.ClipboardOwner;
 import java.awt.datatransfer.DataFlavor;
@@ -39,14 +38,14 @@ public class SelectionAction implements ClipboardOwner, Transferable
 	public void addSelection(Widget widget)
 	{
 		if (widget instanceof LabelWidget)
-		{			
-			final String object = (String)this.canvas.findObject(widget);
+		{
+			final String object = (String) this.canvas.findObject(widget);
 			final StateNode node = new StateNode(object, this.canvas);
 			this.elements.add(node);
 		}
 		else if (widget instanceof ConnectionWidget)
 		{
-			final String object = (String)this.canvas.findObject(widget);
+			final String object = (String) this.canvas.findObject(widget);
 			final StateConnection conn = new StateConnection(object, this.canvas);
 			this.elements.add(conn);
 		}

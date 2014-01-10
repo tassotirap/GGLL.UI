@@ -1,6 +1,5 @@
 package org.ggll.output;
 
-
 import java.awt.Cursor;
 import java.io.File;
 import java.io.IOException;

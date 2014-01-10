@@ -1,6 +1,5 @@
 package org.ggll.output;
 
-
 import java.awt.Component;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
@@ -26,8 +25,6 @@ import org.htmlparser.filters.StringFilter;
 import org.htmlparser.util.NodeList;
 import org.htmlparser.util.ParserException;
 import org.htmlparser.util.SimpleNodeIterator;
-
-
 
 public class Output extends HtmlViewer
 {

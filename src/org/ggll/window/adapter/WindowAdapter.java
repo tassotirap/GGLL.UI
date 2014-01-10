@@ -1,7 +1,11 @@
 package org.ggll.window.adapter;
 
-
 import javax.swing.JOptionPane;
+
+import net.infonode.docking.DockingWindow;
+import net.infonode.docking.DockingWindowAdapter;
+import net.infonode.docking.OperationAbortedException;
+import net.infonode.docking.View;
 
 import org.ggll.director.GGLLDirector;
 import org.ggll.window.MainWindow;
@@ -9,11 +13,6 @@ import org.ggll.window.component.AbstractComponent;
 import org.ggll.window.component.AbstractFileComponent;
 import org.ggll.window.component.EmptyComponent;
 import org.ggll.window.view.AbstractView;
-
-import net.infonode.docking.DockingWindow;
-import net.infonode.docking.DockingWindowAdapter;
-import net.infonode.docking.OperationAbortedException;
-import net.infonode.docking.View;
 
 /** An adapter to control how a window should react when changed **/
 public class WindowAdapter extends DockingWindowAdapter

@@ -1,6 +1,5 @@
 package org.ggll.syntax.graph;
 
-
 import java.awt.Cursor;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -57,7 +56,7 @@ public class SyntaxGraphPopupMenu extends WidgetAction.Adapter implements PopupM
 			{
 				final Cursor oldCursor = SyntaxGraphPopupMenu.this.canvas.getView().getCursor();
 				SyntaxGraphPopupMenu.this.canvas.getView().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-				GrammarParser syntaxParser = new GrammarParser();
+				final GrammarParser syntaxParser = new GrammarParser();
 				syntaxParser.parseGrammar();
 				SyntaxGraphPopupMenu.this.canvas.getView().setCursor(oldCursor);
 			}

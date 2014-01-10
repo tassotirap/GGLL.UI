@@ -1,6 +1,5 @@
 package org.ggll.window.toolbar;
 
-
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

@@ -1,6 +1,5 @@
 package org.ggll.window.menu;
 
-
 import java.util.HashMap;
 
 import javax.swing.JMenuBar;

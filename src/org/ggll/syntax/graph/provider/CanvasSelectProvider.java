@@ -1,6 +1,5 @@
 package org.ggll.syntax.graph.provider;
 
-
 import java.awt.Point;
 
 import org.ggll.syntax.graph.SyntaxGraph;

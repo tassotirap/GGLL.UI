@@ -1,6 +1,5 @@
 package org.ggll.images;
 
-
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 

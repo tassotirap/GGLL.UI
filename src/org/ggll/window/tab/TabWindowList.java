@@ -34,15 +34,15 @@ public class TabWindowList
 	{
 		return this.tabWindowList.get(TabPlace.CENTER_LEFT_TABS.ordinal());
 	}
-	
-	public TabWindow getCenterRightTopTab()
-	{
-		return this.tabWindowList.get(TabPlace.CENTER_RIGHT_TOP_TABS.ordinal());
-	}
-	
+
 	public TabWindow getCenterRightBottomTab()
 	{
 		return this.tabWindowList.get(TabPlace.CENTER_RIGHT_BOTTOM_TABS.ordinal());
+	}
+
+	public TabWindow getCenterRightTopTab()
+	{
+		return this.tabWindowList.get(TabPlace.CENTER_RIGHT_TOP_TABS.ordinal());
 	}
 
 	public TabWindow getTabWindow(int place)

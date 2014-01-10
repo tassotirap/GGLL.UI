@@ -5,12 +5,12 @@ import java.io.Serializable;
 public class StatePreferences implements Serializable
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	private String connectionStrategy;
 	private String moveStrategy;
 	private boolean showGrid;
 	private boolean showLines;
-	
+
 	/**
 	 * 
 	 * @return Connection Strategy
@@ -45,7 +45,8 @@ public class StatePreferences implements Serializable
 	}
 
 	/**
-	 * @param set Connection Strategy
+	 * @param set
+	 *            Connection Strategy
 	 */
 	public void setConnectionStrategy(String connectionStrategy)
 	{
@@ -53,7 +54,8 @@ public class StatePreferences implements Serializable
 	}
 
 	/**
-	 * @param set Move Strategy
+	 * @param set
+	 *            Move Strategy
 	 */
 	public void setMoveStrategy(String moveStrategy)
 	{
@@ -61,7 +63,8 @@ public class StatePreferences implements Serializable
 	}
 
 	/**
-	 * @param set Show Grid
+	 * @param set
+	 *            Show Grid
 	 */
 	public void setShowGrid(boolean showGrid)
 	{
@@ -69,7 +72,8 @@ public class StatePreferences implements Serializable
 	}
 
 	/**
-	 * @param set Show Lines
+	 * @param set
+	 *            Show Lines
 	 */
 	public void setShowLines(boolean showLines)
 	{

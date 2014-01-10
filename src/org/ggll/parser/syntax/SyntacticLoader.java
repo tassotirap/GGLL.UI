@@ -1,9 +1,9 @@
 package org.ggll.parser.syntax;
 
-import org.ggll.parser.syntax.grammar.model.SyntaxDefinitions;
-
 import ggll.core.syntax.model.TableGraphNode;
 import ggll.core.syntax.model.TableNode;
+
+import org.ggll.parser.syntax.grammar.model.SyntaxDefinitions;
 
 /*
  * Created on 11/08/2003

@@ -1,6 +1,5 @@
 package org.ggll.window.component;
 
-
 import javax.swing.JScrollPane;
 
 import org.ggll.output.SyntaxStack;

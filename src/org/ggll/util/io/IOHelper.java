@@ -22,7 +22,6 @@
 
 package org.ggll.util.io;
 
-
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;

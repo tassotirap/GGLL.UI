@@ -1,6 +1,5 @@
 package org.ggll.window.component;
 
-
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.beans.PropertyChangeEvent;
@@ -22,6 +21,11 @@ public class GrammarComponent extends AbstractFileComponent implements PropertyC
 {
 	String path;
 	private SyntaxGraph canvas;
+
+	public GrammarComponent(String fileName)
+	{
+		this(SyntaxGraphRepository.getInstance(fileName));
+	}
 
 	public GrammarComponent(SyntaxGraph canvas)
 	{
@@ -48,11 +52,6 @@ public class GrammarComponent extends AbstractFileComponent implements PropertyC
 
 		GrammarFactory.addGramComponent(this, canvas.getFile());
 		this.jComponent = canvasPanel;
-	}
-
-	public GrammarComponent(String fileName)
-	{
-		this(SyntaxGraphRepository.getInstance(fileName));
 	}
 
 	@Override

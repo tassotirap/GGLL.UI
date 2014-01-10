@@ -1,6 +1,5 @@
 package org.ggll.parser.semantics;
 
-
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileWriter;

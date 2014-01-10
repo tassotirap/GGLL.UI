@@ -1,6 +1,5 @@
 package org.ggll.syntax.graph.widget;
 
-
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;

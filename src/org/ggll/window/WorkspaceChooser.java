@@ -1,6 +1,5 @@
 package org.ggll.window;
 
-
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.io.BufferedReader;

@@ -1,6 +1,5 @@
 package org.ggll.syntax.graph.widget;
 
-
 import java.beans.PropertyChangeEvent;
 
 import org.ggll.resource.CanvasResource;

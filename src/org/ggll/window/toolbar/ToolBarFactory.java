@@ -1,6 +1,5 @@
 package org.ggll.window.toolbar;
 
-
 import java.util.HashMap;
 
 import javax.swing.BoxLayout;

@@ -1,6 +1,5 @@
 package org.ggll.syntax.graph.provider;
 
-
 import java.util.HashMap;
 
 import org.ggll.syntax.graph.SyntaxGraph;

@@ -1,6 +1,5 @@
 package org.ggll.syntax.graph.state;
 
-
 import java.awt.Point;
 import java.io.Serializable;
 
@@ -13,30 +12,35 @@ import org.netbeans.api.visual.widget.Widget;
 public class StateNode implements Serializable
 {
 	private static final long serialVersionUID = -5146510630189874864L;
-	private Point location;
+	private final Point location;
 	private String semanticRoutine;
-	private String id;
+	private final String id;
 	private String title;
 	private String type;
-	
+
 	public StateNode(String id, SyntaxGraph canvas)
 	{
-		Widget widget = canvas.findWidget(id);
+		final Widget widget = canvas.findWidget(id);
 		this.id = id;
-		this.location = widget.getPreferredLocation();		
+		this.location = widget.getPreferredLocation();
 		if (widget instanceof TypedWidget)
 		{
 			this.type = ((TypedWidget) widget).getType();
 		}
 		if (widget instanceof MarkedWidget)
-		{			
+		{
 			this.semanticRoutine = ((MarkedWidget) widget).getMark();
 		}
 		if (widget instanceof LabelWidget)
 		{
 			final LabelWidget labelWidget = (LabelWidget) widget;
-			this.title = labelWidget.getLabel();			
-		}		
+			this.title = labelWidget.getLabel();
+		}
+	}
+
+	public String getId()
+	{
+		return this.id;
 	}
 
 	public Point getLocation()
@@ -49,11 +53,6 @@ public class StateNode implements Serializable
 		return this.semanticRoutine;
 	}
 
-	public String getId()
-	{
-		return this.id;
-	}
-
 	public String getTitle()
 	{
 		return this.title;
@@ -63,30 +62,4 @@ public class StateNode implements Serializable
 	{
 		return this.type;
 	}
-
-//	public void setLocation(Point location)
-//	{
-//		this.location = location;
-//	}
-//
-//	public void setSemanticRoutine(String semanticRoutine)
-//	{
-//		this.semanticRoutine = semanticRoutine;
-//	}
-//
-//	public void setId(String id)
-//	{
-//		this.id = id;
-//	}
-//
-//	public void setTitle(String title)
-//	{
-//		this.title = title;
-//	}
-//
-//	public void setType(String type)
-//	{
-//		this.type = type;
-//	}
-
 }

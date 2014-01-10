@@ -1,6 +1,5 @@
 package org.ggll.window;
 
-
 import javax.swing.JFrame;
 
 import org.ggll.director.GGLLDirector;

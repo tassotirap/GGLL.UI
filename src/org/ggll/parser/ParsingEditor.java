@@ -1,5 +1,6 @@
 package org.ggll.parser;
 
+import static org.apache.commons.lang3.StringEscapeUtils.escapeHtml4;
 import ggll.core.compile.ClassLoader;
 import ggll.core.compile.Compiler;
 import ggll.core.exceptions.ErrorRecoveryException;
@@ -24,12 +25,10 @@ import javax.swing.JOptionPane;
 
 import org.ggll.director.GGLLDirector;
 import org.ggll.output.AppOutput;
-import org.ggll.output.Output;
 import org.ggll.output.HtmlViewer.TOPIC;
+import org.ggll.output.Output;
 import org.ggll.parser.syntax.SyntacticLoader;
 import org.ggll.util.Log;
-import static org.apache.commons.lang3.StringEscapeUtils.escapeHtml4;
-
 
 public class ParsingEditor
 {
@@ -89,7 +88,7 @@ public class ParsingEditor
 	}
 
 	private void startParse(boolean stepping, String text)
-	{		
+	{
 		Output.getInstance().displayTextExt(escapeHtml4(text), TOPIC.Parser);
 		final StringReader stringReader = new StringReader(text);
 		try

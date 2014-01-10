@@ -1,5 +1,10 @@
 package org.ggll.window.view;
 
+import ggll.core.list.ExtendedList;
+import net.infonode.docking.DockingWindow;
+import net.infonode.docking.TabWindow;
+import net.infonode.docking.util.ViewMap;
+
 import org.ggll.director.GGLLDirector;
 import org.ggll.images.IconFactory;
 import org.ggll.images.IconFactory.IconType;
@@ -12,11 +17,6 @@ import org.ggll.window.component.ProjectsComponent;
 import org.ggll.window.component.SemanticStackComponent;
 import org.ggll.window.component.SyntaxStackComponent;
 import org.ggll.window.tab.TabWindowList.TabPlace;
-
-import ggll.core.list.ExtendedList;
-import net.infonode.docking.DockingWindow;
-import net.infonode.docking.TabWindow;
-import net.infonode.docking.util.ViewMap;
 
 public class ViewRepository
 {

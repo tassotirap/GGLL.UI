@@ -1,6 +1,5 @@
 package org.ggll.util.properties;
 
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;

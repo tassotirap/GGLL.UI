@@ -1,6 +1,5 @@
 package org.ggll.syntax.graph.adapter;
 
-
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Point;

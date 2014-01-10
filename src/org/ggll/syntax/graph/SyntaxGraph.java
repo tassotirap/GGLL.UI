@@ -32,8 +32,8 @@ import org.ggll.syntax.graph.provider.GridProvider;
 import org.ggll.syntax.graph.provider.LineProvider;
 import org.ggll.syntax.graph.provider.NodeSelectProvider;
 import org.ggll.syntax.graph.state.State;
-import org.ggll.syntax.graph.state.StateHistory;
 import org.ggll.syntax.graph.state.StateConnection;
+import org.ggll.syntax.graph.state.StateHistory;
 import org.ggll.syntax.graph.state.StateNode;
 import org.ggll.syntax.graph.widget.GridWidget;
 import org.ggll.syntax.graph.widget.LabelWidgetExt;
@@ -390,9 +390,10 @@ public class SyntaxGraph extends GraphScene.StringGraph implements PropertyChang
 		component.addMouseListener(new MouseAdapter()
 		{
 			@Override
-            public void mousePressed(MouseEvent e) {
-                setFocused();
-            }
+			public void mousePressed(MouseEvent e)
+			{
+				setFocused();
+			}
 		});
 		return component;
 	}
@@ -432,6 +433,11 @@ public class SyntaxGraph extends GraphScene.StringGraph implements PropertyChang
 		return this.decorator;
 	}
 
+	public State getCanvasState()
+	{
+		return this.canvasState;
+	}
+
 	/**
 	 * This method is here for a mere convenience, is really essential for the
 	 * canvas itself
@@ -451,11 +457,6 @@ public class SyntaxGraph extends GraphScene.StringGraph implements PropertyChang
 	public String getConnectionStrategy()
 	{
 		return this.connectionStrategy;
-	}
-
-	public State getCanvasState()
-	{
-		return this.canvasState;
 	}
 
 	public String getFile()

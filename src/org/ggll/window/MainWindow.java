@@ -1,6 +1,5 @@
 package org.ggll.window;
 
-
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Frame;
@@ -18,6 +17,20 @@ import javax.swing.JMenuBar;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.WindowConstants;
+
+import net.infonode.docking.DockingWindow;
+import net.infonode.docking.RootWindow;
+import net.infonode.docking.SplitWindow;
+import net.infonode.docking.TabWindow;
+import net.infonode.docking.View;
+import net.infonode.docking.ViewSerializer;
+import net.infonode.docking.mouse.DockingWindowActionMouseButtonListener;
+import net.infonode.docking.properties.RootWindowProperties;
+import net.infonode.docking.theme.DefaultDockingTheme;
+import net.infonode.docking.util.DockingUtil;
+import net.infonode.docking.util.MixedViewHandler;
+import net.infonode.docking.util.ViewMap;
+import net.infonode.util.Direction;
 
 import org.ggll.director.GGLLDirector;
 import org.ggll.file.GrammarFile;
@@ -45,20 +58,6 @@ import org.ggll.window.tab.TabWindowList.TabPlace;
 import org.ggll.window.toolbar.ToolBarFactory;
 import org.ggll.window.view.AbstractView;
 import org.ggll.window.view.ViewRepository;
-
-import net.infonode.docking.DockingWindow;
-import net.infonode.docking.RootWindow;
-import net.infonode.docking.SplitWindow;
-import net.infonode.docking.TabWindow;
-import net.infonode.docking.View;
-import net.infonode.docking.ViewSerializer;
-import net.infonode.docking.mouse.DockingWindowActionMouseButtonListener;
-import net.infonode.docking.properties.RootWindowProperties;
-import net.infonode.docking.theme.DefaultDockingTheme;
-import net.infonode.docking.util.DockingUtil;
-import net.infonode.docking.util.MixedViewHandler;
-import net.infonode.docking.util.ViewMap;
-import net.infonode.util.Direction;
 
 /***
  * 
@@ -171,9 +170,9 @@ public class MainWindow implements ComponentListener
 			tab.getTabWindowProperties().getCloseButtonProperties().setVisible(false);
 			this.tabWindow.add(tab);
 		}
-		SplitWindow mainRigth = new SplitWindow(false, 0.60f, getTabWindowList().getCenterRightTopTab(), getTabWindowList().getCenterRightBottomTab());
-		SplitWindow mainCenter = new SplitWindow(true, 0.70f, getTabWindowList().getCenterLeftTab(), mainRigth);		
-		SplitWindow mainSplit = new SplitWindow(false, 0.75f, mainCenter, getTabWindowList().getBottonTab());		
+		final SplitWindow mainRigth = new SplitWindow(false, 0.60f, getTabWindowList().getCenterRightTopTab(), getTabWindowList().getCenterRightBottomTab());
+		final SplitWindow mainCenter = new SplitWindow(true, 0.70f, getTabWindowList().getCenterLeftTab(), mainRigth);
+		final SplitWindow mainSplit = new SplitWindow(false, 0.75f, mainCenter, getTabWindowList().getBottonTab());
 		this.rootWindow.setWindow(mainSplit);
 	}
 

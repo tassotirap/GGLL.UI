@@ -4,8 +4,8 @@ import ggll.core.list.ExtendedList;
 
 import org.ggll.exceptions.InvalidGrammarException;
 import org.ggll.syntax.graph.SyntaxGraphRepository;
-import org.netbeans.api.visual.widget.ConnectionWidget;
-import org.netbeans.api.visual.widget.LabelWidget;
+import org.ggll.syntax.graph.state.StateConnection;
+import org.ggll.syntax.graph.state.StateNode;
 
 public class LeftSideValidation extends GrammarRule
 {
@@ -13,29 +13,29 @@ public class LeftSideValidation extends GrammarRule
 	public void validate() throws InvalidGrammarException
 	{
 		String errors = "";
-		ExtendedList<String> leftSidesLabels = new ExtendedList<String>();
-		for (LabelWidget leftside : SyntaxGraphRepository.getLeftSides().getAll())
+		final ExtendedList<String> leftSidesLabels = new ExtendedList<String>();
+		for (final StateNode leftside : SyntaxGraphRepository.getLeftSides().getAll())
 		{
-			if (!leftSidesLabels.contains(leftside.getLabel()))
+			if (!leftSidesLabels.contains(leftside.getTitle()))
 			{
-				leftSidesLabels.append(leftside.getLabel());
+				leftSidesLabels.append(leftside.getTitle());
 			}
 			else
 			{
-				errors += "Only one left hand by label is allowed, \"" + leftside.getLabel() + "\" are duplicated.\n";
+				errors += "Only one left hand by label is allowed, \"" + leftside.getTitle() + "\" are duplicated.\n";
 			}
-	
+
 			boolean hasSucessor = false;
-			for (ConnectionWidget sucessor : SyntaxGraphRepository.getSucessors().getAll())
+			for (final StateConnection sucessor : SyntaxGraphRepository.getSucessors().getAll())
 			{
-				if (sucessor.getSourceAnchor().getRelatedWidget() == leftside)
+				if (sucessor.getSource().equals(leftside.getId()))
 				{
 					hasSucessor = true;
 				}
 			}
 			if (!hasSucessor)
 			{
-				errors += "Left side \"" + leftside.getLabel() + "\" must have one sucessor.\n";				
+				errors += "Left side \"" + leftside.getTitle() + "\" must have one sucessor.\n";
 			}
 		}
 

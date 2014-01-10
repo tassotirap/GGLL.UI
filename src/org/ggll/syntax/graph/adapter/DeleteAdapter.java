@@ -1,6 +1,5 @@
 package org.ggll.syntax.graph.adapter;
 
-
 import java.awt.event.KeyEvent;
 
 import org.ggll.syntax.graph.provider.WidgetDeleteProvider;
