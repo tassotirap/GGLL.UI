@@ -10,9 +10,6 @@ import org.ggll.file.GrammarFile;
 import org.ggll.resource.CanvasResource;
 import org.ggll.syntax.graph.state.StateConnection;
 import org.ggll.syntax.graph.state.StateNode;
-import org.ggll.syntax.graph.widget.LabelWidgetExt;
-import org.netbeans.api.visual.widget.ConnectionWidget;
-import org.netbeans.api.visual.widget.Widget;
 
 public class SyntaxGraphRepository
 {
@@ -38,45 +35,8 @@ public class SyntaxGraphRepository
 		return null;
 	}
 
-	public static Widget findLeftSideByLabel(String label)
-	{
-		for (final SyntaxGraph syntaxGraph : getInstances())
-		{
-			for (final String node : syntaxGraph.getNodes())
-			{
-				final Widget widget = syntaxGraph.findWidget(node);
-				if (widget instanceof LabelWidgetExt)
-				{
-					final LabelWidgetExt labelWidgetExt = (LabelWidgetExt) widget;
-					if (labelWidgetExt.getLabel().equals(label) && labelWidgetExt.getType().equals(CanvasResource.LEFT_SIDE))
-					{
-						return labelWidgetExt;
-					}
-				}
-			}
-		}
-		return null;
-	}
 
-	public static String findObject(Widget widget)
-	{
-		for (final SyntaxGraph syntaxGraph : getInstances())
-		{
-			if (syntaxGraph.findObject(widget) != null)
-			{
-				return (String) syntaxGraph.findObject(widget);
-			}
-		}
-		return null;
-	}
-
-	public static Widget findSucessorNode(String node)
-	{
-		final ConnectionWidget cnn = (ConnectionWidget) findWidget(node);
-		return cnn.getSourceAnchor().getRelatedWidget();
-	}
-
-	public static StateNode findSucessorWidget(StateNode node)
+	public static StateNode findSucessorNode(StateNode node)
 	{
 		for (final SyntaxGraph syntaxGraph : getInstances())
 		{
@@ -91,7 +51,7 @@ public class SyntaxGraphRepository
 		return null;
 	}
 	
-	public static StateNode findAlternativeWidget(StateNode node)
+	public static StateNode findAlternativeNode(StateNode node)
 	{
 		for (final SyntaxGraph syntaxGraph : getInstances())
 		{
@@ -101,18 +61,6 @@ public class SyntaxGraphRepository
 				{
 					return syntaxGraph.getCanvasState().findNode(edge.getTarget());
 				}
-			}
-		}
-		return null;
-	}
-
-	public static Widget findWidget(String node)
-	{
-		for (final SyntaxGraph syntaxGraph : getInstances())
-		{
-			if (syntaxGraph.findWidget(node) != null)
-			{
-				return syntaxGraph.findWidget(node);
 			}
 		}
 		return null;
@@ -213,6 +161,16 @@ public class SyntaxGraphRepository
 			leftSides.addAll(syntaxGraph.getCanvasState().getStarts());
 		}
 		return leftSides;
+	}
+	
+	public static ExtendedList<StateNode> getNTerminals()
+	{
+		final ExtendedList<StateNode> nTerminals = new ExtendedList<StateNode>();
+		for (final SyntaxGraph syntaxGraph : getInstances())
+		{
+			nTerminals.addAll(syntaxGraph.getCanvasState().getNTerminal());
+		}
+		return nTerminals;
 	}
 
 	public static ExtendedList<StateNode> getStarts()

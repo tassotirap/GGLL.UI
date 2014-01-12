@@ -145,6 +145,19 @@ public class State implements Serializable, PropertyChangeListener
 		}
 		return leftSides;
 	}
+	
+	public ExtendedList<StateNode> getNTerminal()
+	{
+		final ExtendedList<StateNode> nTerminals = new ExtendedList<StateNode>();
+		for (final StateNode node : this.nodes.values())
+		{
+			if (node.getType().equals(CanvasResource.N_TERMINAL))
+			{
+				nTerminals.append(node);
+			}
+		}
+		return nTerminals;
+	}
 
 	public Set<String> getNodes()
 	{

@@ -2,17 +2,15 @@ package org.ggll.parser.syntax.validation;
 
 import ggll.core.list.ExtendedList;
 
-import org.ggll.exceptions.InvalidGrammarException;
 import org.ggll.syntax.graph.SyntaxGraphRepository;
 import org.ggll.syntax.graph.state.StateConnection;
 import org.ggll.syntax.graph.state.StateNode;
 
-public class LeftSideValidation extends GrammarRule
+public class LeftSideValidation extends GrammarValidation
 {
 	@Override
-	public void validate() throws InvalidGrammarException
+	public void validate()
 	{
-		String errors = "";
 		final ExtendedList<String> leftSidesLabels = new ExtendedList<String>();
 		for (final StateNode leftside : SyntaxGraphRepository.getLeftSides().getAll())
 		{
@@ -22,7 +20,7 @@ public class LeftSideValidation extends GrammarRule
 			}
 			else
 			{
-				errors += "Only one left hand by label is allowed, \"" + leftside.getTitle() + "\" are duplicated.\n";
+				addError("Only one left hand by label is allowed", leftside);
 			}
 
 			boolean hasSucessor = false;
@@ -35,13 +33,8 @@ public class LeftSideValidation extends GrammarRule
 			}
 			if (!hasSucessor)
 			{
-				errors += "Left side \"" + leftside.getTitle() + "\" must have one sucessor.\n";
+				addError("Left side must have one sucessor.", leftside);
 			}
-		}
-
-		if (!errors.equals(""))
-		{
-			throw new InvalidGrammarException(errors);
 		}
 	}
 }

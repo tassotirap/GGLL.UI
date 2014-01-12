@@ -2,33 +2,31 @@ package org.ggll.parser.syntax.validation;
 
 import ggll.core.list.ExtendedList;
 
-import org.ggll.exceptions.InvalidGrammarException;
 import org.ggll.resource.CanvasResource;
 import org.ggll.syntax.graph.SyntaxGraphRepository;
 import org.ggll.syntax.graph.state.StateNode;
 
-public class LeftRecursionValidation extends GrammarRule
+public class LeftRecursionValidation extends GrammarValidation
 {
 	@Override
-	public void validate() throws InvalidGrammarException
+	public void validate()
 	{
 		for (final StateNode leftside : SyntaxGraphRepository.getLeftSides().getAll())
 		{
 			final ExtendedList<StateNode> nTerminals = new ExtendedList<StateNode>();
 			final ExtendedList<StateNode> nodes = new ExtendedList<StateNode>();
-			walkGraph(SyntaxGraphRepository.findSucessorWidget(leftside), nTerminals, nodes);
+			walkGraph(SyntaxGraphRepository.findSucessorNode(leftside), nTerminals, nodes);
 			for (StateNode nTerminal : nTerminals.getAll())
 			{
 				if (nTerminal.getTitle().equals(leftside.getTitle()))
 				{
-					throw new InvalidGrammarException("Left Recursion at node \"" + leftside.getTitle() + "\".");
+					addError("Left recursion.", leftside);
 				}
 			}
 		}
-
 	}
 
-	private void walkGraph(StateNode node, ExtendedList<StateNode> nTerminals, ExtendedList<StateNode> nodes) throws InvalidGrammarException
+	private void walkGraph(StateNode node, ExtendedList<StateNode> nTerminals, ExtendedList<StateNode> nodes)
 	{
 		if (node == null)
 		{
@@ -44,13 +42,13 @@ public class LeftRecursionValidation extends GrammarRule
 			}
 		}
 
-		if (!nodes.contains(SyntaxGraphRepository.findSucessorWidget(node)))
+		if (!nodes.contains(SyntaxGraphRepository.findSucessorNode(node)))
 		{
-			walkGraph(SyntaxGraphRepository.findSucessorWidget(node), nTerminals, nodes);
+			walkGraph(SyntaxGraphRepository.findSucessorNode(node), nTerminals, nodes);
 		}
-		if (!nodes.contains(SyntaxGraphRepository.findAlternativeWidget(node)))
+		if (!nodes.contains(SyntaxGraphRepository.findAlternativeNode(node)))
 		{
-			walkGraph(SyntaxGraphRepository.findAlternativeWidget(node), nTerminals, nodes);
+			walkGraph(SyntaxGraphRepository.findAlternativeNode(node), nTerminals, nodes);
 		}
 	}
 }

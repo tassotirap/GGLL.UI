@@ -6,20 +6,22 @@ import ggll.core.syntax.parser.GGLLTable;
 
 import java.io.File;
 
-import javax.swing.JOptionPane;
-
 import org.ggll.director.GGLLDirector;
-import org.ggll.exceptions.InvalidGrammarException;
 import org.ggll.file.FileNames;
 import org.ggll.output.AppOutput;
 import org.ggll.output.HtmlViewer.TOPIC;
+import org.ggll.output.Output;
+import org.ggll.output.SyntaxErrorOutput;
+import org.ggll.output.TokenOutput;
 import org.ggll.parser.ParsingEditor;
 import org.ggll.parser.syntax.SyntacticLoader;
 import org.ggll.parser.syntax.TableCreate;
-import org.ggll.parser.syntax.validation.GrammarRule;
+import org.ggll.parser.syntax.validation.GrammarError;
+import org.ggll.parser.syntax.validation.GrammarValidation;
 import org.ggll.parser.syntax.validation.HeaderValidation;
 import org.ggll.parser.syntax.validation.LeftRecursionValidation;
 import org.ggll.parser.syntax.validation.LeftSideValidation;
+import org.ggll.parser.syntax.validation.NTerminalValidation;
 import org.ggll.util.io.IOHelper;
 
 public class GrammarParser
@@ -28,17 +30,19 @@ public class GrammarParser
 	{
 		GGLLDirector.saveAllFiles();
 
+		Output.getInstance().clear();
+		TokenOutput.getInstance().clear();
+		SyntaxErrorOutput.getInstance().clear();
+		
 		AppOutput.clearOutputBuffer();
 		AppOutput.clearStacks();
 		AppOutput.clearGeneratedGrammar();
 
-		YyFactory.createYylex(GGLLDirector.getProject().getLexicalFile().getParent(), "export", GGLLDirector.getProject().getLexicalFile().getPath());
+		AppOutput.displayText("Run grammar generate...", TOPIC.Output);
 
 		if (validateGrammar())
 		{
-			AppOutput.displayHorizontalLine(TOPIC.Output);
-			AppOutput.displayText("<a>Run grammar generate...</a><br>", TOPIC.Output);
-
+			YyFactory.createYylex(GGLLDirector.getProject().getLexicalFile().getParent(), "export", GGLLDirector.getProject().getLexicalFile().getPath());
 			final GrammarFactory grammarFactory = new GrammarFactory();
 			final String grammar = grammarFactory.run();
 
@@ -57,34 +61,46 @@ public class GrammarParser
 
 			final File semantic = new File(GGLLDirector.getProject().getProjectDir().getAbsolutePath() + "\\" + GGLLDirector.getProject().getProjectDir().getName() + FileNames.SEM_EXTENSION);
 			IOHelper.copyFile(semantic, new File(GGLLDirector.getProject().getProjectDir().getAbsolutePath() + "\\export\\" + GGLLDirector.getProject().getProjectDir().getName() + FileNames.SEM_EXTENSION));
+			AppOutput.displayText("<font color='green'>Grammar successfully generated.</font>", TOPIC.Output);
+			AppOutput.displayHorizontalLine(TOPIC.Output);
 		}
 	}
 
 	public boolean validateGrammar()
 	{
-		String errors = "";
-
-		final ExtendedList<GrammarRule> rules = new ExtendedList<GrammarRule>();
+		final ExtendedList<GrammarValidation> rules = new ExtendedList<GrammarValidation>();
 		rules.append(new HeaderValidation());
 		rules.append(new LeftSideValidation());
+		rules.append(new NTerminalValidation());
 		rules.append(new LeftRecursionValidation());
 
-		for (final GrammarRule grammarRule : rules.getAll())
+		for (final GrammarValidation grammarRule : rules.getAll())
 		{
-			try
-			{
-				grammarRule.validate();
+			grammarRule.validate();
+		}
 
-			}
-			catch (final InvalidGrammarException ex)
+		int errors = 1;
+		String errorList = "";
+		for (final GrammarValidation grammarRule : rules.getAll())
+		{
+			for (GrammarError grammarError : grammarRule.getErrors().getAll())
 			{
-				errors += ex.getMessage() + "\n";
+				if (grammarError.getNode() == null)
+				{
+					errorList += errors + " - " + grammarError.getError() + "<br />";
+				}
+				else
+				{
+					errorList += errors + " - Node: <b><a href='" + grammarError.getNode().getId() + "'>" + grammarError.getNode().getTitle() + "</a></b> - " + grammarError.getError() + "<br />";
+				}
+				errors++;
 			}
 		}
 
-		if (!errors.equals(""))
+		if (!errorList.equals(""))
 		{
-			JOptionPane.showMessageDialog(null, errors);
+			AppOutput.displayText("<font color='red'>Some errors occurred while attempting to generate the grammar: <br/></font>", TOPIC.Output);
+			AppOutput.displayText("<font color='red'>" + errorList + "</font>", TOPIC.Output);
 			return false;
 		}
 
