@@ -3,7 +3,7 @@ package org.ggll.parser.syntax;
 import ggll.core.syntax.model.TableGraphNode;
 import ggll.core.syntax.model.TableNode;
 
-import org.ggll.parser.syntax.grammar.model.SyntaxDefinitions;
+import org.ggll.resource.CanvasResource;
 
 /*
  * Created on 11/08/2003
@@ -155,7 +155,7 @@ public class SyntacticLoader
 				{
 					this.TabGraph[I].setIsTerminal(true);
 
-					if (!this.Nomer.equals(new String("-1")) && !this.Nomer.equals(SyntaxDefinitions.EmptyNodeLabel))
+					if (!this.Nomer.equals(new String("-1")) && !this.Nomer.equals(CanvasResource.EMPTY_NODE_LABEL))
 					{
 						iterator = 1;
 						/* 2 verifico se Nomer se encontra em TABT */
@@ -206,7 +206,7 @@ public class SyntacticLoader
 					}
 					this.TabGraph[I].setIsTerminal(false);
 				}
-				if (this.Nomer.equals("-1") || this.Nomer.equals(SyntaxDefinitions.EmptyNodeLabel))
+				if (this.Nomer.equals("-1") || this.Nomer.equals(CanvasResource.EMPTY_NODE_LABEL))
 				{
 					this.TabGraph[I].setNodeReference(0);
 				}

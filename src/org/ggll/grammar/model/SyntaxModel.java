@@ -1,4 +1,4 @@
-package org.ggll.parser.syntax.grammar.model;
+package org.ggll.grammar.model;
 
 import ggll.core.list.ExtendedList;
 
@@ -14,6 +14,8 @@ public class SyntaxModel extends SyntaxSubpart
 
 	private ExtendedList<SyntaxElement> children = new ExtendedList<SyntaxElement>();
 	private SimpleNode semanticNode;
+	private String label;
+
 	protected Integer connectionRouter = null;
 
 	public SyntaxModel()
@@ -39,7 +41,6 @@ public class SyntaxModel extends SyntaxSubpart
 	public void addChild(SyntaxElement child, int index)
 	{
 		this.children.insertAt(index, child);
-		fireStructureChange(CHILDREN, child);
 	}
 
 	public SyntaxElement findElement(String id)
@@ -57,19 +58,6 @@ public class SyntaxModel extends SyntaxSubpart
 	public ExtendedList<SyntaxElement> getChildren()
 	{
 		return this.children;
-	}
-
-	public ExtendedList<NodeLabel> getChildrenAsLabels()
-	{
-		final ExtendedList<NodeLabel> lNodes = new ExtendedList<NodeLabel>();
-		for (final SyntaxElement e : this.children.getAll())
-		{
-			if (e instanceof NodeLabel)
-			{
-				lNodes.append((NodeLabel) e);
-			}
-		}
-		return lNodes;
 	}
 
 	public ExtendedList<SyntaxElement> getChildrenConnections()
@@ -96,11 +84,6 @@ public class SyntaxModel extends SyntaxSubpart
 			}
 		}
 		return cNodes;
-	}
-
-	public Object getPropertyValue(Object propName)
-	{
-		return getProperty((String) propName);
 	}
 
 	public SimpleNode getSemanticNode()
@@ -135,23 +118,27 @@ public class SyntaxModel extends SyntaxSubpart
 		}
 		this.children = new ExtendedList<SyntaxElement>();
 		this.children.addAll(remainingChildren);
-		fireStructureChange(CHILDREN, child);
 	}
 
-	public void setPropertyValue(Object id, Object value)
+	public void setSemanticNode(SimpleNode simpleNode)
 	{
-		super.setProperty((String) id, (String) value);
+		this.semanticNode = simpleNode;
 	}
 
-	public void setSemanticNode(SimpleNode sn)
+	public String getLabel()
 	{
-		this.semanticNode = sn;
+		if(label == null)
+		{
+			return "";
+		}
+		return label;
 	}
 
-	@Override
-	public String toString()
+	public void setLabel(String label)
 	{
-		return SyntaxDefinitions.AsinDiagram_LabelText;
+		if (label != null)
+		{
+			this.label = label;
+		}
 	}
-
 }

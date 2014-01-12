@@ -1,24 +1,19 @@
-package org.ggll.parser.syntax.grammar.model;
+package org.ggll.grammar.model;
+
+import org.ggll.resource.CanvasResource;
 
 /** A connection between nodes **/
 public class Connection extends SyntaxElement
 {
-
 	static final long serialVersionUID = 1;
-	private String id;
 	protected SyntaxSubpart source;
 	protected SyntaxSubpart target;
 
 	protected boolean value;
 
-	public Connection()
-	{
-		this.id = toString();
-	}
-
 	public Connection(String id)
 	{
-		this.id = id;
+		setID(id);
 	}
 
 	/** Attach connection to the source node **/
@@ -49,11 +44,11 @@ public class Connection extends SyntaxElement
 			if (getSource() instanceof SyntaxModel)
 			{
 				final SyntaxModel l = (SyntaxModel) getSource();
-				if (context.equals(SyntaxDefinitions.SucConnection))
+				if (context.equals(CanvasResource.SUCCESSOR))
 				{
 					l.setSucessor((SyntaxSubpart) e);
 				}
-				else if (context.equals(SyntaxDefinitions.AltConnection))
+				else if (context.equals(CanvasResource.ALTERNATIVE))
 				{
 					l.setAlternative((SyntaxSubpart) e);
 				}
@@ -99,12 +94,6 @@ public class Connection extends SyntaxElement
 		getTarget().disconnectInput(this);
 	}
 
-	@Override
-	public String getID()
-	{
-		return this.id;
-	}
-
 	/*------------------------------- GETTERS AND SETTERS ----------------------*/
 
 	public SyntaxSubpart getSource()
@@ -132,24 +121,14 @@ public class Connection extends SyntaxElement
 		return this.value;
 	}
 
-	@Override
-	public void setID(String id)
-	{
-		this.id = id;
-	}
-
 	public void setSource(SyntaxSubpart e)
 	{
-		final Object old = this.source;
 		this.source = e;
-		firePropertyChange("source", old, this.source);//$NON-NLS-1$
 	}
 
 	public void setTarget(SyntaxSubpart e)
 	{
-		final Object old = this.target;
 		this.target = e;
-		firePropertyChange("target", old, this.target);
 	}
 
 	public void setValue(boolean value)
@@ -159,14 +138,8 @@ public class Connection extends SyntaxElement
 			return;
 		}
 		this.value = value;
-		if (this.target != null)
-		{
-			this.target.update();
-		}
-		firePropertyChange("value", null, null);//$NON-NLS-1$
 	}
 
-	@Override
 	public String toString()
 	{
 		return "Wire(" + getSource() + "," + getSourceTerminal() + "->" + getTarget() + "," + getTargetTerminal() + ")";//$NON-NLS-5$//$NON-NLS-4$//$NON-NLS-3$//$NON-NLS-2$//$NON-NLS-1$

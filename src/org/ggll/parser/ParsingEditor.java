@@ -126,7 +126,8 @@ public class ParsingEditor
 	{
 		try
 		{
-			this.yylex = YyFactory.getYylex(new File(this.rootPath + "/export/Yylex.java"));
+			YyFactory yyFactory = new YyFactory();
+			this.yylex = yyFactory.getYylex(new File(this.rootPath + "/export/Yylex.java"));
 			return instance;
 		}
 		catch (final Exception e)

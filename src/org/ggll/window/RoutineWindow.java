@@ -22,7 +22,7 @@ import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 
 import org.ggll.director.GGLLDirector;
-import org.ggll.parser.semantics.SemanticFileManager;
+import org.ggll.semantics.SemanticFileManager;
 import org.ggll.syntax.graph.SyntaxGraph;
 import org.ggll.syntax.graph.widget.MarkedWidget;
 import org.ggll.window.component.TextAreaComponent;

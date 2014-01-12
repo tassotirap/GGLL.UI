@@ -1,17 +1,16 @@
-package org.ggll.parser.syntax.grammar;
+package org.ggll.grammar;
 
 import ggll.core.list.ExtendedList;
 
+import org.ggll.grammar.model.AbstractNode;
+import org.ggll.grammar.model.SimpleNode;
+import org.ggll.grammar.model.SyntaxElement;
+import org.ggll.grammar.model.SyntaxModel;
+import org.ggll.grammar.model.SyntaxSubpart;
 import org.ggll.output.AppOutput;
 import org.ggll.output.HtmlViewer.TOPIC;
-import org.ggll.parser.syntax.CanvasParser;
-import org.ggll.parser.syntax.grammar.model.AbstractNode;
-import org.ggll.parser.syntax.grammar.model.NodeLabel;
-import org.ggll.parser.syntax.grammar.model.SimpleNode;
-import org.ggll.parser.syntax.grammar.model.SyntaxDefinitions;
-import org.ggll.parser.syntax.grammar.model.SyntaxElement;
-import org.ggll.parser.syntax.grammar.model.SyntaxModel;
-import org.ggll.parser.syntax.grammar.model.SyntaxSubpart;
+import org.ggll.parser.syntax.CanvasStateParser;
+import org.ggll.resource.CanvasResource;
 import org.ggll.syntax.graph.SyntaxGraph;
 import org.ggll.syntax.graph.SyntaxGraphRepository;
 
@@ -24,11 +23,6 @@ public class GrammarFactory
 
 	private String htmlOutput;
 
-	/**
-	 * Constructor
-	 * 
-	 * @param part
-	 */
 	public GrammarFactory()
 	{
 
@@ -42,18 +36,17 @@ public class GrammarFactory
 	private ExtendedList<AbstractNode> clearAndSetStartNodes(ExtendedList<SyntaxElement> children)
 	{
 		final ExtendedList<AbstractNode> startNodes = new ExtendedList<AbstractNode>();
-
 		for (final SyntaxElement object : children.getAll())
 		{
 			if (object instanceof SyntaxSubpart)
 			{
 				((SyntaxSubpart) object).setFlag(false);
 			}
-			if (object instanceof AbstractNode && ((AbstractNode) object).getType().equals(AbstractNode.LEFTSIDE))
+			if (object instanceof AbstractNode && ((AbstractNode) object).getType().equals(CanvasResource.LEFT_SIDE))
 			{
 				startNodes.append((AbstractNode) object);
 			}
-			if (object instanceof AbstractNode && ((AbstractNode) object).getType().equals(AbstractNode.START))
+			if (object instanceof AbstractNode && ((AbstractNode) object).getType().equals(CanvasResource.START))
 			{
 				startNodes.prepend((AbstractNode) object);
 			}
@@ -68,12 +61,10 @@ public class GrammarFactory
 		String[] stringValue = new String[2];
 		final GrammarData returnValue = new GrammarData();
 		SimpleNode simpleNode;
-		final ExtendedList<NodeLabel> listChildren = syntaxModel.getChildrenAsLabels();
-		final NodeLabel label = listChildren.first();
-		stringValue = label.getLabelContents().split("#");
-		if (syntaxModel instanceof AbstractNode && ((AbstractNode) syntaxModel).getType().equals(AbstractNode.LAMBDA_ALTERNATIVE))
+		stringValue = syntaxModel.getLabel().split("#");
+		if (syntaxModel instanceof AbstractNode && ((AbstractNode) syntaxModel).getType().equals(CanvasResource.LAMBDA))
 		{
-			name = SyntaxDefinitions.EmptyNodeLabel;
+			name = CanvasResource.EMPTY_NODE_LABEL;
 		}
 		else
 		{
@@ -85,7 +76,7 @@ public class GrammarFactory
 		}
 		else if ((simpleNode = syntaxModel.getSemanticNode()) != null)
 		{
-			semanticRoutine = simpleNode.getLabel().getLabelContents();
+			semanticRoutine = simpleNode.getLabel();
 		}
 		else
 		{
@@ -97,9 +88,33 @@ public class GrammarFactory
 		return returnValue;
 	}
 
-	private void writeBegining(NodeLabel label)
+	private void writeBegining(SyntaxModel startNode)
 	{
-		AppOutput.displayText("<a>>>Begining a new leftside..." + label.getLabelContents() + "</a><br>", TOPIC.Output);
+		AppOutput.displayText(">>Begining a new leftside..." + startNode.getLabel() + "<br>", TOPIC.Output);
+		this.htmlOutput += "<table cellspacing=\"0\" cellpadding=\"0\" border=\"1px\" width=\"100%\">";
+		this.htmlOutput += "<tr style=\"background-color: #EEEEEE; font-weight: bold;\"><td></td>";
+		this.htmlOutput += "<td>Node</td><td>Number</td><td>Alternative</td><td>Successor</td>";
+		this.htmlOutput += "<td>Semantic Rout.</td></tr>";
+	}
+
+	private void writeStart(SyntaxModel startNode, SyntaxModel successor)
+	{
+		this.htmlOutput += "<tr><td style=\"background-color: #EEEEEE;\">";
+		this.htmlOutput += "<img src=\"images/icon_s2.png\" alt=\"Initial Node\"></td>";
+		this.htmlOutput += "<td style=\"font-weight: bold;\" >";
+		this.htmlOutput += "<a href='" + startNode.getID() + "'>" + startNode.getLabel() + "</a></td>";
+		this.htmlOutput += "<td align=\"center\">-1</td><td align=\"center\">-</td><td align=\"center\">" + successor.getNumber() + "</td>";
+		this.htmlOutput += "<td align=\"center\">-</td></tr>";
+	}
+	
+	private void writeLeftSide(SyntaxModel leftSideNode, SyntaxModel successor)
+	{
+		this.htmlOutput += "<tr><td style=\"background-color: #EEEEEE;\">";
+		this.htmlOutput += "<img src=\"images/icon_H2.png\" alt=\"Left Side\"></td>";
+		this.htmlOutput += "<td style=\"font-weight: bold;\" >";
+		this.htmlOutput += "<a href=\"" + leftSideNode.getID() + "\">" + leftSideNode.getLabel() + "</a>";
+		this.htmlOutput += "</td><td align=\"center\">-1</td><td align=\"center\">-</td><td align=\"center\">" + successor.getNumber() + "</td>";
+		this.htmlOutput += "<td align=\"center\">-</td></tr>";
 	}
 
 	protected boolean calculateEnabled()
@@ -115,14 +130,14 @@ public class GrammarFactory
 	public String run()
 	{
 		final StringBuffer returnString = new StringBuffer();
-		final CanvasParser ggllTableGenerator = new CanvasParser();
+		final CanvasStateParser canvasStateParser = new CanvasStateParser();
 
 		final ExtendedList<SyntaxElement> children = new ExtendedList<SyntaxElement>();
 		final ExtendedList<AbstractNode> startNodes = new ExtendedList<AbstractNode>();
 
 		for (final SyntaxGraph canvas : SyntaxGraphRepository.getInstances())
 		{
-			children.addAll(ggllTableGenerator.getLogicDiagram(canvas).getChildrenNodes());
+			children.addAll(canvasStateParser.getLogicDiagram(canvas.getCanvasState()).getChildrenNodes());
 		}
 
 		startNodes.addAll(clearAndSetStartNodes(children));
@@ -136,25 +151,12 @@ public class GrammarFactory
 
 			final AbstractNode startNode = startNodes.get(i);
 			final AbstractNode successorNode = (AbstractNode) successorSyntaxSubpart;
-
-			final ExtendedList listChildren = ((SyntaxModel) startNodes.get(i)).getChildrenAsLabels();
-			final NodeLabel label = (NodeLabel) listChildren.first();
-
-			writeBegining(label);
-
-			this.htmlOutput = "<table cellspacing=\"0\" cellpadding=\"0\" border=\"1px\" width=\"100%\">";
-			this.htmlOutput += "<tr style=\"background-color: #EEEEEE; font-weight: bold;\"><td></td>";
-			this.htmlOutput += "<td>Node</td><td>Number</td><td>Alternative</td><td>Successor</td>";
-			this.htmlOutput += "<td>Semantic Rout.</td></tr>";
-			if (startNode.getType().equals(AbstractNode.START))
+			writeBegining(startSyntaxModel);
+			
+			if (startNode.getType().equals(CanvasResource.START))
 			{
-				this.htmlOutput += "<tr><td style=\"background-color: #EEEEEE;\">";
-				this.htmlOutput += "<img src=\"images/icon_s2.png\" alt=\"Initial Node\"></td>";
-				this.htmlOutput += "<td style=\"font-weight: bold;\" >";
-				this.htmlOutput += "<a href=\"" + ((SyntaxModel) startNodes.get(i)).getID() + "\">" + label.getLabelContents() + "</a></td>";
-				this.htmlOutput += "<td align=\"center\">-1</td><td align=\"center\">-</td><td align=\"center\">" + successorSyntaxSubpart.getNumber() + "</td>";
-				this.htmlOutput += "<td align=\"center\">-</td></tr>";
-				final GrammarComponent grammarHead = new GrammarComponent(label.getLabelContents(), startSyntaxModel.getID());
+				writeStart(startSyntaxModel, successorSyntaxSubpart);
+				final GrammarComponent grammarHead = new GrammarComponent(startSyntaxModel.getLabel(), startSyntaxModel.getID());
 				grammarHead.setHead(true);
 				if (i == 0)
 				{
@@ -165,13 +167,8 @@ public class GrammarFactory
 			}
 			else
 			{
-				this.htmlOutput += "<tr><td style=\"background-color: #EEEEEE;\">";
-				this.htmlOutput += "<img src=\"images/icon_H2.png\" alt=\"Left Side\"></td>";
-				this.htmlOutput += "<td style=\"font-weight: bold;\" >";
-				this.htmlOutput += "<a href=\"" + ((SyntaxModel) startNodes.get(i)).getID() + "\">" + label.getLabelContents() + "</a>";
-				this.htmlOutput += "</td><td align=\"center\">-1</td><td align=\"center\">-</td><td align=\"center\">" + successorSyntaxSubpart.getNumber() + "</td>";
-				this.htmlOutput += "<td align=\"center\">-</td></tr>";
-				final GrammarComponent grammarLeftside = new GrammarComponent(label.getLabelContents(), startSyntaxModel.getID());
+				writeLeftSide(startSyntaxModel, successorSyntaxSubpart);
+				final GrammarComponent grammarLeftside = new GrammarComponent(startSyntaxModel.getLabel(), startSyntaxModel.getID());
 				grammarLeftside.setLeftHand(true);
 				if (i == 0)
 				{
@@ -180,20 +177,20 @@ public class GrammarFactory
 				this.grammar.addLeftHand(grammarLeftside);
 				this.grammar.setCurrent(grammarLeftside);
 			}
-			final String stringOut = startSyntaxModel.getID() + " H " + label.getLabelContents() + " -1 -1 " + successorSyntaxSubpart.getNumber() + " -1\n";
-			returnString.append(stringOut);
+			returnString.append(startSyntaxModel.getID() + " H " + startSyntaxModel.getLabel() + " -1 -1 " + successorSyntaxSubpart.getNumber() + " -1\n");
+			
 			final GrammarData successorGrammarData = getNameAndSematicRouting(successorSyntaxSubpart);
 			final GrammarComponent successorGammarComponent = new GrammarComponent(successorGrammarData.name, successorGrammarData.id);
 
-			if (successorNode.getType().equals(AbstractNode.NTERMINAL))
+			if (successorNode.getType().equals(CanvasResource.N_TERMINAL))
 			{
 				successorGammarComponent.setNonterminal(true);
 			}
-			else if (successorNode.getType().equals(AbstractNode.TERMINAL))
+			else if (successorNode.getType().equals(CanvasResource.TERMINAL))
 			{
 				successorGammarComponent.setTerminal(true);
 			}
-			else if (successorNode.getType().equals(AbstractNode.LAMBDA_ALTERNATIVE))
+			else if (successorNode.getType().equals(CanvasResource.LAMBDA))
 			{
 				successorGammarComponent.setLambda(true);
 			}
@@ -238,21 +235,21 @@ public class GrammarFactory
 
 			final GrammarData grammarData = getNameAndSematicRouting((SyntaxModel) syntaxSubpart);
 
-			if (subpartNode.getType().equals(AbstractNode.NTERMINAL))
+			if (subpartNode.getType().equals(CanvasResource.N_TERMINAL))
 			{
 				stringOut = grammarData.id + " N";
 				this.htmlOutput = this.htmlOutput + "<td style=\"background-color: #EEEEEE;\"><img src=\"images/icon_nt2.png\" alt=\"Non-Terminal\"></td>";
 				grammarComponent = new GrammarComponent(grammarData.name, grammarData.id);
 				grammarComponent.setNonterminal(true);
 			}
-			else if (subpartNode.getType().equals(AbstractNode.TERMINAL))
+			else if (subpartNode.getType().equals(CanvasResource.TERMINAL))
 			{
 				stringOut = grammarData.id + " T";
 				this.htmlOutput = this.htmlOutput + "<td style=\"background-color: #EEEEEE;\"><img src=\"images/icon_t2.png\" alt=\"Terminal\"></td>";
 				grammarComponent = new GrammarComponent(grammarData.name, grammarData.id);
 				grammarComponent.setTerminal(true);
 			}
-			else if (subpartNode.getType().equals(AbstractNode.LAMBDA_ALTERNATIVE))
+			else if (subpartNode.getType().equals(CanvasResource.LAMBDA))
 			{
 				stringOut = grammarData.id + " T";
 				this.htmlOutput = this.htmlOutput + "<td style=\"background-color: #EEEEEE;\"><img src=\"images/icon_l.png\" alt=\"Lambda Alternative\"></td>";
@@ -300,15 +297,15 @@ public class GrammarFactory
 			{
 				final GrammarData nextGrammarData = getNameAndSematicRouting(successor);
 				final GrammarComponent nextGrammarComponent = new GrammarComponent(nextGrammarData.name, nextGrammarData.id);
-				if (successorNode.getType().equals(AbstractNode.NTERMINAL))
+				if (successorNode.getType().equals(CanvasResource.N_TERMINAL))
 				{
 					nextGrammarComponent.setNonterminal(true);
 				}
-				else if (successorNode.getType().equals(AbstractNode.TERMINAL))
+				else if (successorNode.getType().equals(CanvasResource.TERMINAL))
 				{
 					nextGrammarComponent.setTerminal(true);
 				}
-				else if (successorNode.getType().equals(AbstractNode.LAMBDA_ALTERNATIVE))
+				else if (successorNode.getType().equals(CanvasResource.LAMBDA))
 				{
 					nextGrammarComponent.setLambda(true);
 				}
@@ -320,15 +317,15 @@ public class GrammarFactory
 			{
 				final GrammarData nextGrammarData = getNameAndSematicRouting(alternative);
 				final GrammarComponent nextGuy = new GrammarComponent(nextGrammarData.name, nextGrammarData.id);
-				if (alternativeNode.getType().equals(AbstractNode.NTERMINAL))
+				if (alternativeNode.getType().equals(CanvasResource.N_TERMINAL))
 				{
 					nextGuy.setNonterminal(true);
 				}
-				else if (alternativeNode.getType().equals(AbstractNode.TERMINAL))
+				else if (alternativeNode.getType().equals(CanvasResource.TERMINAL))
 				{
 					nextGuy.setTerminal(true);
 				}
-				else if (alternativeNode.getType().equals(AbstractNode.LAMBDA_ALTERNATIVE))
+				else if (alternativeNode.getType().equals(CanvasResource.LAMBDA))
 				{
 					nextGuy.setLambda(true);
 				}

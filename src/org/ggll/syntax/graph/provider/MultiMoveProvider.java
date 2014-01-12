@@ -5,7 +5,7 @@ import java.beans.PropertyChangeEvent;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.ggll.parser.syntax.grammar.model.SyntaxDefinitions;
+import org.ggll.resource.CanvasResource;
 import org.ggll.syntax.graph.SyntaxGraph;
 import org.netbeans.api.visual.action.MoveProvider;
 import org.netbeans.api.visual.widget.Widget;
@@ -34,11 +34,11 @@ public class MultiMoveProvider implements MoveProvider
 		String context = null;
 		if (this.targets.entrySet().size() > 1)
 		{
-			context = SyntaxDefinitions.Set;
+			context = CanvasResource.SET;
 		}
 		else if (this.targets.entrySet().size() == 1)
 		{
-			context = SyntaxDefinitions.Node;
+			context = CanvasResource.NODE;
 		}
 		this.targets.clear();
 		this.originalLocation = null;

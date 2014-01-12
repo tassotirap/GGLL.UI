@@ -11,7 +11,7 @@ import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
-import org.ggll.parser.syntax.grammar.GrammarParser;
+import org.ggll.grammar.GrammarParser;
 import org.ggll.resource.LangResource;
 import org.ggll.syntax.graph.SyntaxGraph;
 

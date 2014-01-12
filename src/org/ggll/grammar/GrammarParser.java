@@ -1,4 +1,4 @@
-package org.ggll.parser.syntax.grammar;
+package org.ggll.grammar;
 
 import ggll.core.lexical.YyFactory;
 import ggll.core.list.ExtendedList;
@@ -8,6 +8,12 @@ import java.io.File;
 
 import org.ggll.director.GGLLDirector;
 import org.ggll.file.FileNames;
+import org.ggll.grammar.validation.GrammarError;
+import org.ggll.grammar.validation.GrammarValidation;
+import org.ggll.grammar.validation.HeaderValidation;
+import org.ggll.grammar.validation.LeftRecursionValidation;
+import org.ggll.grammar.validation.LeftSideValidation;
+import org.ggll.grammar.validation.NTerminalValidation;
 import org.ggll.output.AppOutput;
 import org.ggll.output.HtmlViewer.TOPIC;
 import org.ggll.output.Output;
@@ -16,12 +22,6 @@ import org.ggll.output.TokenOutput;
 import org.ggll.parser.ParsingEditor;
 import org.ggll.parser.syntax.SyntacticLoader;
 import org.ggll.parser.syntax.TableCreate;
-import org.ggll.parser.syntax.validation.GrammarError;
-import org.ggll.parser.syntax.validation.GrammarValidation;
-import org.ggll.parser.syntax.validation.HeaderValidation;
-import org.ggll.parser.syntax.validation.LeftRecursionValidation;
-import org.ggll.parser.syntax.validation.LeftSideValidation;
-import org.ggll.parser.syntax.validation.NTerminalValidation;
 import org.ggll.util.io.IOHelper;
 
 public class GrammarParser
@@ -42,7 +42,8 @@ public class GrammarParser
 
 		if (validateGrammar())
 		{
-			YyFactory.createYylex(GGLLDirector.getProject().getLexicalFile().getParent(), "export", GGLLDirector.getProject().getLexicalFile().getPath());
+			createYyler();
+			
 			final GrammarFactory grammarFactory = new GrammarFactory();
 			final String grammar = grammarFactory.run();
 
@@ -64,6 +65,12 @@ public class GrammarParser
 			AppOutput.displayText("<font color='green'>Grammar successfully generated.</font>", TOPIC.Output);
 			AppOutput.displayHorizontalLine(TOPIC.Output);
 		}
+	}
+	
+	private void createYyler()
+	{
+		YyFactory yyFactory = new YyFactory();
+		yyFactory.createYylex(GGLLDirector.getProject().getLexicalFile().getParent(), "export", GGLLDirector.getProject().getLexicalFile().getPath());
 	}
 
 	public boolean validateGrammar()

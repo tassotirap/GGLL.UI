@@ -1,4 +1,4 @@
-package org.ggll.parser.syntax.validation;
+package org.ggll.grammar.validation;
 
 import org.ggll.syntax.graph.SyntaxGraphRepository;
 

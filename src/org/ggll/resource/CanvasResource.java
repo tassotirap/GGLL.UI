@@ -21,4 +21,8 @@ public class CanvasResource
 	public final static String SUC_LBL = "successor";
 	public final static String SUCCESSOR = "SUCCESSOR";
 	public final static String TERMINAL = "TERMINAL";
+	public final static String SEMANTIC_ROUTINE = "SEMANTIC";
+	public final static String EMPTY_NODE_LABEL = "L.A.";
+	public final static String SET = "Set";
+	public final static String NODE = "Node";
 }

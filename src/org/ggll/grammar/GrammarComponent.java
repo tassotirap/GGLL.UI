@@ -1,4 +1,4 @@
-package org.ggll.parser.syntax.grammar;
+package org.ggll.grammar;
 
 /** Just any component on a grammar; an abstract representation **/
 public class GrammarComponent

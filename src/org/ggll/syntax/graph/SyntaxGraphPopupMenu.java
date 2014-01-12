@@ -16,7 +16,7 @@ import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JSeparator;
 
 import org.ggll.director.GGLLDirector;
-import org.ggll.parser.syntax.grammar.GrammarParser;
+import org.ggll.grammar.GrammarParser;
 import org.ggll.resource.CanvasResource;
 import org.ggll.syntax.graph.provider.GridProvider;
 import org.ggll.syntax.graph.provider.LineProvider;

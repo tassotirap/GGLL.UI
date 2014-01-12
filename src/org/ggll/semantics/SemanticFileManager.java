@@ -1,4 +1,4 @@
-package org.ggll.parser.semantics;
+package org.ggll.semantics;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;

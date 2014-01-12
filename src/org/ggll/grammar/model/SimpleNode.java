@@ -1,4 +1,4 @@
-package org.ggll.parser.syntax.grammar.model;
+package org.ggll.grammar.model;
 
 import java.util.Hashtable;
 
@@ -6,7 +6,6 @@ import java.util.Hashtable;
  * A simple node refers to any kind of node that can receive output input
  * connections as usual, and also has a usual node label.
  * 
- * @author Gustavo H. Braga
  * 
  */
 public class SimpleNode extends SyntaxModel implements AbstractNode
@@ -14,10 +13,6 @@ public class SimpleNode extends SyntaxModel implements AbstractNode
 
 	/** gets Track of available IDs by type **/
 	private static Hashtable<String, Integer> nextIDByType = new Hashtable<String, Integer>();
-
-	private static final long serialVersionUID = 1L;
-
-	private final NodeLabel label;
 
 	/**
 	 * determines the type of this node (ex: a terminal, a non terminal, etc...)
@@ -33,9 +28,8 @@ public class SimpleNode extends SyntaxModel implements AbstractNode
 	public SimpleNode(String type, String label)
 	{
 		super(getNewID(type));
+		setLabel(label);
 		this.type = type;
-		this.label = new NodeLabel(label);
-		addChild(this.label);
 	}
 
 	/**
@@ -48,11 +42,6 @@ public class SimpleNode extends SyntaxModel implements AbstractNode
 			nextIDByType.put(type, 0);
 		}
 		return String.valueOf(nextIDByType.put(type, nextIDByType.get(type) + 1) + 1);
-	}
-
-	public NodeLabel getLabel()
-	{
-		return this.label;
 	}
 
 	/*----------------------------- getters, setters ---------------------*/

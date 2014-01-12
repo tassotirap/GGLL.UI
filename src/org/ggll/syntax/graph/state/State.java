@@ -146,6 +146,19 @@ public class State implements Serializable, PropertyChangeListener
 		return leftSides;
 	}
 	
+	public ExtendedList<StateNode> getLambda()
+	{
+		final ExtendedList<StateNode> leftSides = new ExtendedList<StateNode>();
+		for (final StateNode node : this.nodes.values())
+		{
+			if (node.getType().equals(CanvasResource.LAMBDA))
+			{
+				leftSides.append(node);
+			}
+		}
+		return leftSides;
+	}
+	
 	public ExtendedList<StateNode> getNTerminal()
 	{
 		final ExtendedList<StateNode> nTerminals = new ExtendedList<StateNode>();
@@ -157,6 +170,19 @@ public class State implements Serializable, PropertyChangeListener
 			}
 		}
 		return nTerminals;
+	}
+	
+	public ExtendedList<StateNode> getTerminal()
+	{
+		final ExtendedList<StateNode> terminals = new ExtendedList<StateNode>();
+		for (final StateNode node : this.nodes.values())
+		{
+			if (node.getType().equals(CanvasResource.TERMINAL))
+			{
+				terminals.append(node);
+			}
+		}
+		return terminals;
 	}
 
 	public Set<String> getNodes()

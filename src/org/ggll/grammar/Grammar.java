@@ -1,4 +1,4 @@
-package org.ggll.parser.syntax.grammar;
+package org.ggll.grammar;
 
 import ggll.core.list.ExtendedList;
 
