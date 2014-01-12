@@ -1,9 +1,8 @@
 package org.ggll.parser.syntax;
 
 import org.ggll.grammar.model.Connection;
-import org.ggll.grammar.model.SyntaxElement;
 import org.ggll.grammar.model.SimpleNode;
-import org.ggll.grammar.model.SyntaxSubpart;
+import org.ggll.grammar.model.SyntaxElement;
 import org.ggll.resource.CanvasResource;
 import org.ggll.syntax.graph.state.State;
 import org.ggll.syntax.graph.state.StateConnection;
@@ -61,8 +60,8 @@ public class CanvasStateParser
 		final SyntaxElement targetElement = this.syntaxModel.findElement(stateConnection.getTarget());
 		if (this.syntaxModel.isNode(sourceElement) && this.syntaxModel.isNode(targetElement))
 		{
-			final SyntaxSubpart sourceSyntaxSubpart = (SyntaxSubpart) sourceElement;
-			final SyntaxSubpart targetSyntaxSubpart = (SyntaxSubpart) targetElement;
+			final SimpleNode sourceSyntaxSubpart = (SimpleNode) sourceElement;
+			final SimpleNode targetSyntaxSubpart = (SimpleNode) targetElement;
 			final Connection connection = new Connection(stateConnection.getId());
 			connection.setSource(sourceSyntaxSubpart);
 			connection.setTarget(targetSyntaxSubpart);

@@ -15,8 +15,8 @@ abstract public class SyntaxSubpart extends SyntaxElement
 	protected ArrayList<Connection> inputs = new ArrayList<Connection>();
 	protected ArrayList<Connection> outputs = new ArrayList<Connection>();
 
-	protected SyntaxSubpart alternative;
-	protected SyntaxSubpart sucessor;
+	protected SimpleNode alternative;
+	protected SimpleNode sucessor;
 
 	public SyntaxSubpart(String id)
 	{
@@ -43,7 +43,7 @@ abstract public class SyntaxSubpart extends SyntaxElement
 		this.outputs.remove(connection);
 	}
 
-	public SyntaxSubpart getAlternative()
+	public SimpleNode getAlternative()
 	{
 		return this.alternative;
 	}
@@ -72,7 +72,7 @@ abstract public class SyntaxSubpart extends SyntaxElement
 		return this.outputs;
 	}
 
-	public SyntaxSubpart getSucessor()
+	public SimpleNode getSucessor()
 	{
 		return this.sucessor;
 	}
@@ -82,9 +82,9 @@ abstract public class SyntaxSubpart extends SyntaxElement
 		return this.inputs;
 	}
 
-	public void setAlternative(SyntaxSubpart e)
+	public void setAlternative(SimpleNode alternative)
 	{
-		this.alternative = e;
+		this.alternative = alternative;
 	}
 
 	public void setFlag(boolean b)
@@ -98,8 +98,8 @@ abstract public class SyntaxSubpart extends SyntaxElement
 		this.number = number;
 	}
 
-	public void setSucessor(SyntaxSubpart e)
+	public void setSucessor(SimpleNode sucessor)
 	{
-		this.sucessor = e;
+		this.sucessor = sucessor;
 	}
 }

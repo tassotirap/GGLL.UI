@@ -131,30 +131,26 @@ public class GrammarFactory
 		final CanvasStateParser canvasStateParser = new CanvasStateParser();
 
 		final ExtendedList<SyntaxElement> children = new ExtendedList<SyntaxElement>();
-		final ExtendedList<SimpleNode> startNodes = new ExtendedList<SimpleNode>();
-
 		for (final SyntaxGraph canvas : SyntaxGraphRepository.getInstances())
 		{
 			children.addAll(canvasStateParser.getLogicDiagram(canvas.getCanvasState()).getChildrenNodes());
 		}
 
-		startNodes.addAll(clearAndSetStartNodes(children));
-
-		for (int i = 0; i < startNodes.count(); i++)
+		final ExtendedList<SimpleNode> startNodes = clearAndSetStartNodes(children);
+		for(int i = 0; i < startNodes.count(); i++)
 		{
 			this.cont = 0;
 			
 			final SimpleNode startNode = startNodes.get(i);
-			final SimpleNode startSyntaxModel = (SimpleNode) startNodes.get(i);		
-			final SimpleNode successorSyntaxSubpart = (SimpleNode) startSyntaxModel.getSucessor();
+			final SimpleNode successorSyntaxSubpart = startNode.getSucessor();
 			successorSyntaxSubpart.setNumber(++this.cont);
 			
-			writeBegining(startSyntaxModel);
+			writeBegining(startNode);
 			
 			if (startNode.getType().equals(CanvasResource.START))
 			{
-				writeStart(startSyntaxModel, successorSyntaxSubpart);
-				final GrammarComponent grammarHead = new GrammarComponent(startSyntaxModel.getLabel(), startSyntaxModel.getID());
+				writeStart(startNode, successorSyntaxSubpart);
+				final GrammarComponent grammarHead = new GrammarComponent(startNode.getLabel(), startNode.getID());
 				grammarHead.setHead(true);
 				if (i == 0)
 				{
@@ -165,8 +161,8 @@ public class GrammarFactory
 			}
 			else
 			{
-				writeLeftSide(startSyntaxModel, successorSyntaxSubpart);
-				final GrammarComponent grammarLeftside = new GrammarComponent(startSyntaxModel.getLabel(), startSyntaxModel.getID());
+				writeLeftSide(startNode, successorSyntaxSubpart);
+				final GrammarComponent grammarLeftside = new GrammarComponent(startNode.getLabel(), startNode.getID());
 				grammarLeftside.setLeftHand(true);
 				if (i == 0)
 				{
@@ -175,7 +171,7 @@ public class GrammarFactory
 				this.grammar.addLeftHand(grammarLeftside);
 				this.grammar.setCurrent(grammarLeftside);
 			}
-			returnString.append(startSyntaxModel.getID() + " H " + startSyntaxModel.getLabel() + " -1 -1 " + successorSyntaxSubpart.getNumber() + " -1\n");
+			returnString.append(startNode.getID() + " H " + startNode.getLabel() + " -1 -1 " + successorSyntaxSubpart.getNumber() + " -1\n");
 			
 			final GrammarData successorGrammarData = getNameAndSematicRouting(successorSyntaxSubpart);
 			final GrammarComponent successorGammarComponent = new GrammarComponent(successorGrammarData.name, successorGrammarData.id);

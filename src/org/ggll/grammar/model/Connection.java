@@ -2,21 +2,17 @@ package org.ggll.grammar.model;
 
 import org.ggll.resource.CanvasResource;
 
-/** A connection between nodes **/
 public class Connection extends SyntaxElement
 {
 	static final long serialVersionUID = 1;
-	protected SyntaxSubpart source;
-	protected SyntaxSubpart target;
-
-	protected boolean value;
+	protected SimpleNode source;
+	protected SimpleNode target;
 
 	public Connection(String id)
 	{
 		setID(id);
 	}
 
-	/** Attach connection to the source node **/
 	public void attachSource()
 	{
 		if (getSource() == null || getSource().getSourceConnections().contains(this))
@@ -26,34 +22,23 @@ public class Connection extends SyntaxElement
 		getSource().connectOutput(this);
 	}
 
-	/**
-	 * Attach connection to the target node.
-	 * 
-	 * @param context
-	 *            could be a successor or an alternative connection
-	 */
 	public void attachTarget(Object context)
 	{
 		if (this.target == null || this.source == null)
 		{
 			return;
 		}
-		final Object e = getTarget();
-		if (e instanceof SimpleNode)
+		final SimpleNode target = getTarget();
+		final SimpleNode source = getSource();
+		if (context.equals(CanvasResource.SUCCESSOR))
 		{
-			if (getSource() instanceof SimpleNode)
-			{
-				final SimpleNode l = (SimpleNode) getSource();
-				if (context.equals(CanvasResource.SUCCESSOR))
-				{
-					l.setSucessor((SyntaxSubpart) e);
-				}
-				else if (context.equals(CanvasResource.ALTERNATIVE))
-				{
-					l.setAlternative((SyntaxSubpart) e);
-				}
-			}
+			source.setSucessor(target);
 		}
+		else if (context.equals(CanvasResource.ALTERNATIVE))
+		{
+			source.setAlternative(target);
+		}
+
 		getTarget().connectInput(this);
 	}
 
@@ -94,9 +79,7 @@ public class Connection extends SyntaxElement
 		getTarget().disconnectInput(this);
 	}
 
-	/*------------------------------- GETTERS AND SETTERS ----------------------*/
-
-	public SyntaxSubpart getSource()
+	public SimpleNode getSource()
 	{
 		return this.source;
 	}
@@ -106,7 +89,7 @@ public class Connection extends SyntaxElement
 		return this.source.getID();
 	}
 
-	public SyntaxSubpart getTarget()
+	public SimpleNode getTarget()
 	{
 		return this.target;
 	}
@@ -116,32 +99,13 @@ public class Connection extends SyntaxElement
 		return this.target.getID();
 	}
 
-	public boolean getValue()
+	public void setSource(SimpleNode source)
 	{
-		return this.value;
+		this.source = source;
 	}
 
-	public void setSource(SyntaxSubpart e)
+	public void setTarget(SimpleNode target)
 	{
-		this.source = e;
-	}
-
-	public void setTarget(SyntaxSubpart e)
-	{
-		this.target = e;
-	}
-
-	public void setValue(boolean value)
-	{
-		if (value == this.value)
-		{
-			return;
-		}
-		this.value = value;
-	}
-
-	public String toString()
-	{
-		return "Wire(" + getSource() + "," + getSourceTerminal() + "->" + getTarget() + "," + getTargetTerminal() + ")";//$NON-NLS-5$//$NON-NLS-4$//$NON-NLS-3$//$NON-NLS-2$//$NON-NLS-1$
+		this.target = target;
 	}
 }
