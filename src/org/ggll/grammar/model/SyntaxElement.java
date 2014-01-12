@@ -14,5 +14,4 @@ abstract public class SyntaxElement
 	{
 		this.id = id;
 	}
-
 }

@@ -1,9 +1,8 @@
 package org.ggll.parser.syntax;
 
 import org.ggll.grammar.model.Connection;
-import org.ggll.grammar.model.SimpleNode;
 import org.ggll.grammar.model.SyntaxElement;
-import org.ggll.grammar.model.SyntaxModel;
+import org.ggll.grammar.model.SimpleNode;
 import org.ggll.grammar.model.SyntaxSubpart;
 import org.ggll.resource.CanvasResource;
 import org.ggll.syntax.graph.state.State;
@@ -12,7 +11,7 @@ import org.ggll.syntax.graph.state.StateNode;
 
 public class CanvasStateParser
 {
-	private SyntaxModel syntaxModel = new SyntaxModel();
+	private SimpleNode syntaxModel = new SimpleNode();
 
 	private void add(String id, String label, String type)
 	{
@@ -50,9 +49,9 @@ public class CanvasStateParser
 		final SimpleNode routineNode = new SimpleNode(CanvasResource.SEMANTIC_ROUTINE, routineName);
 		final String name = target;
 		final SyntaxElement syntaxElement = this.syntaxModel.findElement(name);
-		if (this.syntaxModel.isNode(syntaxElement) && syntaxElement instanceof SyntaxModel)
+		if (this.syntaxModel.isNode(syntaxElement) && syntaxElement instanceof SimpleNode)
 		{
-			((SyntaxModel) syntaxElement).setSemanticNode(routineNode);
+			((SimpleNode) syntaxElement).setSemanticNode(routineNode);
 		}
 	}
 
@@ -75,7 +74,7 @@ public class CanvasStateParser
 
 	private void recreateDiagram(State state)
 	{
-		this.syntaxModel = new SyntaxModel();
+		this.syntaxModel = new SimpleNode();
 
 		for (final StateNode node : state.getTerminal().getAll())
 		{
@@ -113,7 +112,7 @@ public class CanvasStateParser
 		}
 	}
 
-	public SyntaxModel getLogicDiagram(State canvas)
+	public SimpleNode getLogicDiagram(State canvas)
 	{
 		recreateDiagram(canvas);
 		return this.syntaxModel;

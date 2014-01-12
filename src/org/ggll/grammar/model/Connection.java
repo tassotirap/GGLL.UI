@@ -41,9 +41,9 @@ public class Connection extends SyntaxElement
 		final Object e = getTarget();
 		if (e instanceof SimpleNode)
 		{
-			if (getSource() instanceof SyntaxModel)
+			if (getSource() instanceof SimpleNode)
 			{
-				final SyntaxModel l = (SyntaxModel) getSource();
+				final SimpleNode l = (SimpleNode) getSource();
 				if (context.equals(CanvasResource.SUCCESSOR))
 				{
 					l.setSucessor((SyntaxSubpart) e);
@@ -78,9 +78,9 @@ public class Connection extends SyntaxElement
 		final SyntaxSubpart e = getTarget();
 		if (e instanceof SimpleNode)
 		{
-			if (getSource() instanceof SyntaxModel)
+			if (getSource() instanceof SimpleNode)
 			{
-				final SyntaxModel l = (SyntaxModel) getSource();
+				final SimpleNode l = (SimpleNode) getSource();
 				if (l.getSucessor() == e)
 				{
 					l.setSucessor(null);
