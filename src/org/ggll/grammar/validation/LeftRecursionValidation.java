@@ -15,12 +15,47 @@ public class LeftRecursionValidation extends GrammarValidation
 		{
 			final ExtendedList<StateNode> nTerminals = new ExtendedList<StateNode>();
 			final ExtendedList<StateNode> nodes = new ExtendedList<StateNode>();
-			walkGraph(SyntaxGraphRepository.findSucessorNode(leftside), nTerminals, nodes);
+			walkGraph(leftside, nTerminals, nodes);
 			for (StateNode nTerminal : nTerminals.getAll())
 			{
 				if (nTerminal.getTitle().equals(leftside.getTitle()))
 				{
 					addError("Left recursion.", leftside);
+				}
+			}
+		}
+	}
+
+	private void alternativeNodes(StateNode node, ExtendedList<StateNode> nTerminals, ExtendedList<StateNode> nodes)
+	{
+		StateNode alternative = SyntaxGraphRepository.findAlternativeNode(node);
+		while (alternative != null && !nodes.contains(alternative))
+		{
+			if (alternative.getType().equals(CanvasResource.N_TERMINAL))
+			{
+				if (!nTerminals.contains(alternative))
+				{
+					nTerminals.append(alternative);
+					StateNode leftSide = SyntaxGraphRepository.findLeftSide(alternative);
+					walkGraph(leftSide, nTerminals, nodes);
+				}
+			}
+			alternative = SyntaxGraphRepository.findAlternativeNode(alternative);
+		}
+	}
+
+	private void sucessorNodes(StateNode node, ExtendedList<StateNode> nTerminals, ExtendedList<StateNode> nodes)
+	{
+		StateNode sucessor = SyntaxGraphRepository.findSucessorNode(node);
+		if (sucessor != null && !nodes.contains(sucessor))
+		{
+			if (sucessor.getType().equals(CanvasResource.N_TERMINAL))
+			{
+				if (!nTerminals.contains(sucessor))
+				{
+					nTerminals.append(sucessor);
+					StateNode leftSide = SyntaxGraphRepository.findLeftSide(sucessor);
+					walkGraph(leftSide, nTerminals, nodes);
 				}
 			}
 		}
@@ -33,22 +68,7 @@ public class LeftRecursionValidation extends GrammarValidation
 			return;
 		}
 		nodes.append(node);
-		if (node.getType().equals(CanvasResource.N_TERMINAL))
-		{
-			if (!nTerminals.contains(node))
-			{
-				nTerminals.append(node);
-				walkGraph(SyntaxGraphRepository.findLeftSide(node), nTerminals, nodes);
-			}
-		}
-
-		if (!nodes.contains(SyntaxGraphRepository.findSucessorNode(node)))
-		{
-			walkGraph(SyntaxGraphRepository.findSucessorNode(node), nTerminals, nodes);
-		}
-		if (!nodes.contains(SyntaxGraphRepository.findAlternativeNode(node)))
-		{
-			walkGraph(SyntaxGraphRepository.findAlternativeNode(node), nTerminals, nodes);
-		}
+		sucessorNodes(node, nTerminals, nodes);
+		alternativeNodes(SyntaxGraphRepository.findSucessorNode(node), nTerminals, nodes);
 	}
 }

@@ -1,4 +1,4 @@
-package org.ggll.syntax.graph;
+package org.ggll.syntax .graph;
 
 import ggll.core.list.ExtendedList;
 
@@ -25,6 +25,7 @@ public class SyntaxGraphRepository
 
 	public static StateNode findLeftSide(StateNode node)
 	{
+		if(node == null) return null;
 		for (final StateNode leftside : getLeftSides().getAll())
 		{
 			if (leftside.getTitle().equals(node.getTitle()))
@@ -38,6 +39,7 @@ public class SyntaxGraphRepository
 
 	public static StateNode findSucessorNode(StateNode node)
 	{
+		if(node == null) return null;
 		for (final SyntaxGraph syntaxGraph : getInstances())
 		{
 			for (final StateConnection edge : syntaxGraph.getCanvasState().getSucessors().getAll())
@@ -53,6 +55,7 @@ public class SyntaxGraphRepository
 	
 	public static StateNode findAlternativeNode(StateNode node)
 	{
+		if(node == null) return null;
 		for (final SyntaxGraph syntaxGraph : getInstances())
 		{
 			for (final StateConnection edge : syntaxGraph.getCanvasState().getAlternatives().getAll())
