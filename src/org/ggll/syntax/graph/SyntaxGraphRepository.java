@@ -154,12 +154,12 @@ public class SyntaxGraphRepository
 		final ExtendedList<StateNode> leftSides = new ExtendedList<StateNode>();
 		for (final SyntaxGraph syntaxGraph : getInstances())
 		{
-			leftSides.addAll(syntaxGraph.getCanvasState().getLeftSide());
+			leftSides.addAll(syntaxGraph.getCanvasState().getStarts());
 		}
 		for (final SyntaxGraph syntaxGraph : getInstances())
 		{
-			leftSides.addAll(syntaxGraph.getCanvasState().getStarts());
-		}
+			leftSides.addAll(syntaxGraph.getCanvasState().getLeftSide());
+		}		
 		return leftSides;
 	}
 	

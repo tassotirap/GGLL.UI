@@ -17,6 +17,8 @@ public class StateNode implements Serializable
 	private final String id;
 	private String title;
 	private String type;
+	private int number;
+	private boolean flag;
 
 	public StateNode(String id, SyntaxGraph canvas)
 	{
@@ -61,5 +63,25 @@ public class StateNode implements Serializable
 	public String getType()
 	{
 		return this.type;
+	}
+
+	public int getNumber()
+	{
+		return number;
+	}
+
+	public void setNumber(int number)
+	{
+		this.number = number;
+	}
+
+	public boolean isFlag()
+	{
+		return flag;
+	}
+
+	public void setFlag(boolean flag)
+	{
+		this.flag = flag;
 	}
 }
