@@ -3,6 +3,7 @@ package org.ggll.syntax.graph.state;
 import java.awt.Point;
 import java.io.Serializable;
 
+import org.ggll.resource.CanvasResource;
 import org.ggll.syntax.graph.SyntaxGraph;
 import org.ggll.syntax.graph.widget.MarkedWidget;
 import org.ggll.syntax.graph.widget.TypedWidget;

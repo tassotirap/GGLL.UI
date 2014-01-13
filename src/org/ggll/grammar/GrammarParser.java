@@ -14,6 +14,7 @@ import org.ggll.grammar.validation.HeaderValidation;
 import org.ggll.grammar.validation.LeftRecursionValidation;
 import org.ggll.grammar.validation.LeftSideValidation;
 import org.ggll.grammar.validation.NTerminalValidation;
+import org.ggll.grammar.validation.TerminalValidation;
 import org.ggll.output.AppOutput;
 import org.ggll.output.HtmlViewer.TOPIC;
 import org.ggll.output.Output;
@@ -45,7 +46,7 @@ public class GrammarParser
 			createYyler();
 			
 			final GrammarFactory grammarFactory = new GrammarFactory();
-			final String grammar = grammarFactory.run();
+			final String grammar = grammarFactory.toTable();
 
 			final TableCreate tableCreate = new TableCreate(grammar, false);
 			final SyntacticLoader syntacticLoader = new SyntacticLoader(tableCreate);
@@ -79,6 +80,7 @@ public class GrammarParser
 		rules.append(new HeaderValidation());
 		rules.append(new LeftSideValidation());
 		rules.append(new NTerminalValidation());
+		rules.append(new TerminalValidation());
 		rules.append(new LeftRecursionValidation());
 
 		for (final GrammarValidation grammarRule : rules.getAll())

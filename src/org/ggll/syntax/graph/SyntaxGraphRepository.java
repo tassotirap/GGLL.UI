@@ -35,7 +35,7 @@ public class SyntaxGraphRepository
 		}
 		return null;
 	}
-
+	
 
 	public static StateNode findSucessorNode(StateNode node)
 	{
@@ -48,6 +48,20 @@ public class SyntaxGraphRepository
 				{
 					return syntaxGraph.getCanvasState().findNode(edge.getTarget());
 				}
+			}
+		}
+		return null;
+	}
+	
+	public static StateNode findNode(String id)
+	{
+		if(id == null) return null;
+		for (final SyntaxGraph syntaxGraph : getInstances())
+		{
+			if(syntaxGraph.getCanvasState().findNode(id) != null)
+			{
+				return syntaxGraph.getCanvasState().findNode(id);
+				
 			}
 		}
 		return null;
@@ -185,6 +199,16 @@ public class SyntaxGraphRepository
 		}
 		return starts;
 	}
+	
+	public static ExtendedList<StateNode> getStateNodes()
+	{
+		final ExtendedList<StateNode> stateNodes = new ExtendedList<StateNode>();
+		for (final SyntaxGraph syntaxGraph : getInstances())
+		{
+			stateNodes.addAll(syntaxGraph.getCanvasState().getStateNodes());
+		}
+		return stateNodes;
+	}
 
 	public static ExtendedList<StateConnection> getSucessors()
 	{
@@ -195,7 +219,7 @@ public class SyntaxGraphRepository
 		}
 		return sucessors;
 	}
-
+	
 	public static void refresh()
 	{
 		for (final GrammarFile grammar : GGLLDirector.getProject().getGrammarFile().getAll())

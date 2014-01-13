@@ -184,6 +184,12 @@ public class State implements Serializable, PropertyChangeListener
 		}
 		return terminals;
 	}
+	
+	
+	public ExtendedList<StateNode> getStateNodes()
+	{
+		return new ExtendedList<StateNode>(nodes.values());
+	}
 
 	public Set<String> getNodes()
 	{
