@@ -90,6 +90,19 @@ public class State implements Serializable, PropertyChangeListener
 		return null;
 	}
 
+	public ExtendedList<StateConnection> getAlternatives()
+	{
+		final ExtendedList<StateConnection> alternative = new ExtendedList<StateConnection>();
+		for (final StateConnection edge : this.connections.values())
+		{
+			if (edge.getType().equals(CanvasResource.ALTERNATIVE))
+			{
+				alternative.append(edge);
+			}
+		}
+		return alternative;
+	}
+
 	public List<String> getConnections()
 	{
 		final ExtendedList<String> list = new ExtendedList<String>();
@@ -101,6 +114,19 @@ public class State implements Serializable, PropertyChangeListener
 	public String getFile()
 	{
 		return this.file;
+	}
+
+	public ExtendedList<StateNode> getLambda()
+	{
+		final ExtendedList<StateNode> leftSides = new ExtendedList<StateNode>();
+		for (final StateNode node : this.nodes.values())
+		{
+			if (node.getType().equals(CanvasResource.LAMBDA))
+			{
+				leftSides.append(node);
+			}
+		}
+		return leftSides;
 	}
 
 	public int getLastCustomNode()
@@ -127,12 +153,12 @@ public class State implements Serializable, PropertyChangeListener
 	{
 		return this.lastSTART;
 	}
-
+	
 	public int getLastTerminalId()
 	{
 		return this.lastTerminalId;
 	}
-
+	
 	public ExtendedList<StateNode> getLeftSide()
 	{
 		final ExtendedList<StateNode> leftSides = new ExtendedList<StateNode>();
@@ -146,18 +172,11 @@ public class State implements Serializable, PropertyChangeListener
 		return leftSides;
 	}
 	
-	public ExtendedList<StateNode> getLambda()
+	public Set<String> getNodes()
 	{
-		final ExtendedList<StateNode> leftSides = new ExtendedList<StateNode>();
-		for (final StateNode node : this.nodes.values())
-		{
-			if (node.getType().equals(CanvasResource.LAMBDA))
-			{
-				leftSides.append(node);
-			}
-		}
-		return leftSides;
+		return this.nodes.keySet();
 	}
+	
 	
 	public ExtendedList<StateNode> getNTerminal()
 	{
@@ -170,30 +189,6 @@ public class State implements Serializable, PropertyChangeListener
 			}
 		}
 		return nTerminals;
-	}
-	
-	public ExtendedList<StateNode> getTerminal()
-	{
-		final ExtendedList<StateNode> terminals = new ExtendedList<StateNode>();
-		for (final StateNode node : this.nodes.values())
-		{
-			if (node.getType().equals(CanvasResource.TERMINAL))
-			{
-				terminals.append(node);
-			}
-		}
-		return terminals;
-	}
-	
-	
-	public ExtendedList<StateNode> getStateNodes()
-	{
-		return new ExtendedList<StateNode>(nodes.values());
-	}
-
-	public Set<String> getNodes()
-	{
-		return this.nodes.keySet();
 	}
 
 	public StatePreferences getPreferences()
@@ -214,6 +209,11 @@ public class State implements Serializable, PropertyChangeListener
 		return starts;
 	}
 
+	public ExtendedList<StateNode> getStateNodes()
+	{
+		return new ExtendedList<StateNode>(nodes.values());
+	}
+
 	public ExtendedList<StateConnection> getSucessors()
 	{
 		final ExtendedList<StateConnection> sucessors = new ExtendedList<StateConnection>();
@@ -227,17 +227,17 @@ public class State implements Serializable, PropertyChangeListener
 		return sucessors;
 	}
 	
-	public ExtendedList<StateConnection> getAlternatives()
+	public ExtendedList<StateNode> getTerminal()
 	{
-		final ExtendedList<StateConnection> alternative = new ExtendedList<StateConnection>();
-		for (final StateConnection edge : this.connections.values())
+		final ExtendedList<StateNode> terminals = new ExtendedList<StateNode>();
+		for (final StateNode node : this.nodes.values())
 		{
-			if (edge.getType().equals(CanvasResource.ALTERNATIVE))
+			if (node.getType().equals(CanvasResource.TERMINAL))
 			{
-				alternative.append(edge);
+				terminals.append(node);
 			}
 		}
-		return alternative;
+		return terminals;
 	}
 
 	public String getType(Object obj)

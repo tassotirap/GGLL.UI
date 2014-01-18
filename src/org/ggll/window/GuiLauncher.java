@@ -3,6 +3,8 @@ package org.ggll.window;
 import javax.swing.JFrame;
 
 import org.ggll.director.GGLLDirector;
+import org.ggll.project.Project;
+import org.ggll.project.ProjectHelper;
 import org.ggll.window.splash.SplashWindow;
 
 /**
@@ -44,7 +46,8 @@ public class GuiLauncher
 	private MainWindow startMainWindow(WorkspaceChooser workspaceChooser)
 	{
 		final MainWindow mainWindow = new MainWindow();
-		GGLLDirector.Start(mainWindow, workspaceChooser.getWorkspaceDir());
+		final Project project = ProjectHelper.openProject(workspaceChooser.getWorkspaceDir());
+		GGLLDirector.Start(mainWindow, project);
 		showFrame(mainWindow);
 		return mainWindow;
 	}

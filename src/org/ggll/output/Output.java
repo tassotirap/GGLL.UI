@@ -15,8 +15,8 @@ import javax.swing.JFileChooser;
 import javax.swing.text.Document;
 import javax.swing.text.EditorKit;
 
+import org.ggll.file.CustomFileFilter;
 import org.ggll.syntax.graph.SyntaxGraph;
-import org.ggll.util.CustomFileFilter;
 import org.ggll.util.Log;
 import org.ggll.util.io.IOHelper;
 import org.htmlparser.Node;

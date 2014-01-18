@@ -5,7 +5,7 @@ import java.beans.PropertyChangeEvent;
 
 import org.ggll.resource.CanvasResource;
 import org.ggll.syntax.graph.SyntaxGraph;
-import org.ggll.syntax.graph.SyntaxGraphRepository;
+import org.ggll.syntax.graph.state.StateHelper;
 import org.netbeans.api.visual.action.WidgetAction;
 import org.netbeans.api.visual.widget.Widget;
 
@@ -23,30 +23,30 @@ public class NodeCreateAction extends WidgetAction.Adapter
 		if (this.canvas.getCanvasActiveTool().equals(CanvasResource.TERMINAL))
 		{
 			this.canvas.getCanvasState().incLastTerminalId();
-			return String.format("Terminal%d", SyntaxGraphRepository.getLastTerminalId());
+			return String.format("Terminal%d", StateHelper.getLastTerminalId());
 		}
 		if (this.canvas.getCanvasActiveTool().equals(CanvasResource.N_TERMINAL))
 		{
 			this.canvas.getCanvasState().incLastNTerminalId();
-			return String.format("NTerminal%d", SyntaxGraphRepository.getLastNTerminalId());
+			return String.format("NTerminal%d", StateHelper.getLastNTerminalId());
 		}
 		if (this.canvas.getCanvasActiveTool().equals(CanvasResource.LEFT_SIDE))
 		{
 			this.canvas.getCanvasState().incLastLeftSides();
-			return String.format("LeftSide%d", SyntaxGraphRepository.getLastLeftSides());
+			return String.format("LeftSide%d", StateHelper.getLastLeftSides());
 		}
 		if (this.canvas.getCanvasActiveTool().equals(CanvasResource.LAMBDA))
 		{
 			this.canvas.getCanvasState().incLastLAMBDA();
-			return String.format("Lambda%d", SyntaxGraphRepository.getLastLAMBDA());
+			return String.format("Lambda%d", StateHelper.getLastLAMBDA());
 		}
 		if (this.canvas.getCanvasActiveTool().equals(CanvasResource.START))
 		{
 			this.canvas.getCanvasState().incLastSTART();
-			return String.format("S%d", SyntaxGraphRepository.getLastSTART());
+			return String.format("S%d", StateHelper.getLastSTART());
 		}
 		this.canvas.getCanvasState().incLastCustomNode();
-		return String.format("node%d", SyntaxGraphRepository.getLastCustomNode());
+		return String.format("node%d", StateHelper.getLastCustomNode());
 	}
 
 	private boolean isNode(SyntaxGraph canvas)

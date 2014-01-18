@@ -5,8 +5,8 @@ import ggll.core.list.ExtendedList;
 import org.ggll.output.AppOutput;
 import org.ggll.output.HtmlViewer.TOPIC;
 import org.ggll.resource.CanvasResource;
-import org.ggll.syntax.graph.SyntaxGraphRepository;
 import org.ggll.syntax.graph.state.StateNode;
+import org.ggll.syntax.graph.state.StateHelper;
 
 public class GrammarFactory
 {
@@ -112,45 +112,11 @@ public class GrammarFactory
 		return output;
 	}
 	
-	public String toTable()
-	{
-		for(StateNode stateNode :  SyntaxGraphRepository.getStateNodes().getAll())
-		{
-			stateNode.setFlag(false);
-			stateNode.setNumber(0);
-		}		
-		final StringBuffer returnString = new StringBuffer();
-		final ExtendedList<StateNode> startNodes = SyntaxGraphRepository.getLeftSides();
-		for (int i = 0; i < startNodes.count(); i++)
-		{
-			this.cont = 0;
-			final StateNode startNode = startNodes.get(i);
-			final StateNode successorSyntaxSubpart = SyntaxGraphRepository.findSucessorNode(startNode);
-			successorSyntaxSubpart.setNumber(++this.cont);
-
-			htmlBegining(startNode);
-
-			if (startNode.getType().equals(CanvasResource.START))
-			{
-				htmlStart(startNode, successorSyntaxSubpart);
-			}
-			else
-			{
-				htmlLeftSide(startNode, successorSyntaxSubpart);
-			}
-			returnString.append(startNode.getId() + " H " + startNode.getTitle() + " -1 -1 " + successorSyntaxSubpart.getNumber() + " -1\n");
-			returnString.append(subpart(successorSyntaxSubpart));
-			this.htmlOutput += "</table>";
-			AppOutput.displayGeneratedGrammar(this.htmlOutput);
-		}
-		return returnString.toString();
-	}
-
 	public String subpart(StateNode node)
 	{
 		final StringBuffer returnString = new StringBuffer();
-		final StateNode successor = SyntaxGraphRepository.findSucessorNode(node);
-		final StateNode alternative = SyntaxGraphRepository.findAlternativeNode(node);
+		final StateNode successor = StateHelper.findSucessorNode(node);
+		final StateNode alternative = StateHelper.findAlternativeNode(node);
 
 		node.setFlag(true);
 		if (successor != null && successor.isFlag() == false)
@@ -176,6 +142,40 @@ public class GrammarFactory
 			returnString.append(subpart(alternative));
 		}
 
+		return returnString.toString();
+	}
+
+	public String toTable()
+	{
+		for(StateNode stateNode :  StateHelper.getStateNodes().getAll())
+		{
+			stateNode.setFlag(false);
+			stateNode.setNumber(0);
+		}		
+		final StringBuffer returnString = new StringBuffer();
+		final ExtendedList<StateNode> startNodes = StateHelper.getLeftSides();
+		for (int i = 0; i < startNodes.count(); i++)
+		{
+			this.cont = 0;
+			final StateNode startNode = startNodes.get(i);
+			final StateNode successorSyntaxSubpart = StateHelper.findSucessorNode(startNode);
+			successorSyntaxSubpart.setNumber(++this.cont);
+
+			htmlBegining(startNode);
+
+			if (startNode.getType().equals(CanvasResource.START))
+			{
+				htmlStart(startNode, successorSyntaxSubpart);
+			}
+			else
+			{
+				htmlLeftSide(startNode, successorSyntaxSubpart);
+			}
+			returnString.append(startNode.getId() + " H " + startNode.getTitle() + " -1 -1 " + successorSyntaxSubpart.getNumber() + " -1\n");
+			returnString.append(subpart(successorSyntaxSubpart));
+			this.htmlOutput += "</table>";
+			AppOutput.displayGeneratedGrammar(this.htmlOutput);
+		}
 		return returnString.toString();
 	}
 

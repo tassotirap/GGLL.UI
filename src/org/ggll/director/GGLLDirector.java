@@ -58,7 +58,7 @@ public final class GGLLDirector
 		System.exit(0);
 	}
 
-	public static SyntaxGraph getActiveCanvas()
+	public static SyntaxGraph getActiveSyntaxGraph()
 	{
 		return activeCanvas;
 	}
@@ -141,9 +141,9 @@ public final class GGLLDirector
 		fileManager.saveFileObject(object);
 	}
 
-	public static void setActiveCanvas(SyntaxGraph canvas)
+	public static void setActiveSyntaxGraph(SyntaxGraph syntaxGraph)
 	{
-		activeCanvas = canvas;
+		activeCanvas = syntaxGraph;
 	}
 
 	public static void setUnsavedView(String path, AbstractView view)
@@ -151,10 +151,10 @@ public final class GGLLDirector
 		unViewManager.setUnsavedView(path, view);
 	}
 
-	public static void Start(MainWindow mainWindow, String projectPath)
+	public static void Start(MainWindow mainWindow, Project project)
 	{
 		GGLLDirector.mainWindow = mainWindow;
-		GGLLDirector.project = ProjectHelper.openProject(projectPath);
+		GGLLDirector.project = project;
 		GGLLDirector.unViewManager = new UnsavedViewRepository();
 		GGLLDirector.fileManager = new FileManager();
 	}

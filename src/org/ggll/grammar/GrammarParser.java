@@ -27,6 +27,12 @@ import org.ggll.util.io.IOHelper;
 
 public class GrammarParser
 {
+	private void createYyler()
+	{
+		YyFactory yyFactory = new YyFactory();
+		yyFactory.createYylex(GGLLDirector.getProject().getLexicalFile().getParent(), "export", GGLLDirector.getProject().getLexicalFile().getPath());
+	}
+	
 	public void parseGrammar()
 	{
 		GGLLDirector.saveAllFiles();
@@ -66,12 +72,6 @@ public class GrammarParser
 			AppOutput.displayText("<font color='green'>Grammar successfully generated.</font>", TOPIC.Output);
 			AppOutput.displayHorizontalLine(TOPIC.Output);
 		}
-	}
-	
-	private void createYyler()
-	{
-		YyFactory yyFactory = new YyFactory();
-		yyFactory.createYylex(GGLLDirector.getProject().getLexicalFile().getParent(), "export", GGLLDirector.getProject().getLexicalFile().getPath());
 	}
 
 	public boolean validateGrammar()

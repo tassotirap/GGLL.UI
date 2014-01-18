@@ -1,17 +1,17 @@
 package org.ggll.grammar.validation;
 
-import org.ggll.syntax.graph.SyntaxGraphRepository;
+import org.ggll.syntax.graph.state.StateHelper;
 
 public class HeaderValidation extends GrammarValidation
 {
 	@Override
 	public void validate()
 	{
-		if (SyntaxGraphRepository.getStarts().count() == 0)
+		if (StateHelper.getStarts().count() == 0)
 		{
 			addError("There must be an initial non-terminal.");
 		}
-		if (SyntaxGraphRepository.getStarts().count() > 1)
+		if (StateHelper.getStarts().count() > 1)
 		{
 			addError("There must only one initial non-terminal.");
 		}

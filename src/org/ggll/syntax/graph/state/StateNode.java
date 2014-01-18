@@ -3,7 +3,6 @@ package org.ggll.syntax.graph.state;
 import java.awt.Point;
 import java.io.Serializable;
 
-import org.ggll.resource.CanvasResource;
 import org.ggll.syntax.graph.SyntaxGraph;
 import org.ggll.syntax.graph.widget.MarkedWidget;
 import org.ggll.syntax.graph.widget.TypedWidget;
@@ -51,6 +50,11 @@ public class StateNode implements Serializable
 		return this.location;
 	}
 
+	public int getNumber()
+	{
+		return number;
+	}
+
 	public String getSemanticRoutine()
 	{
 		return this.semanticRoutine;
@@ -66,16 +70,6 @@ public class StateNode implements Serializable
 		return this.type;
 	}
 
-	public int getNumber()
-	{
-		return number;
-	}
-
-	public void setNumber(int number)
-	{
-		this.number = number;
-	}
-
 	public boolean isFlag()
 	{
 		return flag;
@@ -84,5 +78,10 @@ public class StateNode implements Serializable
 	public void setFlag(boolean flag)
 	{
 		this.flag = flag;
+	}
+
+	public void setNumber(int number)
+	{
+		this.number = number;
 	}
 }

@@ -93,7 +93,7 @@ public class MainWindow implements ComponentListener
 	private void createDefaultViews()
 	{
 		final GrammarFile grammarFile = GGLLDirector.getProject().getGrammarFile().get(0);
-		GGLLDirector.setActiveCanvas(SyntaxGraphRepository.getInstance(grammarFile.getAbsolutePath()));
+		GGLLDirector.setActiveSyntaxGraph(SyntaxGraphRepository.getInstance(grammarFile.getAbsolutePath()));
 		this.viewRepository.createDefaultViews();
 	}
 
@@ -247,7 +247,7 @@ public class MainWindow implements ComponentListener
 			final AbstractView view = new AbstractView(title, icon, componentModel, fileName, 2);
 			if (componentModel instanceof GrammarComponent)
 			{
-				GGLLDirector.setActiveCanvas(SyntaxGraphRepository.getInstance(fileName));
+				GGLLDirector.setActiveSyntaxGraph(SyntaxGraphRepository.getInstance(fileName));
 			}
 
 			componentModel.addComponentListener(this);
@@ -372,7 +372,7 @@ public class MainWindow implements ComponentListener
 					final GrammarComponent grammarComponent = (GrammarComponent) component;
 					final SyntaxGraph canvas = grammarComponent.getCanvas();
 
-					GGLLDirector.setActiveCanvas(canvas);
+					GGLLDirector.setActiveSyntaxGraph(canvas);
 					Output.getInstance().setActiveScene(canvas);
 					SemanticStack.getInstance().setActiveScene(canvas);
 					SyntaxStack.getInstance().setActiveScene(canvas);

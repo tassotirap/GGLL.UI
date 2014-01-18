@@ -19,13 +19,13 @@ public class GrammarError
 		this.node = node;
 	}
 
-	public StateNode getNode()
-	{
-		return node;
-	}
-
 	public String getError()
 	{
 		return error;
+	}
+
+	public StateNode getNode()
+	{
+		return node;
 	}
 }

@@ -2,9 +2,9 @@ package org.ggll.grammar.validation;
 
 import ggll.core.list.ExtendedList;
 
-import org.ggll.syntax.graph.SyntaxGraphRepository;
 import org.ggll.syntax.graph.state.StateConnection;
 import org.ggll.syntax.graph.state.StateNode;
+import org.ggll.syntax.graph.state.StateHelper;
 
 public class LeftSideValidation extends GrammarValidation
 {
@@ -12,7 +12,7 @@ public class LeftSideValidation extends GrammarValidation
 	public void validate()
 	{
 		final ExtendedList<String> leftSidesLabels = new ExtendedList<String>();
-		for (final StateNode leftside : SyntaxGraphRepository.getLeftSides().getAll())
+		for (final StateNode leftside : StateHelper.getLeftSides().getAll())
 		{
 			if (!leftSidesLabels.contains(leftside.getTitle()))
 			{
@@ -24,7 +24,7 @@ public class LeftSideValidation extends GrammarValidation
 			}
 
 			boolean hasSucessor = false;
-			for (final StateConnection sucessor : SyntaxGraphRepository.getSucessors().getAll())
+			for (final StateConnection sucessor : StateHelper.getSucessors().getAll())
 			{
 				if (sucessor.getSource().equals(leftside.getId()))
 				{

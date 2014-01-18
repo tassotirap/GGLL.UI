@@ -49,14 +49,14 @@ public class ViewRepository
 
 	private void createGrammarView()
 	{
-		final AbstractView abstractView = new AbstractView("Grammar", this.iconFactory.getIcon(IconType.GRAMMAR_ICON), new GeneratedGrammarComponent(GGLLDirector.getActiveCanvas()), getNextViewId());
+		final AbstractView abstractView = new AbstractView("Grammar", this.iconFactory.getIcon(IconType.GRAMMAR_ICON), new GeneratedGrammarComponent(GGLLDirector.getActiveSyntaxGraph()), getNextViewId());
 		this.tabWindowList.get(TabPlace.BOTTOM_TABS.ordinal()).addTab(abstractView);
 		this.viewMap.addView(2, abstractView);
 	}
 
 	private void createOutputView()
 	{
-		final AbstractView abstractView = new AbstractView("Output", this.iconFactory.getIcon(IconType.ACTIVE_OUTPUT_ICON), new OutputComponent(GGLLDirector.getActiveCanvas()), getNextViewId());
+		final AbstractView abstractView = new AbstractView("Output", this.iconFactory.getIcon(IconType.ACTIVE_OUTPUT_ICON), new OutputComponent(GGLLDirector.getActiveSyntaxGraph()), getNextViewId());
 		this.tabWindowList.get(TabPlace.BOTTOM_TABS.ordinal()).addTab(abstractView);
 		this.viewMap.addView(5, abstractView);
 	}
@@ -70,21 +70,21 @@ public class ViewRepository
 
 	private void createSemanticStackView()
 	{
-		final AbstractView abstractView = new AbstractView("Semantic Stack", this.iconFactory.getIcon(IconType.SEMANTIC_STACK_ICON), new SemanticStackComponent(GGLLDirector.getActiveCanvas()), getNextViewId());
+		final AbstractView abstractView = new AbstractView("Semantic Stack", this.iconFactory.getIcon(IconType.SEMANTIC_STACK_ICON), new SemanticStackComponent(GGLLDirector.getActiveSyntaxGraph()), getNextViewId());
 		this.tabWindowList.get(TabPlace.BOTTOM_TABS.ordinal()).addTab(abstractView);
 		this.viewMap.addView(4, abstractView);
 	}
 
 	private void createSyntaxStackView()
 	{
-		final AbstractView abstractView = new AbstractView("Syntax Stack", this.iconFactory.getIcon(IconType.SYNTACTIC_STACK_ICON), new SyntaxStackComponent(GGLLDirector.getActiveCanvas()), getNextViewId());
+		final AbstractView abstractView = new AbstractView("Syntax Stack", this.iconFactory.getIcon(IconType.SYNTACTIC_STACK_ICON), new SyntaxStackComponent(GGLLDirector.getActiveSyntaxGraph()), getNextViewId());
 		this.tabWindowList.get(TabPlace.BOTTOM_TABS.ordinal()).addTab(abstractView);
 		this.viewMap.addView(3, abstractView);
 	}
 
 	private void createViewView()
 	{
-		final AbstractView abstractView = new AbstractView("View", this.iconFactory.getIcon(IconType.OVERVIEW_CON), new OutlineComponent(GGLLDirector.getActiveCanvas()), getNextViewId());
+		final AbstractView abstractView = new AbstractView("View", this.iconFactory.getIcon(IconType.OVERVIEW_CON), new OutlineComponent(GGLLDirector.getActiveSyntaxGraph()), getNextViewId());
 		this.tabWindowList.get(TabPlace.CENTER_RIGHT_BOTTOM_TABS.ordinal()).addTab(abstractView);
 		this.viewMap.addView(1, abstractView);
 	}

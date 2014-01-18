@@ -7,19 +7,65 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.ggll.resource.CanvasResource;
-import org.ggll.syntax.graph.SyntaxGraphRepository;
 import org.ggll.syntax.graph.state.StateConnection;
 import org.ggll.syntax.graph.state.StateNode;
+import org.ggll.syntax.graph.state.StateHelper;
 
 public class TerminalValidation extends GrammarValidation
 {
 
+	private void alternativeNodes(StateNode node, ExtendedList<String> first, ExtendedList<StateNode> nodes)
+	{
+		StateNode alternative = StateHelper.findAlternativeNode(node);
+		while (alternative != null && !nodes.contains(alternative))
+		{
+			if (alternative.getType().equals(CanvasResource.N_TERMINAL))
+			{
+				StateNode leftSide = StateHelper.findLeftSide(alternative);
+				walkGraph(leftSide, first, nodes);
+			}
+			else if (alternative.getType().equals(CanvasResource.TERMINAL))
+			{
+				first.append(alternative.getTitle());
+			}
+			alternative = StateHelper.findAlternativeNode(alternative);
+		}
+	}
+
+	private void sucessorNodes(StateNode node, ExtendedList<String> first, ExtendedList<StateNode> nodes)
+	{
+		StateNode sucessor = StateHelper.findSucessorNode(node);
+		if (sucessor != null && !nodes.contains(sucessor))
+		{
+			if (sucessor.getType().equals(CanvasResource.N_TERMINAL))
+			{
+				StateNode leftSide = StateHelper.findLeftSide(sucessor);
+				walkGraph(leftSide, first, nodes);
+			}
+			else if (sucessor.getType().equals(CanvasResource.TERMINAL))
+			{
+				first.append(sucessor.getTitle());
+			}
+		}
+	}
+
+	private void walkGraph(StateNode node, ExtendedList<String> first, ExtendedList<StateNode> nodes)
+	{
+		if (node == null)
+		{
+			return;
+		}
+		nodes.append(node);
+		sucessorNodes(node, first, nodes);
+		alternativeNodes(StateHelper.findSucessorNode(node), first, nodes);
+	}
+
 	@Override
 	public void validate()
 	{
-		for (final StateConnection connection : SyntaxGraphRepository.getSucessors().getAll())
+		for (final StateConnection connection : StateHelper.getSucessors().getAll())
 		{
-			StateNode node = SyntaxGraphRepository.findNode(connection.getSource());
+			StateNode node = StateHelper.findNode(connection.getSource());
 			ExtendedList<String> first = new ExtendedList<String>();
 			ExtendedList<StateNode> nodes = new ExtendedList<StateNode>();
 			walkGraph(node, first, nodes);
@@ -33,52 +79,6 @@ public class TerminalValidation extends GrammarValidation
 			}
 		}
 
-	}
-
-	private void walkGraph(StateNode node, ExtendedList<String> first, ExtendedList<StateNode> nodes)
-	{
-		if (node == null)
-		{
-			return;
-		}
-		nodes.append(node);
-		sucessorNodes(node, first, nodes);
-		alternativeNodes(SyntaxGraphRepository.findSucessorNode(node), first, nodes);
-	}
-
-	private void alternativeNodes(StateNode node, ExtendedList<String> first, ExtendedList<StateNode> nodes)
-	{
-		StateNode alternative = SyntaxGraphRepository.findAlternativeNode(node);
-		while (alternative != null && !nodes.contains(alternative))
-		{
-			if (alternative.getType().equals(CanvasResource.N_TERMINAL))
-			{
-				StateNode leftSide = SyntaxGraphRepository.findLeftSide(alternative);
-				walkGraph(leftSide, first, nodes);
-			}
-			else if (alternative.getType().equals(CanvasResource.TERMINAL))
-			{
-				first.append(alternative.getTitle());
-			}
-			alternative = SyntaxGraphRepository.findAlternativeNode(alternative);
-		}
-	}
-
-	private void sucessorNodes(StateNode node, ExtendedList<String> first, ExtendedList<StateNode> nodes)
-	{
-		StateNode sucessor = SyntaxGraphRepository.findSucessorNode(node);
-		if (sucessor != null && !nodes.contains(sucessor))
-		{
-			if (sucessor.getType().equals(CanvasResource.N_TERMINAL))
-			{
-				StateNode leftSide = SyntaxGraphRepository.findLeftSide(sucessor);
-				walkGraph(leftSide, first, nodes);
-			}
-			else if (sucessor.getType().equals(CanvasResource.TERMINAL))
-			{
-				first.append(sucessor.getTitle());
-			}
-		}
 	}
 
 }
