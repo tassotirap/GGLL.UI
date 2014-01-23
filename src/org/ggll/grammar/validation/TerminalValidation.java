@@ -39,8 +39,7 @@ public class TerminalValidation extends GrammarValidation
 		{
 			if (sucessor.getType().equals(CanvasResource.N_TERMINAL))
 			{
-				StateNode leftSide = StateHelper.findLeftSide(sucessor);
-				walkGraph(leftSide, first, nodes);
+				walkGraph(sucessor, first, nodes);
 			}
 			else if (sucessor.getType().equals(CanvasResource.TERMINAL))
 			{
@@ -74,7 +73,7 @@ public class TerminalValidation extends GrammarValidation
 			{
 				if (Collections.frequency(first.getAll(), key) > 1)
 				{
-					addError("Duplicated terminal \"" + key + "\".", node);
+					addError("Duplicated terminal \"<a href='" + key + "'>" + key + "</a>\" in a sequence of alternatives.", node);
 				}
 			}
 		}

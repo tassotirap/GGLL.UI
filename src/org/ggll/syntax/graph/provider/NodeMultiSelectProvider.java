@@ -36,17 +36,19 @@ public final class NodeMultiSelectProvider implements SelectProvider
 		this.canvas.setFocusedObject(object);
 		if (object != null)
 		{
-			if (!invertSelection && this.canvas.getSelectedObjects().contains(object))
+			if (!invertSelection)
 			{
 				widget.setForeground(Color.WHITE);
 				widget.setBackground(Color.BLUE);
 				return;
 			}
-			this.canvas.userSelectionSuggested(Collections.singleton(object), invertSelection);
+			else
+			{
+				widget.setForeground(Color.WHITE);
+				widget.setBackground(Color.WHITE);
+				return;
+			}
 		}
-		else
-		{
-			this.canvas.userSelectionSuggested(Collections.emptySet(), invertSelection);
-		}
+		this.canvas.repaint();
 	}
 }

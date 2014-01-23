@@ -80,25 +80,10 @@ public class OutputComponent extends AbstractComponent
 		output.setRolloverEnabled(true);
 		output.setBackground(bar.getBackground());
 		output.setToolTipText("Output");
-		final JButton saveReport = new JButton(new ImageIcon(getClass().getResource(GGLLImages.ICON_HTML_REPORT)));
-		saveReport.addActionListener(new ActionListener()
-		{
-
-			@Override
-			public void actionPerformed(ActionEvent e)
-			{
-				Output.getInstance().saveReport(bar);
-			}
-		});
-		saveReport.setBorder(new EmptyBorder(0, 0, 0, 0));
-		saveReport.setRolloverEnabled(true);
-		saveReport.setBackground(bar.getBackground());
-		saveReport.setToolTipText("Save an html report.");
 		bar.add(output);
 		bar.add(errorReovery);
 		bar.add(lastToken);
 		bar.add(clear);
-		bar.add(saveReport);
 		this.jComponent.add(bar, BorderLayout.NORTH);
 		this.jComponent.add(jsp, BorderLayout.CENTER);
 	}

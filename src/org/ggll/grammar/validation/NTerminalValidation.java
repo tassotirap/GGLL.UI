@@ -13,7 +13,7 @@ public class NTerminalValidation extends GrammarValidation
 		{
 			if(StateHelper.findLeftSide(nTerminal) == null)
 			{
-				addError("Non terminal don't have a left-side terminal.",  nTerminal);
+				addError("Non terminal doesn't have a initial node.",  nTerminal);
 			}			
 		}
 	}

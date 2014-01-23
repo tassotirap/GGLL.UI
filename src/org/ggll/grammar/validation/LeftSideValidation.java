@@ -33,7 +33,7 @@ public class LeftSideValidation extends GrammarValidation
 			}
 			if (!hasSucessor)
 			{
-				addError("Left side must have one sucessor.", leftside);
+				addError("Left side must have a sucessor.", leftside);
 			}
 		}
 	}

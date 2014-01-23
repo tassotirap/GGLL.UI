@@ -41,7 +41,6 @@ public class GrammarParser
 		TokenOutput.getInstance().clear();
 		SyntaxErrorOutput.getInstance().clear();
 		
-		AppOutput.clearOutputBuffer();
 		AppOutput.clearStacks();
 		AppOutput.clearGeneratedGrammar();
 
@@ -100,7 +99,7 @@ public class GrammarParser
 				}
 				else
 				{
-					errorList += errors + " - Node: <b><a href='" + grammarError.getNode().getId() + "'>" + grammarError.getNode().getTitle() + "</a></b> - " + grammarError.getError() + "<br />";
+					errorList += errors + " - Node: <b><a href='" + grammarError.getNode().getTitle() + "'>" + grammarError.getNode().getTitle() + "</a></b> - " + grammarError.getError() + "<br />";
 				}
 				errors++;
 			}
@@ -108,7 +107,7 @@ public class GrammarParser
 
 		if (!errorList.equals(""))
 		{
-			AppOutput.displayText("<font color='red'>Some errors occurred while attempting to generate the grammar: <br/></font>", TOPIC.Output);
+			AppOutput.displayText("<font color='red'>Grammar has some errors: <br/></font>", TOPIC.Output);
 			AppOutput.displayText("<font color='red'>" + errorList + "</font>", TOPIC.Output);
 			return false;
 		}

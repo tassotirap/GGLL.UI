@@ -2,6 +2,7 @@ package org.ggll.syntax.graph;
 
 import ggll.core.list.ExtendedList;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Graphics2D;
@@ -30,6 +31,7 @@ import org.ggll.syntax.graph.adapter.ExtendedActionFactory;
 import org.ggll.syntax.graph.decorator.ConnectorDecoratorFactory;
 import org.ggll.syntax.graph.provider.GridProvider;
 import org.ggll.syntax.graph.provider.LineProvider;
+import org.ggll.syntax.graph.provider.NodeMultiSelectProvider;
 import org.ggll.syntax.graph.provider.NodeSelectProvider;
 import org.ggll.syntax.graph.state.State;
 import org.ggll.syntax.graph.state.StateConnection;
@@ -679,26 +681,32 @@ public class SyntaxGraph extends GraphScene.StringGraph implements PropertyChang
 		}
 	}
 
-	public void select(Object object)
+	public void select(String object)
 	{
 		select(object, false);
 	}
 
-	public void select(Object object, boolean invertSelection)
+	public void select(String label, boolean invertSelection)
 	{
-		Widget w;
-		if ((w = findWidget(object)) != null)
+		this.setFocused();
+		for(String node : getNodes())
 		{
-			final NodeSelectProvider nsp = new NodeSelectProvider(this);
-			if (!getSelectedObjects().contains(w))
+			Widget widget = findWidget(node);
+			if(widget instanceof LabelWidgetExt)
 			{
-				if (nsp.isSelectionAllowed(w, null, invertSelection))
+				LabelWidgetExt labelWidgetExt = (LabelWidgetExt)widget;
+				if(labelWidgetExt.getLabel().equals(label))
 				{
-					nsp.select(w, null, invertSelection);
+					this.setFocusedWidget(labelWidgetExt);
+					widget.setBackground(Color.BLUE);
+					widget.setForeground(Color.WHITE);
+					continue;
 				}
-				validate();
 			}
+			widget.setBackground(Color.WHITE);
+			widget.setForeground(Color.BLACK);
 		}
+		
 	}
 
 	@Override

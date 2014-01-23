@@ -1,24 +1,12 @@
 package org.ggll.output;
 
-import java.awt.Component;
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.io.StringReader;
-import java.util.HashMap;
 
-import javax.imageio.ImageIO;
 import javax.swing.JComponent;
-import javax.swing.JFileChooser;
 import javax.swing.text.Document;
 import javax.swing.text.EditorKit;
 
-import org.ggll.file.CustomFileFilter;
 import org.ggll.syntax.graph.SyntaxGraph;
-import org.ggll.util.Log;
-import org.ggll.util.io.IOHelper;
 import org.htmlparser.Node;
 import org.htmlparser.Parser;
 import org.htmlparser.filters.StringFilter;
@@ -28,17 +16,11 @@ import org.htmlparser.util.SimpleNodeIterator;
 
 public class Output extends HtmlViewer
 {
-
 	private static Output instance;
-	private static HashMap<TOPIC, Page> pagesByTopic = new HashMap<TOPIC, Page>();
 
 	protected Output()
 	{
 		super();
-		if (pagesByTopic == null)
-		{
-			pagesByTopic = new HashMap<TOPIC, Page>();
-		}
 	}
 
 	public static Output getInstance()
@@ -48,15 +30,6 @@ public class Output extends HtmlViewer
 			instance = new Output();
 		}
 		return instance;
-	}
-
-	public void clearOutputBuffer()
-	{
-		for (final TOPIC topic : pagesByTopic.keySet())
-		{
-			pagesByTopic.put(topic, new Page());
-		}
-
 	}
 
 	@Override
@@ -110,11 +83,6 @@ public class Output extends HtmlViewer
 		{
 			e.printStackTrace();
 		}
-		if (!pagesByTopic.containsKey(topic))
-		{
-			pagesByTopic.put(topic, new Page());
-		}
-		pagesByTopic.get(topic).write(html);
 	}
 
 	@Override
@@ -123,77 +91,9 @@ public class Output extends HtmlViewer
 		displayTextExt(st, DEFAULT_FONT, DEFAULT_SIZE, null, topic);
 	}
 
-	public String getReport()
-	{
-		final Page result = new Page();
-		result.write("<h1>Grammar Graph</h1>");
-		result.write("<img src=\"images/graph.jpg\" alt=\"Grammar Graph\"><br>");
-		for (final TOPIC topic : pagesByTopic.keySet())
-		{
-			result.write("<hr width=\"100%\" size=\"1\" color=\"gray\" align=\"center\">");
-			result.write("<h1>" + topic.toString() + "</h1>");
-			String content = pagesByTopic.get(topic).getContent();
-			content = content.replaceAll("<a href=\"[^\"]+\">", "<a href=#>");
-			content = content.replaceAll("<a style=\"color: #000000; text-decoration: none; font-weight: bold;\" href=\"[^\"]+\">", "<a href=#>");
-			result.write(content);
-		}
-		return result.getContent();
-	}
-
 	public JComponent getView(SyntaxGraph canvas)
 	{
 		setActiveScene(canvas);
 		return getEditorPane();
-	}
-
-	public void saveReport(Component parent)
-	{
-		final JFileChooser c = new JFileChooser();
-		c.setFileFilter(new CustomFileFilter(new String[]{ "html", "htm" }, "An html File"));
-		final int rVal = c.showSaveDialog(parent);
-		if (rVal == JFileChooser.APPROVE_OPTION)
-		{
-			final File file = c.getSelectedFile();
-			try
-			{
-				if (!file.exists())
-				{
-					file.createNewFile();
-				}
-				final File newImagesDir = new File(file.getParentFile(), "images");
-				if (!newImagesDir.exists())
-				{
-					newImagesDir.mkdir();
-				}
-				final File oldImagesDir = new File("resources/images/");
-				if (oldImagesDir.exists() && oldImagesDir.isDirectory())
-				{
-					for (final File f : oldImagesDir.listFiles())
-					{
-						IOHelper.copyFile(f, new File(newImagesDir, f.getName()));
-					}
-					final int width = super.getActiveScene().getBounds() == null ? super.getActiveScene().getView().getParent().getWidth() : super.getActiveScene().getBounds().width;
-					final int height = super.getActiveScene().getBounds() == null ? super.getActiveScene().getView().getParent().getHeight() : super.getActiveScene().getBounds().height;
-					final BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-					final Graphics2D g = image.createGraphics();
-					super.getActiveScene().paint(g);
-					try
-					{
-						ImageIO.write(image, "JPEG", new File(newImagesDir, "graph.jpg"));
-					}
-					catch (final IOException ioe)
-					{
-						System.out.println(ioe.getMessage());
-					}
-				}
-				final FileWriter fw = new FileWriter(file);
-				fw.write(getReport());
-				fw.close();
-			}
-			catch (final Exception e)
-			{
-				Log.log(Log.ERROR, this, "Could not save file: " + file.getName(), e);
-			}
-		}
 	}
 }

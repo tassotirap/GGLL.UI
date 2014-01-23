@@ -10,11 +10,6 @@ public abstract class AppOutput
 		GeneratedGrammar.getInstance().clear();
 	}
 
-	public static void clearOutputBuffer()
-	{
-		Output.getInstance().clearOutputBuffer();
-	}
-
 	public static void clearStacks()
 	{
 		SyntaxStack.getInstance().clearStack();
@@ -39,11 +34,6 @@ public abstract class AppOutput
 	static public void errorRecoveryStatus(String str)
 	{
 		SyntaxErrorOutput.getInstance().displayTextExt(str, TOPIC.Error);
-	}
-
-	public static String getReport()
-	{
-		return Output.getInstance().getReport();
 	}
 
 	static public void printlnSemanticStack(String str)

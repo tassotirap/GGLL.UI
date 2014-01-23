@@ -13,7 +13,7 @@ public class HeaderValidation extends GrammarValidation
 		}
 		if (StateHelper.getStarts().count() > 1)
 		{
-			addError("There must only one initial non-terminal.");
+			addError("There must just one initial non-terminal.");
 		}
 	}
 }
