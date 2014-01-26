@@ -22,6 +22,8 @@ import java.beans.PropertyChangeSupport;
 import java.util.AbstractMap;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.swing.JComponent;
 
@@ -31,8 +33,6 @@ import org.ggll.syntax.graph.adapter.ExtendedActionFactory;
 import org.ggll.syntax.graph.decorator.ConnectorDecoratorFactory;
 import org.ggll.syntax.graph.provider.GridProvider;
 import org.ggll.syntax.graph.provider.LineProvider;
-import org.ggll.syntax.graph.provider.NodeMultiSelectProvider;
-import org.ggll.syntax.graph.provider.NodeSelectProvider;
 import org.ggll.syntax.graph.state.State;
 import org.ggll.syntax.graph.state.StateConnection;
 import org.ggll.syntax.graph.state.StateHistory;
@@ -42,7 +42,6 @@ import org.ggll.syntax.graph.widget.LabelWidgetExt;
 import org.ggll.syntax.graph.widget.LineWidget;
 import org.ggll.syntax.graph.widget.MarkedWidget;
 import org.ggll.syntax.graph.widget.TypedWidget;
-import org.ggll.util.Log;
 import org.netbeans.api.visual.anchor.Anchor.Direction;
 import org.netbeans.api.visual.anchor.AnchorFactory;
 import org.netbeans.api.visual.graph.GraphScene;
@@ -91,12 +90,14 @@ public class SyntaxGraph extends GraphScene.StringGraph implements PropertyChang
 
 	// Components
 	private final ExtendedList<String> alternatives = new ExtendedList<String>();
-	private ExtendedList<String> labels = new ExtendedList<String>();
+	private final ExtendedList<String> successors = new ExtendedList<String>();
+
+	private final ExtendedList<String> labels = new ExtendedList<String>();
 	private final ExtendedList<String> lambdas = new ExtendedList<String>();
 	private final ExtendedList<String> leftSides = new ExtendedList<String>();
 	private final ExtendedList<String> nterminals = new ExtendedList<String>();
 	private final ExtendedList<String> start = new ExtendedList<String>();
-	private final ExtendedList<String> successors = new ExtendedList<String>();
+
 	private final ExtendedList<String> terminals = new ExtendedList<String>();
 
 	public SyntaxGraph(String cursor, String connectionStrategy, String movementStrategy, String file)
@@ -153,6 +154,28 @@ public class SyntaxGraph extends GraphScene.StringGraph implements PropertyChang
 		}
 	}
 
+	private void appendNode(String node, String activeTool)
+	{
+		switch (activeTool)
+		{
+			case CanvasResource.LEFT_SIDE:
+				this.leftSides.append(node);
+				break;
+			case CanvasResource.TERMINAL:
+				this.terminals.append(node);
+				break;
+			case CanvasResource.N_TERMINAL:
+				this.nterminals.append(node);
+				break;
+			case CanvasResource.LAMBDA:
+				this.lambdas.append(node);
+				break;
+			case CanvasResource.START:
+				this.start.append(node);
+				break;
+		}
+	}
+
 	private void clearWidgets()
 	{
 		final Object[] edges = getEdges().toArray();
@@ -174,6 +197,65 @@ public class SyntaxGraph extends GraphScene.StringGraph implements PropertyChang
 		getStart().removeAll();
 		getSuccessors().removeAll();
 		getAlternatives().removeAll();
+	}
+
+	private Widget createGridWidget()
+	{
+		final GridWidget widget = new GridWidget(this);
+		this.backgroundLayer.addChild(widget);
+		setShowingGrid(true);
+		this.canvasState.getPreferences().setShowGrid(true);
+		return widget;
+	}
+
+	private Widget createLineWidget()
+	{
+		final LineWidget widget = new LineWidget(this);
+		this.backgroundLayer.addChild(widget);
+		setShowingLines(true);
+		this.canvasState.getPreferences().setShowLines(true);
+		return widget;
+	}
+
+	private Widget createNodeWidget(String node, String activeTool)
+	{
+		Widget widget = null;
+		if (activeTool.equals(CanvasResource.N_TERMINAL) || activeTool.equals(CanvasResource.TERMINAL) || activeTool.equals(CanvasResource.LEFT_SIDE) || activeTool.equals(CanvasResource.LAMBDA) || activeTool.equals(CanvasResource.START))
+		{
+
+			widget = this.decorator.drawIcon(activeTool, this, node);
+			widget.createActions(CanvasResource.SELECT);
+			widget.getActions(CanvasResource.SELECT).addAction(this.actionFactory.getAction(ExtendedActionFactory.SELECT));
+			widget.getActions(CanvasResource.SELECT).addAction(this.actionFactory.getAction(ExtendedActionFactory.MOVE));
+			widget.createActions(CanvasResource.SUCCESSOR).addAction(this.actionFactory.getAction(ExtendedActionFactory.SUCCESSOR));
+
+			if (!activeTool.equals(CanvasResource.LAMBDA))
+			{
+				widget.getActions(CanvasResource.SELECT).addAction(this.actionFactory.getAction(ExtendedActionFactory.NODE_HOVER));
+				widget.getActions(CanvasResource.SELECT).addAction(this.actionFactory.getAction(ExtendedActionFactory.EDITOR));
+				widget.createActions(CanvasResource.ALTERNATIVE).addAction(this.actionFactory.getAction(ExtendedActionFactory.ALTERNATIVE));
+			}
+			this.mainLayer.addChild(widget);
+			appendNode(node, activeTool);
+		}
+		else if (activeTool.equals(CanvasResource.LABEL))
+		{
+			widget = new LabelWidgetExt(this.mainLayer.getScene(), "Double Click Here to Edit");
+			widget.createActions(CanvasResource.SELECT).addAction(this.actionFactory.getAction(ExtendedActionFactory.LABEL_HOVER));
+			widget.getActions(CanvasResource.SELECT).addAction(this.actionFactory.getAction(ExtendedActionFactory.SELECT_LABEL));
+			widget.getActions(CanvasResource.SELECT).addAction(this.actionFactory.getAction(ExtendedActionFactory.EDITOR));
+			widget.getActions(CanvasResource.SELECT).addAction(this.actionFactory.getAction(ExtendedActionFactory.MOVE));
+			this.labels.append(node);
+			this.mainLayer.addChild(widget);
+		}
+		if (widget != null)
+		{
+			if (widget instanceof TypedWidget)
+			{
+				((TypedWidget) widget).setType(activeTool);
+			}
+		}
+		return widget;
 	}
 
 	@Override
@@ -251,99 +333,21 @@ public class SyntaxGraph extends GraphScene.StringGraph implements PropertyChang
 	@Override
 	protected Widget attachNodeWidget(String node)
 	{
-		Widget widget = null;
 		final String activeTool = getCanvasActiveTool();
 
 		if (node.startsWith(LineWidget.class.getCanonicalName()))
 		{
-			final LineWidget lWidget = new LineWidget(this);
-			this.backgroundLayer.addChild(lWidget);
-			widget = lWidget;
-			setShowingLines(true);
-			this.canvasState.getPreferences().setShowLines(true);
+			return createLineWidget();
 		}
 		else if (node.startsWith(GridWidget.class.getCanonicalName()))
 		{
-			final GridWidget gWidget = new GridWidget(this);
-			this.backgroundLayer.addChild(gWidget);
-			widget = gWidget;
-			setShowingGrid(true);
-			this.canvasState.getPreferences().setShowGrid(true);
+			return createGridWidget();
 		}
 		else if (!activeTool.equals(CanvasResource.SELECT))
 		{
-			final String tool = activeTool;
-			if (tool.equals(CanvasResource.N_TERMINAL) || tool.equals(CanvasResource.TERMINAL) || tool.equals(CanvasResource.LEFT_SIDE) || tool.equals(CanvasResource.LAMBDA) || tool.equals(CanvasResource.START))
-			{
-				try
-				{
-					widget = this.decorator.drawIcon(activeTool, this, node);
-				}
-				catch (final Exception e)
-				{
-					Log.log(Log.ERROR, this, "Could not create widget!", e);
-					widget = new LabelWidgetExt(this.mainLayer.getScene(), node);
-				}
-				widget.createActions(CanvasResource.SELECT);
-				if (!tool.equals(CanvasResource.LAMBDA))
-				{
-					widget.getActions(CanvasResource.SELECT).addAction(this.actionFactory.getAction(ExtendedActionFactory.NODE_HOVER));
-				}
-				widget.getActions(CanvasResource.SELECT).addAction(this.actionFactory.getAction(ExtendedActionFactory.SELECT));
-				if (!tool.equals(CanvasResource.LAMBDA))
-				{
-					widget.getActions(CanvasResource.SELECT).addAction(this.actionFactory.getAction(ExtendedActionFactory.EDITOR));
-				}
-				widget.getActions(CanvasResource.SELECT).addAction(this.actionFactory.getAction(ExtendedActionFactory.MOVE));
-				if (!tool.equals(CanvasResource.LAMBDA))
-				{
-					widget.createActions(CanvasResource.SUCCESSOR).addAction(this.actionFactory.getAction(ExtendedActionFactory.SUCCESSOR));
-				}
-				if (!tool.equals(CanvasResource.LAMBDA))
-				{
-					widget.createActions(CanvasResource.ALTERNATIVE).addAction(this.actionFactory.getAction(ExtendedActionFactory.ALTERNATIVE));
-				}
-				this.mainLayer.addChild(widget);
-				if (tool.equals(CanvasResource.LEFT_SIDE))
-				{
-					this.leftSides.append(node);
-				}
-				else if (tool.equals(CanvasResource.TERMINAL))
-				{
-					this.terminals.append(node);
-				}
-				else if (tool.equals(CanvasResource.N_TERMINAL))
-				{
-					this.nterminals.append(node);
-				}
-				else if (tool.equals(CanvasResource.LAMBDA))
-				{
-					this.lambdas.append(node);
-				}
-				else if (tool.equals(CanvasResource.START))
-				{
-					this.start.append(node);
-				}
-			}
-			else if (tool.equals(CanvasResource.LABEL))
-			{
-				widget = new LabelWidgetExt(this.mainLayer.getScene(), "Double Click Here to Edit");
-				widget.createActions(CanvasResource.SELECT).addAction(this.actionFactory.getAction(ExtendedActionFactory.LABEL_HOVER));
-				widget.getActions(CanvasResource.SELECT).addAction(this.actionFactory.getAction(ExtendedActionFactory.SELECT_LABEL));
-				widget.getActions(CanvasResource.SELECT).addAction(this.actionFactory.getAction(ExtendedActionFactory.EDITOR));
-				widget.getActions(CanvasResource.SELECT).addAction(this.actionFactory.getAction(ExtendedActionFactory.MOVE));
-				this.labels.append(node);
-				this.mainLayer.addChild(widget);
-			}
-			if (widget != null)
-			{
-				if (widget instanceof TypedWidget)
-				{
-					((TypedWidget) widget).setType(tool);
-				}
-			}
+			return createNodeWidget(node, activeTool);
 		}
-		return widget;
+		return null;
 	}
 
 	public boolean canZoomIn()
@@ -440,12 +444,6 @@ public class SyntaxGraph extends GraphScene.StringGraph implements PropertyChang
 		return this.canvasState;
 	}
 
-	/**
-	 * This method is here for a mere convenience, is really essential for the
-	 * canvas itself
-	 * 
-	 * @return the volatile state manager of this canvas
-	 */
 	public StateHistory getCanvasStateHistory()
 	{
 		return this.canvasStateHistory;
@@ -578,17 +576,11 @@ public class SyntaxGraph extends GraphScene.StringGraph implements PropertyChang
 		return this.nterminals.contains((String) o);
 	}
 
-	/**
-	 * @return the showingGrid
-	 */
 	public boolean isShowingGrid()
 	{
 		return this.showingGrid;
 	}
 
-	/**
-	 * @return the showingLines
-	 */
 	public boolean isShowingLines()
 	{
 		return this.showingLines;
@@ -609,9 +601,6 @@ public class SyntaxGraph extends GraphScene.StringGraph implements PropertyChang
 		return this.terminals.contains((String) o);
 	}
 
-	/**
-	 * painting with antialias
-	 */
 	@Override
 	public void paintChildren()
 	{
@@ -681,23 +670,40 @@ public class SyntaxGraph extends GraphScene.StringGraph implements PropertyChang
 		}
 	}
 
-	public void select(String object)
+	public void select(String target)
 	{
-		select(object, false);
+		String[] array = target.split("\\|");
+		if (array.length > 1)
+		{
+			if (array[0].equals("Id"))
+			{
+				selectById(array[1]);
+			}
+			else
+			{
+				selectByLabel(array[1]);
+			}
+		}
+		else
+		{
+			selectById(target);
+		}
+
 	}
 
-	public void select(String label, boolean invertSelection)
+	public void selectById(String label)
 	{
 		this.setFocused();
-		for(String node : getNodes())
+		Set<String> selectedObjects = new HashSet<String>();
+		for (String node : getNodes())
 		{
 			Widget widget = findWidget(node);
-			if(widget instanceof LabelWidgetExt)
+			if (widget instanceof LabelWidgetExt)
 			{
-				LabelWidgetExt labelWidgetExt = (LabelWidgetExt)widget;
-				if(labelWidgetExt.getLabel().equals(label))
+				if (node.equals(label))
 				{
-					this.setFocusedWidget(labelWidgetExt);
+					selectedObjects.add(node);
+					this.setFocusedObject(node);
 					widget.setBackground(Color.BLUE);
 					widget.setForeground(Color.WHITE);
 					continue;
@@ -706,7 +712,32 @@ public class SyntaxGraph extends GraphScene.StringGraph implements PropertyChang
 			widget.setBackground(Color.WHITE);
 			widget.setForeground(Color.BLACK);
 		}
-		
+		setSelectedObjects(selectedObjects);
+	}
+
+	public void selectByLabel(String label)
+	{
+		this.setFocused();
+		Set<String> selectedObjects = new HashSet<String>();
+		for (String node : getNodes())
+		{
+			Widget widget = findWidget(node);
+			if (widget instanceof LabelWidgetExt)
+			{
+				LabelWidgetExt labelWidgetExt = (LabelWidgetExt) widget;
+				if (labelWidgetExt.getLabel().equals(label))
+				{
+					selectedObjects.add(node);
+					this.setFocusedObject(node);					
+					widget.setBackground(Color.BLUE);
+					widget.setForeground(Color.WHITE);
+					continue;
+				}
+			}
+			widget.setBackground(Color.WHITE);
+			widget.setForeground(Color.BLACK);
+		}
+		setSelectedObjects(selectedObjects);
 	}
 
 	@Override
@@ -750,9 +781,6 @@ public class SyntaxGraph extends GraphScene.StringGraph implements PropertyChang
 		}
 	}
 
-	/**
-	 * Called to give properly give focus to this canvas
-	 */
 	public void setFocused()
 	{
 		getView().grabFocus();
@@ -795,15 +823,6 @@ public class SyntaxGraph extends GraphScene.StringGraph implements PropertyChang
 		}
 	}
 
-	/**
-	 * 
-	 * @param labels
-	 */
-	public void setLabels(ExtendedList<String> labels)
-	{
-		this.labels = labels;
-	}
-
 	public void setMoveStrategy(String strategy)
 	{
 		final MoveTracker moveTracker = new MoveTracker(this);
@@ -818,10 +837,6 @@ public class SyntaxGraph extends GraphScene.StringGraph implements PropertyChang
 		}
 	}
 
-	/**
-	 * @param showingGrid
-	 *            the showingGrid to set
-	 */
 	public void setShowingGrid(boolean showingGrid)
 	{
 		this.showingGrid = showingGrid;

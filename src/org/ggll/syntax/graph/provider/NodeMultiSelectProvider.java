@@ -2,7 +2,6 @@ package org.ggll.syntax.graph.provider;
 
 import java.awt.Color;
 import java.awt.Point;
-import java.util.Collections;
 
 import org.ggll.syntax.graph.SyntaxGraph;
 import org.netbeans.api.visual.action.SelectProvider;

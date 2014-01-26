@@ -162,10 +162,6 @@ public class ExtendedActionFactory
 		};
 	}
 
-	private RectangularSelectDecorator createDefaultRectangularSelectDecorator(Scene scene)
-	{
-		return new DefaultRectangularSelectDecorator(scene);
-	}
 
 	private DeleteAdapter createDeleteAction(WidgetDeleteProvider wdp)
 	{
@@ -355,7 +351,7 @@ public class ExtendedActionFactory
 			case POPUP_MENU_MAIN:
 				return createPopupMenuAction(new SyntaxGraphPopupMenu(this.canvas));
 			case RECTANGULAR_SELECT:
-				return createRectangularSelectAction(createDefaultRectangularSelectDecorator(this.canvas), this.canvas.getBackgroundLayer(), new CanvasRectangularSelectProvider(this.canvas));
+				return createRectangularSelectAction(new DefaultRectangularSelectDecorator(this.canvas), this.canvas.getBackgroundLayer(), new CanvasRectangularSelectProvider(this.canvas));
 			case MOUSE_CENTERED_ZOOM:
 				return createMouseCenteredZoomAction(1.05);
 			case PAN:

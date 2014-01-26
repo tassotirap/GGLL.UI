@@ -10,7 +10,6 @@ import javax.swing.JOptionPane;
 import org.ggll.file.FileNames;
 import org.ggll.project.FileManager;
 import org.ggll.project.Project;
-import org.ggll.project.ProjectHelper;
 import org.ggll.syntax.graph.SyntaxGraph;
 import org.ggll.util.print.ComponentPrinter;
 import org.ggll.util.print.TextPrinter;

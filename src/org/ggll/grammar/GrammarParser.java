@@ -99,7 +99,7 @@ public class GrammarParser
 				}
 				else
 				{
-					errorList += errors + " - Node: <b><a href='" + grammarError.getNode().getTitle() + "'>" + grammarError.getNode().getTitle() + "</a></b> - " + grammarError.getError() + "<br />";
+					errorList += errors + " - Node: <b><a href='Label|" + grammarError.getNode().getTitle() + "'>" + grammarError.getNode().getTitle() + "</a></b> - " + grammarError.getError() + "<br />";
 				}
 				errors++;
 			}

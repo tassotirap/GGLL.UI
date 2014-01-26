@@ -32,7 +32,7 @@ public class GrammarFactory
 		this.htmlOutput += "<tr><td style='background-color: #EEEEEE;' width='35' align='center'>";
 		this.htmlOutput += "<img src='images/icon_H2.png' alt='Left Side'></td>";
 		this.htmlOutput += "<td style='font-weight: bold;' align='center'>";
-		this.htmlOutput += "<a href='" + leftSideNode.getTitle() + "'>" + leftSideNode.getTitle() + "</a>";
+		this.htmlOutput += "<a href='Id|" + leftSideNode.getId() + "'>" + leftSideNode.getTitle() + "</a>";
 		this.htmlOutput += "</td><td align='center'>-1</td><td align='center'>-</td><td align='center'>" + successor.getNumber() + "</td>";
 		this.htmlOutput += "<td align='center'>-</td></tr>";
 	}
@@ -53,7 +53,7 @@ public class GrammarFactory
 				break;
 		}
 		
-		this.htmlOutput += "<td style='font-weight: bold;' align='center'><a href='" + node.getTitle() + "'>" + nodeTitle(node) + "</a></td>";
+		this.htmlOutput += "<td style='font-weight: bold;' align='center'><a href='Id|" + node.getId() + "'>" + nodeTitle(node) + "</a></td>";
 		this.htmlOutput += "<td align='center'>" + node.getNumber() + "</td>";
 		this.htmlOutput += alternative == null ? "<td align='center'>-</td>" : "<td align='center'>" + alternative.getNumber() + "</td>";
 		this.htmlOutput += successor == null ? "<td align='center'>-</td>" : "<td align='center'>" + successor.getNumber() + "</td>";
@@ -66,7 +66,7 @@ public class GrammarFactory
 		this.htmlOutput += "<tr><td style='background-color: #EEEEEE;' width='35' align='center'>";
 		this.htmlOutput += "<img src='images/icon_s2.png' alt='Initial Node'></td>";
 		this.htmlOutput += "<td style='font-weight: bold;' align='center'>";
-		this.htmlOutput += "<a href='" + startNode.getTitle() + "'>" + startNode.getTitle() + "</a></td>";
+		this.htmlOutput += "<a href='Id|" + startNode.getTitle() + "'>" + startNode.getTitle() + "</a></td>";
 		this.htmlOutput += "<td align='center'>-1</td><td align='center'>-</td><td align='center'>" + successor.getNumber() + "</td>";
 		this.htmlOutput += "<td align='center'>-</td></tr>";
 	}

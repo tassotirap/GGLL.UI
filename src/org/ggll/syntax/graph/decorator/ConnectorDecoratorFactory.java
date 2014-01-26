@@ -56,7 +56,7 @@ public class ConnectorDecoratorFactory
 		return connection;
 	}
 
-	public Widget drawIcon(String type, SyntaxGraph canvas, String text) throws Exception
+	public Widget drawIcon(String type, SyntaxGraph canvas, String text)
 	{
 		Widget widget;
 		if (type.equals(CanvasResource.LAMBDA))
@@ -72,19 +72,13 @@ public class ConnectorDecoratorFactory
 		else
 		{
 			final LabelWidgetExt lwidget = new LabelWidgetExt(canvas.getMainLayer().getScene(), text);
-			try
-			{
-				lwidget.setOpaque(true);
-				lwidget.setBorder(getIconBorder(type));
-				lwidget.setMinimumSize(new Dimension(50, 0));
-				lwidget.setVerticalAlignment(LabelWidgetExt.VerticalAlignment.CENTER);
-				lwidget.repaint();
-				widget = lwidget;
-			}
-			catch (final Exception e)
-			{
-				throw e;
-			}
+			lwidget.setOpaque(true);
+			lwidget.setBorder(getIconBorder(type));
+			lwidget.setMinimumSize(new Dimension(50, 0));
+			lwidget.setVerticalAlignment(LabelWidgetExt.VerticalAlignment.CENTER);
+			lwidget.repaint();
+			widget = lwidget;
+
 		}
 		return widget;
 	}

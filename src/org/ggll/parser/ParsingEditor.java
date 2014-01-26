@@ -146,7 +146,7 @@ public class ParsingEditor
 		while (iterator.hasNext())
 		{
 			parseStackNodeTemp = iterator.next();
-			lineSyntax += "<a style=\"color: #000000; font-weight: bold;\" href=\"" + parseStackNodeTemp.getFlag() + "\">" + parseStackNodeTemp.getType() + "</a>&nbsp;";
+			lineSyntax += "<a style='color: #000000; font-weight: bold;' href='Id|" + parseStackNodeTemp.getFlag() + "'>" + parseStackNodeTemp.getType() + "</a>&nbsp;";
 			lineSemantic += parseStackNodeTemp.getSemanticSymbol() + "&nbsp;";
 		}
 

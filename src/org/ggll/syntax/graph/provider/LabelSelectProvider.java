@@ -56,7 +56,7 @@ public class LabelSelectProvider extends CanvasSelectProvider
 		}
 		for (final Object o : this.canvas.getNodes())
 		{
-			final LabelWidget lw = (LabelWidget) this.canvas.findWidget(o);
+			final Widget lw = (Widget) this.canvas.findWidget(o);
 			lw.setBackground(Color.WHITE);
 			lw.setForeground(Color.BLACK);
 		}

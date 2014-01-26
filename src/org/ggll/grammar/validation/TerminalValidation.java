@@ -73,7 +73,7 @@ public class TerminalValidation extends GrammarValidation
 			{
 				if (Collections.frequency(first.getAll(), key) > 1)
 				{
-					addError("Duplicated terminal \"<a href='" + key + "'>" + key + "</a>\" in a sequence of alternatives.", node);
+					addError("Duplicated terminal \"<a href='Label|" + key + "'>" + key + "</a>\" in a sequence of alternatives.", node);
 				}
 			}
 		}
