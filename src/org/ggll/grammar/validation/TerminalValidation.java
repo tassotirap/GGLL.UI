@@ -39,7 +39,8 @@ public class TerminalValidation extends GrammarValidation
 		{
 			if (sucessor.getType().equals(CanvasResource.N_TERMINAL))
 			{
-				walkGraph(sucessor, first, nodes);
+				StateNode leftSide = StateHelper.findLeftSide(sucessor);
+				walkGraph(leftSide, first, nodes);
 			}
 			else if (sucessor.getType().equals(CanvasResource.TERMINAL))
 			{

@@ -65,7 +65,7 @@ public class ParsingEditor
 				if (error instanceof SintaticException)
 				{
 					final SintaticException sintaticException = (SintaticException) error;
-					AppOutput.displayText("<font color='red'>Sintatic Error: " + sintaticException.getToken() + "</font>", TOPIC.Output);
+					AppOutput.displayText("<font color='red'>" + sintaticException.getMessage() + "</font>", TOPIC.Output);
 				}
 				else if (error instanceof ErrorRecoveryException)
 				{
@@ -75,7 +75,7 @@ public class ParsingEditor
 				else if (error instanceof LexicalException)
 				{
 					final LexicalException lexicalException = (LexicalException) error;
-					AppOutput.displayText("<font color='red'>Lexical Error: " + lexicalException.getToken() + "</font>", TOPIC.Output);
+					AppOutput.displayText("<font color='red'>Lexical Error: \"" + lexicalException.getToken() + "\"</font>", TOPIC.Output);
 				}
 				else if (error instanceof SemanticException)
 				{
