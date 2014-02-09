@@ -109,7 +109,7 @@ public class ParsingEditor
 			this.analyzer.setParserOutput(new ParserOutput()
 			{
 				@Override
-				public void Output()
+				public void output()
 				{
 					printStack(ParsingEditor.this.analyzer.getParserStacks().getParseStack());
 				}

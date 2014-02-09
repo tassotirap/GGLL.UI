@@ -17,7 +17,7 @@ public class TerminalValidation extends GrammarValidation
 	private void alternativeNodes(StateNode node, ExtendedList<String> first, ExtendedList<StateNode> nodes)
 	{
 		StateNode alternative = StateHelper.findAlternativeNode(node);
-		while (alternative != null && !nodes.contains(alternative))
+		while (alternative != null)
 		{
 			if (alternative.getType().equals(CanvasResource.N_TERMINAL))
 			{
@@ -35,7 +35,7 @@ public class TerminalValidation extends GrammarValidation
 	private void sucessorNodes(StateNode node, ExtendedList<String> first, ExtendedList<StateNode> nodes)
 	{
 		StateNode sucessor = StateHelper.findSucessorNode(node);
-		if (sucessor != null && !nodes.contains(sucessor))
+		if (sucessor != null)
 		{
 			if (sucessor.getType().equals(CanvasResource.N_TERMINAL))
 			{
@@ -55,9 +55,12 @@ public class TerminalValidation extends GrammarValidation
 		{
 			return;
 		}
-		nodes.append(node);
-		sucessorNodes(node, first, nodes);
-		alternativeNodes(StateHelper.findSucessorNode(node), first, nodes);
+		if (!nodes.contains(node))
+		{
+			nodes.append(node);
+			sucessorNodes(node, first, nodes);
+			alternativeNodes(StateHelper.findSucessorNode(node), first, nodes);
+		}
 	}
 
 	@Override
