@@ -35,13 +35,12 @@ public class GrammarComponent extends AbstractFileComponent implements PropertyC
 		final JComponent view = canvas.createView();
 
 		final JScrollPane jsp = new JScrollPane();
-		jsp.setViewportView(view);
-
-		final JPanel canvasPanel = new JPanel();
+		jsp.setViewportView(view);		
 
 		final ToolBarGrammar toolBarGrammar = new ToolBarGrammar(canvas);
 		toolBarGrammar.setLayout(new BoxLayout(toolBarGrammar, BoxLayout.PAGE_AXIS));
 
+		final JPanel canvasPanel = new JPanel();
 		canvasPanel.setLayout(new BorderLayout());
 		canvasPanel.add(toolBarGrammar, BorderLayout.WEST);
 		canvasPanel.add(jsp, BorderLayout.CENTER);

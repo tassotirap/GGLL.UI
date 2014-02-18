@@ -16,6 +16,7 @@ public abstract class BaseToolBar extends JToolBar
 		initComponets();
 		initActions();
 		initLayout();
+		this.setFloatable(false);
 	}
 
 	protected abstract void initActions();

@@ -1,6 +1,7 @@
 package org.ggll.grammar;
 
 import ggll.core.lexical.YyFactory;
+import ggll.core.lexical.Yylex;
 import ggll.core.list.ExtendedList;
 import ggll.core.syntax.parser.GGLLTable;
 
@@ -18,28 +19,33 @@ import org.ggll.grammar.validation.TerminalValidation;
 import org.ggll.output.AppOutput;
 import org.ggll.output.HtmlViewer.TOPIC;
 import org.ggll.output.Output;
-import org.ggll.output.SyntaxErrorOutput;
-import org.ggll.output.TokenOutput;
 import org.ggll.parser.ParsingEditor;
 import org.ggll.parser.syntax.SyntacticLoader;
-import org.ggll.parser.syntax.TableCreate;
 import org.ggll.util.io.IOHelper;
 
 public class GrammarParser
 {
-	private void createYyler()
+	private Yylex createLexFile()
 	{
-		YyFactory yyFactory = new YyFactory();
-		yyFactory.createYylex(GGLLDirector.getProject().getLexicalFile().getParent(), "export", GGLLDirector.getProject().getLexicalFile().getPath());
+		String outputDir = GGLLDirector.getProject().getLexicalFile().getParent() + "/export";		
+		YyFactory yyFactory = new YyFactory();		
+		try
+		{
+			yyFactory.createYylex(outputDir,  GGLLDirector.getProject().getLexicalFile().getPath());
+			return yyFactory.getYylex(new File(outputDir +"/Yylex.java"));
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			return null;
+		}
 	}
+
 	
 	public void parseGrammar()
 	{
 		GGLLDirector.saveAllFiles();
-
 		Output.getInstance().clear();
-		TokenOutput.getInstance().clear();
-		SyntaxErrorOutput.getInstance().clear();
 		
 		AppOutput.clearStacks();
 		AppOutput.clearGeneratedGrammar();
@@ -48,26 +54,28 @@ public class GrammarParser
 
 		if (validateGrammar())
 		{
-			createYyler();
-			
-			final GrammarFactory grammarFactory = new GrammarFactory();
-			final String grammar = grammarFactory.toTable();
-
-			final TableCreate tableCreate = new TableCreate(grammar, false);
-			final SyntacticLoader syntacticLoader = new SyntacticLoader(tableCreate);
-			final ParsingEditor parsingEditor = ParsingEditor.getInstance().build();
 			final File dir = new File(GGLLDirector.getProject().getProjectDir().getAbsolutePath(), "export");
 			if (!dir.exists())
 			{
 				dir.mkdir();
 			}
+			
+			final ParsingEditor parsingEditor = ParsingEditor.getInstance();	
+			
+			Yylex yylex = createLexFile();
+			parsingEditor.setYylex(yylex);
+			
+
+			final SyntacticLoader syntacticLoader = new SyntacticLoader();
 			parsingEditor.setSyntacticLoader(syntacticLoader);
 
 			final GGLLTable analyzer = new GGLLTable(syntacticLoader.tabGraph(), syntacticLoader.tabNt(), syntacticLoader.tabT());
 			analyzer.serialize(GGLLDirector.getProject().getProjectDir().getAbsolutePath() + "\\export\\data.ggll");
 
-			final File semantic = new File(GGLLDirector.getProject().getProjectDir().getAbsolutePath() + "\\" + GGLLDirector.getProject().getProjectDir().getName() + FileNames.SEM_EXTENSION);
-			IOHelper.copyFile(semantic, new File(GGLLDirector.getProject().getProjectDir().getAbsolutePath() + "\\export\\" + GGLLDirector.getProject().getProjectDir().getName() + FileNames.SEM_EXTENSION));
+			final File semanticIn = new File(GGLLDirector.getProject().getProjectDir().getAbsolutePath() + "\\" + GGLLDirector.getProject().getProjectDir().getName() + FileNames.SEM_EXTENSION);
+			final File semanticOut = new File(GGLLDirector.getProject().getProjectDir().getAbsolutePath() + "\\export\\" + GGLLDirector.getProject().getProjectDir().getName() + FileNames.SEM_EXTENSION);
+			IOHelper.copyFile(semanticIn, semanticOut);
+			
 			AppOutput.displayText("<font color='green'>Grammar successfully generated.</font>", TOPIC.Output);
 			AppOutput.displayHorizontalLine(TOPIC.Output);
 		}

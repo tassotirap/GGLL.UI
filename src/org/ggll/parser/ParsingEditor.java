@@ -7,7 +7,6 @@ import ggll.core.exceptions.ErrorRecoveryException;
 import ggll.core.exceptions.LexicalException;
 import ggll.core.exceptions.SemanticException;
 import ggll.core.exceptions.SintaticException;
-import ggll.core.lexical.YyFactory;
 import ggll.core.lexical.Yylex;
 import ggll.core.semantics.SemanticRoutineClass;
 import ggll.core.syntax.model.ParseNode;
@@ -16,7 +15,6 @@ import ggll.core.syntax.parser.GGLLTable;
 import ggll.core.syntax.parser.Parser;
 import ggll.core.syntax.parser.ParserOutput;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.Iterator;
@@ -37,17 +35,13 @@ public class ParsingEditor
 	private Yylex yylex;
 	private Parser analyzer;
 
-	private final String rootPath;
-
-	public ParsingEditor(SyntacticLoader syntacticLoader, String rootPath)
-	{
-		instance = this;
-		this.rootPath = rootPath;
-		this.syntacticLoader = syntacticLoader;
-	}
 
 	public static ParsingEditor getInstance()
 	{
+		if(instance == null)
+		{
+			instance = new ParsingEditor();
+		}
 		return instance;
 	}
 
@@ -87,7 +81,7 @@ public class ParsingEditor
 		this.analyzer = null;
 	}
 
-	private void startParse(boolean stepping, String text)
+	private void startParser(boolean stepping, String text)
 	{
 		Output.getInstance().displayTextExt(escapeHtml4(text), TOPIC.Parser);
 		final StringReader stringReader = new StringReader(text);
@@ -122,20 +116,6 @@ public class ParsingEditor
 
 	}
 
-	public ParsingEditor build()
-	{
-		try
-		{
-			YyFactory yyFactory = new YyFactory();
-			this.yylex = yyFactory.getYylex(new File(this.rootPath + "/export/Yylex.java"));
-			return instance;
-		}
-		catch (final Exception e)
-		{
-			e.printStackTrace();
-			return null;
-		}
-	}
 
 	public void printStack(ParseStack parseStackNode)
 	{
@@ -175,7 +155,7 @@ public class ParsingEditor
 				return;
 			}
 
-			startParse(stepping, text);
+			startParser(stepping, text);
 
 			AppOutput.clearStacks();
 			this.analyzer.run();
@@ -217,6 +197,16 @@ public class ParsingEditor
 			e.printStackTrace();
 		}
 
+	}
+
+	public Yylex getYylex()
+	{
+		return yylex;
+	}
+
+	public void setYylex(Yylex yylex)
+	{
+		this.yylex = yylex;
 	}
 
 }

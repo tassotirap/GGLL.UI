@@ -1,4 +1,4 @@
-package org.ggll.syntax.graph.decorator;
+package org.ggll.syntax.graph.connector;
 
 import java.awt.Color;
 import java.awt.Point;
@@ -14,11 +14,11 @@ import org.netbeans.api.visual.widget.ConnectionWidget;
 import org.netbeans.api.visual.widget.Scene;
 import org.netbeans.api.visual.widget.Widget;
 
-public class SuccessorConnectorDecorator implements ConnectDecorator
+public class AlternativeConnector implements ConnectDecorator
 {
 	private final SyntaxGraph canvas;
 
-	public SuccessorConnectorDecorator(SyntaxGraph canvas)
+	public AlternativeConnector(SyntaxGraph canvas)
 	{
 		this.canvas = canvas;
 	}
@@ -28,7 +28,7 @@ public class SuccessorConnectorDecorator implements ConnectDecorator
 	{
 		final ConnectionWidget widget = new ConnectionWidget(scene);
 		widget.setTargetAnchorShape(AnchorShape.TRIANGLE_FILLED);
-		widget.setLineColor(Color.BLUE);
+		widget.setLineColor(Color.RED);
 		return widget;
 	}
 
@@ -41,17 +41,17 @@ public class SuccessorConnectorDecorator implements ConnectDecorator
 	@Override
 	public Anchor createSourceAnchor(Widget sourceWidget)
 	{
-		return new UnidirectionalAnchor(this.canvas, sourceWidget, Direction.RIGHT);
+		return new UnidirectionalAnchor(this.canvas, sourceWidget, Direction.BOTTOM);
 	}
 
 	@Override
 	public Anchor createTargetAnchor(Widget targetWidget)
 	{
-		return new UnidirectionalAnchor(this.canvas, targetWidget, Direction.LEFT);
+		return new UnidirectionalAnchor(this.canvas, targetWidget, Direction.TOP);
 	}
 
 	public Anchor createTargetAnchor(Widget targetWidget, String edge)
 	{
-		return new UnidirectionalAnchor(this.canvas, targetWidget, Direction.LEFT, edge, Direction.TOP);
+		return new UnidirectionalAnchor(this.canvas, targetWidget, Direction.TOP, edge, Direction.LEFT);
 	}
 }

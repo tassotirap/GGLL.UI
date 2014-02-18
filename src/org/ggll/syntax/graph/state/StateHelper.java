@@ -147,6 +147,16 @@ public class StateHelper
 		return leftSides;
 	}
 	
+	public static int getNodesCount()
+	{
+		int count = 0;
+		for (final SyntaxGraph syntaxGraph : SyntaxGraphRepository.getInstances())
+		{
+			count += syntaxGraph.getCanvasState().getNodes().size();
+		}		
+		return count;
+	}
+	
 	public static ExtendedList<StateNode> getNTerminals()
 	{
 		final ExtendedList<StateNode> nTerminals = new ExtendedList<StateNode>();

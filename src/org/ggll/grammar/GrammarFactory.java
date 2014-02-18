@@ -14,6 +14,10 @@ public class GrammarFactory
 
 	private String htmlOutput;
 
+	private String table[][];
+	
+	private int line;
+
 	public GrammarFactory()
 	{
 	}
@@ -39,7 +43,7 @@ public class GrammarFactory
 
 	private void htmlNodeIcon(StateNode node, StateNode successor, StateNode alternative)
 	{
-		this.htmlOutput += "<tr>";		
+		this.htmlOutput += "<tr>";
 		switch (node.getType())
 		{
 			case CanvasResource.N_TERMINAL:
@@ -52,7 +56,7 @@ public class GrammarFactory
 				this.htmlOutput += "<td style='background-color: #EEEEEE;' align='center' width='35'><img src='images/icon_l.png' alt='Lambda Alternative'></td>";
 				break;
 		}
-		
+
 		this.htmlOutput += "<td style='font-weight: bold;' align='center'><a href='Id|" + node.getId() + "'>" + nodeTitle(node) + "</a></td>";
 		this.htmlOutput += "<td align='center'>" + node.getNumber() + "</td>";
 		this.htmlOutput += alternative == null ? "<td align='center'>-</td>" : "<td align='center'>" + alternative.getNumber() + "</td>";
@@ -89,32 +93,30 @@ public class GrammarFactory
 		return node.getTitle();
 	}
 
-	private String stringSubpart(StateNode node, StateNode successor, StateNode alternative)
-	{
-		String output = "";
-		
+	private void stringSubpart(StateNode node, StateNode successor, StateNode alternative)
+	{	
+		line++;
+		table[line][0] = node.getId();
 		switch (node.getType())
 		{
 			case CanvasResource.N_TERMINAL:
-				output = node.getId() + " N";
+				table[line][1] = "N";
 				break;
 			case CanvasResource.TERMINAL:
 			case CanvasResource.LAMBDA:
-				output = node.getId() + " T";
+				table[line][1] = "T";
 				break;
 		}
-
-		output += " " + nodeTitle(node);
-		output += " " + node.getNumber();
-		output += alternative == null ? " 0" : " " + alternative.getNumber();
-		output += successor == null ? " 0" : " " + successor.getNumber();
-		output += " " + nodeSemanticRoutine(node) + "\n";
-		return output;
+		
+		table[line][2] = nodeTitle(node);
+		table[line][3] = ""+node.getNumber();
+		table[line][4] = alternative == null ? "0" : "" + alternative.getNumber();
+		table[line][5] = successor == null ? "0" : "" + successor.getNumber();
+		table[line][6] = nodeSemanticRoutine(node);
 	}
-	
-	public String subpart(StateNode node)
+
+	public void subpart(StateNode node)
 	{
-		final StringBuffer returnString = new StringBuffer();
 		final StateNode successor = StateHelper.findSucessorNode(node);
 		final StateNode alternative = StateHelper.findAlternativeNode(node);
 
@@ -128,32 +130,32 @@ public class GrammarFactory
 		{
 			alternative.setNumber(++this.cont);
 		}
-		
+
 		htmlNodeIcon(node, successor, alternative);
-		returnString.append(stringSubpart(node, successor, alternative));		
+		stringSubpart(node, successor, alternative);
 
 		if (successor != null && successor.isFlag() == false)
 		{
-			returnString.append(subpart(successor));
+			subpart(successor);
 		}
 
 		if (alternative != null && alternative.isFlag() == false)
 		{
-			returnString.append(subpart(alternative));
+			subpart(alternative);
 		}
-
-		return returnString.toString();
 	}
 
-	public String toTable()
+	public void createTable()
 	{
-		for(StateNode stateNode :  StateHelper.getStateNodes().getAll())
+		for (StateNode stateNode : StateHelper.getStateNodes().getAll())
 		{
 			stateNode.setFlag(false);
 			stateNode.setNumber(0);
-		}		
-		final StringBuffer returnString = new StringBuffer();
+		}
 		final ExtendedList<StateNode> startNodes = StateHelper.getLeftSides();
+		table = new String[StateHelper.getNodesCount()][7];
+		line = -1;
+
 		for (int i = 0; i < startNodes.count(); i++)
 		{
 			this.cont = 0;
@@ -171,12 +173,22 @@ public class GrammarFactory
 			{
 				htmlLeftSide(startNode, successorSyntaxSubpart);
 			}
-			returnString.append(startNode.getId() + " H " + startNode.getTitle() + " -1 -1 " + successorSyntaxSubpart.getNumber() + " -1\n");
-			returnString.append(subpart(successorSyntaxSubpart));
+			line++;
+			table[line][0] = startNode.getId();
+			table[line][1] = "H";
+			table[line][2] = startNode.getTitle();
+			table[line][3] = "-1";
+			table[line][4] = "-1";
+			table[line][5] = successorSyntaxSubpart.getNumber() + "";
+			table[line][6] = "-1";
+			subpart(successorSyntaxSubpart);
 			this.htmlOutput += "</table>";
 			AppOutput.displayGeneratedGrammar(this.htmlOutput);
 		}
-		return returnString.toString();
 	}
 
+	public String[][] getTable()
+	{
+		return table;
+	}
 }

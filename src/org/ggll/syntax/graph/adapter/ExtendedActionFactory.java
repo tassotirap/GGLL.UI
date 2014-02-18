@@ -341,9 +341,9 @@ public class ExtendedActionFactory
 			case NODE_HOVER:
 				return createHoverAction(new NodeHoverProvider(this.canvas));
 			case ALTERNATIVE:
-				return createConnectAction(this.canvas.getCanvasDecorator().getConnectDecoratorAlternative(), this.canvas.getInterractionLayer(), new NodeConnectProvider(this.canvas));
+				return createConnectAction(this.canvas.getConnectorFactory().getConnector(CanvasResource.ALTERNATIVE), this.canvas.getInterractionLayer(), new NodeConnectProvider(this.canvas));
 			case SUCCESSOR:
-				return createConnectAction(this.canvas.getCanvasDecorator().getConnectDecoratorSuccessor(), this.canvas.getInterractionLayer(), new NodeConnectProvider(this.canvas));
+				return createConnectAction(this.canvas.getConnectorFactory().getConnector(CanvasResource.SUCCESSOR), this.canvas.getInterractionLayer(), new NodeConnectProvider(this.canvas));
 			case RECONNECT:
 				return createReconnectAction(new NodeReconnectProvider(this.canvas));
 			case EDITOR:

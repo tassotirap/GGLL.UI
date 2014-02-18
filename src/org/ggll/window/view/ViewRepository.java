@@ -142,7 +142,9 @@ public class ViewRepository
 	{
 		for (int i = 0; i < DEFAULT_LAYOUT; i++)
 		{
-			this.tabWindowList.append(new TabWindow());
+			TabWindow tabWindow  = new TabWindow();
+			tabWindow.getWindowProperties().setUndockEnabled(false);
+			this.tabWindowList.append(tabWindow);
 		}
 
 		createParserView();

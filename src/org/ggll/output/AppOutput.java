@@ -1,10 +1,7 @@
 package org.ggll.output;
 
-import org.ggll.output.HtmlViewer.TOPIC;
-
 public abstract class AppOutput
 {
-
 	public static void clearGeneratedGrammar()
 	{
 		GeneratedGrammar.getInstance().clear();
@@ -31,11 +28,6 @@ public abstract class AppOutput
 		Output.getInstance().displayTextExt(str, topic);
 	}
 
-	static public void errorRecoveryStatus(String str)
-	{
-		SyntaxErrorOutput.getInstance().displayTextExt(str, TOPIC.Error);
-	}
-
 	static public void printlnSemanticStack(String str)
 	{
 		printSemanticStack(str, false);
@@ -56,11 +48,6 @@ public abstract class AppOutput
 		printSyntaxStack(str, showLine);
 	}
 
-	static public void printlnToken(String str)
-	{
-		TokenOutput.getInstance().displayTextExt(str + "<br>", TOPIC.Tokens);
-	}
-
 	static public void printSemanticStack(String str)
 	{
 		printSemanticStack(str, false);
@@ -79,11 +66,6 @@ public abstract class AppOutput
 	static public void printSyntaxStack(String str, boolean showLine)
 	{
 		SyntaxStack.getInstance().displayTextExt(str, showLine);
-	}
-
-	static public void printToken(String str)
-	{
-		TokenOutput.getInstance().displayTextExt(str, TOPIC.Tokens);
 	}
 
 	public static void showAndSelectNode(String flag)

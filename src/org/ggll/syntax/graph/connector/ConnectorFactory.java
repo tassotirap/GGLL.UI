@@ -1,4 +1,4 @@
-package org.ggll.syntax.graph.decorator;
+package org.ggll.syntax.graph.connector;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -13,6 +13,7 @@ import org.ggll.syntax.graph.SyntaxGraph;
 import org.ggll.syntax.graph.widget.IconNodeWidgetExt;
 import org.ggll.syntax.graph.widget.IconNodeWidgetExt.TextOrientation;
 import org.ggll.syntax.graph.widget.LabelWidgetExt;
+import org.netbeans.api.visual.action.ConnectDecorator;
 import org.netbeans.api.visual.anchor.AnchorShape;
 import org.netbeans.api.visual.anchor.PointShape;
 import org.netbeans.api.visual.border.Border;
@@ -20,34 +21,25 @@ import org.netbeans.api.visual.border.BorderFactory;
 import org.netbeans.api.visual.widget.ConnectionWidget;
 import org.netbeans.api.visual.widget.Widget;
 
-public class ConnectorDecoratorFactory
+public class ConnectorFactory
 {
-	protected AlternativeConnectorDecorator connectDecoratorAlternative;
+	protected AlternativeConnector connectAlternative;
 
-	protected SuccessorConnectorDecorator connectDecoratorSuccessor;
+	protected SuccessorConnector connectSuccessor;
 
 	private final String[] iconName = new String[]{ CanvasResource.N_TERMINAL, CanvasResource.TERMINAL, CanvasResource.LEFT_SIDE, CanvasResource.LAMBDA, CanvasResource.START };
 
 	private final URL[] icons = new URL[]{ getClass().getResource(GGLLImages.ICON_N_TERMINAL), getClass().getResource(GGLLImages.ICON_TERMINAL), getClass().getResource(GGLLImages.ICON_LEFT_SIDE), getClass().getResource(GGLLImages.ICON_LAMBDA), getClass().getResource(GGLLImages.ICON_START) };
 
-	public ConnectorDecoratorFactory(SyntaxGraph canvas)
+	public ConnectorFactory(SyntaxGraph canvas)
 	{
-		this.connectDecoratorAlternative = new AlternativeConnectorDecorator(canvas);
-		this.connectDecoratorSuccessor = new SuccessorConnectorDecorator(canvas);
+		this.connectAlternative = new AlternativeConnector(canvas);
+		this.connectSuccessor = new SuccessorConnector(canvas);
 	}
 
 	public ConnectionWidget drawConnection(String type, SyntaxGraph canvas, String label)
 	{
-		ConnectionWidget connection = null;
-		if (type.equals(CanvasResource.SUCCESSOR))
-		{
-			connection = this.connectDecoratorSuccessor.createConnectionWidget(canvas.getMainLayer().getScene());
-		}
-		else
-		{
-			connection = this.connectDecoratorAlternative.createConnectionWidget(canvas.getMainLayer().getScene());
-		}
-
+		ConnectionWidget connection = getConnector(type).createConnectionWidget(canvas.getMainLayer().getScene());
 		connection.setTargetAnchorShape(AnchorShape.TRIANGLE_FILLED);
 		connection.setEndPointShape(PointShape.SQUARE_FILLED_BIG);
 		connection.setControlPointShape(PointShape.SQUARE_FILLED_BIG);
@@ -62,9 +54,7 @@ public class ConnectorDecoratorFactory
 		if (type.equals(CanvasResource.LAMBDA))
 		{
 			final IconNodeWidgetExt iwidget = new IconNodeWidgetExt(canvas.getMainLayer().getScene(), TextOrientation.RIGHT_CENTER);
-
 			iwidget.setImage(new ImageIcon(findIconPath(type)).getImage());
-
 			iwidget.setOpaque(true);
 			iwidget.repaint();
 			widget = iwidget;
@@ -107,14 +97,16 @@ public class ConnectorDecoratorFactory
 		return null;
 	}
 
-	public AlternativeConnectorDecorator getConnectDecoratorAlternative()
-	{
-		return this.connectDecoratorAlternative;
-	}
-
-	public SuccessorConnectorDecorator getConnectDecoratorSuccessor()
-	{
-		return this.connectDecoratorSuccessor;
+	public ConnectDecorator getConnector(String type)
+	{		
+		switch (type)
+		{
+			case CanvasResource.SUCCESSOR:
+				return this.connectSuccessor;
+			case CanvasResource.ALTERNATIVE:
+				return this.connectAlternative;
+		}
+		return null;		
 	}
 
 	public Border getIconBorder(String type)

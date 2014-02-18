@@ -30,7 +30,7 @@ import javax.swing.JComponent;
 import org.ggll.images.GGLLImages;
 import org.ggll.resource.CanvasResource;
 import org.ggll.syntax.graph.adapter.ExtendedActionFactory;
-import org.ggll.syntax.graph.decorator.ConnectorDecoratorFactory;
+import org.ggll.syntax.graph.connector.ConnectorFactory;
 import org.ggll.syntax.graph.provider.GridProvider;
 import org.ggll.syntax.graph.provider.LineProvider;
 import org.ggll.syntax.graph.state.State;
@@ -86,7 +86,7 @@ public class SyntaxGraph extends GraphScene.StringGraph implements PropertyChang
 	private final AbstractMap<String, Cursor> cursors = new HashMap<String, Cursor>();
 
 	// Decorator
-	private final ConnectorDecoratorFactory decorator = new ConnectorDecoratorFactory(this);
+	private final ConnectorFactory connectorFactory = new ConnectorFactory(this);
 
 	// Components
 	private final ExtendedList<String> alternatives = new ExtendedList<String>();
@@ -223,7 +223,7 @@ public class SyntaxGraph extends GraphScene.StringGraph implements PropertyChang
 		if (activeTool.equals(CanvasResource.N_TERMINAL) || activeTool.equals(CanvasResource.TERMINAL) || activeTool.equals(CanvasResource.LEFT_SIDE) || activeTool.equals(CanvasResource.LAMBDA) || activeTool.equals(CanvasResource.START))
 		{
 
-			widget = this.decorator.drawIcon(activeTool, this, node);
+			widget = this.connectorFactory.drawIcon(activeTool, this, node);
 			widget.createActions(CanvasResource.SELECT);
 			widget.getActions(CanvasResource.SELECT).addAction(this.actionFactory.getAction(ExtendedActionFactory.SELECT));
 			widget.getActions(CanvasResource.SELECT).addAction(this.actionFactory.getAction(ExtendedActionFactory.MOVE));
@@ -304,7 +304,7 @@ public class SyntaxGraph extends GraphScene.StringGraph implements PropertyChang
 
 		if (activeTool.equals(CanvasResource.SUCCESSOR) || activeTool.equals(CanvasResource.ALTERNATIVE))
 		{
-			connection = this.decorator.drawConnection(activeTool, this, edge);
+			connection = this.connectorFactory.drawConnection(activeTool, this, edge);
 			connection.setRouter(getActiveRouter());
 			connection.createActions(CanvasResource.SELECT).addAction(this.actionFactory.getAction(ExtendedActionFactory.CONN_SELECT));
 			connection.getActions(CanvasResource.SELECT).addAction(this.actionFactory.getAction(ExtendedActionFactory.RECONNECT));
@@ -434,9 +434,9 @@ public class SyntaxGraph extends GraphScene.StringGraph implements PropertyChang
 		return tool;
 	}
 
-	public ConnectorDecoratorFactory getCanvasDecorator()
+	public ConnectorFactory getConnectorFactory()
 	{
-		return this.decorator;
+		return this.connectorFactory;
 	}
 
 	public State getCanvasState()

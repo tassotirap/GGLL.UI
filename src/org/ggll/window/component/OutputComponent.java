@@ -13,8 +13,6 @@ import javax.swing.border.EmptyBorder;
 
 import org.ggll.images.GGLLImages;
 import org.ggll.output.Output;
-import org.ggll.output.SyntaxErrorOutput;
-import org.ggll.output.TokenOutput;
 import org.ggll.syntax.graph.SyntaxGraph;
 
 public class OutputComponent extends AbstractComponent
@@ -24,34 +22,8 @@ public class OutputComponent extends AbstractComponent
 	{
 		final JScrollPane jsp = new JScrollPane();
 		final JPanel bar = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-		final JButton lastToken = new JButton(new ImageIcon(getClass().getResource(GGLLImages.ICON_TOKEN)));
 		this.jComponent = new JPanel(new BorderLayout());
 		jsp.setViewportView(Output.getInstance().getView(canvas));
-		lastToken.addActionListener(new ActionListener()
-		{
-			@Override
-			public void actionPerformed(ActionEvent e)
-			{
-				jsp.setViewportView(TokenOutput.getInstance().getView(canvas));
-			}
-		});
-		lastToken.setBorder(new EmptyBorder(0, 0, 0, 0));
-		lastToken.setRolloverEnabled(true);
-		lastToken.setBackground(bar.getBackground());
-		lastToken.setToolTipText("Tokens");
-		final JButton errorReovery = new JButton(new ImageIcon(getClass().getResource(GGLLImages.ICON_ERROR_RECOVERY)));
-		errorReovery.addActionListener(new ActionListener()
-		{
-			@Override
-			public void actionPerformed(ActionEvent e)
-			{
-				jsp.setViewportView(SyntaxErrorOutput.getInstance().getView(canvas));
-			}
-		});
-		errorReovery.setBorder(new EmptyBorder(0, 0, 0, 0));
-		errorReovery.setRolloverEnabled(true);
-		errorReovery.setBackground(bar.getBackground());
-		errorReovery.setToolTipText("Error Recovery");
 		final JButton clear = new JButton(new ImageIcon(getClass().getResource(GGLLImages.ICON_ERASE)));
 		clear.addActionListener(new ActionListener()
 		{
@@ -59,8 +31,6 @@ public class OutputComponent extends AbstractComponent
 			public void actionPerformed(ActionEvent e)
 			{
 				Output.getInstance().clear();
-				TokenOutput.getInstance().clear();
-				SyntaxErrorOutput.getInstance().clear();
 			}
 		});
 		clear.setBorder(new EmptyBorder(0, 0, 0, 0));
@@ -81,8 +51,6 @@ public class OutputComponent extends AbstractComponent
 		output.setBackground(bar.getBackground());
 		output.setToolTipText("Output");
 		bar.add(output);
-		bar.add(errorReovery);
-		bar.add(lastToken);
 		bar.add(clear);
 		this.jComponent.add(bar, BorderLayout.NORTH);
 		this.jComponent.add(jsp, BorderLayout.CENTER);

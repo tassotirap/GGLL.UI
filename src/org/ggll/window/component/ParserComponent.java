@@ -28,21 +28,11 @@ public class ParserComponent extends AbstractComponent
 
 	public ParserComponent(String rootPath)
 	{
-		final ParsingEditor parser;
 		createOpenButton();
 		createParseButton();
 		createNextStepButton();
-
-		if (ParsingEditor.getInstance() == null)
-		{
-			parser = new ParsingEditor(null, rootPath);
-		}
-		else
-		{
-			parser = ParsingEditor.getInstance();
-		}
-		createListener(parser);
-		createLayout(parser);
+		createListener(ParsingEditor.getInstance());
+		createLayout(ParsingEditor.getInstance());
 	}
 
 	private void createLayout(final ParsingEditor parser)

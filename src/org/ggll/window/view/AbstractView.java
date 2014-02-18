@@ -19,6 +19,7 @@ public class AbstractView extends View
 		this.id = id;
 		this.componentModel = componentModel;
 		getWindowProperties().setCloseEnabled(false);
+		getWindowProperties().setUndockEnabled(false);
 	}
 
 	public AbstractView(String title, Icon icon, AbstractComponent componentModel, String fileName, int id)
@@ -27,6 +28,7 @@ public class AbstractView extends View
 		this.id = id;
 		this.componentModel = componentModel;
 		this.fileName = fileName;
+		getWindowProperties().setUndockEnabled(false);
 	}
 
 	public AbstractComponent getComponentModel()

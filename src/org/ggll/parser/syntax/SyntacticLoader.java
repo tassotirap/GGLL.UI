@@ -3,20 +3,9 @@ package org.ggll.parser.syntax;
 import ggll.core.syntax.model.TableGraphNode;
 import ggll.core.syntax.model.TableNode;
 
+import org.ggll.grammar.GrammarFactory;
 import org.ggll.resource.CanvasResource;
 
-/*
- * Created on 11/08/2003
- *
- * To change the template for this generated file go to
- * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
- */
-/**
- * @author gohan
- * 
- *         To change the template for this generated type comment go to
- *         Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
- */
 public class SyntacticLoader
 {
 	int AltR;
@@ -35,34 +24,36 @@ public class SyntacticLoader
 	TableNode TabT[];
 	char Tipo;
 
-	public SyntacticLoader(TableCreate argTab)
+	public SyntacticLoader()
 	{
+		final GrammarFactory grammarFactory = new GrammarFactory();
+		grammarFactory.createTable();
+		
 		this.MaxT = 0;
 		this.MaxNt = 0;
 		this.IndPrim = 1;
 		this.NoMax = 0;
-		final TableCreate t = argTab;
-		final String tab[][] = t.getTab();
-		this.TabT = new TableNode[t.getNLines() + 1];
-		this.TabNt = new TableNode[t.getNLines() + 1];
-		this.TabGraph = new TableGraphNode[t.getNLines() + 1];
-		int registrosLidos;
+		final String table[][] = grammarFactory.getTable();
+		this.TabT = new TableNode[table.length];
+		this.TabNt = new TableNode[table.length];
+		this.TabGraph = new TableGraphNode[table.length];
+		int line;
 		int iterator;
-		final int indicesTabNtEncontrados[] = new int[t.getNLines() + 1];
+		final int indicesTabNtEncontrados[] = new int[table.length];
 		int indiceEncontrado;
 		/*
 		 * 2 Para todos os registros (linhas )presentes na tabela de entrada,
 		 * faço:
 		 */
-		for (registrosLidos = 0; registrosLidos < t.getNLines(); registrosLidos++)
+		for (line = 0; line < table.length; line++)
 		{
-			this.Flag = tab[registrosLidos][0];
-			this.Tipo = tab[registrosLidos][1].toCharArray()[0];
-			this.Nomer = tab[registrosLidos][2];
-			this.NumNo = Integer.parseInt(tab[registrosLidos][3]);
-			this.AltR = Integer.parseInt(tab[registrosLidos][4]);
-			this.SucR = Integer.parseInt(tab[registrosLidos][5]);
-			this.SemR = tab[registrosLidos][6];
+			this.Flag = table[line][0];
+			this.Tipo = table[line][1].toCharArray()[0];
+			this.Nomer = table[line][2];
+			this.NumNo = Integer.parseInt(table[line][3]);
+			this.AltR = Integer.parseInt(table[line][4]);
+			this.SucR = Integer.parseInt(table[line][5]);
+			this.SemR = table[line][6];
 
 			/*
 			 * A tabela indicesTabNtEncontrados será util mais adiante, porém,
