@@ -69,7 +69,7 @@ public class GrammarParser
 			final SyntacticLoader syntacticLoader = new SyntacticLoader();
 			parsingEditor.setSyntacticLoader(syntacticLoader);
 
-			final GGLLTable analyzer = new GGLLTable(syntacticLoader.tabGraph(), syntacticLoader.tabNt(), syntacticLoader.tabT());
+			final GGLLTable analyzer = new GGLLTable(syntacticLoader.getTableNodes(), syntacticLoader.getNTerminalTable(), syntacticLoader.getTerminalTable());
 			analyzer.serialize(GGLLDirector.getProject().getProjectDir().getAbsolutePath() + "\\export\\data.ggll");
 
 			final File semanticIn = new File(GGLLDirector.getProject().getProjectDir().getAbsolutePath() + "\\" + GGLLDirector.getProject().getProjectDir().getName() + FileNames.SEM_EXTENSION);

@@ -99,7 +99,7 @@ public class ParsingEditor
 			final Compiler compiler = new Compiler();
 			compiler.compile(GGLLDirector.getProject().getSemanticFile().getPath());
 			final ClassLoader<SemanticRoutineClass> classLoader = new ClassLoader<SemanticRoutineClass>(GGLLDirector.getProject().getSemanticFile());
-			this.analyzer = new Parser(new GGLLTable(this.syntacticLoader.tabGraph(), this.syntacticLoader.tabNt(), this.syntacticLoader.tabT()), this.yylex, classLoader.getInstance(), stepping);
+			this.analyzer = new Parser(new GGLLTable(this.syntacticLoader.getTableNodes(), this.syntacticLoader.getNTerminalTable(), this.syntacticLoader.getTerminalTable()), this.yylex, classLoader.getInstance(), stepping);
 			this.analyzer.setParserOutput(new ParserOutput()
 			{
 				@Override

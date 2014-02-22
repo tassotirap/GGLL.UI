@@ -145,7 +145,7 @@ public class GrammarFactory
 		}
 	}
 
-	public void createTable()
+	public String[][] createTable()
 	{
 		for (StateNode stateNode : StateHelper.getStateNodes().getAll())
 		{
@@ -185,10 +185,7 @@ public class GrammarFactory
 			this.htmlOutput += "</table>";
 			AppOutput.displayGeneratedGrammar(this.htmlOutput);
 		}
-	}
-
-	public String[][] getTable()
-	{
+		
 		return table;
 	}
 }

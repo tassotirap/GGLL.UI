@@ -8,242 +8,214 @@ import org.ggll.resource.CanvasResource;
 
 public class SyntacticLoader
 {
-	int AltR;
-	String Flag;
-	int IndPrim;
-	int MaxNt;
-	int MaxT;
-	int NoMax;
-	String Nomer;
-	int NumNo;
-	String SemR;
-	int SucR;
-	TableGraphNode TabGraph[];
 
-	TableNode TabNt[];
-	TableNode TabT[];
-	char Tipo;
+	TableGraphNode TableNodes[];
+	TableNode TableNTerminal[];
+	TableNode TableTerminal[];
+	
+	int maxTerminal = 0;
+	int maxNTerminal = 0;
+	int maxNodes = 0;
 
 	public SyntacticLoader()
 	{
 		final GrammarFactory grammarFactory = new GrammarFactory();
-		grammarFactory.createTable();
+		final String table[][] = grammarFactory.createTable();
 		
-		this.MaxT = 0;
-		this.MaxNt = 0;
-		this.IndPrim = 1;
-		this.NoMax = 0;
-		final String table[][] = grammarFactory.getTable();
-		this.TabT = new TableNode[table.length];
-		this.TabNt = new TableNode[table.length];
-		this.TabGraph = new TableGraphNode[table.length];
-		int line;
-		int iterator;
-		final int indicesTabNtEncontrados[] = new int[table.length];
-		int indiceEncontrado;
-		/*
-		 * 2 Para todos os registros (linhas )presentes na tabela de entrada,
-		 * faço:
-		 */
+		this.TableTerminal = new TableNode[table.length];
+		this.TableNTerminal = new TableNode[table.length];
+		this.TableNodes = new TableGraphNode[table.length];
+		
+		int line;		
+		int firstIndex = 1;
 		for (line = 0; line < table.length; line++)
 		{
-			this.Flag = table[line][0];
-			this.Tipo = table[line][1].toCharArray()[0];
-			this.Nomer = table[line][2];
-			this.NumNo = Integer.parseInt(table[line][3]);
-			this.AltR = Integer.parseInt(table[line][4]);
-			this.SucR = Integer.parseInt(table[line][5]);
-			this.SemR = table[line][6];
+			String flag = table[line][0];
+			char type = table[line][1].toCharArray()[0];
+			String syntaticSymbol = table[line][2];
+			int nodeNumber = Integer.parseInt(table[line][3]);
+			int alternativeNumber = Integer.parseInt(table[line][4]);
+			int sucessorNumer = Integer.parseInt(table[line][5]);
+			String semanticRoutine = table[line][6];			
 
-			/*
-			 * A tabela indicesTabNtEncontrados será util mais adiante, porém,
-			 * preciso inicializá-la, toda vez que eu mudar de registro
-			 */
-			for (int i = 0; i < indicesTabNtEncontrados.length; i++)
+			if (type == 'H')
 			{
-				indicesTabNtEncontrados[i] = -1;
+				firstIndex = header(firstIndex, table, flag, syntaticSymbol);
 			}
-			/* 2 Se Tipo for igual Cabeça: */
-			if (this.Tipo == 'H')
-			{
-				/*
-				 * Para facilitar a busca, faço todos os valores de
-				 * indicesTabNtEncontrados serem iguais a -1
-				 */
-
-				/* 2 Faço IndPrim <- IndPrim + NoMax, */
-				this.IndPrim = this.IndPrim + this.NoMax;
-				/* 2 NoMax <- 0 */
-				this.NoMax = 0;
-				/* 2 verifico se Nomer se encontra em TABNT */
-				/*
-				 * iterador e aux serão uteis apenas para a localização de um
-				 * simbolo na tabela de não terminais
-				 */
-				iterator = 1;
-				int aux = 0;
-				/* enquanto existir entradas em TABNT */
-				while (this.TabNt[iterator] != null)
-				{
-					/* Se eu encontrar um simbolo igual à Nomer... */
-					if (this.TabNt[iterator].getName().equals(this.Nomer))
-					{
-						/*
-						 * Guardo o indice do simbolo encontrado em uma tabela
-						 * especial
-						 */
-						indicesTabNtEncontrados[aux] = iterator;
-						aux = aux + 1;
-					}
-					iterator = iterator + 1;
-				}
-				/* 2 se Nomer não se encontra na TABNT */
-				if (indicesTabNtEncontrados[0] == -1)
-				{
-					this.MaxNt = this.MaxNt + 1;
-					/* 2 Coloco na TABNT um o não-terminal TabNT */
-					this.TabNt[this.MaxNt] = new TableNode(this.Flag, this.Nomer, this.IndPrim);
-				}
-				else
-				{
-					/*
-					 * 2 Se existe E tal que 1<=E<=MaxNt e TabNt[E].name() =
-					 * Nomer
-					 */
-					for (int j = 0; j < this.MaxNt; j++)
-					{
-						if (indicesTabNtEncontrados[j] != -1)
-						{
-							/* 2 TabNt[E]->prim = 0 ? */
-							if (this.TabNt[indicesTabNtEncontrados[j]].getFirstNode() == 0)
-							{
-								/* 2 Se sim */
-								this.TabNt[indicesTabNtEncontrados[j]].setFirstNode(this.IndPrim);
-							}
-							else
-							{
-								/* 2 Se não */
-								System.out.println("Erro!!Duas cabeças para um mesmo não-terminal");
-							}
-						}
-					}
-				} // } else {...
-			} // if(Tipo == 'H')...
-			/* 2 Se Tipo for diferente de H */
 			else
 			{
-				/* 2 I <- IndPrim + NumNo -1 */
-				final int I = this.IndPrim + this.NumNo - 1;
-				/* O nó que será inserido em TabGraph é criado agora */
-				this.TabGraph[I] = new TableGraphNode();
-				/*
-				 * IndiceEncontrado será utilizado na localização de uma simbolo
-				 * na Tabela de simbolos Terminais
-				 */
-				indiceEncontrado = -1;
-				/* 2 se Tipo for igual a T e Nomer não for um lambda-nó */
-				if (this.Tipo == 'T')
+				final int I = firstIndex + nodeNumber - 1;
+				this.TableNodes[I] = new TableGraphNode();
+				int index = -1;
+				if (type == 'T')
 				{
-					this.TabGraph[I].setIsTerminal(true);
+					index = terminal(flag, syntaticSymbol, I);
+				}
+				else if (type == 'N')
+				{
+					index = nTerminal(flag, syntaticSymbol, I);
+				}
+				setReferenceNode(index, syntaticSymbol, I);
+				setAlternative(firstIndex, alternativeNumber, I);
+				setSucessor(firstIndex, sucessorNumer, I);
+				setSemanticRoutine(semanticRoutine, I);
 
-					if (!this.Nomer.equals(new String("-1")) && !this.Nomer.equals(CanvasResource.EMPTY_NODE_LABEL))
-					{
-						iterator = 1;
-						/* 2 verifico se Nomer se encontra em TABT */
-						while (this.TabT[iterator] != null)
-						{
-							if (this.TabT[iterator].getName().equals(this.Nomer))
-							{
-								indiceEncontrado = iterator;
-								break;
-							}
-							iterator = iterator + 1;
-						}
-						if (indiceEncontrado == -1)
-						{
-							/*
-							 * 2 Se não foi encontrado, a entrada na tabela de
-							 * simbolos terminais terá de ser criada
-							 */
-							this.MaxT = this.MaxT + 1;
-							this.TabT[this.MaxT] = new TableNode(this.Flag, this.Nomer);
-							indiceEncontrado = this.MaxT;
-						}
-					}
-				}
-				/* 2 Se Tipo for igoal a N */
-				else if (this.Tipo == 'N')
+				if (maxNodes < nodeNumber)
 				{
-					iterator = 1;
-					/* 2 verifico se Nomer se encontra em TABT */
-					while (this.TabNt[iterator] != null)
-					{
-						if (this.TabNt[iterator].getName().equals(this.Nomer))
-						{
-							indiceEncontrado = iterator;
-							break;
-						}
-						iterator = iterator + 1;
-					}
-					if (indiceEncontrado == -1)
-					{
-						/*
-						 * 2 Se não for encontrado, uma entrada na tabela TabNt,
-						 * será criada
-						 */
-						this.MaxNt = this.MaxNt + 1;
-						this.TabNt[this.MaxNt] = new TableNode(this.Flag, this.Nomer, 0);
-						indiceEncontrado = this.MaxNt;
-					}
-					this.TabGraph[I].setIsTerminal(false);
-				}
-				if (this.Nomer.equals("-1") || this.Nomer.equals(CanvasResource.EMPTY_NODE_LABEL))
-				{
-					this.TabGraph[I].setNodeReference(0);
-				}
-				else
-				{
-					this.TabGraph[I].setNodeReference(indiceEncontrado);
-				}
-				if (this.AltR != 0)
-				{
-					this.TabGraph[I].setAlternativeIndex(this.IndPrim + this.AltR - 1);
-				}
-				else
-				{
-					this.TabGraph[I].setAlternativeIndex(0);
-				}
-				if (this.SucR != 0)
-				{
-					this.TabGraph[I].setSucessorIndex(this.IndPrim + this.SucR - 1);
-				}
-				else
-				{
-					this.TabGraph[I].setSucessorIndex(0);
-				}
-				/* Colocando o valor da rotina semantica */
-				this.TabGraph[I].setSemanticRoutine(this.SemR);
-
-				if (this.NoMax < this.NumNo)
-				{
-					this.NoMax = this.NumNo;
+					maxNodes = nodeNumber;
 				}
 			}
-		} // while (registrosLidos < t.linhas()) ...
-	} // public CarregadorSintatico() ...
-
-	public TableGraphNode[] tabGraph()
-	{
-		return this.TabGraph;
+		}
 	}
 
-	public TableNode[] tabNt()
+	private void setSemanticRoutine(String semanticRoutine, final int I)
 	{
-		return this.TabNt;
+		this.TableNodes[I].setSemanticRoutine(semanticRoutine);
 	}
 
-	public TableNode[] tabT()
+	private void setSucessor(int firstIndex, int sucessorNumer, final int I)
 	{
-		return this.TabT;
+		if (sucessorNumer != 0)
+		{
+			this.TableNodes[I].setSucessorIndex(firstIndex + sucessorNumer - 1);
+		}
+		else
+		{
+			this.TableNodes[I].setSucessorIndex(0);
+		}
+	}
+
+	private void setAlternative(int firstIndex, int alternativeNumber, final int I)
+	{
+		if (alternativeNumber != 0)
+		{
+			this.TableNodes[I].setAlternativeIndex(firstIndex + alternativeNumber - 1);
+		}
+		else
+		{
+			this.TableNodes[I].setAlternativeIndex(0);
+		}
+	}
+
+	private void setReferenceNode(int index, String syntaticSymbol, final int I)
+	{
+		if (syntaticSymbol.equals("-1") || syntaticSymbol.equals(CanvasResource.EMPTY_NODE_LABEL))
+		{
+			this.TableNodes[I].setNodeReference(0);
+		}
+		else
+		{
+			this.TableNodes[I].setNodeReference(index);
+		}
+	}
+
+	private int nTerminal(String flag, String syntaticSymbol, final int I)
+	{
+		int iterator;
+		int index = -1;
+		iterator = 1;		
+		while (this.TableNTerminal[iterator] != null)
+		{
+			if (this.TableNTerminal[iterator].getName().equals(syntaticSymbol))
+			{
+				index = iterator;
+				break;
+			}
+			iterator = iterator + 1;
+		}
+		if (index == -1)
+		{
+			maxNTerminal = maxNTerminal + 1;
+			this.TableNTerminal[maxNTerminal] = new TableNode(flag, syntaticSymbol, 0);
+			index = maxNTerminal;
+		}
+		this.TableNodes[I].setIsTerminal(false);
+		return index;
+	}
+
+	private int terminal(String flag, String syntaticSymbol, final int I)
+	{
+		int iterator = 1;
+		int index = -1;
+		this.TableNodes[I].setIsTerminal(true);
+
+		if (!syntaticSymbol.equals(new String("-1")) && !syntaticSymbol.equals(CanvasResource.EMPTY_NODE_LABEL))
+		{
+			while (this.TableTerminal[iterator] != null)
+			{
+				if (this.TableTerminal[iterator].getName().equals(syntaticSymbol))
+				{
+					index = iterator;
+					break;
+				}
+				iterator = iterator + 1;
+			}
+			if (index == -1)
+			{
+				maxTerminal = maxTerminal + 1;
+				this.TableTerminal[maxTerminal] = new TableNode(flag, syntaticSymbol);
+				index = maxTerminal;
+			}
+		}
+		return index;
+	}
+
+	private Integer header(Integer firstIndex, final String[][] table, String flag, String syntaticSymbol)
+	{
+		int iterator = 1;
+		firstIndex = firstIndex + maxNodes;
+		maxNodes = 0;
+		int aux = 0;
+		
+		final int nTerminalIndex[] = new int[table.length];
+		for (int i = 0; i < nTerminalIndex.length; i++)
+		{
+			nTerminalIndex[i] = -1;
+		}
+		
+		while (this.TableNTerminal[iterator] != null)
+		{
+			if (this.TableNTerminal[iterator].getName().equals(syntaticSymbol))
+			{
+				nTerminalIndex[aux] = iterator;
+				aux = aux + 1;
+			}
+			iterator = iterator + 1;
+		}
+
+		if (nTerminalIndex[0] == -1)
+		{
+			maxNTerminal = maxNTerminal + 1;
+			this.TableNTerminal[maxNTerminal] = new TableNode(flag, syntaticSymbol, firstIndex);
+		}
+		else
+		{
+			for (int j = 0; j < maxNTerminal; j++)
+			{
+				if (nTerminalIndex[j] != -1)
+				{
+					if (this.TableNTerminal[nTerminalIndex[j]].getFirstNode() == 0)
+					{
+						this.TableNTerminal[nTerminalIndex[j]].setFirstNode(firstIndex);
+					}
+				}
+			}
+		}
+		return firstIndex;
+	}
+
+	public TableGraphNode[] getTableNodes()
+	{
+		return this.TableNodes;
+	}
+
+	public TableNode[] getNTerminalTable()
+	{
+		return this.TableNTerminal;
+	}
+
+	public TableNode[] getTerminalTable()
+	{
+		return this.TableTerminal;
 	}
 }
