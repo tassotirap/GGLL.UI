@@ -1,8 +1,10 @@
 package org.ggll.images;
 
+import java.io.File;
+
 public class GGLLImages
 {
-	public static String imagePath = "/org/ggll/images/";
+	public static String imagePath = new File("resource").getAbsolutePath() + "//";
 
 	public final static String CURSOS_ALTERNATIVE_ENABLED = imagePath + "cursor_alternative_enabled.png";
 	public final static String CURSOS_LABEL_ENABLED = imagePath + "cursor_label_enabled.png";

@@ -12,6 +12,7 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 import org.ggll.grammar.GrammarParser;
+import org.ggll.images.GGLLImages;
 import org.ggll.resource.LangResource;
 import org.ggll.syntax.graph.SyntaxGraph;
 
@@ -91,9 +92,9 @@ public class ToolBarCanvas extends BaseToolBar
 	@Override
 	protected void initComponets()
 	{
-		this.btnRun = new JButton(new ImageIcon(getClass().getResource(this.imgPath + "application-run.png")));
-		this.btnZoomIn = new JButton(new ImageIcon(getClass().getResource(this.imgPath + "zoom-in.png")));
-		this.btnZoomOut = new JButton(new ImageIcon(getClass().getResource(this.imgPath + "zoom-out.png")));
+		this.btnRun = new JButton(new ImageIcon(GGLLImages.imagePath + "application-run.png"));
+		this.btnZoomIn = new JButton(new ImageIcon(GGLLImages.imagePath + "zoom-in.png"));
+		this.btnZoomOut = new JButton(new ImageIcon(GGLLImages.imagePath + "zoom-out.png"));
 		this.buttons = new JButton[]{ this.btnRun, this.btnZoomIn, this.btnZoomOut };
 		this.names = new String[]{ LangResource.build, LangResource.zoom_plus, LangResource.zoom_minus };
 	}

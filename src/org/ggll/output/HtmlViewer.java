@@ -1,9 +1,7 @@
 package org.ggll.output;
 
 import java.awt.Cursor;
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.StringReader;
 
 import javax.swing.JEditorPane;
@@ -13,6 +11,7 @@ import javax.swing.text.Document;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.StyleSheet;
 
+import org.ggll.images.GGLLImages;
 import org.ggll.syntax.graph.SyntaxGraph;
 import org.ggll.util.html.CustomHTMLEditorKit;
 
@@ -42,13 +41,11 @@ public abstract class HtmlViewer implements HyperlinkListener
 		Error, Grammar, Output, Parser, SemanticStack, SyntaxStack, Tokens
 	};
 
-	public static final String ApplicationImagePath = new File("resources").getAbsolutePath();
+	public static final String ApplicationImagePath = GGLLImages.imagePath;
 	public final static String DEFAULT_FONT = "Arial";
 	public final static String DEFAULT_SIZE = "3";
 
 	public final static String HORIZONTAL_LINE = "<hr width=\"100%\" size=\"1\" color=\"gray\" align=\"center\">";
-	public static final String SystemImagePath = new File("resources/images").getAbsolutePath();
-	public static final String SystemImagePathKey = "system.image.path.key";
 
 	public final static boolean USE_CSSFILE = false;
 	private SyntaxGraph activeScene;
@@ -62,7 +59,7 @@ public abstract class HtmlViewer implements HyperlinkListener
 	{
 		try
 		{
-			this.cssSheet.loadRules(new InputStreamReader(HtmlViewer.class.getResourceAsStream("/org/ggll/output/output.css")), null);
+			this.cssSheet.loadRules(new StringReader(GGLLImages.imagePath + "output.css"), null);
 		}
 		catch (final IOException e)
 		{
@@ -74,7 +71,6 @@ public abstract class HtmlViewer implements HyperlinkListener
 			this.kit.setStyleSheet(this.cssSheet);
 		}
 		this.kit.setLinkCursor(new Cursor(Cursor.HAND_CURSOR));
-		setSystemImagePath(SystemImagePath);
 		this.editorPane.setEditorKit(this.kit);
 		final Document doc = this.editorPane.getDocument();
 		final StringReader reader = new StringReader(new Page().getContent());
@@ -142,10 +138,5 @@ public abstract class HtmlViewer implements HyperlinkListener
 	public void setActiveScene(SyntaxGraph canvas)
 	{
 		this.activeScene = canvas;
-	}
-
-	public void setSystemImagePath(String path)
-	{
-		System.setProperty(SystemImagePathKey, path);
 	}
 }

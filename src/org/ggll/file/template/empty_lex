@@ -16,19 +16,16 @@ import ggll.core.exceptions.*;
 	}
 	
 	public int searchTableNodeSymbol(String text)
-	{
-		int index = -1;
-		int i=1;
-		while(tableNode[i]!=null)
+	{		
+		for(int i = 1; i < tableNode.length; i++)
 		{
+			if(tableNode[i] == null) continue;
 			if((tableNode[i].getName()).equals(text))
 			{
-				index = i;
-				break;	
+				return i;
 			}
-			i++;
 		}
-		return index;
+		return -1;
 	}
 
 	public Yylex()

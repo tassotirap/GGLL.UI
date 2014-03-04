@@ -11,6 +11,7 @@ import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
+import org.ggll.images.GGLLImages;
 import org.ggll.resource.CanvasResource;
 import org.ggll.resource.LangResource;
 import org.ggll.syntax.graph.SyntaxGraph;
@@ -144,15 +145,15 @@ public class ToolBarGrammar extends BaseToolBar
 	@Override
 	protected void initComponets()
 	{
-		this.btnSelect = new JButton(new ImageIcon(getClass().getResource(this.imgPath + "select.png")));
-		this.btnSucessor = new JButton(new ImageIcon(getClass().getResource(this.imgPath + "successor.png")));
-		this.btnAlternative = new JButton(new ImageIcon(getClass().getResource(this.imgPath + "alternative.png")));
-		this.btnLeftHand = new JButton(new ImageIcon(getClass().getResource(this.imgPath + "left_hand.png")));
-		this.btnNTerminal = new JButton(new ImageIcon(getClass().getResource(this.imgPath + "icon_nt.png")));
-		this.btnTerminal = new JButton(new ImageIcon(getClass().getResource(this.imgPath + "icon_t.png")));
-		this.btnLambdaAlternative = new JButton(new ImageIcon(getClass().getResource(this.imgPath + "icon_l.png")));
-		this.btnLabel = new JButton(new ImageIcon(getClass().getResource(this.imgPath + "label.png")));
-		this.btnStart = new JButton(new ImageIcon(getClass().getResource(this.imgPath + "icon_s.png")));
+		this.btnSelect = new JButton(new ImageIcon(GGLLImages.imagePath + "select.png"));
+		this.btnSucessor = new JButton(new ImageIcon(GGLLImages.imagePath + "successor.png"));
+		this.btnAlternative = new JButton(new ImageIcon(GGLLImages.imagePath + "alternative.png"));
+		this.btnLeftHand = new JButton(new ImageIcon(GGLLImages.imagePath + "left_hand.png"));
+		this.btnNTerminal = new JButton(new ImageIcon(GGLLImages.imagePath + "icon_nt.png"));
+		this.btnTerminal = new JButton(new ImageIcon(GGLLImages.imagePath + "icon_t.png"));
+		this.btnLambdaAlternative = new JButton(new ImageIcon(GGLLImages.imagePath + "icon_l.png"));
+		this.btnLabel = new JButton(new ImageIcon(GGLLImages.imagePath + "label.png"));
+		this.btnStart = new JButton(new ImageIcon(GGLLImages.imagePath + "icon_s.png"));
 
 		this.buttons = new JButton[]{ this.btnSelect, this.btnSucessor, this.btnAlternative, this.btnLeftHand, this.btnNTerminal, this.btnTerminal, this.btnLambdaAlternative, this.btnLabel, this.btnStart };
 		this.names = new String[]{ LangResource.select, LangResource.successor, LangResource.alternative, LangResource.left_hand, LangResource.n_terminal, LangResource.terminal, LangResource.lambda_alternative, LangResource.label, LangResource.start };

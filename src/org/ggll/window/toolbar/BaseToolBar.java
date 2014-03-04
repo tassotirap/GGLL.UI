@@ -8,8 +8,6 @@ public abstract class BaseToolBar extends JToolBar
 
 	protected Object context;
 
-	protected final String imgPath = "/org/ggll/images/";
-
 	public BaseToolBar(Object context)
 	{
 		this.context = context;

@@ -14,6 +14,7 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 import org.ggll.director.GGLLDirector;
+import org.ggll.images.GGLLImages;
 import org.ggll.resource.LangResource;
 import org.ggll.syntax.graph.state.StateHistory;
 import org.ggll.window.component.AbstractComponent;
@@ -135,12 +136,12 @@ public class ToolBarDefault extends BaseToolBar implements PropertyChangeListene
 	@Override
 	protected void initComponets()
 	{
-		this.btnSave = new JButton(new ImageIcon(getClass().getResource(this.imgPath + "document-save.png")));
-		this.btnSaveAll = new JButton(new ImageIcon(getClass().getResource(this.imgPath + "document-save-all.png")));
-		this.btnPrint = new JButton(new ImageIcon(getClass().getResource(this.imgPath + "document-print.png")));
-		this.btnUndo = new JButton(new ImageIcon(getClass().getResource(this.imgPath + "edit-undo.png")));
+		this.btnSave = new JButton(new ImageIcon(GGLLImages.imagePath + "document-save.png"));
+		this.btnSaveAll = new JButton(new ImageIcon(GGLLImages.imagePath + "document-save-all.png"));
+		this.btnPrint = new JButton(new ImageIcon(GGLLImages.imagePath + "document-print.png"));
+		this.btnUndo = new JButton(new ImageIcon(GGLLImages.imagePath + "edit-undo.png"));
 		this.btnUndo.setEnabled(false);
-		this.btnRedo = new JButton(new ImageIcon(getClass().getResource(this.imgPath + "edit-redo.png")));
+		this.btnRedo = new JButton(new ImageIcon(GGLLImages.imagePath + "edit-redo.png"));
 		this.btnRedo.setEnabled(false);
 		this.buttons = new JButton[]{ this.btnSave, this.btnSaveAll, this.btnPrint, this.btnUndo, this.btnRedo };
 		this.names = new String[]{ LangResource.save, LangResource.save_all, LangResource.print, LangResource.copy, LangResource.cut, LangResource.paste, LangResource.undo, LangResource.redo };

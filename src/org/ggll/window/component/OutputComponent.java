@@ -24,7 +24,7 @@ public class OutputComponent extends AbstractComponent
 		final JPanel bar = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		this.jComponent = new JPanel(new BorderLayout());
 		jsp.setViewportView(Output.getInstance().getView(canvas));
-		final JButton clear = new JButton(new ImageIcon(getClass().getResource(GGLLImages.ICON_ERASE)));
+		final JButton clear = new JButton(new ImageIcon(GGLLImages.ICON_ERASE));
 		clear.addActionListener(new ActionListener()
 		{
 			@Override
@@ -37,7 +37,7 @@ public class OutputComponent extends AbstractComponent
 		clear.setRolloverEnabled(true);
 		clear.setBackground(bar.getBackground());
 		clear.setToolTipText("Clear All");
-		final JButton output = new JButton(new ImageIcon(getClass().getResource(GGLLImages.ICON_OUTPUT)));
+		final JButton output = new JButton(new ImageIcon(GGLLImages.ICON_OUTPUT));
 		output.addActionListener(new ActionListener()
 		{
 			@Override

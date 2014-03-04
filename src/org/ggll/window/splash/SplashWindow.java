@@ -19,7 +19,6 @@ import java.awt.MediaTracker;
 import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.net.URL;
 
 /**
  * A Splash window.
@@ -225,7 +224,7 @@ public class SplashWindow extends java.awt.Window
 	 * @param imageURL
 	 *            The url of the splash image.
 	 */
-	public static SplashWindow splash(URL imageURL)
+	public static SplashWindow splash(String imageURL)
 	{
 		if (imageURL != null)
 		{

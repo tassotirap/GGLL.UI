@@ -3,6 +3,7 @@ package org.ggll.window;
 import javax.swing.JFrame;
 
 import org.ggll.director.GGLLDirector;
+import org.ggll.images.GGLLImages;
 import org.ggll.project.Project;
 import org.ggll.project.ProjectHelper;
 import org.ggll.window.splash.SplashWindow;
@@ -17,7 +18,7 @@ import org.ggll.window.splash.SplashWindow;
  */
 public class GuiLauncher
 {
-	private final static String SPLASH_SCREEN_PNG = "/org/ggll/images/splash_screen.png";
+	private final static String SPLASH_SCREEN_PNG = "splash_screen.png";
 
 	private void showFrame(final JFrame frame)
 	{
@@ -75,7 +76,7 @@ public class GuiLauncher
 		final WorkspaceChooser workspaceChooser = startWorkspaceChooser();
 		if (workspaceChooser.isDone())
 		{
-			SplashWindow.splash(GuiLauncher.class.getResource(SPLASH_SCREEN_PNG));
+			SplashWindow.splash(GGLLImages.imagePath + SPLASH_SCREEN_PNG);
 			startMainWindow(workspaceChooser);
 			SplashWindow.disposeSplash();
 		}

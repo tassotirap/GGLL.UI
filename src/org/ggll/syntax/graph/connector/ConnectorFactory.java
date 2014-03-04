@@ -3,7 +3,6 @@ package org.ggll.syntax.graph.connector;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Insets;
-import java.net.URL;
 
 import javax.swing.ImageIcon;
 
@@ -29,7 +28,7 @@ public class ConnectorFactory
 
 	private final String[] iconName = new String[]{ CanvasResource.N_TERMINAL, CanvasResource.TERMINAL, CanvasResource.LEFT_SIDE, CanvasResource.LAMBDA, CanvasResource.START };
 
-	private final URL[] icons = new URL[]{ getClass().getResource(GGLLImages.ICON_N_TERMINAL), getClass().getResource(GGLLImages.ICON_TERMINAL), getClass().getResource(GGLLImages.ICON_LEFT_SIDE), getClass().getResource(GGLLImages.ICON_LAMBDA), getClass().getResource(GGLLImages.ICON_START) };
+	private final String[] icons = new String[]{ GGLLImages.ICON_N_TERMINAL, GGLLImages.ICON_TERMINAL, GGLLImages.ICON_LEFT_SIDE, GGLLImages.ICON_LAMBDA, GGLLImages.ICON_START };
 
 	public ConnectorFactory(SyntaxGraph canvas)
 	{
@@ -85,7 +84,7 @@ public class ConnectorFactory
 		widget.setForeground(Color.WHITE);
 	}
 
-	public URL findIconPath(String type)
+	public String findIconPath(String type)
 	{
 		for (int i = 0; i < this.icons.length && i < this.iconName.length; i++)
 		{
@@ -98,7 +97,7 @@ public class ConnectorFactory
 	}
 
 	public ConnectDecorator getConnector(String type)
-	{		
+	{
 		switch (type)
 		{
 			case CanvasResource.SUCCESSOR:
@@ -106,7 +105,7 @@ public class ConnectorFactory
 			case CanvasResource.ALTERNATIVE:
 				return this.connectAlternative;
 		}
-		return null;		
+		return null;
 	}
 
 	public Border getIconBorder(String type)

@@ -17,6 +17,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 import org.ggll.exceptions.WarningException;
+import org.ggll.images.GGLLImages;
 import org.ggll.project.ProjectHelper;
 import org.ggll.util.Log;
 import org.jdesktop.layout.GroupLayout;
@@ -32,7 +33,7 @@ public class WorkspaceChooser extends JFrame
 	private static final long serialVersionUID = 1L;
 
 	private static final String LIST_FILE = "workspace";
-	private static final String PROJECTS_SCREEN_PNG = "/org/ggll/images/projects_screen.png";
+	private static final String PROJECTS_SCREEN_PNG = "projects_screen.png";
 
 	private JButton btnBrowse;
 	private JButton btnCancel;
@@ -175,7 +176,7 @@ public class WorkspaceChooser extends JFrame
 		this.btnCancel = new JButton();
 		this.btnOk = new javax.swing.JButton();
 
-		this.imgWorkspace.setIcon(new ImageIcon(getClass().getResource(PROJECTS_SCREEN_PNG))); // NOI18N
+		this.imgWorkspace.setIcon(new ImageIcon(GGLLImages.imagePath + PROJECTS_SCREEN_PNG)); // NOI18N
 		this.lblWorkspace.setText("Please inform a workspace to continue:");
 		this.btnBrowse.setText("Browse");
 

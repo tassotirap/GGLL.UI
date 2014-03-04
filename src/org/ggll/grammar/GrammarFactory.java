@@ -34,7 +34,7 @@ public class GrammarFactory
 	private void htmlLeftSide(StateNode leftSideNode, StateNode successor)
 	{
 		this.htmlOutput += "<tr><td style='background-color: #EEEEEE;' width='35' align='center'>";
-		this.htmlOutput += "<img src='images/icon_H2.png' alt='Left Side'></td>";
+		this.htmlOutput += "<img src='icon_H2.png' alt='Left Side'></td>";
 		this.htmlOutput += "<td style='font-weight: bold;' align='center'>";
 		this.htmlOutput += "<a href='Id|" + leftSideNode.getId() + "'>" + leftSideNode.getTitle() + "</a>";
 		this.htmlOutput += "</td><td align='center'>-1</td><td align='center'>-</td><td align='center'>" + successor.getNumber() + "</td>";
@@ -47,13 +47,13 @@ public class GrammarFactory
 		switch (node.getType())
 		{
 			case CanvasResource.N_TERMINAL:
-				this.htmlOutput += "<td style='background-color: #EEEEEE;' align='center' width='35'><img src='images/icon_nt2.png' alt='Non-Terminal'></td>";
+				this.htmlOutput += "<td style='background-color: #EEEEEE;' align='center' width='35'><img src='icon_nt2.png' alt='Non-Terminal'></td>";
 				break;
 			case CanvasResource.TERMINAL:
-				this.htmlOutput += "<td style='background-color: #EEEEEE;' align='center' width='35'><img src='images/icon_t2.png' alt='Terminal'></td>";
+				this.htmlOutput += "<td style='background-color: #EEEEEE;' align='center' width='35'><img src='icon_t2.png' alt='Terminal'></td>";
 				break;
 			case CanvasResource.LAMBDA:
-				this.htmlOutput += "<td style='background-color: #EEEEEE;' align='center' width='35'><img src='images/icon_l.png' alt='Lambda Alternative'></td>";
+				this.htmlOutput += "<td style='background-color: #EEEEEE;' align='center' width='35'><img src='icon_l.png' alt='Lambda Alternative'></td>";
 				break;
 		}
 
@@ -68,7 +68,7 @@ public class GrammarFactory
 	private void htmlStart(StateNode startNode, StateNode successor)
 	{
 		this.htmlOutput += "<tr><td style='background-color: #EEEEEE;' width='35' align='center'>";
-		this.htmlOutput += "<img src='images/icon_s2.png' alt='Initial Node'></td>";
+		this.htmlOutput += "<img src='icon_s2.png' alt='Initial Node'></td>";
 		this.htmlOutput += "<td style='font-weight: bold;' align='center'>";
 		this.htmlOutput += "<a href='Id|" + startNode.getTitle() + "'>" + startNode.getTitle() + "</a></td>";
 		this.htmlOutput += "<td align='center'>-1</td><td align='center'>-</td><td align='center'>" + successor.getNumber() + "</td>";

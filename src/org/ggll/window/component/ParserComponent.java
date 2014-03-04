@@ -83,7 +83,7 @@ public class ParserComponent extends AbstractComponent
 
 	private void createNextStepButton()
 	{
-		this.parseNextStep = new JButton(new ImageIcon(getClass().getResource(GGLLImages.ICON_PARSER_STEP)));
+		this.parseNextStep = new JButton(new ImageIcon(GGLLImages.ICON_PARSER_STEP));
 		this.parseNextStep.setOpaque(false);
 		this.parseNextStep.setBorder(new EmptyBorder(0, 0, 0, 0));
 		this.parseNextStep.setRolloverEnabled(true);
@@ -93,7 +93,7 @@ public class ParserComponent extends AbstractComponent
 
 	private void createOpenButton()
 	{
-		this.open = new JButton(new ImageIcon(getClass().getResource(GGLLImages.ICON_PARSER_OPEN)));
+		this.open = new JButton(new ImageIcon(GGLLImages.ICON_PARSER_OPEN));
 		this.open.setOpaque(false);
 		this.open.setBorder(new EmptyBorder(0, 0, 0, 0));
 		this.open.setRolloverEnabled(true);
@@ -103,7 +103,7 @@ public class ParserComponent extends AbstractComponent
 
 	private void createParseButton()
 	{
-		this.parse = new JButton(new ImageIcon(getClass().getResource(GGLLImages.ICON_PARSER_PARSE)));
+		this.parse = new JButton(new ImageIcon(GGLLImages.ICON_PARSER_PARSE));
 		this.parse.setOpaque(false);
 		this.parse.setBorder(new EmptyBorder(0, 0, 0, 0));
 		this.parse.setRolloverEnabled(true);
