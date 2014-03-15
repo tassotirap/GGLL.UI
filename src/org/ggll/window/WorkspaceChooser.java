@@ -31,10 +31,10 @@ import org.jdesktop.layout.LayoutStyle;
 public class WorkspaceChooser extends JFrame
 {
 	private static final long serialVersionUID = 1L;
-
+	
 	private static final String LIST_FILE = "workspace";
 	private static final String PROJECTS_SCREEN_PNG = "projects_screen.png";
-
+	
 	private JButton btnBrowse;
 	private JButton btnCancel;
 	private JButton btnOk;
@@ -42,10 +42,10 @@ public class WorkspaceChooser extends JFrame
 	private JLabel imgWorkspace;
 	private JLabel lblWorkspace;
 	private String workspaceDir;
-
+	
 	private boolean canceled;
 	private boolean done;
-
+	
 	public WorkspaceChooser()
 	{
 		setPanelProperties();
@@ -53,11 +53,11 @@ public class WorkspaceChooser extends JFrame
 		initComponents();
 		readDirsFromList();
 	}
-
-	private void addDirToList(String filename)
+	
+	private void addDirToList(final String filename)
 	{
-		final File file = new File(System.getProperty("java.io.tmpdir"), LIST_FILE);
-
+		final File file = new File(System.getProperty("java.io.tmpdir"), WorkspaceChooser.LIST_FILE);
+		
 		try
 		{
 			if (!file.exists())
@@ -66,9 +66,9 @@ public class WorkspaceChooser extends JFrame
 			}
 			final FileReader fileReader = new FileReader(file);
 			final BufferedReader bufferedReader = new BufferedReader(fileReader);
-
+			
 			final StringBuffer oldText = new StringBuffer();
-
+			
 			String line = "";
 			while ((line = bufferedReader.readLine()) != null)
 			{
@@ -85,10 +85,10 @@ public class WorkspaceChooser extends JFrame
 		}
 		catch (final IOException e)
 		{
-			Log.log(Log.ERROR, this, "Could not load workspace list!", e);
+			Log.Write("Could not load workspace list!");
 		}
 	}
-
+	
 	private void btnBrowseActionPerformed()
 	{
 		final JFileChooser fileChooser = new JFileChooser();
@@ -96,23 +96,23 @@ public class WorkspaceChooser extends JFrame
 		final int dialogReturn = fileChooser.showOpenDialog(this);
 		if (dialogReturn == JFileChooser.APPROVE_OPTION)
 		{
-			this.ckbWorkspace.setSelectedItem(fileChooser.getSelectedFile().getAbsolutePath());
+			ckbWorkspace.setSelectedItem(fileChooser.getSelectedFile().getAbsolutePath());
 		}
 		if (dialogReturn == JFileChooser.CANCEL_OPTION)
 		{
-			this.ckbWorkspace.setSelectedItem("");
+			ckbWorkspace.setSelectedItem("");
 		}
 	}
-
+	
 	private void btnCancelActionPerformed()
 	{
 		dispose();
-		this.canceled = true;
+		canceled = true;
 	}
-
+	
 	private void btnOkActionPerformed()
 	{
-		final String directory = this.ckbWorkspace.getSelectedItem().toString();
+		final String directory = ckbWorkspace.getSelectedItem().toString();
 		final File file = new File(directory);
 		boolean newDirectory = false;
 		try
@@ -131,13 +131,13 @@ public class WorkspaceChooser extends JFrame
 						setupProject(directory, file);
 					}
 				}
-
+				
 			}
 		}
 		catch (final WarningException e)
 		{
 			JOptionPane.showMessageDialog(this, e.getMessage(), "Worksapce Loader", JOptionPane.ERROR_MESSAGE);
-
+			
 			if (newDirectory)
 			{
 				file.delete();
@@ -149,14 +149,11 @@ public class WorkspaceChooser extends JFrame
 			System.exit(0);
 		}
 	}
-
-	private boolean createDirectory(String directory, File file) throws Exception
+	
+	private boolean createDirectory(final String directory, final File file) throws Exception
 	{
 		final int option = JOptionPane.showConfirmDialog(this, "This directory does not exist.\nIf you continue this directory will be created and a new project will be created on this directory.\nProceed?", "Directory not found", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-		if (option == JOptionPane.NO_OPTION)
-		{
-			return false;
-		}
+		if (option == JOptionPane.NO_OPTION) { return false; }
 		if (file.mkdir())
 		{
 			return true;
@@ -166,61 +163,76 @@ public class WorkspaceChooser extends JFrame
 			throw new WarningException("Could not find or create this directory in disk!");
 		}
 	}
-
+	
+	public String getWorkspaceDir()
+	{
+		return workspaceDir;
+	}
+	
 	private void initComponents()
 	{
-		this.imgWorkspace = new JLabel();
-		this.lblWorkspace = new JLabel();
-		this.ckbWorkspace = new JComboBox<String>();
-		this.btnBrowse = new JButton();
-		this.btnCancel = new JButton();
-		this.btnOk = new javax.swing.JButton();
-
-		this.imgWorkspace.setIcon(new ImageIcon(GGLLImages.imagePath + PROJECTS_SCREEN_PNG)); // NOI18N
-		this.lblWorkspace.setText("Please inform a workspace to continue:");
-		this.btnBrowse.setText("Browse");
-
-		this.btnBrowse.addActionListener(new java.awt.event.ActionListener()
+		imgWorkspace = new JLabel();
+		lblWorkspace = new JLabel();
+		ckbWorkspace = new JComboBox<String>();
+		btnBrowse = new JButton();
+		btnCancel = new JButton();
+		btnOk = new javax.swing.JButton();
+		
+		imgWorkspace.setIcon(new ImageIcon(GGLLImages.imagePath + WorkspaceChooser.PROJECTS_SCREEN_PNG)); // NOI18N
+		lblWorkspace.setText("Please inform a workspace to continue:");
+		btnBrowse.setText("Browse");
+		
+		btnBrowse.addActionListener(new java.awt.event.ActionListener()
 		{
 			@Override
-			public void actionPerformed(java.awt.event.ActionEvent evt)
+			public void actionPerformed(final java.awt.event.ActionEvent evt)
 			{
 				btnBrowseActionPerformed();
 			}
 		});
-
-		this.btnCancel.setText("OK");
-		this.btnCancel.addActionListener(new java.awt.event.ActionListener()
+		
+		btnCancel.setText("OK");
+		btnCancel.addActionListener(new java.awt.event.ActionListener()
 		{
 			@Override
-			public void actionPerformed(java.awt.event.ActionEvent evt)
+			public void actionPerformed(final java.awt.event.ActionEvent evt)
 			{
 				btnOkActionPerformed();
 			}
 		});
-
-		this.btnOk.setText("Cancel");
-		this.btnOk.addActionListener(new java.awt.event.ActionListener()
+		
+		btnOk.setText("Cancel");
+		btnOk.addActionListener(new java.awt.event.ActionListener()
 		{
 			@Override
-			public void actionPerformed(java.awt.event.ActionEvent evt)
+			public void actionPerformed(final java.awt.event.ActionEvent evt)
 			{
 				btnCancelActionPerformed();
 			}
 		});
-
-		this.ckbWorkspace.setEditable(true);
-
+		
+		ckbWorkspace.setEditable(true);
+		
 		final GroupLayout layout = new GroupLayout(getContentPane());
-		layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.LEADING).add(layout.createSequentialGroup().addContainerGap().add(layout.createParallelGroup(GroupLayout.TRAILING).add(this.ckbWorkspace, GroupLayout.PREFERRED_SIZE, 305, GroupLayout.PREFERRED_SIZE).add(this.btnCancel, GroupLayout.PREFERRED_SIZE, 85, GroupLayout.PREFERRED_SIZE)).addPreferredGap(LayoutStyle.RELATED).add(layout.createParallelGroup(GroupLayout.TRAILING).add(this.btnOk, GroupLayout.DEFAULT_SIZE, 89, Short.MAX_VALUE).add(this.btnBrowse, GroupLayout.DEFAULT_SIZE, 89, Short.MAX_VALUE)).addContainerGap()).add(this.imgWorkspace).add(layout.createSequentialGroup().addContainerGap().add(this.lblWorkspace)));
-		layout.setVerticalGroup(layout.createParallelGroup(GroupLayout.LEADING).add(layout.createSequentialGroup().add(this.imgWorkspace).addPreferredGap(LayoutStyle.UNRELATED).add(this.lblWorkspace).addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED).add(layout.createParallelGroup(GroupLayout.BASELINE).add(this.ckbWorkspace, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).add(this.btnBrowse)).addPreferredGap(LayoutStyle.RELATED).add(layout.createParallelGroup(GroupLayout.BASELINE).add(this.btnOk).add(this.btnCancel)).addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
+		layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.LEADING).add(layout.createSequentialGroup().addContainerGap().add(layout.createParallelGroup(GroupLayout.TRAILING).add(ckbWorkspace, GroupLayout.PREFERRED_SIZE, 305, GroupLayout.PREFERRED_SIZE).add(btnCancel, GroupLayout.PREFERRED_SIZE, 85, GroupLayout.PREFERRED_SIZE)).addPreferredGap(LayoutStyle.RELATED).add(layout.createParallelGroup(GroupLayout.TRAILING).add(btnOk, GroupLayout.DEFAULT_SIZE, 89, Short.MAX_VALUE).add(btnBrowse, GroupLayout.DEFAULT_SIZE, 89, Short.MAX_VALUE)).addContainerGap()).add(imgWorkspace).add(layout.createSequentialGroup().addContainerGap().add(lblWorkspace)));
+		layout.setVerticalGroup(layout.createParallelGroup(GroupLayout.LEADING).add(layout.createSequentialGroup().add(imgWorkspace).addPreferredGap(LayoutStyle.UNRELATED).add(lblWorkspace).addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED).add(layout.createParallelGroup(GroupLayout.BASELINE).add(ckbWorkspace, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).add(btnBrowse)).addPreferredGap(LayoutStyle.RELATED).add(layout.createParallelGroup(GroupLayout.BASELINE).add(btnOk).add(btnCancel)).addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
 		getContentPane().setLayout(layout);
 		pack();
 	}
-
+	
+	public boolean isCanceled()
+	{
+		return canceled;
+	}
+	
+	public boolean isDone()
+	{
+		return done;
+	}
+	
 	private void readDirsFromList()
 	{
-		final File file = new File(System.getProperty("java.io.tmpdir"), LIST_FILE);
+		final File file = new File(System.getProperty("java.io.tmpdir"), WorkspaceChooser.LIST_FILE);
 		try
 		{
 			if (!file.exists())
@@ -234,24 +246,24 @@ public class WorkspaceChooser extends JFrame
 			{
 				if (!line.equals(""))
 				{
-					this.ckbWorkspace.addItem(line);
+					ckbWorkspace.addItem(line);
 				}
 			}
 			bufferedReader.close();
 		}
 		catch (final IOException e)
 		{
-			Log.log(Log.ERROR, this, "Could not load workspace list!", e);
+			Log.Write("Could not load workspace list!");
 		}
 	}
-
+	
 	private void setPanelLocation()
 	{
 		final Dimension screenDim = Toolkit.getDefaultToolkit().getScreenSize();
 		setLocation((screenDim.width - 428) / 2, (screenDim.height - 230) / 2);
 		setResizable(false);
 	}
-
+	
 	private void setPanelProperties()
 	{
 		setTitle("GGLL");
@@ -259,41 +271,23 @@ public class WorkspaceChooser extends JFrame
 		setAlwaysOnTop(true);
 		setSize(428, 230);
 	}
-
-	private void setupProject(String directory, File file) throws Exception
+	
+	private void setupProject(final String directory, final File file) throws Exception
 	{
-		this.workspaceDir = directory;
+		workspaceDir = directory;
 		verifyOrCreateProject(file);
 		addDirToList(directory);
 		setVisible(false);
-		this.done = true;
+		done = true;
 	}
-
-	private void verifyOrCreateProject(File file) throws Exception
+	
+	private void verifyOrCreateProject(final File file) throws Exception
 	{
 		if (!ProjectHelper.isProject(file))
 		{
-			if (file.listFiles().length > 0)
-			{
-				throw new WarningException("Must be a new, empty, or existing project directory!");
-			}
+			if (file.listFiles().length > 0) { throw new WarningException("Must be a new, empty, or existing project directory!"); }
 			ProjectHelper.createNewProject(file);
 		}
 	}
-
-	public String getWorkspaceDir()
-	{
-		return this.workspaceDir;
-	}
-
-	public boolean isCanceled()
-	{
-		return this.canceled;
-	}
-
-	public boolean isDone()
-	{
-		return this.done;
-	}
-
+	
 }

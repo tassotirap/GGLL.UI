@@ -8,27 +8,27 @@ public abstract class AbstractComponent
 {
 	protected ExtendedList<ComponentListener> listeners = new ExtendedList<ComponentListener>();
 	protected JComponent jComponent;
-
-	public void addComponentListener(ComponentListener listener)
+	
+	public void addComponentListener(final ComponentListener listener)
 	{
-		if (!this.listeners.contains(listener))
+		if (!listeners.contains(listener))
 		{
-			this.listeners.append(listener);
+			listeners.append(listener);
 		}
 	}
-
+	
 	public abstract void fireContentChanged();
-
+	
 	public JComponent getJComponent()
 	{
-		return this.jComponent;
+		return jComponent;
 	}
-
-	public void removeComponentListener(ComponentListener listener)
+	
+	public void removeComponentListener(final ComponentListener listener)
 	{
-		if (this.listeners.contains(listener))
+		if (listeners.contains(listener))
 		{
-			this.listeners.remove(listener);
+			listeners.remove(listener);
 		}
 	}
 }

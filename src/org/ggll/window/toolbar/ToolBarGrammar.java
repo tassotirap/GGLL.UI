@@ -19,158 +19,161 @@ import org.ggll.syntax.graph.SyntaxGraph;
 public class ToolBarGrammar extends BaseToolBar
 {
 	private static final long serialVersionUID = 1L;
-
+	
 	JButton[] buttons;
 	String[] names;
 	SyntaxGraph canvas;
 	private JButton btnNTerminal, btnTerminal, btnLambdaAlternative, btnStart;
-	private JButton btnSelect, btnSucessor, btnAlternative, btnLeftHand, btnLabel;
-
-	public ToolBarGrammar(SyntaxGraph canvas)
+	private JButton btnSelect, btnSucessor, btnAlternative, btnLeftHand,
+			btnLabel;
+	
+	public ToolBarGrammar(final SyntaxGraph canvas)
 	{
 		super(canvas);
 		this.canvas = canvas;
-		for (int i = 0; i < this.buttons.length; i++)
+		for (int i = 0; i < buttons.length; i++)
 		{
-			this.buttons[i].setName(this.names[i]);
+			buttons[i].setName(names[i]);
 		}
-		this.add(this.btnSelect);
+		this.add(btnSelect);
 		this.add(createJSeparator());
-		this.add(this.btnSucessor);
-		this.add(this.btnAlternative);
+		this.add(btnSucessor);
+		this.add(btnAlternative);
 		this.add(createJSeparator());
-		this.add(this.btnStart);
-		this.add(this.btnLeftHand);
-		this.add(this.btnNTerminal);
-		this.add(this.btnTerminal);
-		this.add(this.btnLambdaAlternative);
+		this.add(btnStart);
+		this.add(btnLeftHand);
+		this.add(btnNTerminal);
+		this.add(btnTerminal);
+		this.add(btnLambdaAlternative);
 		this.add(createJSeparator());
-		this.add(this.btnLabel);
+		this.add(btnLabel);
 	}
-
+	
 	private JSeparator createJSeparator()
 	{
 		final JSeparator jSeparator = new JSeparator(SwingConstants.HORIZONTAL);
 		jSeparator.setMaximumSize(new Dimension(100, 6));
 		return jSeparator;
 	}
-
+	
 	@Override
 	protected void initActions()
 	{
-
-		this.btnSelect.addActionListener(new ActionListener()
+		
+		btnSelect.addActionListener(new ActionListener()
 		{
 			@Override
-			public void actionPerformed(ActionEvent evt)
+			public void actionPerformed(final ActionEvent evt)
 			{
-				ToolBarGrammar.this.canvas.setActiveTool(CanvasResource.SELECT);
+				canvas.setActiveTool(CanvasResource.SELECT);
 			}
-
+			
 		});
-		this.btnSucessor.addActionListener(new ActionListener()
+		btnSucessor.addActionListener(new ActionListener()
 		{
 			@Override
-			public void actionPerformed(ActionEvent evt)
+			public void actionPerformed(final ActionEvent evt)
 			{
-				ToolBarGrammar.this.canvas.setActiveTool(CanvasResource.SUCCESSOR);
+				canvas.setActiveTool(CanvasResource.SUCCESSOR);
 			}
-
+			
 		});
-		this.btnAlternative.addActionListener(new ActionListener()
+		btnAlternative.addActionListener(new ActionListener()
 		{
 			@Override
-			public void actionPerformed(ActionEvent evt)
+			public void actionPerformed(final ActionEvent evt)
 			{
-				ToolBarGrammar.this.canvas.setActiveTool(CanvasResource.ALTERNATIVE);
+				canvas.setActiveTool(CanvasResource.ALTERNATIVE);
 			}
-
+			
 		});
-		this.btnLeftHand.addActionListener(new ActionListener()
+		btnLeftHand.addActionListener(new ActionListener()
 		{
 			@Override
-			public void actionPerformed(ActionEvent evt)
+			public void actionPerformed(final ActionEvent evt)
 			{
-				ToolBarGrammar.this.canvas.setActiveTool(CanvasResource.LEFT_SIDE);
+				canvas.setActiveTool(CanvasResource.LEFT_SIDE);
 			}
-
+			
 		});
-		this.btnNTerminal.addActionListener(new ActionListener()
+		btnNTerminal.addActionListener(new ActionListener()
 		{
 			@Override
-			public void actionPerformed(ActionEvent evt)
+			public void actionPerformed(final ActionEvent evt)
 			{
-				ToolBarGrammar.this.canvas.setActiveTool(CanvasResource.N_TERMINAL);
+				canvas.setActiveTool(CanvasResource.N_TERMINAL);
 			}
-
+			
 		});
-		this.btnTerminal.addActionListener(new ActionListener()
+		btnTerminal.addActionListener(new ActionListener()
 		{
 			@Override
-			public void actionPerformed(ActionEvent evt)
+			public void actionPerformed(final ActionEvent evt)
 			{
-				ToolBarGrammar.this.canvas.setActiveTool(CanvasResource.TERMINAL);
+				canvas.setActiveTool(CanvasResource.TERMINAL);
 			}
-
+			
 		});
-		this.btnLambdaAlternative.addActionListener(new ActionListener()
+		btnLambdaAlternative.addActionListener(new ActionListener()
 		{
 			@Override
-			public void actionPerformed(ActionEvent evt)
+			public void actionPerformed(final ActionEvent evt)
 			{
-				ToolBarGrammar.this.canvas.setActiveTool(CanvasResource.LAMBDA);
+				canvas.setActiveTool(CanvasResource.LAMBDA);
 			}
-
+			
 		});
-		this.btnLabel.addActionListener(new ActionListener()
+		btnLabel.addActionListener(new ActionListener()
 		{
 			@Override
-			public void actionPerformed(ActionEvent evt)
+			public void actionPerformed(final ActionEvent evt)
 			{
-				ToolBarGrammar.this.canvas.setActiveTool(CanvasResource.LABEL);
+				canvas.setActiveTool(CanvasResource.LABEL);
 			}
-
+			
 		});
-		this.btnStart.addActionListener(new ActionListener()
+		btnStart.addActionListener(new ActionListener()
 		{
 			@Override
-			public void actionPerformed(ActionEvent evt)
+			public void actionPerformed(final ActionEvent evt)
 			{
-				ToolBarGrammar.this.canvas.setActiveTool(CanvasResource.START);
+				canvas.setActiveTool(CanvasResource.START);
 			}
-
+			
 		});
 	}
-
+	
 	@Override
 	protected void initComponets()
 	{
-		this.btnSelect = new JButton(new ImageIcon(GGLLImages.imagePath + "select.png"));
-		this.btnSucessor = new JButton(new ImageIcon(GGLLImages.imagePath + "successor.png"));
-		this.btnAlternative = new JButton(new ImageIcon(GGLLImages.imagePath + "alternative.png"));
-		this.btnLeftHand = new JButton(new ImageIcon(GGLLImages.imagePath + "left_hand.png"));
-		this.btnNTerminal = new JButton(new ImageIcon(GGLLImages.imagePath + "icon_nt.png"));
-		this.btnTerminal = new JButton(new ImageIcon(GGLLImages.imagePath + "icon_t.png"));
-		this.btnLambdaAlternative = new JButton(new ImageIcon(GGLLImages.imagePath + "icon_l.png"));
-		this.btnLabel = new JButton(new ImageIcon(GGLLImages.imagePath + "label.png"));
-		this.btnStart = new JButton(new ImageIcon(GGLLImages.imagePath + "icon_s.png"));
-
-		this.buttons = new JButton[]{ this.btnSelect, this.btnSucessor, this.btnAlternative, this.btnLeftHand, this.btnNTerminal, this.btnTerminal, this.btnLambdaAlternative, this.btnLabel, this.btnStart };
-		this.names = new String[]{ LangResource.select, LangResource.successor, LangResource.alternative, LangResource.left_hand, LangResource.n_terminal, LangResource.terminal, LangResource.lambda_alternative, LangResource.label, LangResource.start };
+		btnSelect = new JButton(new ImageIcon(GGLLImages.imagePath + "select.png"));
+		btnSucessor = new JButton(new ImageIcon(GGLLImages.imagePath + "successor.png"));
+		btnAlternative = new JButton(new ImageIcon(GGLLImages.imagePath + "alternative.png"));
+		btnLeftHand = new JButton(new ImageIcon(GGLLImages.imagePath + "left_hand.png"));
+		btnNTerminal = new JButton(new ImageIcon(GGLLImages.imagePath + "icon_nt.png"));
+		btnTerminal = new JButton(new ImageIcon(GGLLImages.imagePath + "icon_t.png"));
+		btnLambdaAlternative = new JButton(new ImageIcon(GGLLImages.imagePath + "icon_l.png"));
+		btnLabel = new JButton(new ImageIcon(GGLLImages.imagePath + "label.png"));
+		btnStart = new JButton(new ImageIcon(GGLLImages.imagePath + "icon_s.png"));
+		
+		buttons = new JButton[]
+		{ btnSelect, btnSucessor, btnAlternative, btnLeftHand, btnNTerminal, btnTerminal, btnLambdaAlternative, btnLabel, btnStart };
+		names = new String[]
+		{ LangResource.select, LangResource.successor, LangResource.alternative, LangResource.left_hand, LangResource.n_terminal, LangResource.terminal, LangResource.lambda_alternative, LangResource.label, LangResource.start };
 	}
-
+	
 	@Override
 	protected void initLayout()
 	{
-		for (int i = 0; i < this.buttons.length; i++)
+		for (int i = 0; i < buttons.length; i++)
 		{
-			final JButton bt = this.buttons[i];
+			final JButton bt = buttons[i];
 			bt.setOpaque(false);
 			bt.setBorder(new EmptyBorder(1, 1, 1, 1));
 			bt.setRolloverEnabled(true);
 			bt.setDisabledIcon(new ImageIcon(GrayFilter.createDisabledImage(((ImageIcon) bt.getIcon()).getImage())));
 			bt.setBackground(getBackground());
-			bt.setToolTipText(this.names[i]);
+			bt.setToolTipText(names[i]);
 		}
 	}
 }

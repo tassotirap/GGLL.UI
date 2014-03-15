@@ -15,13 +15,35 @@ import org.netbeans.modules.visual.action.MoveAction;
 public class MoveTracker extends Observable
 {
 	private final SyntaxGraph canvas;
-
-	public MoveTracker(SyntaxGraph canvas)
+	
+	public MoveTracker(final SyntaxGraph canvas)
 	{
 		this.canvas = canvas;
 	}
-
-	private void removeAllMoveAction(Chain chainActions)
+	
+	@Override
+	public void notifyObservers(final Object obj)
+	{
+		setChanged();
+		super.notifyObservers(obj);
+		canvas.getActionFactory().setActiveMoveAction((String) obj);
+		final WidgetAction activeMovement = canvas.getActionFactory().getAction("Move");
+		for (final String nodes : canvas.getNodes())
+		{
+			final Object obecjtWidget = canvas.findWidget(nodes);
+			if (obecjtWidget != null)
+			{
+				final Widget widget = (Widget) obecjtWidget;
+				if (widget instanceof LabelWidgetExt || widget instanceof IconNodeWidgetExt)
+				{
+					removeAllMoveAction(widget.getActions(CanvasResource.SELECT));
+					widget.getActions(CanvasResource.SELECT).addAction(activeMovement);
+				}
+			}
+		}
+	}
+	
+	private void removeAllMoveAction(final Chain chainActions)
 	{
 		final ExtendedList<WidgetAction> tmpActions = new ExtendedList<WidgetAction>();
 		for (final WidgetAction action : chainActions.getActions())
@@ -35,28 +57,6 @@ public class MoveTracker extends Observable
 		{
 			chainActions.removeAction(action);
 		}
-
-	}
-
-	@Override
-	public void notifyObservers(Object obj)
-	{
-		setChanged();
-		super.notifyObservers(obj);
-		this.canvas.getActionFactory().setActiveMoveAction((String) obj);
-		final WidgetAction activeMovement = this.canvas.getActionFactory().getAction("Move");
-		for (final String nodes : this.canvas.getNodes())
-		{
-			final Object obecjtWidget = this.canvas.findWidget(nodes);
-			if (obecjtWidget != null)
-			{
-				final Widget widget = (Widget) obecjtWidget;
-				if (widget instanceof LabelWidgetExt || widget instanceof IconNodeWidgetExt)
-				{
-					removeAllMoveAction(widget.getActions(CanvasResource.SELECT));
-					widget.getActions(CanvasResource.SELECT).addAction(activeMovement);
-				}
-			}
-		}
+		
 	}
 }

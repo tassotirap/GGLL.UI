@@ -7,47 +7,44 @@ import java.util.HashMap;
 public class UnsavedViewRepository
 {
 	private final HashMap<String, AbstractView> unsavedViews;
-
+	
 	public UnsavedViewRepository()
 	{
-		this.unsavedViews = new HashMap<String, AbstractView>();
+		unsavedViews = new HashMap<String, AbstractView>();
 	}
-
-	public AbstractView getUnsavedView(String key)
+	
+	public AbstractView getUnsavedView(final String key)
 	{
-		if (!this.unsavedViews.containsKey(key))
-		{
-			return this.unsavedViews.get(key);
-		}
+		if (!unsavedViews.containsKey(key)) { return unsavedViews.get(key); }
 		return null;
 	}
-
+	
 	public ExtendedList<AbstractView> getUnsavedViews()
 	{
-		return new ExtendedList<AbstractView>(this.unsavedViews.values());
+		return new ExtendedList<AbstractView>(unsavedViews.values());
 	}
-
-	public boolean hasUnsavedView(AbstractView value)
+	
+	public boolean hasUnsavedView(final AbstractView value)
 	{
-		return this.unsavedViews.containsValue(value);
+		return unsavedViews.containsValue(value);
 	}
-
-	public boolean hasUnsavedView(String key)
+	
+	public boolean hasUnsavedView(final String key)
 	{
-		return this.unsavedViews.containsKey(key);
+		return unsavedViews.containsKey(key);
 	}
-
-	public void removeUnsavedView(String key)
+	
+	public void removeUnsavedView(final String key)
 	{
-		this.unsavedViews.remove(key);
+		unsavedViews.remove(key);
 	}
-
-	public void setUnsavedView(String key, AbstractView value)
+	
+	public void setUnsavedView(final String key, final AbstractView value)
 	{
-		if (!this.unsavedViews.containsKey(key))
+		if (!unsavedViews.containsKey(key))
 		{
-			this.unsavedViews.put(key, value);
+			unsavedViews.put(key, value);
 		}
 	}
-
+	
 }

@@ -12,49 +12,65 @@ import org.netbeans.modules.visual.util.GeomUtil;
 
 public class LabelWidgetExt extends org.netbeans.api.visual.widget.LabelWidget implements TypedWidget, MarkedWidget
 {
-
+	
 	private String mark;
 	private Paint markBackground;
-
+	
 	private Color markForeground;
 	private String type;
-
-	public LabelWidgetExt(Scene scene)
+	
+	public LabelWidgetExt(final Scene scene)
 	{
 		super(scene);
 	}
-
-	public LabelWidgetExt(Scene scene, String node)
+	
+	public LabelWidgetExt(final Scene scene, final String node)
 	{
 		super(scene, node);
 	}
-
+	
 	@Override
 	protected Rectangle calculateClientArea()
 	{
-		if (getLabel() == null)
-		{
-			return super.calculateClientArea();
-		}
+		if (getLabel() == null) { return super.calculateClientArea(); }
 		final Graphics2D gr = getGraphics();
 		final FontMetrics fontMetrics = gr.getFontMetrics(getFont());
 		final Rectangle2D stringBounds = fontMetrics.getStringBounds((getMark() == null ? "" : getMark() + "   ") + getLabel(), gr);
 		return GeomUtil.roundRectangle(stringBounds);
 	}
-
+	
+	@Override
+	public String getMark()
+	{
+		return mark;
+	}
+	
+	public Paint getMarkBackground()
+	{
+		return markBackground == null ? MarkedWidget.DEFAULT_MARK_BACKGROUND : markBackground;
+	}
+	
+	public Color getMarkForeground()
+	{
+		return markForeground == null ? MarkedWidget.DEFAULT_MARK_FOREGROUND : markForeground;
+	}
+	
+	@Override
+	public String getType()
+	{
+		return type;
+	}
+	
 	@Override
 	protected void paintWidget()
 	{
-		if (getLabel() == null)
-		{
-			return;
-		}
+		if (getLabel() == null) { return; }
 		final Graphics2D gr = getGraphics();
 		gr.setFont(getFont());
-
+		
 		final FontMetrics fontMetrics = gr.getFontMetrics();
 		final Rectangle clientArea = getClientArea();
-
+		
 		int x;
 		final int x1 = clientArea.x + fontMetrics.stringWidth(" ");
 		final int markInc = getMark() == null ? 0 : fontMetrics.stringWidth(getMark() + "   ");
@@ -75,7 +91,7 @@ public class LabelWidgetExt extends org.netbeans.api.visual.widget.LabelWidget i
 			default:
 				return;
 		}
-
+		
 		int y;
 		int y1;
 		switch (getVerticalAlignment())
@@ -96,7 +112,7 @@ public class LabelWidgetExt extends org.netbeans.api.visual.widget.LabelWidget i
 				return;
 		}
 		y1 = y;
-
+		
 		final Paint background = getBackground();
 		final Paint mBackground = getMarkBackground();
 		final Paint mForeground = getMarkForeground();
@@ -136,50 +152,28 @@ public class LabelWidgetExt extends org.netbeans.api.visual.widget.LabelWidget i
 			gr.drawString(getLabel(), x, y);
 		}
 	}
-
+	
 	@Override
-	public String getMark()
-	{
-		return this.mark;
-	}
-
-	public Paint getMarkBackground()
-	{
-		return this.markBackground == null ? DEFAULT_MARK_BACKGROUND : this.markBackground;
-	}
-
-	public Color getMarkForeground()
-	{
-		return this.markForeground == null ? DEFAULT_MARK_FOREGROUND : this.markForeground;
-	}
-
-	@Override
-	public String getType()
-	{
-		return this.type;
-	}
-
-	@Override
-	public void setMark(String mark)
+	public void setMark(final String mark)
 	{
 		this.mark = mark;
 		revalidate();
 	}
-
+	
 	@Override
-	public void setMarkBackground(Paint p)
+	public void setMarkBackground(final Paint p)
 	{
-		this.markBackground = p;
+		markBackground = p;
 	}
-
+	
 	@Override
-	public void setMarkForeground(Color markForeground)
+	public void setMarkForeground(final Color markForeground)
 	{
 		this.markForeground = markForeground;
 	}
-
+	
 	@Override
-	public void setType(String type)
+	public void setType(final String type)
 	{
 		this.type = type;
 	}

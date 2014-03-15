@@ -8,9 +8,9 @@ import java.awt.datatransfer.Transferable;
 
 public class ClipboardHelper
 {
-
+	
 	private static Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-
+	
 	/**
 	 * Gets whatever is in clipboard since it is a WidgetSelection or
 	 * StringSelection
@@ -20,7 +20,7 @@ public class ClipboardHelper
 	public static Object getClipboardContents()
 	{
 		Object result = null;
-		final Transferable contents = clipboard.getContents(null);
+		final Transferable contents = ClipboardHelper.clipboard.getContents(null);
 		if (contents != null)
 		{
 			try
@@ -39,9 +39,9 @@ public class ClipboardHelper
 			}
 		}
 		return result;
-
+		
 	}
-
+	
 	/**
 	 * Set the content of the clipboard
 	 * 
@@ -49,8 +49,8 @@ public class ClipboardHelper
 	 * @param owner
 	 *            the object that is sending the content
 	 */
-	public static void setClipboardContents(Transferable contents, ClipboardOwner owner)
+	public static void setClipboardContents(final Transferable contents, final ClipboardOwner owner)
 	{
-		clipboard.setContents(contents, owner);
+		ClipboardHelper.clipboard.setContents(contents, owner);
 	}
 }

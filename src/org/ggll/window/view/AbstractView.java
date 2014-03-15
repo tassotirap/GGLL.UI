@@ -12,8 +12,8 @@ public class AbstractView extends View
 	private final AbstractComponent componentModel;
 	private String fileName;
 	private final int id;
-
-	public AbstractView(String title, Icon icon, AbstractComponent componentModel, int id)
+	
+	public AbstractView(final String title, final Icon icon, final AbstractComponent componentModel, final int id)
 	{
 		super(title, icon, componentModel.getJComponent());
 		this.id = id;
@@ -21,8 +21,8 @@ public class AbstractView extends View
 		getWindowProperties().setCloseEnabled(false);
 		getWindowProperties().setUndockEnabled(false);
 	}
-
-	public AbstractView(String title, Icon icon, AbstractComponent componentModel, String fileName, int id)
+	
+	public AbstractView(final String title, final Icon icon, final AbstractComponent componentModel, final String fileName, final int id)
 	{
 		super(title, icon, componentModel.getJComponent());
 		this.id = id;
@@ -30,19 +30,19 @@ public class AbstractView extends View
 		this.fileName = fileName;
 		getWindowProperties().setUndockEnabled(false);
 	}
-
+	
 	public AbstractComponent getComponentModel()
 	{
-		return this.componentModel;
+		return componentModel;
 	}
-
+	
 	public String getFileName()
 	{
-		return this.fileName;
+		return fileName;
 	}
-
+	
 	public int getId()
 	{
-		return this.id;
+		return id;
 	}
 }

@@ -7,12 +7,16 @@ import org.ggll.file.FileNames;
 
 public class IconFactory
 {
+	private IconFactory()
+	{
+	}
+	
 	public enum IconType
 	{
 		ACTIVE_OUTPUT_ICON, DIR_ICON, GRAM_ICON, GRAMMAR_ICON, JAVA_ICON, LEX_ICON, OVERVIEW_CON, PARSER_ICON, PROJECT_ICON, PROPERTIES_ICON, SEM_ICON, SEMANTIC_STACK_ICON, SYNTACTIC_STACK_ICON, TXT_ICON, XML_ICON
 	}
-
-	public Icon getIcon(IconType type)
+	
+	public static Icon getIcon(final IconType type)
 	{
 		switch (type)
 		{
@@ -50,8 +54,8 @@ public class IconFactory
 				return null;
 		}
 	}
-
-	public Icon getIcon(String fileName)
+	
+	public static Icon getIcon(final String fileName)
 	{
 		if (fileName.toLowerCase().endsWith(FileNames.GRAM_EXTENSION.toLowerCase()))
 		{
@@ -73,10 +77,7 @@ public class IconFactory
 		{
 			return getIcon(IconType.XML_ICON);
 		}
-		else if (fileName.toLowerCase().endsWith(FileNames.JAVA_EXTENSION.toLowerCase()))
-		{
-			return getIcon(IconType.JAVA_ICON);
-		}
+		else if (fileName.toLowerCase().endsWith(FileNames.JAVA_EXTENSION.toLowerCase())) { return getIcon(IconType.JAVA_ICON); }
 		return new IconView();
 	}
 }

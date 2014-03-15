@@ -7,45 +7,44 @@ import org.ggll.syntax.graph.widget.GridWidget;
 
 public class GridProvider
 {
-
+	
 	private static HashMap<SyntaxGraph, GridProvider> gridProviders = new HashMap<SyntaxGraph, GridProvider>();
+	
+	public static GridProvider getInstance(final SyntaxGraph canvas)
+	{
+		if (!GridProvider.gridProviders.containsKey(canvas))
+		{
+			GridProvider.gridProviders.put(canvas, new GridProvider(canvas));
+		}
+		return GridProvider.gridProviders.get(canvas);
+	}
+	
 	private final SyntaxGraph canvas;
+	
 	private GridWidget grid;
-
-	private GridProvider(SyntaxGraph canvas)
+	
+	private GridProvider(final SyntaxGraph canvas)
 	{
 		this.canvas = canvas;
 	}
-
-	public static GridProvider getInstance(SyntaxGraph canvas)
-	{
-		if (!gridProviders.containsKey(canvas))
-		{
-			gridProviders.put(canvas, new GridProvider(canvas));
-		}
-		return gridProviders.get(canvas);
-	}
-
+	
 	public boolean isVisible()
 	{
-		if (this.grid == null)
-		{
-			return false;
-		}
-		return this.grid.isVisible();
+		if (grid == null) { return false; }
+		return grid.isVisible();
 	}
-
-	public void setVisible(boolean visible)
+	
+	public void setVisible(final boolean visible)
 	{
-		if (this.grid != null)
+		if (grid != null)
 		{
-			this.grid.setVisible(visible);
-			this.canvas.setShowingGrid(visible);
+			grid.setVisible(visible);
+			canvas.setShowingGrid(visible);
 		}
 		else if (visible)
 		{
-			this.grid = (GridWidget) this.canvas.addNode(GridWidget.class.getCanonicalName());
+			grid = (GridWidget) canvas.addNode(GridWidget.class.getCanonicalName());
 		}
-		this.canvas.repaint();
+		canvas.repaint();
 	}
 }

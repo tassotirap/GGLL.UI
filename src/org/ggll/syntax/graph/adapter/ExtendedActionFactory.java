@@ -93,290 +93,290 @@ public class ExtendedActionFactory
 	public final static String SELECT_LABEL = "SelectLabel";
 	public final static String STATIC_MOVE_FREE = "StaticMoveFree";
 	public final static String SUCCESSOR = "Successor";
-
+	
 	private String activeMoveAction = null;
 	private SyntaxGraph canvas = null;
-
-	private final BasicStroke STROKE = new BasicStroke(1.0f, BasicStroke.JOIN_BEVEL, BasicStroke.CAP_BUTT, 5.0f, new float[]{ 6.0f, 3.0f }, 0.0f);
-
-	public ExtendedActionFactory(SyntaxGraph canvas)
+	
+	private final BasicStroke STROKE = new BasicStroke(1.0f, BasicStroke.JOIN_BEVEL, BasicStroke.CAP_BUTT, 5.0f, new float[]
+	{ 6.0f, 3.0f }, 0.0f);
+	
+	public ExtendedActionFactory(final SyntaxGraph canvas)
 	{
 		this.canvas = canvas;
 	}
-
-	private WidgetAction createAlignWithMultiMoveAction(SyntaxGraph canvas, AlignWithWidgetCollector collector, LayerWidget interractionLayer, AlignWithMoveDecorator decorator, boolean outerBounds)
+	
+	private WidgetAction createAlignWithMultiMoveAction(final SyntaxGraph canvas, final AlignWithWidgetCollector collector, final LayerWidget interractionLayer, final AlignWithMoveDecorator decorator, final boolean outerBounds)
 	{
 		final AlignWithMultiMoveProvider alignWithMultiMoveProvidersp = new AlignWithMultiMoveProvider(canvas, collector, interractionLayer, decorator, outerBounds);
 		return createMoveAction(alignWithMultiMoveProvidersp, alignWithMultiMoveProvidersp);
 	}
-
-	private ConnectAction createConnectAction(ConnectDecorator decorator, LayerWidget interractionLayer, ConnectProvider provider)
+	
+	private ConnectAction createConnectAction(final ConnectDecorator decorator, final LayerWidget interractionLayer, final ConnectProvider provider)
 	{
 		return new ConnectAction(decorator != null ? decorator : createDefaultConnectDecorator(), interractionLayer, provider);
 	}
-
+	
 	private AlignWithMoveDecorator createDefaultAlignWithMoveDecorator()
 	{
 		return new AlignWithMoveDecorator()
 		{
 			@Override
-			public ConnectionWidget createLineWidget(Scene scene)
+			public ConnectionWidget createLineWidget(final Scene scene)
 			{
 				final ConnectionWidget widget = new ConnectionWidget(scene);
-				widget.setStroke(ExtendedActionFactory.this.STROKE);
+				widget.setStroke(STROKE);
 				widget.setForeground(Color.BLUE);
 				return widget;
 			}
 		};
 	}
-
+	
 	private ConnectDecorator createDefaultConnectDecorator()
 	{
 		return new ConnectDecorator()
 		{
 			@Override
-			public ConnectionWidget createConnectionWidget(Scene scene)
+			public ConnectionWidget createConnectionWidget(final Scene scene)
 			{
 				final ConnectionWidget widget = new ConnectionWidget(scene);
 				widget.setTargetAnchorShape(AnchorShape.TRIANGLE_FILLED);
 				return widget;
 			}
-
+			
 			@Override
-			public Anchor createFloatAnchor(Point location)
+			public Anchor createFloatAnchor(final Point location)
 			{
 				return AnchorFactory.createFixedAnchor(location);
 			}
-
+			
 			@Override
-			public Anchor createSourceAnchor(Widget sourceWidget)
+			public Anchor createSourceAnchor(final Widget sourceWidget)
 			{
 				return AnchorFactory.createCenterAnchor(sourceWidget);
 			}
-
+			
 			@Override
-			public Anchor createTargetAnchor(Widget targetWidget)
+			public Anchor createTargetAnchor(final Widget targetWidget)
 			{
 				return AnchorFactory.createCenterAnchor(targetWidget);
 			}
 		};
 	}
-
-
-	private DeleteAdapter createDeleteAction(WidgetDeleteProvider wdp)
+	
+	private DeleteAdapter createDeleteAction(final WidgetDeleteProvider wdp)
 	{
 		return new DeleteAdapter(wdp);
 	}
-
-	private WidgetAction createEditorAction(TextFieldInplaceEditor editor)
+	
+	private WidgetAction createEditorAction(final TextFieldInplaceEditor editor)
 	{
 		return createInplaceEditorAction(editor, null);
 	}
-
+	
 	private MoveStrategy createFreeMoveStrategy()
 	{
 		return new MoveStrategy()
 		{
 			@Override
-			public Point locationSuggested(Widget widget, Point originalLocation, Point suggestedLocation)
+			public Point locationSuggested(final Widget widget, final Point originalLocation, final Point suggestedLocation)
 			{
 				return suggestedLocation;
 			}
 		};
 	}
-
-	private WidgetAction createHoverAction(TwoStateHoverProvider provider)
+	
+	private WidgetAction createHoverAction(final TwoStateHoverProvider provider)
 	{
 		return new TwoStatedMouseHoverAction(provider);
 	}
-
-	private <T extends JComponent> WidgetAction createInplaceEditorAction(InplaceEditorProvider<T> provider)
+	
+	private <T extends JComponent> WidgetAction createInplaceEditorAction(final InplaceEditorProvider<T> provider)
 	{
 		return new InplaceEditorAction<T>(provider);
 	}
-
-	private WidgetAction createInplaceEditorAction(TextFieldInplaceEditor editor, EnumSet<InplaceEditorProvider.ExpansionDirection> expansionDirections)
+	
+	private WidgetAction createInplaceEditorAction(final TextFieldInplaceEditor editor, final EnumSet<InplaceEditorProvider.ExpansionDirection> expansionDirections)
 	{
 		return createInplaceEditorAction(new TextFieldInplaceEditorProvider(editor, expansionDirections));
 	}
-
-	private WidgetAction createMouseCenteredZoomAction(double zoomMultiplier)
+	
+	private WidgetAction createMouseCenteredZoomAction(final double zoomMultiplier)
 	{
 		return new MouseCenteredZoomAction(zoomMultiplier);
 	}
-
+	
 	private WidgetAction createMoveAction()
 	{
 		return createMoveAction(null, null);
 	}
-
-	private WidgetAction createMoveAction(MoveStrategy strategy, MoveProvider provider)
+	
+	private WidgetAction createMoveAction(final MoveStrategy strategy, final MoveProvider provider)
 	{
 		final MoveStrategy freeMoveStrategy = new MoveStrategy()
 		{
 			@Override
-			public Point locationSuggested(Widget widget, Point originalLocation, Point suggestedLocation)
+			public Point locationSuggested(final Widget widget, final Point originalLocation, final Point suggestedLocation)
 			{
 				return suggestedLocation;
 			}
 		};
-
+		
 		final MoveProvider defaultMoveProvider = new MoveProvider()
 		{
 			@Override
-			public Point getOriginalLocation(Widget widget)
+			public Point getOriginalLocation(final Widget widget)
 			{
 				return widget.getPreferredLocation();
 			}
-
+			
 			@Override
-			public void movementFinished(Widget widget)
+			public void movementFinished(final Widget widget)
 			{
 			}
-
+			
 			@Override
-			public void movementStarted(Widget widget)
+			public void movementStarted(final Widget widget)
 			{
 			}
-
+			
 			@Override
-			public void setNewLocation(Widget widget, Point location)
+			public void setNewLocation(final Widget widget, final Point location)
 			{
 				widget.setPreferredLocation(location);
 			}
 		};
-
+		
 		return new MoveAction(strategy != null ? strategy : freeMoveStrategy, provider != null ? provider : defaultMoveProvider);
 	}
-
+	
 	private WidgetAction createPanAction()
 	{
 		return new PanAction();
 	}
-
+	
 	private WidgetAction createPopupMenuAction(final PopupMenuProvider provider)
 	{
 		return new PopupMenuAction(provider);
 	}
-
-	private WidgetAction createReconnectAction(ReconnectDecorator decorator, ReconnectProvider provider)
+	
+	private WidgetAction createReconnectAction(final ReconnectDecorator decorator, final ReconnectProvider provider)
 	{
 		final ReconnectDecorator defaultReconnectDecorator = new ReconnectDecorator()
 		{
 			@Override
-			public Anchor createFloatAnchor(Point location)
+			public Anchor createFloatAnchor(final Point location)
 			{
 				return AnchorFactory.createFixedAnchor(location);
 			}
-
+			
 			@Override
-			public Anchor createReplacementWidgetAnchor(Widget replacementWidget)
+			public Anchor createReplacementWidgetAnchor(final Widget replacementWidget)
 			{
 				return AnchorFactory.createCenterAnchor(replacementWidget);
 			}
 		};
-
+		
 		return new ReconnectAction(decorator != null ? decorator : defaultReconnectDecorator, provider);
 	}
-
-	private WidgetAction createReconnectAction(ReconnectProvider provider)
+	
+	private WidgetAction createReconnectAction(final ReconnectProvider provider)
 	{
 		return createReconnectAction(null, provider);
 	}
-
-	private WidgetAction createRectangularSelectAction(RectangularSelectDecorator decorator, LayerWidget interractionLayer, RectangularSelectProvider provider)
+	
+	private WidgetAction createRectangularSelectAction(final RectangularSelectDecorator decorator, final LayerWidget interractionLayer, final RectangularSelectProvider provider)
 	{
 		return new RectangularSelectAction(decorator, interractionLayer, provider);
 	}
-
-	private WidgetAction createSelectAction(SelectProvider provider)
+	
+	private WidgetAction createSelectAction(final SelectProvider provider)
 	{
 		return new SelectAction(provider);
 	}
-
-	private MoveStrategy createSnapToGridMoveStrategy(int horizontalGridSize, int verticalGridSize)
+	
+	private MoveStrategy createSnapToGridMoveStrategy(final int horizontalGridSize, final int verticalGridSize)
 	{
 		return new SnapToGridMoveStrategy(horizontalGridSize, verticalGridSize);
 	}
-
-	private MoveStrategy createSnapToLineMoveStrategy(SyntaxGraph canvas)
+	
+	private MoveStrategy createSnapToLineMoveStrategy(final SyntaxGraph canvas)
 	{
 		return new SnapToLineMoveStrategy(LineProvider.getInstance(canvas));
 	}
-
-	public WidgetAction getAction(String action)
+	
+	public WidgetAction getAction(final String action)
 	{
 		switch (action)
 		{
 			case MOVE:
-				if (this.activeMoveAction != null)
+				if (activeMoveAction != null)
 				{
-					switch (this.activeMoveAction)
+					switch (activeMoveAction)
 					{
 						case CanvasResource.M_FREE:
-							return getAction(MOVE_FREE);
+							return getAction(ExtendedActionFactory.MOVE_FREE);
 						case CanvasResource.M_SNAP:
-							return getAction(MOVE_SNAP);
+							return getAction(ExtendedActionFactory.MOVE_SNAP);
 						case CanvasResource.M_ALIGN:
-							return getAction(MOVE_ALIGN);
+							return getAction(ExtendedActionFactory.MOVE_ALIGN);
 						case CanvasResource.M_LINES:
-							return getAction(MOVE_LINES);
+							return getAction(ExtendedActionFactory.MOVE_LINES);
 					}
 				}
-				return getAction(MOVE_FREE);
+				return getAction(ExtendedActionFactory.MOVE_FREE);
 			case MOVE_FREE:
-				return createMoveAction(createFreeMoveStrategy(), new MultiMoveProvider(this.canvas));
+				return createMoveAction(createFreeMoveStrategy(), new MultiMoveProvider(canvas));
 			case MOVE_SNAP:
-				return createMoveAction(createSnapToGridMoveStrategy(GridWidget.GRID_SIZE, GridWidget.GRID_SIZE), new MultiMoveProvider(this.canvas));
+				return createMoveAction(createSnapToGridMoveStrategy(GridWidget.GRID_SIZE, GridWidget.GRID_SIZE), new MultiMoveProvider(canvas));
 			case MOVE_ALIGN:
-				return createAlignWithMultiMoveAction(this.canvas, new SingleLayerAlignWithWidgetCollector(this.canvas.getMainLayer(), true), this.canvas.getInterractionLayer(), createDefaultAlignWithMoveDecorator(), true);
+				return createAlignWithMultiMoveAction(canvas, new SingleLayerAlignWithWidgetCollector(canvas.getMainLayer(), true), canvas.getInterractionLayer(), createDefaultAlignWithMoveDecorator(), true);
 			case MOVE_LINES:
-				return createMoveAction(createSnapToLineMoveStrategy(this.canvas), new MultiMoveProvider(this.canvas));
+				return createMoveAction(createSnapToLineMoveStrategy(canvas), new MultiMoveProvider(canvas));
 			case CREATE_NODE:
-				return new NodeCreateAction(this.canvas);
+				return new NodeCreateAction(canvas);
 			case SELECT:
-				return createSelectAction(new NodeSelectProvider(this.canvas));
+				return createSelectAction(new NodeSelectProvider(canvas));
 			case MULTI_SELECT:
-				return createSelectAction(new NodeMultiSelectProvider(this.canvas));
+				return createSelectAction(new NodeMultiSelectProvider(canvas));
 			case NODE_HOVER:
-				return createHoverAction(new NodeHoverProvider(this.canvas));
+				return createHoverAction(new NodeHoverProvider(canvas));
 			case ALTERNATIVE:
-				return createConnectAction(this.canvas.getConnectorFactory().getConnector(CanvasResource.ALTERNATIVE), this.canvas.getInterractionLayer(), new NodeConnectProvider(this.canvas));
+				return createConnectAction(canvas.getConnectorFactory().getConnector(CanvasResource.ALTERNATIVE), canvas.getInterractionLayer(), new NodeConnectProvider(canvas));
 			case SUCCESSOR:
-				return createConnectAction(this.canvas.getConnectorFactory().getConnector(CanvasResource.SUCCESSOR), this.canvas.getInterractionLayer(), new NodeConnectProvider(this.canvas));
+				return createConnectAction(canvas.getConnectorFactory().getConnector(CanvasResource.SUCCESSOR), canvas.getInterractionLayer(), new NodeConnectProvider(canvas));
 			case RECONNECT:
-				return createReconnectAction(new NodeReconnectProvider(this.canvas));
+				return createReconnectAction(new NodeReconnectProvider(canvas));
 			case EDITOR:
-				return createEditorAction(new LabelTextFieldEditor(this.canvas));
+				return createEditorAction(new LabelTextFieldEditor(canvas));
 			case POPUP_MENU_MAIN:
-				return createPopupMenuAction(new SyntaxGraphPopupMenu(this.canvas));
+				return createPopupMenuAction(new SyntaxGraphPopupMenu(canvas));
 			case RECTANGULAR_SELECT:
-				return createRectangularSelectAction(new DefaultRectangularSelectDecorator(this.canvas), this.canvas.getBackgroundLayer(), new CanvasRectangularSelectProvider(this.canvas));
+				return createRectangularSelectAction(new DefaultRectangularSelectDecorator(canvas), canvas.getBackgroundLayer(), new CanvasRectangularSelectProvider(canvas));
 			case MOUSE_CENTERED_ZOOM:
 				return createMouseCenteredZoomAction(1.05);
 			case PAN:
 				return createPanAction();
 			case CONN_SELECT:
-				return this.canvas.createSelectAction();
+				return canvas.createSelectAction();
 			case FREE_MOVE_CP:
-				return new MoveControlPointAction(new FreeMoveControl(this.canvas), RoutingPolicy.DISABLE_ROUTING_UNTIL_END_POINT_IS_MOVED);
+				return new MoveControlPointAction(new FreeMoveControl(canvas), RoutingPolicy.DISABLE_ROUTING_UNTIL_END_POINT_IS_MOVED);
 			case ADD_REMOVE_CP:
 				return ActionFactory.createAddRemoveControlPointAction();
 			case SELECT_LABEL:
-				return createSelectAction(new LabelSelectProvider(this.canvas));
+				return createSelectAction(new LabelSelectProvider(canvas));
 			case LABEL_HOVER:
-				return createHoverAction(new LabelHoverProvider(this.canvas));
+				return createHoverAction(new LabelHoverProvider(canvas));
 			case STATIC_MOVE_FREE:
 				return createMoveAction();
 			case DELETE:
-				return createDeleteAction(new WidgetDeleteProvider(this.canvas));
+				return createDeleteAction(new WidgetDeleteProvider(canvas));
 			default:
 				return null;
-
+				
 		}
 	}
-
-	public void setActiveMoveAction(String activeMoveAction)
+	
+	public void setActiveMoveAction(final String activeMoveAction)
 	{
 		this.activeMoveAction = activeMoveAction;
 	}

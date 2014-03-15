@@ -7,14 +7,14 @@ import org.ggll.syntax.graph.SyntaxGraph;
 
 public class SyntaxStackComponent extends AbstractComponent
 {
-	public SyntaxStackComponent(SyntaxGraph canvas)
+	public SyntaxStackComponent(final SyntaxGraph canvas)
 	{
-		this.jComponent = new JScrollPane(SyntaxStack.getInstance().getView(canvas));
+		jComponent = new JScrollPane(SyntaxStack.getInstance().getView(canvas));
 	}
-
+	
 	@Override
 	public void fireContentChanged()
 	{
 	}
-
+	
 }

@@ -9,11 +9,11 @@ public class EmptyComponent extends AbstractComponent
 {
 	public EmptyComponent()
 	{
-		this.jComponent = new JPanel(new BorderLayout());
+		jComponent = new JPanel(new BorderLayout());
 		final JLabel label = new JLabel();
-		this.jComponent.add(label, BorderLayout.CENTER);
+		jComponent.add(label, BorderLayout.CENTER);
 	}
-
+	
 	@Override
 	public void fireContentChanged()
 	{

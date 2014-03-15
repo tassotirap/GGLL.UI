@@ -13,20 +13,20 @@ public class FreeMoveControl implements MoveControlPointProvider
 {
 	private final StateHistory canvasStateRepository;
 	private final MoveControlPointProvider moveProvider;
-
-	public FreeMoveControl(SyntaxGraph canvas)
+	
+	public FreeMoveControl(final SyntaxGraph canvas)
 	{
-		this.canvasStateRepository = canvas.getCanvasStateHistory();
-		this.moveProvider = org.netbeans.api.visual.action.ActionFactory.createFreeMoveControlPointProvider();
+		canvasStateRepository = canvas.getCanvasStateHistory();
+		moveProvider = org.netbeans.api.visual.action.ActionFactory.createFreeMoveControlPointProvider();
 	}
-
+	
 	@Override
-	public List<Point> locationSuggested(ConnectionWidget connectionWidget, int arg1, Point point)
+	public List<Point> locationSuggested(final ConnectionWidget connectionWidget, final int arg1, final Point point)
 	{
-		final List<Point> points = this.moveProvider.locationSuggested(connectionWidget, arg1, point);
+		final List<Point> points = moveProvider.locationSuggested(connectionWidget, arg1, point);
 		connectionWidget.setControlPoints(points, true);
-		this.canvasStateRepository.propertyChange(new PropertyChangeEvent(this, "undoable", null, "Move"));
+		canvasStateRepository.propertyChange(new PropertyChangeEvent(this, "undoable", null, "Move"));
 		return points;
 	}
-
+	
 }

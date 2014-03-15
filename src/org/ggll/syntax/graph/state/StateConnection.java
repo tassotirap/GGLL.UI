@@ -16,46 +16,46 @@ public class StateConnection implements Serializable
 	private final String target;
 	private String type;
 	private final List<Point> points;
-
-	public StateConnection(String id, SyntaxGraph canvas)
+	
+	public StateConnection(final String id, final SyntaxGraph canvas)
 	{
 		final ConnectionWidget connectionWidget = (ConnectionWidget) canvas.findWidget(id);
 		this.id = id;
-		this.source = canvas.getEdgeSource(id);
-		this.target = canvas.getEdgeTarget(id);
-		this.points = connectionWidget.getControlPoints();
+		source = canvas.getEdgeSource(id);
+		target = canvas.getEdgeTarget(id);
+		points = connectionWidget.getControlPoints();
 		if (canvas.isAlternative(id))
 		{
-			this.type = CanvasResource.ALTERNATIVE;
+			type = CanvasResource.ALTERNATIVE;
 		}
 		else if (canvas.isSuccessor(id))
 		{
-			this.type = CanvasResource.SUCCESSOR;
+			type = CanvasResource.SUCCESSOR;
 		}
 	}
-
+	
 	public String getId()
 	{
-		return this.id;
+		return id;
 	}
-
+	
 	public List<Point> getPoints()
 	{
-		return this.points;
+		return points;
 	}
-
+	
 	public String getSource()
 	{
-		return this.source;
+		return source;
 	}
-
+	
 	public String getTarget()
 	{
-		return this.target;
+		return target;
 	}
-
+	
 	public String getType()
 	{
-		return this.type;
+		return type;
 	}
 }

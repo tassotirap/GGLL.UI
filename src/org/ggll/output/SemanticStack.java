@@ -2,35 +2,36 @@ package org.ggll.output;
 
 public class SemanticStack extends Output
 {
-
+	
 	private static SemanticStack instance;
+	
+	public static SemanticStack getInstance()
+	{
+		if (SemanticStack.instance == null)
+		{
+			SemanticStack.instance = new SemanticStack();
+		}
+		return SemanticStack.instance;
+	}
+	
 	private int lastLine;
-
+	
 	private SemanticStack()
 	{
 		super();
 	}
-
-	public static SemanticStack getInstance()
-	{
-		if (instance == null)
-		{
-			instance = new SemanticStack();
-		}
-		return instance;
-	}
-
+	
 	public void clearStack()
 	{
-		this.lastLine = 0;
+		lastLine = 0;
 		clear();
 	}
-
-	public void displayTextExt(String str, boolean showLine)
+	
+	public void displayTextExt(final String str, final boolean showLine)
 	{
 		if (showLine)
 		{
-			displayTextExt(String.format("<b>%d.&nbsp;&nbsp;</b>%s", ++this.lastLine, str), TOPIC.SemanticStack);
+			displayTextExt(String.format("<b>%d.&nbsp;&nbsp;</b>%s", ++lastLine, str), TOPIC.SemanticStack);
 		}
 		else
 		{

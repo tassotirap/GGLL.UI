@@ -7,72 +7,55 @@ import org.ggll.syntax.graph.SyntaxGraphRepository;
 
 public class StateHelper
 {
-
-
-	private StateHelper()
+	
+	public static StateNode findAlternativeNode(final StateNode node)
 	{
-	}
-
-	public static StateNode findAlternativeNode(StateNode node)
-	{
-		if(node == null) return null;
+		if (node == null) { return null; }
 		for (final SyntaxGraph syntaxGraph : SyntaxGraphRepository.getInstances())
 		{
 			for (final StateConnection edge : syntaxGraph.getCanvasState().getAlternatives().getAll())
 			{
-				if (edge.getSource().equals(node.getId()))
-				{
-					return syntaxGraph.getCanvasState().findNode(edge.getTarget());
-				}
+				if (edge.getSource().equals(node.getId())) { return syntaxGraph.getCanvasState().findNode(edge.getTarget()); }
 			}
 		}
 		return null;
 	}
 	
-
-	public static StateNode findLeftSide(StateNode node)
+	public static StateNode findLeftSide(final StateNode node)
 	{
-		if(node == null) return null;
-		for (final StateNode leftside : getLeftSides().getAll())
+		if (node == null) { return null; }
+		for (final StateNode leftside : StateHelper.getLeftSides().getAll())
 		{
-			if (leftside.getTitle().equals(node.getTitle()))
-			{
-				return leftside;
-			}
+			if (leftside.getTitle().equals(node.getTitle())) { return leftside; }
 		}
 		return null;
 	}
 	
-	public static StateNode findNode(String id)
+	public static StateNode findNode(final String id)
 	{
-		if(id == null) return null;
+		if (id == null) { return null; }
 		for (final SyntaxGraph syntaxGraph : SyntaxGraphRepository.getInstances())
 		{
-			if(syntaxGraph.getCanvasState().findNode(id) != null)
-			{
-				return syntaxGraph.getCanvasState().findNode(id);
-				
+			if (syntaxGraph.getCanvasState().findNode(id) != null) { return syntaxGraph.getCanvasState().findNode(id);
+			
 			}
 		}
 		return null;
 	}
 	
-	public static StateNode findSucessorNode(StateNode node)
+	public static StateNode findSucessorNode(final StateNode node)
 	{
-		if(node == null) return null;
+		if (node == null) { return null; }
 		for (final SyntaxGraph syntaxGraph : SyntaxGraphRepository.getInstances())
 		{
 			for (final StateConnection edge : syntaxGraph.getCanvasState().getSucessors().getAll())
 			{
-				if (edge.getSource().equals(node.getId()))
-				{
-					return syntaxGraph.getCanvasState().findNode(edge.getTarget());
-				}
+				if (edge.getSource().equals(node.getId())) { return syntaxGraph.getCanvasState().findNode(edge.getTarget()); }
 			}
 		}
 		return null;
 	}
-
+	
 	public static int getLastCustomNode()
 	{
 		int lastCustomNode = 0;
@@ -82,7 +65,7 @@ public class StateHelper
 		}
 		return lastCustomNode;
 	}
-
+	
 	public static int getLastLAMBDA()
 	{
 		int lastLAMBDA = 0;
@@ -92,7 +75,7 @@ public class StateHelper
 		}
 		return lastLAMBDA;
 	}
-
+	
 	public static int getLastLeftSides()
 	{
 		int lastLeftSides = 0;
@@ -102,7 +85,7 @@ public class StateHelper
 		}
 		return lastLeftSides;
 	}
-
+	
 	public static int getLastNTerminalId()
 	{
 		int lastNTerminalId = 0;
@@ -112,7 +95,7 @@ public class StateHelper
 		}
 		return lastNTerminalId;
 	}
-
+	
 	public static int getLastSTART()
 	{
 		int lastSTART = 0;
@@ -122,7 +105,7 @@ public class StateHelper
 		}
 		return lastSTART;
 	}
-
+	
 	public static int getLastTerminalId()
 	{
 		int lastTerminalId = 0;
@@ -132,7 +115,7 @@ public class StateHelper
 		}
 		return lastTerminalId;
 	}
-
+	
 	public static ExtendedList<StateNode> getLeftSides()
 	{
 		final ExtendedList<StateNode> leftSides = new ExtendedList<StateNode>();
@@ -143,7 +126,7 @@ public class StateHelper
 		for (final SyntaxGraph syntaxGraph : SyntaxGraphRepository.getInstances())
 		{
 			leftSides.addAll(syntaxGraph.getCanvasState().getLeftSide());
-		}		
+		}
 		return leftSides;
 	}
 	
@@ -153,7 +136,7 @@ public class StateHelper
 		for (final SyntaxGraph syntaxGraph : SyntaxGraphRepository.getInstances())
 		{
 			count += syntaxGraph.getCanvasState().getNodes().size();
-		}		
+		}
 		return count;
 	}
 	
@@ -166,7 +149,7 @@ public class StateHelper
 		}
 		return nTerminals;
 	}
-
+	
 	public static ExtendedList<StateNode> getStarts()
 	{
 		final ExtendedList<StateNode> starts = new ExtendedList<StateNode>();
@@ -186,7 +169,7 @@ public class StateHelper
 		}
 		return stateNodes;
 	}
-
+	
 	public static ExtendedList<StateConnection> getSucessors()
 	{
 		final ExtendedList<StateConnection> sucessors = new ExtendedList<StateConnection>();
@@ -195,5 +178,9 @@ public class StateHelper
 			sucessors.addAll(syntaxGraph.getCanvasState().getSucessors());
 		}
 		return sucessors;
+	}
+	
+	private StateHelper()
+	{
 	}
 }

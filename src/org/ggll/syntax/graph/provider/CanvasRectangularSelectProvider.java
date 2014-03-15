@@ -57,28 +57,28 @@ import org.netbeans.api.visual.widget.Widget;
 
 public final class CanvasRectangularSelectProvider implements RectangularSelectProvider
 {
-
+	
 	private final SyntaxGraph canvas;
-
-	public CanvasRectangularSelectProvider(SyntaxGraph canvas)
+	
+	public CanvasRectangularSelectProvider(final SyntaxGraph canvas)
 	{
 		this.canvas = canvas;
 	}
-
+	
 	@Override
-	public void performSelection(Rectangle sceneSelection)
+	public void performSelection(final Rectangle sceneSelection)
 	{
 		final boolean entirely = sceneSelection.width > 0;
 		final int w = sceneSelection.width;
 		final int h = sceneSelection.height;
 		final Rectangle rect = new Rectangle(w >= 0 ? 0 : w, h >= 0 ? 0 : h, w >= 0 ? w : -w, h >= 0 ? h : -h);
 		rect.translate(sceneSelection.x, sceneSelection.y);
-
+		
 		final HashSet<Object> set = new HashSet<Object>();
-		final Set<?> objects = this.canvas.getObjects();
+		final Set<?> objects = canvas.getObjects();
 		for (final Object object : objects)
 		{
-			final Widget widget = this.canvas.findWidget(object);
+			final Widget widget = canvas.findWidget(object);
 			if (widget == null)
 			{
 				continue;
@@ -118,31 +118,31 @@ public final class CanvasRectangularSelectProvider implements RectangularSelectP
 			}
 		}
 		final Iterator<Object> iterator = set.iterator();
-		this.canvas.setFocusedObject(iterator.hasNext() ? iterator.next() : null);
-		this.canvas.userSelectionSuggested(set, false);
-		for (final Object o : this.canvas.getLabels())
+		canvas.setFocusedObject(iterator.hasNext() ? iterator.next() : null);
+		canvas.userSelectionSuggested(set, false);
+		for (final Object o : canvas.getLabels())
 		{
-			final LabelWidget lw = (LabelWidget) this.canvas.findWidget(o);
+			final LabelWidget lw = (LabelWidget) canvas.findWidget(o);
 			lw.setBorder(BorderFactory.createEmptyBorder());
 		}
-		for (final Object o : this.canvas.getNodes())
+		for (final Object o : canvas.getNodes())
 		{
-			final Widget lw = this.canvas.findWidget(o);
+			final Widget lw = canvas.findWidget(o);
 			if (lw instanceof LabelWidget)
 			{
 				lw.setBackground(Color.WHITE);
 				lw.setForeground(Color.BLACK);
 			}
 		}
-		for (final Object o : this.canvas.getSelectedObjects())
+		for (final Object o : canvas.getSelectedObjects())
 		{
-			if (this.canvas.isNode(o) || this.canvas.isLabel(o))
+			if (canvas.isNode(o) || canvas.isLabel(o))
 			{
-				final Widget lw = this.canvas.findWidget(o);
-				if (this.canvas.isLabel(o))
+				final Widget lw = canvas.findWidget(o);
+				if (canvas.isLabel(o))
 				{
 					lw.setForeground(Color.BLUE);
-					((LabelWidget) this.canvas.findWidget(o)).setBorder(BorderFactory.createLineBorder(1, Color.BLUE));
+					((LabelWidget) canvas.findWidget(o)).setBorder(BorderFactory.createLineBorder(1, Color.BLUE));
 				}
 				else if (lw instanceof LabelWidget)
 				{
@@ -152,5 +152,5 @@ public final class CanvasRectangularSelectProvider implements RectangularSelectP
 			}
 		}
 	}
-
+	
 }

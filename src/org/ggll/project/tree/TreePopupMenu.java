@@ -9,19 +9,19 @@ import javax.swing.tree.TreePath;
 
 public class TreePopupMenu extends JPopupMenu
 {
-
+	
 	private static final long serialVersionUID = 1L;
 	private final Tree fileTree;
-
-	public TreePopupMenu(Tree fileTree)
+	
+	public TreePopupMenu(final Tree fileTree)
 	{
 		this.fileTree = fileTree;
 		initialize();
 	}
-
+	
 	public void initialize()
 	{
-		final TreePath node = this.fileTree.getSelectedNode();
+		final TreePath node = fileTree.getSelectedNode();
 		if (node != null && node.getLastPathComponent() instanceof TreeFile)
 		{
 			final TreeFile tFile = (TreeFile) node.getLastPathComponent();
@@ -31,9 +31,9 @@ public class TreePopupMenu extends JPopupMenu
 				open.addActionListener(new ActionListener()
 				{
 					@Override
-					public void actionPerformed(ActionEvent e)
+					public void actionPerformed(final ActionEvent e)
 					{
-						TreePopupMenu.this.fileTree.open(node);
+						fileTree.open(node);
 					}
 				});
 				add(open);

@@ -12,17 +12,17 @@ import org.ggll.util.Log;
 public class SemanticFileManager
 {
 	private final SemanticFile file;
-
-	public SemanticFileManager(SemanticFile file)
+	
+	public SemanticFileManager(final SemanticFile file)
 	{
 		this.file = file;
 	}
-
-	private boolean addToFile(String name, String code)
+	
+	private boolean addToFile(final String name, final String code)
 	{
 		try
 		{
-			final FileInputStream fileInputStream = new FileInputStream(this.file);
+			final FileInputStream fileInputStream = new FileInputStream(file);
 			final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(fileInputStream));
 			String line = bufferedReader.readLine();
 			String currentFile = "";
@@ -37,51 +37,36 @@ public class SemanticFileManager
 				line = bufferedReader.readLine();
 			}
 			bufferedReader.close();
-			final FileWriter fileWriter = new FileWriter(this.file);
+			final FileWriter fileWriter = new FileWriter(file);
 			final PrintWriter printWriter = new PrintWriter(fileWriter);
 			printWriter.println(currentFile);
 			printWriter.close();
-
+			
 		}
 		catch (final Exception e)
 		{
-			Log.log(Log.ERROR, this, "Could not create new routine", e);
+			Log.Write("Could not create new routine");
 			return false;
 		}
 		return true;
 	}
-
-	private String getFormatedCode(String name, String code)
+	
+	public boolean canInsert(final String routine)
 	{
-		final String[] codeLines = code.split("\n");
-		code = "public void " + name + "()";
-		code += "\n";
-		code += "{";
-		code += "\n";
-		for (final String line : codeLines)
-		{
-			code += "\t" + line + "\n";
-		}
-		code += "}";
-		return code;
+		return file.getCode(routine) == null;
 	}
-
-	public boolean canInsert(String routine)
-	{
-		return this.file.getCode(routine) == null;
-	}
-
-	public void editRoutine(String name, String code)
+	
+	public void editRoutine(final String name, String code)
 	{
 		try
 		{
 			code = getFormatedCode(name, code);
-			final FileInputStream fileInputStream = new FileInputStream(this.file);
+			final FileInputStream fileInputStream = new FileInputStream(file);
 			final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(fileInputStream));
 			String line = bufferedReader.readLine();
 			String currentFile = "";
 			final String routine = String.format(SemanticFile.ROUTINE_FORMAT, name);
-
+			
 			while (line != null)
 			{
 				currentFile += line + "\n";
@@ -99,33 +84,30 @@ public class SemanticFileManager
 						line = bufferedReader.readLine();
 					}
 				}
-
+				
 				line = bufferedReader.readLine();
-
+				
 			}
 			bufferedReader.close();
-
-			final FileWriter fileWriter = new FileWriter(this.file);
+			
+			final FileWriter fileWriter = new FileWriter(file);
 			final PrintWriter printWriter = new PrintWriter(fileWriter);
 			printWriter.println(currentFile);
 			printWriter.close();
-
+			
 		}
 		catch (final Exception e)
 		{
-			Log.log(Log.ERROR, this, "Could not create new routine", e);
+			Log.Write("Could not create new routine");
 		}
 	}
-
-	public String getCleanCode(String routine, String code)
+	
+	public String getCleanCode(final String routine, String code)
 	{
 		if (code == null)
 		{
-			code = this.file.getCode(routine);
-			if (code == null)
-			{
-				return null;
-			}
+			code = file.getCode(routine);
+			if (code == null) { return null; }
 		}
 		code = code.replaceFirst("(\\s*\\t*)*public void(\\s*\\t*)*" + routine + "(\\s*\\t*)*\\(\\)(\\s*\\t*)*\\{", "");
 		code = code.replaceFirst("(\\s*\\t*)*\\n", "");
@@ -156,8 +138,23 @@ public class SemanticFileManager
 		}
 		return code;
 	}
-
-	public boolean insertRoutine(String name, String code, String widgetName)
+	
+	private String getFormatedCode(final String name, String code)
+	{
+		final String[] codeLines = code.split("\n");
+		code = "public void " + name + "()";
+		code += "\n";
+		code += "{";
+		code += "\n";
+		for (final String line : codeLines)
+		{
+			code += "\t" + line + "\n";
+		}
+		code += "}";
+		return code;
+	}
+	
+	public boolean insertRoutine(final String name, String code, final String widgetName)
 	{
 		code = getFormatedCode(name, code);
 		addToFile(name, code);

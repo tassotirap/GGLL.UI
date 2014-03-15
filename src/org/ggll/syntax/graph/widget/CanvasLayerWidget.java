@@ -61,20 +61,33 @@ import org.netbeans.api.visual.widget.Scene;
  */
 public class CanvasLayerWidget extends LayerWidget implements Serializable
 {
-
+	
 	private static final long serialVersionUID = 4067199192049261603L;
-
+	
 	/**
 	 * Creates a layer widget.
 	 * 
 	 * @param scene
 	 *            the scene
 	 */
-	public CanvasLayerWidget(Scene scene)
+	public CanvasLayerWidget(final Scene scene)
 	{
 		super(scene);
 	}
-
+	
+	/**
+	 * Returns whether a specified local location is part of the layer widget.
+	 * 
+	 * @param localLocation
+	 *            the local location
+	 * @return always false
+	 */
+	@Override
+	public boolean isHitAt(final Point localLocation)
+	{
+		return false;
+	}
+	
 	/**
 	 * Returns whether the layer widget requires to repainted after
 	 * revalidation.
@@ -86,18 +99,5 @@ public class CanvasLayerWidget extends LayerWidget implements Serializable
 	{
 		return false;
 	}
-
-	/**
-	 * Returns whether a specified local location is part of the layer widget.
-	 * 
-	 * @param localLocation
-	 *            the local location
-	 * @return always false
-	 */
-	@Override
-	public boolean isHitAt(Point localLocation)
-	{
-		return false;
-	}
-
+	
 }

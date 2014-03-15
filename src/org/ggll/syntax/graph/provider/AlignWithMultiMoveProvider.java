@@ -57,60 +57,60 @@ public final class AlignWithMultiMoveProvider extends AlignWithSupport implement
 {
 	private final MultiMoveProvider multiMoveProvider;
 	private final boolean outerBounds;
-
-	public AlignWithMultiMoveProvider(SyntaxGraph canvas, AlignWithWidgetCollector collector, LayerWidget interractionLayer, AlignWithMoveDecorator decorator, boolean outerBounds)
+	
+	public AlignWithMultiMoveProvider(final SyntaxGraph canvas, final AlignWithWidgetCollector collector, final LayerWidget interractionLayer, final AlignWithMoveDecorator decorator, final boolean outerBounds)
 	{
 		super(collector, interractionLayer, decorator);
 		this.outerBounds = outerBounds;
-		this.multiMoveProvider = new MultiMoveProvider(canvas);
+		multiMoveProvider = new MultiMoveProvider(canvas);
 	}
-
+	
 	@Override
-	public Point getOriginalLocation(Widget widget)
+	public Point getOriginalLocation(final Widget widget)
 	{
-		return this.multiMoveProvider.getOriginalLocation(widget);
+		return multiMoveProvider.getOriginalLocation(widget);
 	}
-
+	
 	@Override
-	public Point locationSuggested(Widget widget, Point originalLocation, Point suggestedLocation)
+	public Point locationSuggested(final Widget widget, final Point originalLocation, final Point suggestedLocation)
 	{
 		final Point widgetLocation = widget.getLocation();
-		final Rectangle widgetBounds = this.outerBounds ? widget.getBounds() : widget.getClientArea();
+		final Rectangle widgetBounds = outerBounds ? widget.getBounds() : widget.getClientArea();
 		final Rectangle bounds = widget.convertLocalToScene(widgetBounds);
 		bounds.translate(suggestedLocation.x - widgetLocation.x, suggestedLocation.y - widgetLocation.y);
 		final Insets insets = widget.getBorder().getInsets();
-		if (!this.outerBounds)
+		if (!outerBounds)
 		{
 			suggestedLocation.x += insets.left;
 			suggestedLocation.y += insets.top;
 		}
 		final Point point = super.locationSuggested(widget, bounds, suggestedLocation, true, true, true, true);
-		if (!this.outerBounds)
+		if (!outerBounds)
 		{
 			point.x -= insets.left;
 			point.y -= insets.top;
 		}
 		return widget.getParentWidget().convertSceneToLocal(point);
 	}
-
+	
 	@Override
-	public void movementFinished(Widget widget)
+	public void movementFinished(final Widget widget)
 	{
 		hide();
-		this.multiMoveProvider.movementFinished(widget);
+		multiMoveProvider.movementFinished(widget);
 	}
-
+	
 	@Override
-	public void movementStarted(Widget widget)
+	public void movementStarted(final Widget widget)
 	{
 		show();
-		this.multiMoveProvider.movementStarted(widget);
+		multiMoveProvider.movementStarted(widget);
 	}
-
+	
 	@Override
-	public void setNewLocation(Widget widget, Point location)
+	public void setNewLocation(final Widget widget, final Point location)
 	{
-		this.multiMoveProvider.setNewLocation(widget, location);
+		multiMoveProvider.setNewLocation(widget, location);
 	}
-
+	
 }

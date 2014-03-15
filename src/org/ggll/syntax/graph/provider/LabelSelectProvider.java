@@ -12,63 +12,60 @@ import org.netbeans.api.visual.widget.Widget;
 public class LabelSelectProvider extends CanvasSelectProvider
 {
 	private final SyntaxGraph canvas;
-
-	public LabelSelectProvider(SyntaxGraph canvas)
+	
+	public LabelSelectProvider(final SyntaxGraph canvas)
 	{
 		super(canvas);
 		this.canvas = canvas;
 	}
-
+	
 	@Override
-	public boolean isAimingAllowed(Widget arg0, Point arg1, boolean arg2)
+	public boolean isAimingAllowed(final Widget arg0, final Point arg1, final boolean arg2)
 	{
 		return false;
 	}
-
+	
 	@Override
-	public boolean isSelectionAllowed(Widget widget, Point arg1, boolean arg2)
+	public boolean isSelectionAllowed(final Widget widget, final Point arg1, final boolean arg2)
 	{
-		return this.canvas.findObject(widget) != null;
+		return canvas.findObject(widget) != null;
 	}
-
+	
 	@Override
-	public void select(Widget widget, Point localLocation, boolean invertSelection)
+	public void select(final Widget widget, final Point localLocation, final boolean invertSelection)
 	{
 		super.select(widget, localLocation, invertSelection);
-		final Object object = this.canvas.findObject(widget);
-		this.canvas.setFocusedObject(object);
+		final Object object = canvas.findObject(widget);
+		canvas.setFocusedObject(object);
 		if (object != null)
 		{
-			if (!invertSelection && this.canvas.getSelectedObjects().contains(object))
-			{
-				return;
-			}
-			this.canvas.userSelectionSuggested(Collections.singleton(object), invertSelection);
+			if (!invertSelection && canvas.getSelectedObjects().contains(object)) { return; }
+			canvas.userSelectionSuggested(Collections.singleton(object), invertSelection);
 		}
 		else
 		{
-			this.canvas.userSelectionSuggested(Collections.emptySet(), invertSelection);
+			canvas.userSelectionSuggested(Collections.emptySet(), invertSelection);
 		}
-		for (final Object o : this.canvas.getLabels())
+		for (final Object o : canvas.getLabels())
 		{
-			final LabelWidget lw = (LabelWidget) this.canvas.findWidget(o);
+			final LabelWidget lw = (LabelWidget) canvas.findWidget(o);
 			lw.setBorder(BorderFactory.createEmptyBorder());
 		}
-		for (final Object o : this.canvas.getNodes())
+		for (final Object o : canvas.getNodes())
 		{
-			final Widget lw = (Widget) this.canvas.findWidget(o);
+			final Widget lw = canvas.findWidget(o);
 			lw.setBackground(Color.WHITE);
 			lw.setForeground(Color.BLACK);
 		}
-		for (final Object o : this.canvas.getSelectedObjects())
+		for (final Object o : canvas.getSelectedObjects())
 		{
-			if (this.canvas.isLabel(o))
+			if (canvas.isLabel(o))
 			{
-				final LabelWidget lw = (LabelWidget) this.canvas.findWidget(o);
+				final LabelWidget lw = (LabelWidget) canvas.findWidget(o);
 				lw.setForeground(Color.BLUE);
-				((LabelWidget) this.canvas.findWidget(o)).setBorder(BorderFactory.createLineBorder(1, Color.BLUE));
+				((LabelWidget) canvas.findWidget(o)).setBorder(BorderFactory.createLineBorder(1, Color.BLUE));
 			}
 		}
 	}
-
+	
 }

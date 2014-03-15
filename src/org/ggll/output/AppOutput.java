@@ -6,69 +6,69 @@ public abstract class AppOutput
 	{
 		GeneratedGrammar.getInstance().clear();
 	}
-
+	
 	public static void clearStacks()
 	{
 		SyntaxStack.getInstance().clearStack();
 		SemanticStack.getInstance().clearStack();
 	}
-
-	static public void displayGeneratedGrammar(String str)
+	
+	static public void displayGeneratedGrammar(final String str)
 	{
 		GeneratedGrammar.getInstance().displayTextExt(str, Output.TOPIC.Grammar);
 	}
-
-	static public void displayHorizontalLine(Output.TOPIC topic)
+	
+	static public void displayHorizontalLine(final Output.TOPIC topic)
 	{
 		Output.getInstance().displayHorizontalLineExt(topic);
 	}
-
-	static public void displayText(String str, Output.TOPIC topic)
+	
+	static public void displayText(final String str, final Output.TOPIC topic)
 	{
 		Output.getInstance().displayTextExt(str, topic);
 	}
-
-	static public void printlnSemanticStack(String str)
+	
+	static public void printlnSemanticStack(final String str)
 	{
-		printSemanticStack(str, false);
+		AppOutput.printSemanticStack(str, false);
 	}
-
-	static public void printlnSemanticStack(String str, boolean showLine)
-	{
-		SemanticStack.getInstance().displayTextExt(str, showLine);
-	}
-
-	static public void printlnSyntaxStack(String str)
-	{
-		printSyntaxStack(str, false);
-	}
-
-	static public void printlnSyntaxStack(String str, boolean showLine)
-	{
-		printSyntaxStack(str, showLine);
-	}
-
-	static public void printSemanticStack(String str)
-	{
-		printSemanticStack(str, false);
-	}
-
-	static public void printSemanticStack(String str, boolean showLine)
+	
+	static public void printlnSemanticStack(final String str, final boolean showLine)
 	{
 		SemanticStack.getInstance().displayTextExt(str, showLine);
 	}
-
-	static public void printSyntaxStack(String str)
+	
+	static public void printlnSyntaxStack(final String str)
 	{
-		printSyntaxStack(str, false);
+		AppOutput.printSyntaxStack(str, false);
 	}
-
-	static public void printSyntaxStack(String str, boolean showLine)
+	
+	static public void printlnSyntaxStack(final String str, final boolean showLine)
+	{
+		AppOutput.printSyntaxStack(str, showLine);
+	}
+	
+	static public void printSemanticStack(final String str)
+	{
+		AppOutput.printSemanticStack(str, false);
+	}
+	
+	static public void printSemanticStack(final String str, final boolean showLine)
+	{
+		SemanticStack.getInstance().displayTextExt(str, showLine);
+	}
+	
+	static public void printSyntaxStack(final String str)
+	{
+		AppOutput.printSyntaxStack(str, false);
+	}
+	
+	static public void printSyntaxStack(final String str, final boolean showLine)
 	{
 		SyntaxStack.getInstance().displayTextExt(str, showLine);
 	}
-
-	public static void showAndSelectNode(String flag)
+	
+	public static void showAndSelectNode(final String flag)
 	{
 		Output.getInstance().getActiveScene().select(flag);
 	}

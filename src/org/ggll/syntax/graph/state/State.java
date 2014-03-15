@@ -22,24 +22,8 @@ import org.ggll.syntax.graph.SyntaxGraphRepository;
 public class State implements Serializable, PropertyChangeListener
 {
 	private static final long serialVersionUID = -7729464439313780001L;
-	private final HashMap<String, StateConnection> connections = new HashMap<String, StateConnection>();
-	private final HashMap<String, StateNode> nodes = new HashMap<String, StateNode>();
-	private final StatePreferences preferences = new StatePreferences();
-
-	private int lastTerminalId = 0;
-	private int lastNTerminalId = 0;
-	private int lastLeftSides = 0;
-	private int lastLAMBDA = 0;
-	private int lastSTART = 0;
-	private int lastCustomNode = 0;
-	private String file;
-
-	private State(String file)
-	{
-		this.file = file;
-	}
-
-	public static State read(String file) throws IOException, ClassNotFoundException
+	
+	public static State read(final String file) throws IOException, ClassNotFoundException
 	{
 		State canvasState = null;
 		if (file.length() > 0)
@@ -59,41 +43,53 @@ public class State implements Serializable, PropertyChangeListener
 		}
 		return canvasState;
 	}
-
-	public void addConnection(String object, SyntaxGraph canvas)
+	
+	private final HashMap<String, StateConnection> connections = new HashMap<String, StateConnection>();
+	private final HashMap<String, StateNode> nodes = new HashMap<String, StateNode>();
+	
+	private final StatePreferences preferences = new StatePreferences();
+	private int lastTerminalId = 0;
+	private int lastNTerminalId = 0;
+	private int lastLeftSides = 0;
+	private int lastLAMBDA = 0;
+	private int lastSTART = 0;
+	private int lastCustomNode = 0;
+	
+	private String file;
+	
+	private State(final String file)
+	{
+		this.file = file;
+	}
+	
+	public void addConnection(final String object, final SyntaxGraph canvas)
 	{
 		final StateConnection connection = new StateConnection(object, canvas);
-		this.connections.put(connection.getId(), connection);
+		connections.put(connection.getId(), connection);
 	}
-
-	public void addNode(String object, SyntaxGraph canvas)
+	
+	public void addNode(final String object, final SyntaxGraph canvas)
 	{
 		final StateNode node = new StateNode(object, canvas);
-		this.nodes.put(node.getId(), node);
+		nodes.put(node.getId(), node);
 	}
-
-	public StateConnection findConnection(Object conn)
+	
+	public StateConnection findConnection(final Object conn)
 	{
-		if (this.connections.containsKey(conn))
-		{
-			return this.connections.get(conn);
-		}
+		if (connections.containsKey(conn)) { return connections.get(conn); }
 		return null;
 	}
-
-	public StateNode findNode(String node)
+	
+	public StateNode findNode(final String node)
 	{
-		if (this.nodes.containsKey(node))
-		{
-			return this.nodes.get(node);
-		}
+		if (nodes.containsKey(node)) { return nodes.get(node); }
 		return null;
 	}
-
+	
 	public ExtendedList<StateConnection> getAlternatives()
 	{
 		final ExtendedList<StateConnection> alternative = new ExtendedList<StateConnection>();
-		for (final StateConnection edge : this.connections.values())
+		for (final StateConnection edge : connections.values())
 		{
 			if (edge.getType().equals(CanvasResource.ALTERNATIVE))
 			{
@@ -102,24 +98,24 @@ public class State implements Serializable, PropertyChangeListener
 		}
 		return alternative;
 	}
-
+	
 	public List<String> getConnections()
 	{
 		final ExtendedList<String> list = new ExtendedList<String>();
-		list.addAll(this.connections.keySet());
+		list.addAll(connections.keySet());
 		Collections.sort(list.getAll());
 		return list.getAll();
 	}
-
+	
 	public String getFile()
 	{
-		return this.file;
+		return file;
 	}
-
+	
 	public ExtendedList<StateNode> getLambda()
 	{
 		final ExtendedList<StateNode> leftSides = new ExtendedList<StateNode>();
-		for (final StateNode node : this.nodes.values())
+		for (final StateNode node : nodes.values())
 		{
 			if (node.getType().equals(CanvasResource.LAMBDA))
 			{
@@ -128,41 +124,41 @@ public class State implements Serializable, PropertyChangeListener
 		}
 		return leftSides;
 	}
-
+	
 	public int getLastCustomNode()
 	{
-		return this.lastCustomNode;
+		return lastCustomNode;
 	}
-
+	
 	public int getLastLAMBDA()
 	{
-		return this.lastLAMBDA;
+		return lastLAMBDA;
 	}
-
+	
 	public int getLastLeftSides()
 	{
-		return this.lastLeftSides;
+		return lastLeftSides;
 	}
-
+	
 	public int getLastNTerminalId()
 	{
-		return this.lastNTerminalId;
+		return lastNTerminalId;
 	}
-
+	
 	public int getLastSTART()
 	{
-		return this.lastSTART;
+		return lastSTART;
 	}
 	
 	public int getLastTerminalId()
 	{
-		return this.lastTerminalId;
+		return lastTerminalId;
 	}
 	
 	public ExtendedList<StateNode> getLeftSide()
 	{
 		final ExtendedList<StateNode> leftSides = new ExtendedList<StateNode>();
-		for (final StateNode node : this.nodes.values())
+		for (final StateNode node : nodes.values())
 		{
 			if (node.getType().equals(CanvasResource.LEFT_SIDE))
 			{
@@ -174,14 +170,13 @@ public class State implements Serializable, PropertyChangeListener
 	
 	public Set<String> getNodes()
 	{
-		return this.nodes.keySet();
+		return nodes.keySet();
 	}
-	
 	
 	public ExtendedList<StateNode> getNTerminal()
 	{
 		final ExtendedList<StateNode> nTerminals = new ExtendedList<StateNode>();
-		for (final StateNode node : this.nodes.values())
+		for (final StateNode node : nodes.values())
 		{
 			if (node.getType().equals(CanvasResource.N_TERMINAL))
 			{
@@ -190,16 +185,16 @@ public class State implements Serializable, PropertyChangeListener
 		}
 		return nTerminals;
 	}
-
+	
 	public StatePreferences getPreferences()
 	{
-		return this.preferences;
+		return preferences;
 	}
-
+	
 	public ExtendedList<StateNode> getStarts()
 	{
 		final ExtendedList<StateNode> starts = new ExtendedList<StateNode>();
-		for (final StateNode node : this.nodes.values())
+		for (final StateNode node : nodes.values())
 		{
 			if (node.getType().equals(CanvasResource.START))
 			{
@@ -208,16 +203,16 @@ public class State implements Serializable, PropertyChangeListener
 		}
 		return starts;
 	}
-
+	
 	public ExtendedList<StateNode> getStateNodes()
 	{
 		return new ExtendedList<StateNode>(nodes.values());
 	}
-
+	
 	public ExtendedList<StateConnection> getSucessors()
 	{
 		final ExtendedList<StateConnection> sucessors = new ExtendedList<StateConnection>();
-		for (final StateConnection edge : this.connections.values())
+		for (final StateConnection edge : connections.values())
 		{
 			if (edge.getType().equals(CanvasResource.SUCCESSOR))
 			{
@@ -230,7 +225,7 @@ public class State implements Serializable, PropertyChangeListener
 	public ExtendedList<StateNode> getTerminal()
 	{
 		final ExtendedList<StateNode> terminals = new ExtendedList<StateNode>();
-		for (final StateNode node : this.nodes.values())
+		for (final StateNode node : nodes.values())
 		{
 			if (node.getType().equals(CanvasResource.TERMINAL))
 			{
@@ -239,67 +234,61 @@ public class State implements Serializable, PropertyChangeListener
 		}
 		return terminals;
 	}
-
-	public String getType(Object obj)
+	
+	public String getType(final Object obj)
 	{
-		if (this.nodes.containsKey(obj))
-		{
-			return this.nodes.get(obj).getType();
-		}
-		if (this.connections.containsKey(obj))
-		{
-			return this.connections.get(obj).getType();
-		}
+		if (nodes.containsKey(obj)) { return nodes.get(obj).getType(); }
+		if (connections.containsKey(obj)) { return connections.get(obj).getType(); }
 		return null;
 	}
-
+	
 	public void incLastCustomNode()
 	{
-		this.lastCustomNode++;
+		lastCustomNode++;
 	}
-
+	
 	public void incLastLAMBDA()
 	{
-		this.lastLAMBDA++;
+		lastLAMBDA++;
 	}
-
+	
 	public void incLastLeftSides()
 	{
-		this.lastLeftSides++;
+		lastLeftSides++;
 	}
-
+	
 	public void incLastNTerminalId()
 	{
-		this.lastNTerminalId++;
+		lastNTerminalId++;
 	}
-
+	
 	public void incLastSTART()
 	{
-		this.lastSTART++;
+		lastSTART++;
 	}
-
+	
 	public void incLastTerminalId()
 	{
-		this.lastTerminalId++;
+		lastTerminalId++;
 	}
-
+	
 	@Override
-	public void propertyChange(PropertyChangeEvent evt)
+	public void propertyChange(final PropertyChangeEvent evt)
 	{
 		if (evt.getPropertyName().equals("writing"))
 		{
-			final SyntaxGraph canvas = SyntaxGraphRepository.getInstance(this.file);
+			final SyntaxGraph canvas = SyntaxGraphRepository.getInstance(file);
 			if (canvas != null)
 			{
 				refresh(canvas);
 			}
 		}
 	}
-
-	public void refresh(SyntaxGraph canvas)
+	
+	public void refresh(final SyntaxGraph canvas)
 	{
-		this.nodes.clear();
-		this.connections.clear();
+		nodes.clear();
+		connections.clear();
 		for (final String object : canvas.getNodes())
 		{
 			addNode(object, canvas);
@@ -309,16 +298,16 @@ public class State implements Serializable, PropertyChangeListener
 			addConnection(object, canvas);
 		}
 	}
-
-	public void setFile(String file)
+	
+	public void setFile(final String file)
 	{
 		this.file = file;
 	}
-
+	
 	public void write() throws IOException
 	{
 		propertyChange(new PropertyChangeEvent(this, "writing", null, this));
-		final FileOutputStream fileOutputStream = new FileOutputStream(this.file);
+		final FileOutputStream fileOutputStream = new FileOutputStream(file);
 		final ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
 		objectOutputStream.writeObject(this);
 		objectOutputStream.close();

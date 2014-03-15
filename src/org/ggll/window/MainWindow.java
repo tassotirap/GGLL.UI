@@ -32,7 +32,7 @@ import net.infonode.docking.util.MixedViewHandler;
 import net.infonode.docking.util.ViewMap;
 import net.infonode.util.Direction;
 
-import org.ggll.director.GGLLDirector;
+import org.ggll.facade.GGLLFacade;
 import org.ggll.file.GrammarFile;
 import org.ggll.images.IconView;
 import org.ggll.output.GeneratedGrammar;
@@ -65,117 +65,215 @@ import org.ggll.window.view.ViewRepository;
  */
 public class MainWindow implements ComponentListener
 {
-
+	
 	public final static String DEFAULT_NAME = "GGLL Window";
 	public final static String DEFAULT_TITLE = "GGLL";
 	public final static String UNSAVED_PREFIX = "* ";
 	public final static Icon VIEW_ICON = new IconView();
-
+	
 	private final ViewMap perspectiveMap = new ViewMap();
 	private RootWindowProperties rootWindowProperties;
-
+	
 	private AbstractView emptyDynamicView = null;
 	private JMenuBar currentMenuBar;
 	private JComponent currentToolBar;
 	private TabWindowList tabWindow;
-
+	
 	private JFrame frame;
-
+	
 	private RootWindow rootWindow;
 	private MenuFactory menuBarFactory;
 	private ToolBarFactory toolBarFactory;
 	private ViewRepository viewRepository;
-
+	
 	public MainWindow()
 	{
 	}
-
+	
+	public AbstractView addComponent(final AbstractComponent componentModel, final String title, final String fileName, final Icon icon, final TabPlace place)
+	{
+		if (componentModel != null)
+		{
+			final AbstractView view = new AbstractView(title, icon, componentModel, fileName, 2);
+			if (componentModel instanceof GrammarComponent)
+			{
+				GGLLFacade.getInstance().setActiveSyntaxGraph(SyntaxGraphRepository.getInstance(fileName));
+			}
+			
+			componentModel.addComponentListener(this);
+			getTabWindowList().getTabWindow(place).addTab(view);
+			updateFocusedComponent(componentModel);
+			
+			return view;
+		}
+		return null;
+	}
+	
+	public void addEmptyDynamicView()
+	{
+		final EmptyComponent emptyComponent = new EmptyComponent();
+		emptyDynamicView = addComponent(emptyComponent, "Empty Page", null, MainWindow.VIEW_ICON, TabPlace.CENTER_LEFT_TABS);
+	}
+	
+	protected void addMenuBar(final JMenuBar menuBar, final boolean replace, final boolean repaint)
+	{
+		if (currentMenuBar != null)
+		{
+			frame.setMenuBar(null);
+		}
+		currentMenuBar = menuBar;
+		frame.setJMenuBar(menuBar);
+		if (repaint)
+		{
+			frame.validate();
+			frame.repaint();
+		}
+	}
+	
+	protected void addToolBar(final JComponent toolBar, final boolean replace, final boolean repaint)
+	{
+		if (replace && currentToolBar != null)
+		{
+			frame.getContentPane().remove(currentToolBar);
+		}
+		currentToolBar = toolBar;
+		frame.getContentPane().add(toolBar, BorderLayout.NORTH);
+		if (repaint)
+		{
+			frame.validate();
+			frame.repaint();
+		}
+	}
+	
+	@Override
+	public void ContentChanged(final AbstractComponent source)
+	{
+		if (viewRepository.containsView(source))
+		{
+			final AbstractView view = viewRepository.getView(source);
+			if (!view.getTitle().startsWith(MainWindow.UNSAVED_PREFIX))
+			{
+				view.getViewProperties().setTitle(MainWindow.UNSAVED_PREFIX + view.getTitle());
+			}
+			GGLLFacade.getInstance().setUnsavedView(((AbstractFileComponent) source).getPath(), view);
+		}
+	}
+	
 	private void createDefaultViews()
 	{
-		final GrammarFile grammarFile = GGLLDirector.getProject().getGrammarFile().get(0);
-		GGLLDirector.setActiveSyntaxGraph(SyntaxGraphRepository.getInstance(grammarFile.getAbsolutePath()));
-		this.viewRepository.createDefaultViews();
+		final GrammarFile grammarFile = GGLLFacade.getInstance().getGrammarFile().get(0);
+		GGLLFacade.getInstance().setActiveSyntaxGraph(SyntaxGraphRepository.getInstance(grammarFile.getAbsolutePath()));
+		viewRepository.createDefaultViews();
 	}
-
-	private void createDynamicViewMenu(View view)
+	
+	private void createDynamicViewMenu(final View view)
 	{
 		final MenuModel model = new MenuModel();
 		if (((AbstractView) view).getTitle().equals("Parser"))
 		{
 			final ParserComponent parserComponent = (ParserComponent) ((AbstractView) view).getComponentModel();
-			addToolBar(this.toolBarFactory.createToolBar(parserComponent.getTextArea(), true, false), true, true);
-			addMenuBar(this.menuBarFactory.createMenuBar(parserComponent.getTextArea(), model), true, true);
+			addToolBar(toolBarFactory.createToolBar(parserComponent.getTextArea(), true, false), true, true);
+			addMenuBar(menuBarFactory.createMenuBar(parserComponent.getTextArea(), model), true, true);
 		}
 		else
 		{
-			addToolBar(this.toolBarFactory.createToolBar(null, false, false), true, true);
-			addMenuBar(this.menuBarFactory.createMenuBar(null, model), true, true);
+			addToolBar(toolBarFactory.createToolBar(null, false, false), true, true);
+			addMenuBar(menuBarFactory.createMenuBar(null, model), true, true);
 		}
 	}
-
+	
 	private void createRootWindow()
 	{
-
-		final MixedViewHandler handler = new MixedViewHandler(this.perspectiveMap, new ViewSerializer()
+		
+		final MixedViewHandler handler = new MixedViewHandler(perspectiveMap, new ViewSerializer()
 		{
 			@Override
-			public View readView(ObjectInputStream in) throws IOException
+			public View readView(final ObjectInputStream in) throws IOException
 			{
-				return MainWindow.this.viewRepository.getView(in.readInt());
+				return viewRepository.getView(in.readInt());
 			}
-
+			
 			@Override
-			public void writeView(View view, ObjectOutputStream out) throws IOException
+			public void writeView(final View view, final ObjectOutputStream out) throws IOException
 			{
 				out.writeInt(((AbstractView) view).getId());
 			}
 		});
-
-		this.rootWindowProperties.addSuperObject(new DefaultDockingTheme().getRootWindowProperties());
-		this.rootWindow = DockingUtil.createRootWindow(this.perspectiveMap, handler, true);
-		this.rootWindow.getRootWindowProperties().addSuperObject(this.rootWindowProperties);
-		this.rootWindow.getWindowBar(Direction.DOWN).setEnabled(true);
-		this.rootWindow.addListener(new WindowAdapter());
-		this.rootWindow.addTabMouseButtonListener(DockingWindowActionMouseButtonListener.MIDDLE_BUTTON_CLOSE_LISTENER);
+		
+		rootWindowProperties.addSuperObject(new DefaultDockingTheme().getRootWindowProperties());
+		rootWindow = DockingUtil.createRootWindow(perspectiveMap, handler, true);
+		rootWindow.getRootWindowProperties().addSuperObject(rootWindowProperties);
+		rootWindow.getWindowBar(Direction.DOWN).setEnabled(true);
+		rootWindow.addListener(new WindowAdapter());
+		rootWindow.addTabMouseButtonListener(DockingWindowActionMouseButtonListener.MIDDLE_BUTTON_CLOSE_LISTENER);
 	}
-
+	
+	public JFrame getFrame()
+	{
+		return frame;
+	}
+	
+	public ViewMap getPerspectiveMap()
+	{
+		return perspectiveMap;
+	}
+	
+	public TabWindowList getTabs()
+	{
+		return tabWindow;
+	}
+	
+	public TabWindowList getTabWindowList()
+	{
+		return tabWindow;
+	}
+	
 	private void init()
 	{
-		init(DEFAULT_TITLE);
+		init(MainWindow.DEFAULT_TITLE);
 	}
-
-	private void init(String title)
+	
+	private void init(final String title)
 	{
-		this.frame = new JFrame(title);
-		this.frame.setName(DEFAULT_NAME);
-		this.frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-
-		this.tabWindow = new TabWindowList();
-		this.viewRepository = new ViewRepository(this.perspectiveMap);
+		frame = new JFrame(title);
+		frame.setName(MainWindow.DEFAULT_NAME);
+		frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+		
+		tabWindow = new TabWindowList();
+		viewRepository = new ViewRepository(perspectiveMap);
 	}
-
+	
 	private void openFiles()
 	{
-		final List<File> filesToOpen = GGLLDirector.getOpenedFiles().getAll();
+		final List<File> filesToOpen = GGLLFacade.getInstance().getOpenedFiles().getAll();
 		for (int i = 0; i < filesToOpen.size(); i++)
 		{
-			GGLLDirector.openFile(filesToOpen.get(i).getAbsolutePath(), false);
+			GGLLFacade.getInstance().openFile(filesToOpen.get(i).getAbsolutePath(), false);
 		}
 	}
-
+	
+	public void removeEmptyDynamicView()
+	{
+		if (emptyDynamicView != null)
+		{
+			emptyDynamicView.close();
+			emptyDynamicView = null;
+		}
+	}
+	
 	private void setDefaultLayout()
 	{
-		for (final TabWindow tab : this.viewRepository.getTabWindowList().getAll())
+		for (final TabWindow tab : viewRepository.getTabWindowList().getAll())
 		{
 			tab.getTabWindowProperties().getCloseButtonProperties().setVisible(false);
-			this.tabWindow.add(tab);
+			tabWindow.add(tab);
 		}
 		final SplitWindow mainRigth = new SplitWindow(false, 0.60f, getTabWindowList().getCenterRightTopTab(), getTabWindowList().getCenterRightBottomTab());
 		final SplitWindow mainCenter = new SplitWindow(true, 0.70f, getTabWindowList().getCenterLeftTab(), mainRigth);
 		final SplitWindow mainSplit = new SplitWindow(false, 0.75f, mainCenter, getTabWindowList().getBottonTab());
-		this.rootWindow.setWindow(mainSplit);
+		rootWindow.setWindow(mainSplit);
 	}
-
+	
 	private void setLookAndFeel()
 	{
 		try
@@ -187,153 +285,55 @@ public class MainWindow implements ComponentListener
 			e.printStackTrace();
 		}
 	}
-
-	protected void addMenuBar(JMenuBar menuBar, boolean replace, boolean repaint)
+	
+	public void setSaved(final String path)
 	{
-		if (this.currentMenuBar != null)
+		if (viewRepository.containsView(path))
 		{
-			this.frame.setMenuBar(null);
-		}
-		this.currentMenuBar = menuBar;
-		this.frame.setJMenuBar(menuBar);
-		if (repaint)
-		{
-			this.frame.validate();
-			this.frame.repaint();
+			final AbstractView dynamicView = viewRepository.getView(path);
+			
+			if (GGLLFacade.getInstance().hasUnsavedView(dynamicView))
+			{
+				if (dynamicView.getTitle().startsWith(MainWindow.UNSAVED_PREFIX))
+				{
+					dynamicView.getViewProperties().setTitle(dynamicView.getTitle().replace(MainWindow.UNSAVED_PREFIX, ""));
+				}
+			}
+			
+			while (GGLLFacade.getInstance().hasUnsavedView(dynamicView))
+			{
+				GGLLFacade.getInstance().removeUnsavedView(path);
+			}
 		}
 	}
-
-	protected void addToolBar(JComponent toolBar, boolean replace, boolean repaint)
-	{
-		if (replace && this.currentToolBar != null)
-		{
-			this.frame.getContentPane().remove(this.currentToolBar);
-		}
-		this.currentToolBar = toolBar;
-		this.frame.getContentPane().add(toolBar, BorderLayout.NORTH);
-		if (repaint)
-		{
-			this.frame.validate();
-			this.frame.repaint();
-		}
-	}
-
+	
 	protected void showFrame()
 	{
 		init();
 		setLookAndFeel();
-		this.menuBarFactory = new MenuFactory();
-		this.toolBarFactory = new ToolBarFactory();
-		this.rootWindowProperties = new RootWindowProperties();
-
+		menuBarFactory = new MenuFactory();
+		toolBarFactory = new ToolBarFactory();
+		rootWindowProperties = new RootWindowProperties();
+		
 		createRootWindow();
 		createDefaultViews();
 		setDefaultLayout();
 		openFiles();
-
-		this.frame.getContentPane().add(this.rootWindow, BorderLayout.CENTER);
-		this.frame.setSize(1024, 768);
-		this.frame.setExtendedState(this.frame.getExtendedState() | Frame.MAXIMIZED_BOTH);
+		
+		frame.getContentPane().add(rootWindow, BorderLayout.CENTER);
+		frame.setSize(1024, 768);
+		frame.setExtendedState(frame.getExtendedState() | Frame.MAXIMIZED_BOTH);
 		final Dimension screenDim = Toolkit.getDefaultToolkit().getScreenSize();
-		this.frame.setLocation((screenDim.width - this.frame.getWidth()) / 2, (screenDim.height - this.frame.getHeight()) / 2);
-		this.frame.setVisible(true);
-		this.frame.addWindowListener(new WindowClosingAdapter());
+		frame.setLocation((screenDim.width - frame.getWidth()) / 2, (screenDim.height - frame.getHeight()) / 2);
+		frame.setVisible(true);
+		frame.addWindowListener(new WindowClosingAdapter());
 	}
-
-	public AbstractView addComponent(AbstractComponent componentModel, String title, String fileName, Icon icon, TabPlace place)
-	{
-		if (componentModel != null)
-		{
-			final AbstractView view = new AbstractView(title, icon, componentModel, fileName, 2);
-			if (componentModel instanceof GrammarComponent)
-			{
-				GGLLDirector.setActiveSyntaxGraph(SyntaxGraphRepository.getInstance(fileName));
-			}
-
-			componentModel.addComponentListener(this);
-			getTabWindowList().getTabWindow(place).addTab(view);
-			updateFocusedComponent(componentModel);
-
-			return view;
-		}
-		return null;
-	}
-
-	public void addEmptyDynamicView()
-	{
-		final EmptyComponent emptyComponent = new EmptyComponent();
-		this.emptyDynamicView = addComponent(emptyComponent, "Empty Page", null, VIEW_ICON, TabPlace.CENTER_LEFT_TABS);
-	}
-
-	@Override
-	public void ContentChanged(AbstractComponent source)
-	{
-		if (this.viewRepository.containsView(source))
-		{
-			final AbstractView view = this.viewRepository.getView(source);
-			if (!view.getTitle().startsWith(UNSAVED_PREFIX))
-			{
-				view.getViewProperties().setTitle(UNSAVED_PREFIX + view.getTitle());
-			}
-			GGLLDirector.setUnsavedView(((AbstractFileComponent) source).getPath(), view);
-		}
-	}
-
-	public JFrame getFrame()
-	{
-		return this.frame;
-	}
-
-	public ViewMap getPerspectiveMap()
-	{
-		return this.perspectiveMap;
-	}
-
-	public TabWindowList getTabs()
-	{
-		return this.tabWindow;
-	}
-
-	public TabWindowList getTabWindowList()
-	{
-		return this.tabWindow;
-	}
-
-	public void removeEmptyDynamicView()
-	{
-		if (this.emptyDynamicView != null)
-		{
-			this.emptyDynamicView.close();
-			this.emptyDynamicView = null;
-		}
-	}
-
-	public void setSaved(String path)
-	{
-		if (this.viewRepository.containsView(path))
-		{
-			final AbstractView dynamicView = this.viewRepository.getView(path);
-
-			if (GGLLDirector.hasUnsavedView(dynamicView))
-			{
-				if (dynamicView.getTitle().startsWith(UNSAVED_PREFIX))
-				{
-					dynamicView.getViewProperties().setTitle(dynamicView.getTitle().replace(UNSAVED_PREFIX, ""));
-				}
-			}
-
-			while (GGLLDirector.hasUnsavedView(dynamicView))
-			{
-				GGLLDirector.removeUnsavedView(path);
-			}
-		}
-	}
-
-	public void updateFocusedComponent(AbstractComponent component)
+	
+	public void updateFocusedComponent(final AbstractComponent component)
 	{
 		if (component == null)
 		{
-			final View view = this.rootWindow.getFocusedView();
+			final View view = rootWindow.getFocusedView();
 			if (view instanceof AbstractView)
 			{
 				createDynamicViewMenu(view);
@@ -341,8 +341,8 @@ public class MainWindow implements ComponentListener
 			else
 			{
 				final MenuModel model = new MenuModel();
-				addToolBar(this.toolBarFactory.createToolBar(null, false, false), true, true);
-				addMenuBar(this.menuBarFactory.createMenuBar(null, model), true, true);
+				addToolBar(toolBarFactory.createToolBar(null, false, false), true, true);
+				addMenuBar(menuBarFactory.createMenuBar(null, model), true, true);
 			}
 			return;
 		}
@@ -362,8 +362,8 @@ public class MainWindow implements ComponentListener
 			if (component instanceof TextAreaComponent)
 			{
 				final TextAreaComponent textArea = (TextAreaComponent) component;
-				addToolBar(this.toolBarFactory.createToolBar(textArea, true, false), true, true);
-				addMenuBar(this.menuBarFactory.createMenuBar(textArea, model), true, true);
+				addToolBar(toolBarFactory.createToolBar(textArea, true, false), true, true);
+				addMenuBar(menuBarFactory.createMenuBar(textArea, model), true, true);
 			}
 			else
 			{
@@ -371,25 +371,25 @@ public class MainWindow implements ComponentListener
 				{
 					final GrammarComponent grammarComponent = (GrammarComponent) component;
 					final SyntaxGraph canvas = grammarComponent.getCanvas();
-
-					GGLLDirector.setActiveSyntaxGraph(canvas);
+					
+					GGLLFacade.getInstance().setActiveSyntaxGraph(canvas);
 					Output.getInstance().setActiveScene(canvas);
 					SemanticStack.getInstance().setActiveScene(canvas);
 					SyntaxStack.getInstance().setActiveScene(canvas);
 					SyntaxTopComponent.getInstance().setCanvas(canvas);
 					GeneratedGrammar.getInstance().setActiveScene(canvas);
-
+					
 					model.setZoomIn(true);
 					model.setZoomOut(true);
-					addToolBar(this.toolBarFactory.createToolBar(grammarComponent, true, true), true, true);
-					addMenuBar(this.menuBarFactory.createMenuBar(grammarComponent, model), true, true);
+					addToolBar(toolBarFactory.createToolBar(grammarComponent, true, true), true, true);
+					addMenuBar(menuBarFactory.createMenuBar(grammarComponent, model), true, true);
 				}
 			}
 		}
 	}
-
-	public void updateWindow(DockingWindow window, boolean added)
+	
+	public void updateWindow(final DockingWindow window, final boolean added)
 	{
-		this.viewRepository.updateViews(window, added);
+		viewRepository.updateViews(window, added);
 	}
 }

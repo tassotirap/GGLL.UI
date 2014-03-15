@@ -27,43 +27,43 @@ public class TextAreaComponent extends AbstractFileComponent implements Hyperlin
 {
 	private final RSyntaxTextArea textArea;
 	private String path;
-
+	
 	public TextAreaComponent()
 	{
-		this.textArea = createTextArea();
-		this.textArea.setSyntaxEditingStyle(SYNTAX_STYLE_JAVA);
+		textArea = createTextArea();
+		textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVA);
 		SetTheme();
-		this.jComponent = new RTextScrollPane(this.textArea, true);
+		jComponent = new RTextScrollPane(textArea, true);
 	}
-
-	public TextAreaComponent(String path)
+	
+	public TextAreaComponent(final String path)
 	{
 		this();
 		this.path = path;
 		setText(path, true);
-		this.textArea.getDocument().addDocumentListener(new DocumentListener()
+		textArea.getDocument().addDocumentListener(new DocumentListener()
 		{
 			@Override
-			public void changedUpdate(DocumentEvent arg0)
+			public void changedUpdate(final DocumentEvent arg0)
 			{
 				fireContentChanged();
-
+				
 			}
-
+			
 			@Override
-			public void insertUpdate(DocumentEvent arg0)
+			public void insertUpdate(final DocumentEvent arg0)
 			{
 				fireContentChanged();
 			}
-
+			
 			@Override
-			public void removeUpdate(DocumentEvent arg0)
+			public void removeUpdate(final DocumentEvent arg0)
 			{
 				fireContentChanged();
 			}
 		});
 	}
-
+	
 	private RSyntaxTextArea createTextArea()
 	{
 		final RSyntaxTextArea textArea = new RSyntaxTextArea(25, 70);
@@ -76,48 +76,34 @@ public class TextAreaComponent extends AbstractFileComponent implements Hyperlin
 		textArea.setClearWhitespaceLinesEnabled(false);
 		return textArea;
 	}
-
-	private void SetTheme()
-	{
-		final InputStream in = getClass().getResourceAsStream("/eclipse.xml");
-		try
-		{
-			final Theme theme = Theme.load(in);
-			theme.apply(this.textArea);
-		}
-		catch (final IOException ioe)
-		{
-			ioe.printStackTrace();
-		}
-	}
-
+	
 	@Override
 	public void fireContentChanged()
 	{
-		for (final ComponentListener listener : this.listeners.getAll())
+		for (final ComponentListener listener : listeners.getAll())
 		{
 			listener.ContentChanged(this);
 		}
 	}
-
+	
 	@Override
 	public String getPath()
 	{
-		return this.path;
+		return path;
 	}
-
+	
 	public String getText()
 	{
-		return this.textArea.getText();
+		return textArea.getText();
 	}
-
+	
 	public JTextArea getTextArea()
 	{
-		return this.textArea;
+		return textArea;
 	}
-
+	
 	@Override
-	public void hyperlinkUpdate(HyperlinkEvent e)
+	public void hyperlinkUpdate(final HyperlinkEvent e)
 	{
 		if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED)
 		{
@@ -128,29 +114,29 @@ public class TextAreaComponent extends AbstractFileComponent implements Hyperlin
 			}
 			else
 			{
-				JOptionPane.showMessageDialog(this.textArea, "URL clicked:\n" + url.toString());
+				JOptionPane.showMessageDialog(textArea, "URL clicked:\n" + url.toString());
 			}
 		}
 	}
-
+	
 	@Override
 	public String saveFile()
 	{
-		final File file = new File(this.path);
+		final File file = new File(path);
 		try
 		{
 			final FileWriter fw = new FileWriter(file);
-			fw.write(this.textArea.getText());
+			fw.write(textArea.getText());
 			fw.close();
 		}
 		catch (final IOException e)
 		{
-			Log.log(Log.ERROR, null, "Could not save file!", e);
+			Log.Write("Could not save file!");
 		}
 		return getPath();
 	}
-
-	public void setText(String resource, boolean file)
+	
+	public void setText(final String resource, final boolean file)
 	{
 		if (file)
 		{
@@ -158,10 +144,10 @@ public class TextAreaComponent extends AbstractFileComponent implements Hyperlin
 			try
 			{
 				r = new BufferedReader(new InputStreamReader(new FileInputStream(resource), "UTF-8"));
-				this.textArea.read(r, null);
+				textArea.read(r, null);
 				r.close();
-				this.textArea.setCaretPosition(0);
-				this.textArea.discardAllEdits();
+				textArea.setCaretPosition(0);
+				textArea.discardAllEdits();
 			}
 			catch (final RuntimeException re)
 			{
@@ -169,12 +155,26 @@ public class TextAreaComponent extends AbstractFileComponent implements Hyperlin
 			}
 			catch (final Exception e)
 			{
-				this.textArea.setText("Type here to see syntax highlighting");
+				textArea.setText("Type here to see syntax highlighting");
 			}
 		}
 		else
 		{
-			this.textArea.setText(resource);
+			textArea.setText(resource);
+		}
+	}
+	
+	private void SetTheme()
+	{
+		final InputStream in = getClass().getResourceAsStream("/eclipse.xml");
+		try
+		{
+			final Theme theme = Theme.load(in);
+			theme.apply(textArea);
+		}
+		catch (final IOException ioe)
+		{
+			ioe.printStackTrace();
 		}
 	}
 }

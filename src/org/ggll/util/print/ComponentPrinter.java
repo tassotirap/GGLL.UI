@@ -20,42 +20,43 @@ import org.netbeans.api.visual.widget.Widget;
  */
 public class ComponentPrinter implements Printable
 {
-
-	private Component componentToBePrinted;
-	private Widget widgetToBePrinted;
-
-	public ComponentPrinter(Component componentToBePrinted)
-	{
-		this.componentToBePrinted = componentToBePrinted;
-	}
-
-	public ComponentPrinter(Widget widgetToBePrinted)
-	{
-		this.widgetToBePrinted = widgetToBePrinted;
-	}
-
-	public static void disableDoubleBuffering(Component c)
+	
+	public static void disableDoubleBuffering(final Component c)
 	{
 		final RepaintManager currentManager = RepaintManager.currentManager(c);
 		currentManager.setDoubleBufferingEnabled(false);
 	}
-
-	public static void enableDoubleBuffering(Component c)
+	
+	public static void enableDoubleBuffering(final Component c)
 	{
 		final RepaintManager currentManager = RepaintManager.currentManager(c);
 		currentManager.setDoubleBufferingEnabled(true);
 	}
-
-	public static void printComponent(Component c)
+	
+	public static void printComponent(final Component c)
 	{
 		new ComponentPrinter(c).print();
 	}
-
-	public static void printWidget(Widget w)
+	
+	public static void printWidget(final Widget w)
 	{
 		new ComponentPrinter(w).print();
 	}
-
+	
+	private Component componentToBePrinted;
+	
+	private Widget widgetToBePrinted;
+	
+	public ComponentPrinter(final Component componentToBePrinted)
+	{
+		this.componentToBePrinted = componentToBePrinted;
+	}
+	
+	public ComponentPrinter(final Widget widgetToBePrinted)
+	{
+		this.widgetToBePrinted = widgetToBePrinted;
+	}
+	
 	public void print()
 	{
 		final PrinterJob printJob = PrinterJob.getPrinterJob();
@@ -72,29 +73,29 @@ public class ComponentPrinter implements Printable
 			}
 		}
 	}
-
+	
 	@Override
-	public int print(Graphics g, PageFormat pageFormat, int pageIndex)
+	public int print(final Graphics g, final PageFormat pageFormat, final int pageIndex)
 	{
 		if (pageIndex > 0)
 		{
-			return NO_SUCH_PAGE;
+			return Printable.NO_SUCH_PAGE;
 		}
 		else
 		{
 			final Graphics2D g2d = (Graphics2D) g;
 			g2d.translate(pageFormat.getImageableX(), pageFormat.getImageableY());
-			disableDoubleBuffering(this.componentToBePrinted);
-			if (this.componentToBePrinted != null)
+			ComponentPrinter.disableDoubleBuffering(componentToBePrinted);
+			if (componentToBePrinted != null)
 			{
-				this.componentToBePrinted.paint(g2d);
+				componentToBePrinted.paint(g2d);
 			}
-			else if (this.widgetToBePrinted != null)
+			else if (widgetToBePrinted != null)
 			{
-				this.widgetToBePrinted.getScene().paint(g2d);
+				widgetToBePrinted.getScene().paint(g2d);
 			}
-			enableDoubleBuffering(this.componentToBePrinted);
-			return PAGE_EXISTS;
+			ComponentPrinter.enableDoubleBuffering(componentToBePrinted);
+			return Printable.PAGE_EXISTS;
 		}
 	}
 }

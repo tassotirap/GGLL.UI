@@ -47,11 +47,6 @@ import org.ggll.util.Log;
  */
 public class IOHelper
 {
-	// {{{ IOUtilities() constructor
-	private IOHelper()
-	{
-	} // }}}
-
 	/**
 	 * Method that will close an {@link java.io.Closeable} ignoring it if it is
 	 * null and ignoring exceptions.
@@ -60,7 +55,7 @@ public class IOHelper
 	 *            the closeable to close.
 	 * @since jEdit 4.3pre8
 	 */
-	public static void closeQuietly(Closeable closeable)
+	public static void closeQuietly(final Closeable closeable)
 	{
 		if (closeable != null)
 		{
@@ -74,7 +69,7 @@ public class IOHelper
 			}
 		}
 	} // }}}
-
+	
 	// {{{ closeQuietly() methods
 	/**
 	 * Method that will close an {@link InputStream} ignoring it if it is null
@@ -83,7 +78,7 @@ public class IOHelper
 	 * @param in
 	 *            the InputStream to close.
 	 */
-	public static void closeQuietly(InputStream in)
+	public static void closeQuietly(final InputStream in)
 	{
 		if (in != null)
 		{
@@ -97,7 +92,7 @@ public class IOHelper
 			}
 		}
 	}
-
+	
 	/**
 	 * Method that will close an {@link OutputStream} ignoring it if it is null
 	 * and ignoring exceptions.
@@ -105,7 +100,7 @@ public class IOHelper
 	 * @param out
 	 *            the OutputStream to close.
 	 */
-	public static void closeQuietly(OutputStream out)
+	public static void closeQuietly(final OutputStream out)
 	{
 		if (out != null)
 		{
@@ -119,7 +114,7 @@ public class IOHelper
 			}
 		}
 	}
-
+	
 	/**
 	 * Method that will close an {@link Reader} ignoring it if it is null and
 	 * ignoring exceptions.
@@ -128,7 +123,7 @@ public class IOHelper
 	 *            the Reader to close.
 	 * @since jEdit 4.3pre5
 	 */
-	public static void closeQuietly(Reader r)
+	public static void closeQuietly(final Reader r)
 	{
 		if (r != null)
 		{
@@ -142,7 +137,7 @@ public class IOHelper
 			}
 		}
 	}
-
+	
 	// {{{ copyFile() method
 	/**
 	 * Copies the source file to the destination.
@@ -159,10 +154,10 @@ public class IOHelper
 	 * 
 	 * @since jEdit 4.3pre9
 	 */
-	public static boolean copyFile(File source, File dest)
+	public static boolean copyFile(final File source, final File dest)
 	{
 		boolean ok = false;
-
+		
 		if (dest.exists() && dest.canWrite() || !dest.exists() && dest.getParentFile().canWrite())
 		{
 			OutputStream fos = null;
@@ -171,22 +166,22 @@ public class IOHelper
 			{
 				fos = new FileOutputStream(dest);
 				fis = new FileInputStream(source);
-				ok = copyStream(32768, fis, fos, false);
+				ok = IOHelper.copyStream(32768, fis, fos, false);
 			}
 			catch (final IOException ioe)
 			{
-				Log.log(Log.WARNING, IOHelper.class, "Error coping file: " + ioe + " : " + ioe.getMessage());
+				Log.Write(ioe.getMessage());
 			}
 			finally
 			{
-				closeQuietly(fos);
-				closeQuietly(fis);
+				IOHelper.closeQuietly(fos);
+				IOHelper.closeQuietly(fis);
 			}
 		}
 		return ok;
 	} // }}}
-
-	public static void copyFileAndUpdateString(File source, File dest, String string, String string2)
+	
+	public static void copyFileAndUpdateString(final File source, final File dest, final String string, final String string2)
 	{
 		if (dest.exists() && dest.canWrite() || !dest.exists() && dest.getParentFile().canWrite())
 		{
@@ -213,24 +208,24 @@ public class IOHelper
 			}
 			catch (final IOException ioe)
 			{
-				Log.log(Log.WARNING, IOHelper.class, "Error moving file: " + ioe + " : " + ioe.getMessage());
+				Log.Write(ioe.getMessage());
 			}
 			finally
 			{
-				closeQuietly(br);
-				closeQuietly(isr);
-				closeQuietly(osw);
-				closeQuietly(fos);
-				closeQuietly(fis);
+				IOHelper.closeQuietly(br);
+				IOHelper.closeQuietly(isr);
+				IOHelper.closeQuietly(osw);
+				IOHelper.closeQuietly(fos);
+				IOHelper.closeQuietly(fis);
 			}
 		}
-
+		
 	}
-
-	public static boolean copyFileFromInputSteam(InputStream in, File dest)
+	
+	public static boolean copyFileFromInputSteam(final InputStream in, final File dest)
 	{
 		boolean ok = false;
-
+		
 		if (dest.exists() && dest.canWrite() || !dest.exists() && dest.getParentFile().canWrite())
 		{
 			OutputStream fos = null;
@@ -238,21 +233,21 @@ public class IOHelper
 			try
 			{
 				fos = new FileOutputStream(dest);
-				ok = copyStream(32768, in, fos, false);
+				ok = IOHelper.copyStream(32768, in, fos, false);
 			}
 			catch (final IOException ioe)
 			{
-				Log.log(Log.WARNING, IOHelper.class, "Error coping file: " + ioe + " : " + ioe.getMessage());
+				Log.Write(ioe.getMessage());
 			}
 			finally
 			{
-				closeQuietly(fos);
-				closeQuietly(fis);
+				IOHelper.closeQuietly(fos);
+				IOHelper.closeQuietly(fis);
 			}
 		}
 		return ok;
 	}
-
+	
 	/**
 	 * Copy an input stream to an output stream with a buffer of 4096 bytes.
 	 * 
@@ -269,11 +264,11 @@ public class IOHelper
 	 * @throws IOException
 	 *             IOException If an I/O error occurs
 	 */
-	public static boolean copyStream(InputStream in, OutputStream out, boolean canStop) throws IOException
+	public static boolean copyStream(final InputStream in, final OutputStream out, final boolean canStop) throws IOException
 	{
-		return copyStream(4096, in, out, canStop);
+		return IOHelper.copyStream(4096, in, out, canStop);
 	} // }}}
-
+	
 	// {{{ copyStream() methods
 	/**
 	 * Copy an input stream to an output stream.
@@ -293,21 +288,18 @@ public class IOHelper
 	 * @throws IOException
 	 *             IOException If an I/O error occurs
 	 */
-	public static boolean copyStream(int bufferSize, InputStream in, OutputStream out, boolean canStop) throws IOException
+	public static boolean copyStream(final int bufferSize, final InputStream in, final OutputStream out, final boolean canStop) throws IOException
 	{
 		final byte[] buffer = new byte[bufferSize];
 		int n;
 		while (-1 != (n = in.read(buffer)))
 		{
 			out.write(buffer, 0, n);
-			if (canStop && Thread.interrupted())
-			{
-				return false;
-			}
+			if (canStop && Thread.interrupted()) { return false; }
 		}
 		return true;
 	}
-
+	
 	// {{{ fileLength() method
 	/**
 	 * Returns the length of a file. If it is a directory it will calculate
@@ -319,7 +311,7 @@ public class IOHelper
 	 *         will return 0
 	 * @since 4.3pre10
 	 */
-	public static long fileLength(File file)
+	public static long fileLength(final File file)
 	{
 		long length = 0L;
 		if (file.isFile())
@@ -331,12 +323,12 @@ public class IOHelper
 			final File[] files = file.listFiles();
 			for (final File file2 : files)
 			{
-				length += fileLength(file2);
+				length += IOHelper.fileLength(file2);
 			}
 		}
 		return length;
 	} // }}}
-
+	
 	// {{{ moveFile() method
 	/**
 	 * Moves the source file to the destination.
@@ -354,10 +346,10 @@ public class IOHelper
 	 * 
 	 * @since jEdit 4.3pre9
 	 */
-	public static boolean moveFile(File source, File dest)
+	public static boolean moveFile(final File source, final File dest)
 	{
 		boolean ok = false;
-
+		
 		if (dest.exists() && dest.canWrite() || !dest.exists() && dest.getParentFile().canWrite())
 		{
 			OutputStream fos = null;
@@ -366,18 +358,18 @@ public class IOHelper
 			{
 				fos = new FileOutputStream(dest);
 				fis = new FileInputStream(source);
-				ok = copyStream(32768, fis, fos, false);
+				ok = IOHelper.copyStream(32768, fis, fos, false);
 			}
 			catch (final IOException ioe)
 			{
-				Log.log(Log.WARNING, IOHelper.class, "Error moving file: " + ioe + " : " + ioe.getMessage());
+				Log.Write(ioe.getMessage());
 			}
 			finally
 			{
-				closeQuietly(fos);
-				closeQuietly(fis);
+				IOHelper.closeQuietly(fos);
+				IOHelper.closeQuietly(fis);
 			}
-
+			
 			if (ok)
 			{
 				source.delete();
@@ -385,10 +377,10 @@ public class IOHelper
 		}
 		return ok;
 	} // }}}
-
-	public static String readInputStreamAsString(InputStream in) throws IOException
+	
+	public static String readInputStreamAsString(final InputStream in) throws IOException
 	{
-
+		
 		final BufferedInputStream bis = new BufferedInputStream(in);
 		final ByteArrayOutputStream buf = new ByteArrayOutputStream();
 		int result = bis.read();
@@ -400,4 +392,9 @@ public class IOHelper
 		}
 		return buf.toString();
 	}
+	
+	// {{{ IOUtilities() constructor
+	private IOHelper()
+	{
+	} // }}}
 }

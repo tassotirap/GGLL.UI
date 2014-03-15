@@ -20,122 +20,124 @@ public class ToolBarCanvas extends BaseToolBar
 {
 	private static final long serialVersionUID = 1L;
 	private JButton[] buttons;
-
+	
 	String[] names;
 	private JButton btnRun, btnZoomIn, btnZoomOut;
 	private final SyntaxGraph canvas;
-
-	public ToolBarCanvas(SyntaxGraph canvas)
+	
+	public ToolBarCanvas(final SyntaxGraph canvas)
 	{
 		super(canvas);
 		this.canvas = canvas;
-		for (int i = 0; i < this.buttons.length; i++)
+		for (int i = 0; i < buttons.length; i++)
 		{
-			this.buttons[i].setName(this.names[i]);
+			buttons[i].setName(names[i]);
 		}
-		this.add(this.btnRun);
+		this.add(btnRun);
 		this.add(createJSeparator());
-		this.add(this.btnZoomIn);
-		this.add(this.btnZoomOut);
+		this.add(btnZoomIn);
+		this.add(btnZoomOut);
 	}
-
+	
 	private JSeparator createJSeparator()
 	{
 		final JSeparator jSeparator = new JSeparator(SwingConstants.VERTICAL);
 		jSeparator.setMaximumSize(new Dimension(6, 100));
 		return jSeparator;
 	}
-
+	
+	public JButton getBtnRun()
+	{
+		return btnRun;
+	}
+	
+	public JButton getBtnZoomIn()
+	{
+		return btnZoomIn;
+	}
+	
+	public JButton getBtnZoomOut()
+	{
+		return btnZoomOut;
+	}
+	
+	public JButton[] getButtons()
+	{
+		return buttons;
+	}
+	
+	public String[] getNames()
+	{
+		return names;
+	}
+	
 	@Override
 	protected void initActions()
 	{
-		this.btnZoomIn.addActionListener(new ActionListener()
+		btnZoomIn.addActionListener(new ActionListener()
 		{
 			@Override
-			public void actionPerformed(ActionEvent evt)
+			public void actionPerformed(final ActionEvent evt)
 			{
-				if (ToolBarCanvas.this.canvas.canZoomIn())
+				if (canvas.canZoomIn())
 				{
-					ToolBarCanvas.this.canvas.setZoomFactor(ToolBarCanvas.this.canvas.getZoomFactor() * 1.1);
-					ToolBarCanvas.this.canvas.validate();
+					canvas.setZoomFactor(canvas.getZoomFactor() * 1.1);
+					canvas.validate();
 				}
 			}
-
+			
 		});
-
-		this.btnZoomOut.addActionListener(new ActionListener()
+		
+		btnZoomOut.addActionListener(new ActionListener()
 		{
 			@Override
-			public void actionPerformed(ActionEvent evt)
+			public void actionPerformed(final ActionEvent evt)
 			{
-				if (ToolBarCanvas.this.canvas.canZoomOut())
+				if (canvas.canZoomOut())
 				{
-					ToolBarCanvas.this.canvas.setZoomFactor(ToolBarCanvas.this.canvas.getZoomFactor() / 1.1);
-					ToolBarCanvas.this.canvas.validate();
+					canvas.setZoomFactor(canvas.getZoomFactor() / 1.1);
+					canvas.validate();
 				}
 			}
-
+			
 		});
-
-		this.btnRun.addActionListener(new ActionListener()
+		
+		btnRun.addActionListener(new ActionListener()
 		{
 			@Override
-			public void actionPerformed(ActionEvent evt)
+			public void actionPerformed(final ActionEvent evt)
 			{
 				final GrammarParser syntaxParser = new GrammarParser();
 				syntaxParser.parseGrammar();
 			}
 		});
-
+		
 	}
-
+	
 	@Override
 	protected void initComponets()
 	{
-		this.btnRun = new JButton(new ImageIcon(GGLLImages.imagePath + "application-run.png"));
-		this.btnZoomIn = new JButton(new ImageIcon(GGLLImages.imagePath + "zoom-in.png"));
-		this.btnZoomOut = new JButton(new ImageIcon(GGLLImages.imagePath + "zoom-out.png"));
-		this.buttons = new JButton[]{ this.btnRun, this.btnZoomIn, this.btnZoomOut };
-		this.names = new String[]{ LangResource.build, LangResource.zoom_plus, LangResource.zoom_minus };
+		btnRun = new JButton(new ImageIcon(GGLLImages.imagePath + "application-run.png"));
+		btnZoomIn = new JButton(new ImageIcon(GGLLImages.imagePath + "zoom-in.png"));
+		btnZoomOut = new JButton(new ImageIcon(GGLLImages.imagePath + "zoom-out.png"));
+		buttons = new JButton[]
+		{ btnRun, btnZoomIn, btnZoomOut };
+		names = new String[]
+		{ LangResource.build, LangResource.zoom_plus, LangResource.zoom_minus };
 	}
-
+	
 	@Override
 	protected void initLayout()
 	{
-		for (int i = 0; i < this.buttons.length; i++)
+		for (int i = 0; i < buttons.length; i++)
 		{
-			final JButton button = this.buttons[i];
+			final JButton button = buttons[i];
 			button.setOpaque(false);
 			button.setBorder(new EmptyBorder(5, 5, 5, 5));
 			button.setRolloverEnabled(true);
 			button.setDisabledIcon(new ImageIcon(GrayFilter.createDisabledImage(((ImageIcon) button.getIcon()).getImage())));
 			button.setBackground(getBackground());
-			button.setToolTipText(this.names[i]);
+			button.setToolTipText(names[i]);
 		}
-	}
-
-	public JButton getBtnRun()
-	{
-		return this.btnRun;
-	}
-
-	public JButton getBtnZoomIn()
-	{
-		return this.btnZoomIn;
-	}
-
-	public JButton getBtnZoomOut()
-	{
-		return this.btnZoomOut;
-	}
-
-	public JButton[] getButtons()
-	{
-		return this.buttons;
-	}
-
-	public String[] getNames()
-	{
-		return this.names;
 	}
 }

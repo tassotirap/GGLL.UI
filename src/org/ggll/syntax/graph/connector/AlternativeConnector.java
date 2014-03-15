@@ -17,41 +17,41 @@ import org.netbeans.api.visual.widget.Widget;
 public class AlternativeConnector implements ConnectDecorator
 {
 	private final SyntaxGraph canvas;
-
-	public AlternativeConnector(SyntaxGraph canvas)
+	
+	public AlternativeConnector(final SyntaxGraph canvas)
 	{
 		this.canvas = canvas;
 	}
-
+	
 	@Override
-	public ConnectionWidget createConnectionWidget(Scene scene)
+	public ConnectionWidget createConnectionWidget(final Scene scene)
 	{
 		final ConnectionWidget widget = new ConnectionWidget(scene);
 		widget.setTargetAnchorShape(AnchorShape.TRIANGLE_FILLED);
 		widget.setLineColor(Color.RED);
 		return widget;
 	}
-
+	
 	@Override
-	public Anchor createFloatAnchor(Point location)
+	public Anchor createFloatAnchor(final Point location)
 	{
 		return AnchorFactory.createFixedAnchor(location);
 	}
-
+	
 	@Override
-	public Anchor createSourceAnchor(Widget sourceWidget)
+	public Anchor createSourceAnchor(final Widget sourceWidget)
 	{
-		return new UnidirectionalAnchor(this.canvas, sourceWidget, Direction.BOTTOM);
+		return new UnidirectionalAnchor(canvas, sourceWidget, Direction.BOTTOM);
 	}
-
+	
 	@Override
-	public Anchor createTargetAnchor(Widget targetWidget)
+	public Anchor createTargetAnchor(final Widget targetWidget)
 	{
-		return new UnidirectionalAnchor(this.canvas, targetWidget, Direction.TOP);
+		return new UnidirectionalAnchor(canvas, targetWidget, Direction.TOP);
 	}
-
-	public Anchor createTargetAnchor(Widget targetWidget, String edge)
+	
+	public Anchor createTargetAnchor(final Widget targetWidget, final String edge)
 	{
-		return new UnidirectionalAnchor(this.canvas, targetWidget, Direction.TOP, edge, Direction.LEFT);
+		return new UnidirectionalAnchor(canvas, targetWidget, Direction.TOP, edge, Direction.LEFT);
 	}
 }

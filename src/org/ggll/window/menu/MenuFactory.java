@@ -10,40 +10,36 @@ public class MenuFactory
 {
 	private JMenuBar defaultMenuBar;
 	private final HashMap<AbstractComponent, JMenuBar> menuBars = new HashMap<AbstractComponent, JMenuBar>();
-
+	
 	public MenuFactory()
 	{
 	}
-
-	private JMenuBar getDefaultMenuBar(MenuModel model)
+	
+	public JMenuBar createMenuBar(final AbstractComponent context, final MenuModel model)
 	{
-		if (this.defaultMenuBar == null)
+		if (context == null) { return getDefaultMenuBar(model); }
+		if (!menuBars.containsKey(context))
 		{
-			this.defaultMenuBar = createMenuBarExt(null, model);
+			menuBars.put(context, createMenuBarExt(context, model));
 		}
-		return this.defaultMenuBar;
+		return menuBars.get(context);
 	}
-
-	@SuppressWarnings("rawtypes")
-	public JMenuBar createMenuBar(final AbstractComponent context, MenuModel model)
+	
+	public JMenuBar createMenuBarExt(final AbstractComponent context, final MenuModel model)
 	{
-		if (context == null)
-		{
-			return getDefaultMenuBar(model);
-		}
-		if (!this.menuBars.containsKey(context))
-		{
-			this.menuBars.put(context, createMenuBarExt(context, model));
-		}
-		return this.menuBars.get(context);
-	}
-
-	@SuppressWarnings("rawtypes")
-	public JMenuBar createMenuBarExt(AbstractComponent context, MenuModel model)
-	{
-		final Menu menu = new Menu(new String[]{ Menu.FILE, Menu.HELP }, context, model);
+		final Menu menu = new Menu(new String[]
+		{ Menu.FILE, Menu.HELP }, context, model);
 		menu.build();
 		return menu;
 	}
-
+	
+	private JMenuBar getDefaultMenuBar(final MenuModel model)
+	{
+		if (defaultMenuBar == null)
+		{
+			defaultMenuBar = createMenuBarExt(null, model);
+		}
+		return defaultMenuBar;
+	}
+	
 }

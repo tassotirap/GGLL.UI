@@ -17,18 +17,18 @@ import org.ggll.syntax.graph.SyntaxGraph;
 
 public class OutputComponent extends AbstractComponent
 {
-
+	
 	public OutputComponent(final SyntaxGraph canvas)
 	{
 		final JScrollPane jsp = new JScrollPane();
 		final JPanel bar = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-		this.jComponent = new JPanel(new BorderLayout());
+		jComponent = new JPanel(new BorderLayout());
 		jsp.setViewportView(Output.getInstance().getView(canvas));
 		final JButton clear = new JButton(new ImageIcon(GGLLImages.ICON_ERASE));
 		clear.addActionListener(new ActionListener()
 		{
 			@Override
-			public void actionPerformed(ActionEvent e)
+			public void actionPerformed(final ActionEvent e)
 			{
 				Output.getInstance().clear();
 			}
@@ -41,7 +41,7 @@ public class OutputComponent extends AbstractComponent
 		output.addActionListener(new ActionListener()
 		{
 			@Override
-			public void actionPerformed(ActionEvent e)
+			public void actionPerformed(final ActionEvent e)
 			{
 				jsp.setViewportView(Output.getInstance().getView(canvas));
 			}
@@ -52,13 +52,13 @@ public class OutputComponent extends AbstractComponent
 		output.setToolTipText("Output");
 		bar.add(output);
 		bar.add(clear);
-		this.jComponent.add(bar, BorderLayout.NORTH);
-		this.jComponent.add(jsp, BorderLayout.CENTER);
+		jComponent.add(bar, BorderLayout.NORTH);
+		jComponent.add(jsp, BorderLayout.CENTER);
 	}
-
+	
 	@Override
 	public void fireContentChanged()
 	{
 	}
-
+	
 }

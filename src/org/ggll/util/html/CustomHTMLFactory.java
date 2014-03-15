@@ -10,23 +10,20 @@ import javax.swing.text.html.HTMLEditorKit.HTMLFactory;
 public class CustomHTMLFactory extends HTMLFactory implements ViewFactory
 {
 	private final String applicationImagePath;
-
-	public CustomHTMLFactory(String applicationImagePath)
+	
+	public CustomHTMLFactory(final String applicationImagePath)
 	{
 		this.applicationImagePath = applicationImagePath;
 	}
-
+	
 	@Override
-	public View create(Element elem)
+	public View create(final Element elem)
 	{
 		final Object o = elem.getAttributes().getAttribute(StyleConstants.NameAttribute);
 		if (o instanceof HTML.Tag)
 		{
 			final HTML.Tag kind = (HTML.Tag) o;
-			if (kind == HTML.Tag.IMG)
-			{
-				return new CustomImageView(elem, this.applicationImagePath);
-			}
+			if (kind == HTML.Tag.IMG) { return new CustomImageView(elem, applicationImagePath); }
 		}
 		return super.create(elem);
 	}

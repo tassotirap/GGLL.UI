@@ -2,7 +2,7 @@ package org.ggll.window;
 
 import javax.swing.JFrame;
 
-import org.ggll.director.GGLLDirector;
+import org.ggll.facade.GGLLFacade;
 import org.ggll.images.GGLLImages;
 import org.ggll.project.Project;
 import org.ggll.project.ProjectHelper;
@@ -19,7 +19,7 @@ import org.ggll.window.splash.SplashWindow;
 public class GuiLauncher
 {
 	private final static String SPLASH_SCREEN_PNG = "splash_screen.png";
-
+	
 	private void showFrame(final JFrame frame)
 	{
 		java.awt.EventQueue.invokeLater(new Runnable()
@@ -31,7 +31,7 @@ public class GuiLauncher
 			}
 		});
 	}
-
+	
 	private void showFrame(final MainWindow frame)
 	{
 		java.awt.EventQueue.invokeLater(new Runnable()
@@ -43,16 +43,27 @@ public class GuiLauncher
 			}
 		});
 	}
-
-	private MainWindow startMainWindow(WorkspaceChooser workspaceChooser)
+	
+	public void start()
+	{
+		final WorkspaceChooser workspaceChooser = startWorkspaceChooser();
+		if (workspaceChooser.isDone())
+		{
+			SplashWindow.splash(GGLLImages.imagePath + GuiLauncher.SPLASH_SCREEN_PNG);
+			startMainWindow(workspaceChooser);
+			SplashWindow.disposeSplash();
+		}
+	}
+	
+	private MainWindow startMainWindow(final WorkspaceChooser workspaceChooser)
 	{
 		final MainWindow mainWindow = new MainWindow();
 		final Project project = ProjectHelper.openProject(workspaceChooser.getWorkspaceDir());
-		GGLLDirector.Start(mainWindow, project);
+		GGLLFacade.Start(mainWindow, project);
 		showFrame(mainWindow);
 		return mainWindow;
 	}
-
+	
 	private WorkspaceChooser startWorkspaceChooser()
 	{
 		final WorkspaceChooser workspaceChooser = new WorkspaceChooser();
@@ -69,16 +80,5 @@ public class GuiLauncher
 			}
 		}
 		return workspaceChooser;
-	}
-
-	public void start()
-	{
-		final WorkspaceChooser workspaceChooser = startWorkspaceChooser();
-		if (workspaceChooser.isDone())
-		{
-			SplashWindow.splash(GGLLImages.imagePath + SPLASH_SCREEN_PNG);
-			startMainWindow(workspaceChooser);
-			SplashWindow.disposeSplash();
-		}
 	}
 }

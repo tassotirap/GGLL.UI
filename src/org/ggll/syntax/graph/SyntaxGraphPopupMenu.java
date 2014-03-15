@@ -15,7 +15,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JSeparator;
 
-import org.ggll.director.GGLLDirector;
+import org.ggll.facade.GGLLFacade;
 import org.ggll.grammar.GrammarParser;
 import org.ggll.resource.CanvasResource;
 import org.ggll.syntax.graph.provider.GridProvider;
@@ -31,135 +31,135 @@ import org.netbeans.api.visual.widget.Widget;
 
 public class SyntaxGraphPopupMenu extends WidgetAction.Adapter implements PopupMenuProvider
 {
-
+	
 	final JPopupMenu popup = new JPopupMenu();
 	private final SyntaxGraph canvas;
 	private final GridProvider gridProvider;
 	private final LineProvider lineProvider;
-
+	
 	private Widget widget;
-
-	public SyntaxGraphPopupMenu(SyntaxGraph canvas)
+	
+	public SyntaxGraphPopupMenu(final SyntaxGraph canvas)
 	{
 		this.canvas = canvas;
-		this.gridProvider = GridProvider.getInstance(canvas);
-		this.lineProvider = LineProvider.getInstance(canvas);
+		gridProvider = GridProvider.getInstance(canvas);
+		lineProvider = LineProvider.getInstance(canvas);
 	}
-
+	
 	private JMenuItem createBuildAndParseMenu()
 	{
 		final JMenuItem grammarMenu = new JMenuItem("Build and Parse");
 		grammarMenu.addActionListener(new ActionListener()
 		{
 			@Override
-			public void actionPerformed(ActionEvent e)
+			public void actionPerformed(final ActionEvent e)
 			{
-				final Cursor oldCursor = SyntaxGraphPopupMenu.this.canvas.getView().getCursor();
-				SyntaxGraphPopupMenu.this.canvas.getView().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+				final Cursor oldCursor = canvas.getView().getCursor();
+				canvas.getView().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 				final GrammarParser syntaxParser = new GrammarParser();
 				syntaxParser.parseGrammar();
-				SyntaxGraphPopupMenu.this.canvas.getView().setCursor(oldCursor);
+				canvas.getView().setCursor(oldCursor);
 			}
 		});
 		return grammarMenu;
 	}
-
+	
 	private JMenuItem createDeleteMenu()
 	{
 		final JMenuItem deleteMenu = new JMenuItem("Delete");
 		deleteMenu.addActionListener(new ActionListener()
 		{
-
+			
 			@Override
-			public void actionPerformed(ActionEvent e)
+			public void actionPerformed(final ActionEvent e)
 			{
-				final WidgetDeleteProvider wdp = new WidgetDeleteProvider(SyntaxGraphPopupMenu.this.canvas);
-				if (SyntaxGraphPopupMenu.this.widget.getState().isSelected() && wdp.isDeletionAllowed())
+				final WidgetDeleteProvider wdp = new WidgetDeleteProvider(canvas);
+				if (widget.getState().isSelected() && wdp.isDeletionAllowed())
 				{
 					wdp.deleteSelected();
 				}
-				else if (wdp.isDeletionAllowed(SyntaxGraphPopupMenu.this.widget))
+				else if (wdp.isDeletionAllowed(widget))
 				{
-					wdp.deleteThese(SyntaxGraphPopupMenu.this.widget);
+					wdp.deleteThese(widget);
 				}
 			}
 		});
 		return deleteMenu;
 	}
-
+	
 	private JMenu createMovingMenu()
 	{
 		final JMenu movingMenu = new JMenu("Move Policy");
-
+		
 		final JRadioButtonMenuItem freeMenuItem = new JRadioButtonMenuItem("Free Move");
 		final JRadioButtonMenuItem snapMenuItem = new JRadioButtonMenuItem("Snap To Grid");
 		final JRadioButtonMenuItem alignMenuItem = new JRadioButtonMenuItem("Auto Align");
 		final JRadioButtonMenuItem linesMenuItem = new JRadioButtonMenuItem("Snap To Lines");
-
-		freeMenuItem.setSelected(this.canvas.getCanvasState().getPreferences().getMoveStrategy().equals(CanvasResource.M_FREE));
-		snapMenuItem.setSelected(this.canvas.getCanvasState().getPreferences().getMoveStrategy().equals(CanvasResource.M_SNAP));
-		alignMenuItem.setSelected(this.canvas.getCanvasState().getPreferences().getMoveStrategy().equals(CanvasResource.M_ALIGN));
-		linesMenuItem.setSelected(this.canvas.getCanvasState().getPreferences().getMoveStrategy().equals(CanvasResource.M_LINES));
-
+		
+		freeMenuItem.setSelected(canvas.getCanvasState().getPreferences().getMoveStrategy().equals(CanvasResource.M_FREE));
+		snapMenuItem.setSelected(canvas.getCanvasState().getPreferences().getMoveStrategy().equals(CanvasResource.M_SNAP));
+		alignMenuItem.setSelected(canvas.getCanvasState().getPreferences().getMoveStrategy().equals(CanvasResource.M_ALIGN));
+		linesMenuItem.setSelected(canvas.getCanvasState().getPreferences().getMoveStrategy().equals(CanvasResource.M_LINES));
+		
 		movingMenu.add(freeMenuItem);
 		movingMenu.add(snapMenuItem);
 		movingMenu.add(alignMenuItem);
 		movingMenu.add(linesMenuItem);
-
+		
 		freeMenuItem.addActionListener(new ActionListener()
 		{
 			@Override
-			public void actionPerformed(ActionEvent e)
+			public void actionPerformed(final ActionEvent e)
 			{
-				SyntaxGraphPopupMenu.this.gridProvider.setVisible(false);
-				SyntaxGraphPopupMenu.this.lineProvider.removeAllLines();
-				SyntaxGraphPopupMenu.this.canvas.setMoveStrategy(CanvasResource.M_FREE);
+				gridProvider.setVisible(false);
+				lineProvider.removeAllLines();
+				canvas.setMoveStrategy(CanvasResource.M_FREE);
 			}
 		});
-
+		
 		snapMenuItem.addActionListener(new ActionListener()
 		{
 			@Override
-			public void actionPerformed(ActionEvent e)
+			public void actionPerformed(final ActionEvent e)
 			{
-				SyntaxGraphPopupMenu.this.gridProvider.setVisible(true);
-				SyntaxGraphPopupMenu.this.lineProvider.removeAllLines();
-				SyntaxGraphPopupMenu.this.canvas.setMoveStrategy(CanvasResource.M_SNAP);
+				gridProvider.setVisible(true);
+				lineProvider.removeAllLines();
+				canvas.setMoveStrategy(CanvasResource.M_SNAP);
 			}
 		});
-
+		
 		alignMenuItem.addActionListener(new ActionListener()
 		{
 			@Override
-			public void actionPerformed(ActionEvent e)
+			public void actionPerformed(final ActionEvent e)
 			{
-				SyntaxGraphPopupMenu.this.gridProvider.setVisible(false);
-				SyntaxGraphPopupMenu.this.lineProvider.removeAllLines();
-				SyntaxGraphPopupMenu.this.canvas.setMoveStrategy(CanvasResource.M_ALIGN);
+				gridProvider.setVisible(false);
+				lineProvider.removeAllLines();
+				canvas.setMoveStrategy(CanvasResource.M_ALIGN);
 			}
 		});
-
+		
 		linesMenuItem.addActionListener(new ActionListener()
 		{
 			@Override
-			public void actionPerformed(ActionEvent e)
+			public void actionPerformed(final ActionEvent e)
 			{
-				SyntaxGraphPopupMenu.this.gridProvider.setVisible(false);
-				SyntaxGraphPopupMenu.this.lineProvider.populateCanvas();
-				SyntaxGraphPopupMenu.this.canvas.setMoveStrategy(CanvasResource.M_LINES);
+				gridProvider.setVisible(false);
+				lineProvider.populateCanvas();
+				canvas.setMoveStrategy(CanvasResource.M_LINES);
 			}
 		});
 		return movingMenu;
 	}
-
+	
 	private JMenuItem createRedoMenu()
 	{
-		final StateHistory volatileStateManager = this.canvas.getCanvasStateHistory();
+		final StateHistory volatileStateManager = canvas.getCanvasStateHistory();
 		final JMenuItem redoMenu = new JMenuItem();
 		redoMenu.addActionListener(new ActionListener()
 		{
 			@Override
-			public void actionPerformed(ActionEvent e)
+			public void actionPerformed(final ActionEvent e)
 			{
 				if (volatileStateManager.hasNextRedo())
 				{
@@ -178,74 +178,74 @@ public class SyntaxGraphPopupMenu extends WidgetAction.Adapter implements PopupM
 		}
 		return redoMenu;
 	}
-
+	
 	private JMenu createRoutingMenu()
 	{
 		final JMenu routingMenu = new JMenu("Routing Policy");
-
+		
 		final JRadioButtonMenuItem ortoMenuItem = new JRadioButtonMenuItem("Ortogonal");
 		final JRadioButtonMenuItem directMenuItem = new JRadioButtonMenuItem("Direct");
 		final JRadioButtonMenuItem freeMenuItem = new JRadioButtonMenuItem("Free");
-
-		ortoMenuItem.setSelected(this.canvas.getCanvasState().getPreferences().getConnectionStrategy().equals(CanvasResource.R_ORTHOGONAL));
-		directMenuItem.setSelected(this.canvas.getCanvasState().getPreferences().getConnectionStrategy().equals(CanvasResource.R_DIRECT));
-		freeMenuItem.setSelected(this.canvas.getCanvasState().getPreferences().getConnectionStrategy().equals(CanvasResource.R_FREE));
-
+		
+		ortoMenuItem.setSelected(canvas.getCanvasState().getPreferences().getConnectionStrategy().equals(CanvasResource.R_ORTHOGONAL));
+		directMenuItem.setSelected(canvas.getCanvasState().getPreferences().getConnectionStrategy().equals(CanvasResource.R_DIRECT));
+		freeMenuItem.setSelected(canvas.getCanvasState().getPreferences().getConnectionStrategy().equals(CanvasResource.R_FREE));
+		
 		routingMenu.add(ortoMenuItem);
 		routingMenu.add(directMenuItem);
 		routingMenu.add(freeMenuItem);
-
+		
 		ortoMenuItem.addActionListener(new ActionListener()
 		{
 			@Override
-			public void actionPerformed(ActionEvent e)
+			public void actionPerformed(final ActionEvent e)
 			{
-				SyntaxGraphPopupMenu.this.canvas.setConnectionStrategy(CanvasResource.R_ORTHOGONAL);
+				canvas.setConnectionStrategy(CanvasResource.R_ORTHOGONAL);
 			}
 		});
-
+		
 		directMenuItem.addActionListener(new ActionListener()
 		{
 			@Override
-			public void actionPerformed(ActionEvent e)
+			public void actionPerformed(final ActionEvent e)
 			{
-				SyntaxGraphPopupMenu.this.canvas.setConnectionStrategy(CanvasResource.R_DIRECT);
+				canvas.setConnectionStrategy(CanvasResource.R_DIRECT);
 			}
 		});
-
+		
 		freeMenuItem.addActionListener(new ActionListener()
 		{
 			@Override
-			public void actionPerformed(ActionEvent e)
+			public void actionPerformed(final ActionEvent e)
 			{
-				SyntaxGraphPopupMenu.this.canvas.setConnectionStrategy(CanvasResource.R_FREE);
+				canvas.setConnectionStrategy(CanvasResource.R_FREE);
 			}
 		});
-
+		
 		return routingMenu;
 	}
-
+	
 	private JMenuItem createSemanticRoutinesMenu()
 	{
 		boolean hasSemanticRoutine = false;
 		boolean isMarkedWidget = false;
-		final MarkedWidget markedWidget = (MarkedWidget) this.widget;
+		final MarkedWidget markedWidget = (MarkedWidget) widget;
 		String mark = null;
-
-		if (this.widget instanceof MarkedWidget)
+		
+		if (widget instanceof MarkedWidget)
 		{
 			isMarkedWidget = true;
-			if ((mark = ((MarkedWidget) this.widget).getMark()) != null && !mark.equals(""))
+			if ((mark = ((MarkedWidget) widget).getMark()) != null && !mark.equals(""))
 			{
 				hasSemanticRoutine = true;
 			}
 		}
-
+		
 		final JMenu semanticRoutinesMenu = new JMenu("Semantic Routines");
 		final JMenuItem createSemanticRoutine = new JMenuItem("Create New...");
 		final JMenuItem removeSemanticRoutine = new JMenuItem();
 		final JMenuItem editSemanticRoutine = new JMenuItem();
-
+		
 		if (hasSemanticRoutine)
 		{
 			removeSemanticRoutine.setText("Remove " + mark);
@@ -255,7 +255,7 @@ public class SyntaxGraphPopupMenu extends WidgetAction.Adapter implements PopupM
 			removeSemanticRoutine.setText("Remove");
 			removeSemanticRoutine.setEnabled(false);
 		}
-
+		
 		if (hasSemanticRoutine)
 		{
 			editSemanticRoutine.setText("Edit " + mark + "...");
@@ -265,52 +265,52 @@ public class SyntaxGraphPopupMenu extends WidgetAction.Adapter implements PopupM
 			editSemanticRoutine.setText("Edit...");
 			editSemanticRoutine.setEnabled(false);
 		}
-
+		
 		semanticRoutinesMenu.add(createSemanticRoutine);
 		semanticRoutinesMenu.add(removeSemanticRoutine);
 		semanticRoutinesMenu.add(editSemanticRoutine);
 		semanticRoutinesMenu.add(new JSeparator());
-
-		final Set<String> semanticRoutinesNames = GGLLDirector.getProject().getSemanticFile().getRegRoutines();
+		
+		final Set<String> semanticRoutinesNames = GGLLFacade.getInstance().getSemanticFile().getRegRoutines();
 		for (final String semanticRoutineName : semanticRoutinesNames)
 		{
 			final JMenuItem semanticRoutinesNamesMenuItem = new JMenuItem("Use " + semanticRoutineName);
 			semanticRoutinesNamesMenuItem.addActionListener(new ActionListener()
 			{
 				@Override
-				public void actionPerformed(ActionEvent e)
+				public void actionPerformed(final ActionEvent e)
 				{
 					markedWidget.setMark(semanticRoutineName);
-					SyntaxGraphPopupMenu.this.canvas.getCanvasStateHistory().propertyChange(new PropertyChangeEvent(this, "undoable", null, "AddRoutine"));
+					canvas.getCanvasStateHistory().propertyChange(new PropertyChangeEvent(this, "undoable", null, "AddRoutine"));
 				}
 			});
 			semanticRoutinesMenu.add(semanticRoutinesNamesMenuItem);
 		}
-
+		
 		if (!isMarkedWidget)
 		{
 			semanticRoutinesMenu.setEnabled(false);
 		}
-
+		
 		createSemanticRoutine.addActionListener(new ActionListener()
 		{
 			@Override
-			public void actionPerformed(ActionEvent e)
+			public void actionPerformed(final ActionEvent e)
 			{
 				String semFile = null;
-				if (GGLLDirector.getProject().getSemanticFile() != null)
+				if (GGLLFacade.getInstance().getSemanticFile() != null)
 				{
-					semFile = GGLLDirector.getProject().getSemanticFile().getAbsolutePath();
+					semFile = GGLLFacade.getInstance().getSemanticFile().getAbsolutePath();
 				}
 				if (semFile != null)
 				{
-					final AbstractView abstractComponent = GGLLDirector.getUnsavedView(semFile);
+					final AbstractView abstractComponent = GGLLFacade.getInstance().getUnsavedView(semFile);
 					if (abstractComponent != null)
 					{
-						final int option = JOptionPane.showConfirmDialog(SyntaxGraphPopupMenu.this.popup, "A new semantic routine can not be created while the semantic routines file remains unsaved.\nWould you like to save it now?", "Can not create a new routine", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+						final int option = JOptionPane.showConfirmDialog(popup, "A new semantic routine can not be created while the semantic routines file remains unsaved.\nWould you like to save it now?", "Can not create a new routine", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
 						if (option == JOptionPane.YES_OPTION)
 						{
-							GGLLDirector.saveFile(abstractComponent.getComponentModel());
+							GGLLFacade.getInstance().saveFile(abstractComponent.getComponentModel());
 						}
 						else
 						{
@@ -320,119 +320,116 @@ public class SyntaxGraphPopupMenu extends WidgetAction.Adapter implements PopupM
 				}
 				if (semFile != null)
 				{
-					new RoutineWindow((String) SyntaxGraphPopupMenu.this.canvas.findObject(SyntaxGraphPopupMenu.this.widget), markedWidget, null, SyntaxGraphPopupMenu.this.canvas);
+					new RoutineWindow((String) canvas.findObject(widget), markedWidget, null, canvas);
 				}
 			}
 		});
-
+		
 		removeSemanticRoutine.addActionListener(new ActionListener()
 		{
 			@Override
-			public void actionPerformed(ActionEvent e)
+			public void actionPerformed(final ActionEvent e)
 			{
 				markedWidget.setMark(null);
-				SyntaxGraphPopupMenu.this.canvas.getCanvasStateHistory().propertyChange(new PropertyChangeEvent(this, "undoable", null, "RemoveRoutine"));
+				canvas.getCanvasStateHistory().propertyChange(new PropertyChangeEvent(this, "undoable", null, "RemoveRoutine"));
 			}
 		});
-
+		
 		editSemanticRoutine.addActionListener(new ActionListener()
 		{
-
+			
 			@Override
-			public void actionPerformed(ActionEvent e)
+			public void actionPerformed(final ActionEvent e)
 			{
-				if (GGLLDirector.getProject() != null)
+				String semFile = null;
+				if (GGLLFacade.getInstance().getSemanticFile() != null)
 				{
-					String semFile = null;
-					if (GGLLDirector.getProject().getSemanticFile() != null)
+					semFile = GGLLFacade.getInstance().getSemanticFile().getAbsolutePath();
+				}
+				if (semFile != null)
+				{
+					final AbstractView abstractComponent = GGLLFacade.getInstance().getUnsavedView(semFile);
+					if (abstractComponent != null)
 					{
-						semFile = GGLLDirector.getProject().getSemanticFile().getAbsolutePath();
-					}
-					if (semFile != null)
-					{
-						final AbstractView abstractComponent = GGLLDirector.getUnsavedView(semFile);
-						if (abstractComponent != null)
+						final int option = JOptionPane.showConfirmDialog(popup, "A semantic routine can not be edited while the semantic routines file remains unsaved.\nWould you like to save it now?", "Can not create a new routine", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+						if (option == JOptionPane.YES_OPTION)
 						{
-							final int option = JOptionPane.showConfirmDialog(SyntaxGraphPopupMenu.this.popup, "A semantic routine can not be edited while the semantic routines file remains unsaved.\nWould you like to save it now?", "Can not create a new routine", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
-							if (option == JOptionPane.YES_OPTION)
-							{
-								GGLLDirector.saveFile(abstractComponent.getComponentModel());
-							}
-							else
-							{
-								return;
-							}
+							GGLLFacade.getInstance().saveFile(abstractComponent.getComponentModel());
 						}
 						else
 						{
-							new RoutineWindow((String) SyntaxGraphPopupMenu.this.canvas.findObject(SyntaxGraphPopupMenu.this.widget), markedWidget, markedWidget.getMark(), SyntaxGraphPopupMenu.this.canvas);
+							return;
 						}
+					}
+					else
+					{
+						new RoutineWindow((String) canvas.findObject(widget), markedWidget, markedWidget.getMark(), canvas);
 					}
 				}
 			}
 		});
 		return semanticRoutinesMenu;
 	}
-
+	
 	private JMenu createShowMenu()
 	{
 		final JMenu showMenu = new JMenu("Show");
-
+		
 		final JRadioButtonMenuItem nothingMenuItem = new JRadioButtonMenuItem("Nothing");
 		final JRadioButtonMenuItem gridMenuItem = new JRadioButtonMenuItem("Grid");
 		final JRadioButtonMenuItem lineMenuItem = new JRadioButtonMenuItem("Lines");
-
-		nothingMenuItem.setSelected(!this.canvas.isShowingGrid() && !this.canvas.isShowingLines());
-		gridMenuItem.setEnabled(this.canvas.getCanvasState().getPreferences().getMoveStrategy().equals(CanvasResource.M_FREE));
-		gridMenuItem.setSelected(this.canvas.isShowingGrid());
-		lineMenuItem.setEnabled(this.canvas.getCanvasState().getPreferences().getMoveStrategy().equals(CanvasResource.M_FREE));
-		lineMenuItem.setSelected(this.canvas.isShowingLines());
-
+		
+		nothingMenuItem.setSelected(!canvas.isShowingGrid() && !canvas.isShowingLines());
+		gridMenuItem.setEnabled(canvas.getCanvasState().getPreferences().getMoveStrategy().equals(CanvasResource.M_FREE));
+		gridMenuItem.setSelected(canvas.isShowingGrid());
+		lineMenuItem.setEnabled(canvas.getCanvasState().getPreferences().getMoveStrategy().equals(CanvasResource.M_FREE));
+		lineMenuItem.setSelected(canvas.isShowingLines());
+		
 		showMenu.add(nothingMenuItem);
 		showMenu.add(gridMenuItem);
 		showMenu.add(lineMenuItem);
-
+		
 		nothingMenuItem.addActionListener(new ActionListener()
 		{
 			@Override
-			public void actionPerformed(ActionEvent e)
+			public void actionPerformed(final ActionEvent e)
 			{
-				SyntaxGraphPopupMenu.this.gridProvider.setVisible(false);
-				SyntaxGraphPopupMenu.this.lineProvider.removeAllLines();
+				gridProvider.setVisible(false);
+				lineProvider.removeAllLines();
 			}
 		});
-
+		
 		gridMenuItem.addActionListener(new ActionListener()
 		{
 			@Override
-			public void actionPerformed(ActionEvent e)
+			public void actionPerformed(final ActionEvent e)
 			{
-				SyntaxGraphPopupMenu.this.gridProvider.setVisible(true);
-				SyntaxGraphPopupMenu.this.lineProvider.removeAllLines();
+				gridProvider.setVisible(true);
+				lineProvider.removeAllLines();
 			}
 		});
-
+		
 		lineMenuItem.addActionListener(new ActionListener()
 		{
 			@Override
-			public void actionPerformed(ActionEvent e)
+			public void actionPerformed(final ActionEvent e)
 			{
-				SyntaxGraphPopupMenu.this.gridProvider.setVisible(false);
-				SyntaxGraphPopupMenu.this.lineProvider.populateCanvas();
+				gridProvider.setVisible(false);
+				lineProvider.populateCanvas();
 			}
 		});
-
+		
 		return showMenu;
 	}
-
+	
 	private JMenuItem createUndoMenu()
 	{
-		final StateHistory volatileStateManager = this.canvas.getCanvasStateHistory();
+		final StateHistory volatileStateManager = canvas.getCanvasStateHistory();
 		final JMenuItem undoMenu = new JMenuItem();
 		undoMenu.addActionListener(new ActionListener()
 		{
 			@Override
-			public void actionPerformed(ActionEvent e)
+			public void actionPerformed(final ActionEvent e)
 			{
 				if (volatileStateManager.hasNextUndo())
 				{
@@ -451,18 +448,18 @@ public class SyntaxGraphPopupMenu extends WidgetAction.Adapter implements PopupM
 		}
 		return undoMenu;
 	}
-
+	
 	@Override
-	public JPopupMenu getPopupMenu(Widget widget, Point localLocation)
+	public JPopupMenu getPopupMenu(final Widget widget, final Point localLocation)
 	{
-		Object focusedWidget = this.canvas.getFocusedObject();
-		Widget activeWidget = this.canvas.findWidget(focusedWidget != widget ? focusedWidget : null);
+		Object focusedWidget = canvas.getFocusedObject();
+		Widget activeWidget = canvas.findWidget(focusedWidget != widget ? focusedWidget : null);
 		if (activeWidget == null)
 		{
-			for (final String string : this.canvas.getNodes())
+			for (final String string : canvas.getNodes())
 			{
-
-				final Widget tempWidget = this.canvas.findWidget(string);
+				
+				final Widget tempWidget = canvas.findWidget(string);
 				if (tempWidget.getPreferredLocation() != null && tempWidget.getPreferredBounds() != null)
 				{
 					final Rectangle area = new Rectangle();
@@ -484,26 +481,26 @@ public class SyntaxGraphPopupMenu extends WidgetAction.Adapter implements PopupM
 				}
 			}
 		}
-		this.popup.removeAll();
-		if (activeWidget != null && !this.canvas.isLabel(focusedWidget) && activeWidget instanceof MarkedWidget)
+		popup.removeAll();
+		if (activeWidget != null && !canvas.isLabel(focusedWidget) && activeWidget instanceof MarkedWidget)
 		{
 			this.widget = activeWidget;
-			this.popup.add(createDeleteMenu());
-			this.popup.add(new JSeparator());
-
-			this.popup.add(createSemanticRoutinesMenu());
-			this.popup.add(new JSeparator());
+			popup.add(createDeleteMenu());
+			popup.add(new JSeparator());
+			
+			popup.add(createSemanticRoutinesMenu());
+			popup.add(new JSeparator());
 		}
-		this.popup.add(createUndoMenu());
-		this.popup.add(createRedoMenu());
-		this.popup.add(new JSeparator());
-		this.popup.add(createBuildAndParseMenu());
-		this.popup.add(new JSeparator());
-		this.popup.add(createShowMenu());
-		this.popup.add(createRoutingMenu());
-		this.popup.add(createMovingMenu());
-
-		return this.popup;
+		popup.add(createUndoMenu());
+		popup.add(createRedoMenu());
+		popup.add(new JSeparator());
+		popup.add(createBuildAndParseMenu());
+		popup.add(new JSeparator());
+		popup.add(createShowMenu());
+		popup.add(createRoutingMenu());
+		popup.add(createMovingMenu());
+		
+		return popup;
 	}
-
+	
 }

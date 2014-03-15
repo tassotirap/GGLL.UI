@@ -1,6 +1,5 @@
 package org.ggll.parser;
 
-import static org.apache.commons.lang3.StringEscapeUtils.escapeHtml4;
 import ggll.core.compile.ClassLoader;
 import ggll.core.compile.Compiler;
 import ggll.core.exceptions.ErrorRecoveryException;
@@ -21,7 +20,8 @@ import java.util.Iterator;
 
 import javax.swing.JOptionPane;
 
-import org.ggll.director.GGLLDirector;
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.ggll.facade.GGLLFacade;
 import org.ggll.output.AppOutput;
 import org.ggll.output.HtmlViewer.TOPIC;
 import org.ggll.output.Output;
@@ -31,30 +31,31 @@ import org.ggll.util.Log;
 public class ParsingEditor
 {
 	private static ParsingEditor instance;
-	private SyntacticLoader syntacticLoader;
-	private Yylex yylex;
-	private Parser analyzer;
-
-
+	
 	public static ParsingEditor getInstance()
 	{
-		if(instance == null)
+		if (ParsingEditor.instance == null)
 		{
-			instance = new ParsingEditor();
+			ParsingEditor.instance = new ParsingEditor();
 		}
-		return instance;
+		return ParsingEditor.instance;
 	}
-
+	
+	private SyntacticLoader syntacticLoader;
+	private Yylex yylex;
+	
+	private Parser analyzer;
+	
 	private void endParser()
 	{
-		if (this.analyzer.isSucess())
+		if (analyzer.isSucess())
 		{
 			AppOutput.displayText("<font color='green'>Expression Successfully recognized.</font>", TOPIC.Output);
 		}
 		else
 		{
 			AppOutput.displayText("<font color='red'>Expression can't be recognized.</font>", TOPIC.Output);
-			for (final Exception error : this.analyzer.getErrorList().getAll())
+			for (final Exception error : analyzer.getErrorList().getAll())
 			{
 				if (error instanceof SintaticException)
 				{
@@ -78,46 +79,15 @@ public class ParsingEditor
 				}
 			}
 		}
-		this.analyzer = null;
+		analyzer = null;
 	}
-
-	private void startParser(boolean stepping, String text)
+	
+	public Yylex getYylex()
 	{
-		Output.getInstance().displayTextExt(escapeHtml4(text), TOPIC.Parser);
-		final StringReader stringReader = new StringReader(text);
-		try
-		{
-			this.yylex.yyreset(stringReader);
-		}
-		catch (final IOException e1)
-		{
-			Log.log(Log.ERROR, this, "An internal error has occurred!", e1);
-		}
-
-		try
-		{
-			final Compiler compiler = new Compiler();
-			compiler.compile(GGLLDirector.getProject().getSemanticFile().getPath());
-			final ClassLoader<SemanticRoutineClass> classLoader = new ClassLoader<SemanticRoutineClass>(GGLLDirector.getProject().getSemanticFile());
-			this.analyzer = new Parser(new GGLLTable(this.syntacticLoader.getTableNodes(), this.syntacticLoader.getNTerminalTable(), this.syntacticLoader.getTerminalTable()), this.yylex, classLoader.getInstance(), stepping);
-			this.analyzer.setParserOutput(new ParserOutput()
-			{
-				@Override
-				public void output()
-				{
-					printStack(ParsingEditor.this.analyzer.getParserStacks().getParseStack());
-				}
-			});
-		}
-		catch (final Exception e)
-		{
-			e.printStackTrace();
-		}
-
+		return yylex;
 	}
-
-
-	public void printStack(ParseStack parseStackNode)
+	
+	public void printStack(final ParseStack parseStackNode)
 	{
 		final Iterator<ParseNode> iterator = parseStackNode.iterator();
 		ParseNode parseStackNodeTemp = null;
@@ -129,36 +99,33 @@ public class ParsingEditor
 			lineSyntax += "<a style='color: #000000; font-weight: bold;' href='Id|" + parseStackNodeTemp.getFlag() + "'>" + parseStackNodeTemp.getType() + "</a>&nbsp;";
 			lineSemantic += parseStackNodeTemp.getSemanticSymbol() + "&nbsp;";
 		}
-
+		
 		AppOutput.showAndSelectNode(parseStackNode.peek().getFlag());
 		AppOutput.printlnSyntaxStack(lineSyntax, true);
 		AppOutput.printlnSemanticStack(lineSemantic, true);
 	}
-
-	public void run(boolean stepping, String text)
+	
+	public void run(final boolean stepping, final String text)
 	{
 		try
 		{
-			if (this.analyzer != null)
+			if (analyzer != null)
 			{
-				this.analyzer.nextToEnd();
+				analyzer.nextToEnd();
 				endParser();
 				return;
 			}
-			if (this.syntacticLoader == null)
-			{
-				return;
-			}
+			if (syntacticLoader == null) { return; }
 			if (text.equals(""))
 			{
 				JOptionPane.showMessageDialog(null, "There is nothing to parse", "Can not parse", JOptionPane.WARNING_MESSAGE);
 				return;
 			}
-
+			
 			startParser(stepping, text);
-
+			
 			AppOutput.clearStacks();
-			this.analyzer.run();
+			analyzer.run();
 			if (!stepping)
 			{
 				endParser();
@@ -169,25 +136,62 @@ public class ParsingEditor
 			e.printStackTrace();
 		}
 	}
-
-	public void setSyntacticLoader(SyntacticLoader cs)
+	
+	public void setSyntacticLoader(final SyntacticLoader cs)
 	{
-		this.syntacticLoader = cs;
+		syntacticLoader = cs;
 	}
-
-	public void stepRun(String text)
+	
+	public void setYylex(final Yylex yylex)
+	{
+		this.yylex = yylex;
+	}
+	
+	private void startParser(final boolean stepping, final String text)
+	{
+		Output.getInstance().displayTextExt(StringEscapeUtils.escapeHtml4(text), TOPIC.Parser);
+		final StringReader stringReader = new StringReader(text);
+		try
+		{
+			yylex.yyreset(stringReader);
+		}
+		catch (final IOException e1)
+		{
+			Log.Write("An internal error has occurred!");
+		}
+		
+		try
+		{
+			final Compiler compiler = new Compiler();
+			compiler.compile(GGLLFacade.getInstance().getSemanticFile().getPath());
+			final ClassLoader<SemanticRoutineClass> classLoader = new ClassLoader<SemanticRoutineClass>(GGLLFacade.getInstance().getSemanticFile());
+			analyzer = new Parser(new GGLLTable(syntacticLoader.getTableNodes(), syntacticLoader.getNTerminalTable(), syntacticLoader.getTerminalTable()), yylex, classLoader.getInstance(), stepping);
+			analyzer.setParserOutput(new ParserOutput()
+			{
+				@Override
+				public void output()
+				{
+					printStack(analyzer.getParserStacks().getParseStack());
+				}
+			});
+		}
+		catch (final Exception e)
+		{
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public void stepRun(final String text)
 	{
 		try
 		{
-			if (this.analyzer == null)
+			if (analyzer == null)
 			{
 				run(true, text);
 			}
-			if (this.analyzer == null)
-			{
-				return;
-			}
-			if (!this.analyzer.next())
+			if (analyzer == null) { return; }
+			if (!analyzer.next())
 			{
 				endParser();
 			}
@@ -196,17 +200,7 @@ public class ParsingEditor
 		{
 			e.printStackTrace();
 		}
-
+		
 	}
-
-	public Yylex getYylex()
-	{
-		return yylex;
-	}
-
-	public void setYylex(Yylex yylex)
-	{
-		this.yylex = yylex;
-	}
-
+	
 }

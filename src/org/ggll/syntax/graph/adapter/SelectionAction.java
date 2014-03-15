@@ -20,13 +20,13 @@ public class SelectionAction implements ClipboardOwner, Transferable
 {
 	private final ArrayList<Serializable> elements = new ArrayList<Serializable>();
 	private final SyntaxGraph canvas;
-
-	public SelectionAction(SyntaxGraph canvas)
+	
+	public SelectionAction(final SyntaxGraph canvas)
 	{
 		this.canvas = canvas;
 	}
-
-	public SelectionAction(Widget[] widgets, SyntaxGraph canvas)
+	
+	public SelectionAction(final Widget[] widgets, final SyntaxGraph canvas)
 	{
 		this.canvas = canvas;
 		for (final Widget widget : widgets)
@@ -34,43 +34,44 @@ public class SelectionAction implements ClipboardOwner, Transferable
 			addSelection(widget);
 		}
 	}
-
-	public void addSelection(Widget widget)
+	
+	public void addSelection(final Widget widget)
 	{
 		if (widget instanceof LabelWidget)
 		{
-			final String object = (String) this.canvas.findObject(widget);
-			final StateNode node = new StateNode(object, this.canvas);
-			this.elements.add(node);
+			final String object = (String) canvas.findObject(widget);
+			final StateNode node = new StateNode(object, canvas);
+			elements.add(node);
 		}
 		else if (widget instanceof ConnectionWidget)
 		{
-			final String object = (String) this.canvas.findObject(widget);
-			final StateConnection conn = new StateConnection(object, this.canvas);
-			this.elements.add(conn);
+			final String object = (String) canvas.findObject(widget);
+			final StateConnection conn = new StateConnection(object, canvas);
+			elements.add(conn);
 		}
 	}
-
+	
 	@Override
-	public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException
+	public Object getTransferData(final DataFlavor flavor) throws UnsupportedFlavorException, IOException
 	{
-		return this.elements;
+		return elements;
 	}
-
+	
 	@Override
 	public DataFlavor[] getTransferDataFlavors()
 	{
-		return new DataFlavor[]{ new DataFlavor(java.util.ArrayList.class, "Node") };
+		return new DataFlavor[]
+		{ new DataFlavor(java.util.ArrayList.class, "Node") };
 	}
-
+	
 	@Override
-	public boolean isDataFlavorSupported(DataFlavor flavor)
+	public boolean isDataFlavorSupported(final DataFlavor flavor)
 	{
 		return flavor.isMimeTypeEqual(DataFlavor.javaSerializedObjectMimeType);
 	}
-
+	
 	@Override
-	public void lostOwnership(Clipboard clipboard, Transferable contents)
+	public void lostOwnership(final Clipboard clipboard, final Transferable contents)
 	{
 	}
 }

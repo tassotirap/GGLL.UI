@@ -3,8 +3,8 @@ package org.ggll.grammar.validation;
 import ggll.core.list.ExtendedList;
 
 import org.ggll.syntax.graph.state.StateConnection;
-import org.ggll.syntax.graph.state.StateNode;
 import org.ggll.syntax.graph.state.StateHelper;
+import org.ggll.syntax.graph.state.StateNode;
 
 public class LeftSideValidation extends GrammarValidation
 {
@@ -22,7 +22,7 @@ public class LeftSideValidation extends GrammarValidation
 			{
 				addError("Only one left hand by label is allowed", leftside);
 			}
-
+			
 			boolean hasSucessor = false;
 			for (final StateConnection sucessor : StateHelper.getSucessors().getAll())
 			{

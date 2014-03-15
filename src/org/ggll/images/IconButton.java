@@ -9,27 +9,27 @@ import java.awt.Graphics;
  */
 public class IconButton extends Icon
 {
-
+	
 	@Override
 	public int getIconHeight()
 	{
-		return ICON_SIZE;
+		return Icon.ICON_SIZE;
 	}
-
+	
 	@Override
 	public int getIconWidth()
 	{
-		return ICON_SIZE;
+		return Icon.ICON_SIZE;
 	}
-
+	
 	@Override
-	public void paintIcon(Component c, Graphics g, int x, int y)
+	public void paintIcon(final Component c, final Graphics g, final int x, final int y)
 	{
 		final Color oldColor = g.getColor();
-
+		
 		g.setColor(Color.BLACK);
-		g.fillOval(x, y, ICON_SIZE, ICON_SIZE);
-
+		g.fillOval(x, y, Icon.ICON_SIZE, Icon.ICON_SIZE);
+		
 		g.setColor(oldColor);
 	}
 }

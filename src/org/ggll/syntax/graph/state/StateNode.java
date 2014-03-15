@@ -19,68 +19,68 @@ public class StateNode implements Serializable
 	private String type;
 	private int number;
 	private boolean flag;
-
-	public StateNode(String id, SyntaxGraph canvas)
+	
+	public StateNode(final String id, final SyntaxGraph canvas)
 	{
 		final Widget widget = canvas.findWidget(id);
 		this.id = id;
-		this.location = widget.getPreferredLocation();
+		location = widget.getPreferredLocation();
 		if (widget instanceof TypedWidget)
 		{
-			this.type = ((TypedWidget) widget).getType();
+			type = ((TypedWidget) widget).getType();
 		}
 		if (widget instanceof MarkedWidget)
 		{
-			this.semanticRoutine = ((MarkedWidget) widget).getMark();
+			semanticRoutine = ((MarkedWidget) widget).getMark();
 		}
 		if (widget instanceof LabelWidget)
 		{
 			final LabelWidget labelWidget = (LabelWidget) widget;
-			this.title = labelWidget.getLabel();
+			title = labelWidget.getLabel();
 		}
 	}
-
+	
 	public String getId()
 	{
-		return this.id;
+		return id;
 	}
-
+	
 	public Point getLocation()
 	{
-		return this.location;
+		return location;
 	}
-
+	
 	public int getNumber()
 	{
 		return number;
 	}
-
+	
 	public String getSemanticRoutine()
 	{
-		return this.semanticRoutine;
+		return semanticRoutine;
 	}
-
+	
 	public String getTitle()
 	{
-		return this.title;
+		return title;
 	}
-
+	
 	public String getType()
 	{
-		return this.type;
+		return type;
 	}
-
+	
 	public boolean isFlag()
 	{
 		return flag;
 	}
-
-	public void setFlag(boolean flag)
+	
+	public void setFlag(final boolean flag)
 	{
 		this.flag = flag;
 	}
-
-	public void setNumber(int number)
+	
+	public void setNumber(final int number)
 	{
 		this.number = number;
 	}

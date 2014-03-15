@@ -13,97 +13,91 @@ public class TreeFileModel implements TreeModel
 {
 	private final File root;
 	private final ExtendedList<TreeModelListener> listeners = new ExtendedList<TreeModelListener>();
-
-	public TreeFileModel(File rootDirectory)
+	
+	public TreeFileModel(final File rootDirectory)
 	{
-		this.root = rootDirectory;
+		root = rootDirectory;
 	}
-
+	
 	@Override
-	public void addTreeModelListener(TreeModelListener listener)
+	public void addTreeModelListener(final TreeModelListener listener)
 	{
-		this.listeners.append(listener);
+		listeners.append(listener);
 	}
-
-	public void fireTreeNodesChanged(TreePath parentPath, int[] indices, Object[] children)
+	
+	public void fireTreeNodesChanged(final TreePath parentPath, final int[] indices, final Object[] children)
 	{
 		final TreeModelEvent event = new TreeModelEvent(this, parentPath, indices, children);
-		for (final TreeModelListener treeModelListener : this.listeners.getAll())
+		for (final TreeModelListener treeModelListener : listeners.getAll())
 		{
 			treeModelListener.treeNodesChanged(event);
 		}
 	}
-
-	public void fireTreeStructureChanged(Object source, TreePath path)
+	
+	public void fireTreeStructureChanged(final Object source, final TreePath path)
 	{
 		final TreeModelEvent event = new TreeModelEvent(source, path);
-		for (final TreeModelListener treeModelListener : this.listeners.getAll())
+		for (final TreeModelListener treeModelListener : listeners.getAll())
 		{
 			treeModelListener.treeStructureChanged(event);
 		}
 	}
-
+	
 	@Override
-	public Object getChild(Object parent, int index)
+	public Object getChild(final Object parent, final int index)
 	{
 		final File directory = (File) parent;
 		final String[] children = directory.list(new TreeFileNameFilter());
 		return new TreeFile(directory, children[index]);
 	}
-
+	
 	@Override
-	public int getChildCount(Object parent)
+	public int getChildCount(final Object parent)
 	{
 		final File file = (File) parent;
 		if (file.isDirectory())
 		{
 			final String[] fileList = file.list(new TreeFileNameFilter());
-			if (fileList != null)
-			{
-				return fileList.length;
-			}
+			if (fileList != null) { return fileList.length; }
 		}
 		return 0;
 	}
-
+	
 	@Override
-	public int getIndexOfChild(Object parent, Object child)
+	public int getIndexOfChild(final Object parent, final Object child)
 	{
 		final File directory = (File) parent;
 		final File file = (File) child;
 		final String[] children = directory.list(new TreeFileNameFilter());
 		for (int i = 0; i < children.length; i++)
 		{
-			if (file.getName().equals(children[i]))
-			{
-				return i;
-			}
+			if (file.getName().equals(children[i])) { return i; }
 		}
 		return -1;
 	}
-
+	
 	@Override
 	public Object getRoot()
 	{
-		return this.root;
+		return root;
 	}
-
+	
 	@Override
-	public boolean isLeaf(Object node)
+	public boolean isLeaf(final Object node)
 	{
 		final File file = (File) node;
 		return file.isFile();
 	}
-
+	
 	@Override
-	public void removeTreeModelListener(TreeModelListener listener)
+	public void removeTreeModelListener(final TreeModelListener listener)
 	{
-		this.listeners.remove(listener);
+		listeners.remove(listener);
 	}
-
+	
 	@Override
-	public void valueForPathChanged(TreePath path, Object value)
+	public void valueForPathChanged(final TreePath path, final Object value)
 	{
-
+		
 	}
 }

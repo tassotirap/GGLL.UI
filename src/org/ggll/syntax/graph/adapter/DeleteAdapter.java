@@ -9,23 +9,23 @@ import org.netbeans.api.visual.widget.Widget;
 public class DeleteAdapter extends Adapter
 {
 	WidgetDeleteProvider widgetDeleteProvider;
-
-	public DeleteAdapter(WidgetDeleteProvider widgetDeleteProvider)
+	
+	public DeleteAdapter(final WidgetDeleteProvider widgetDeleteProvider)
 	{
 		this.widgetDeleteProvider = widgetDeleteProvider;
 	}
-
+	
 	@Override
-	public State keyReleased(Widget widget, WidgetKeyEvent event)
+	public State keyReleased(final Widget widget, final WidgetKeyEvent event)
 	{
 		if (event.getKeyCode() == KeyEvent.VK_DELETE)
 		{
-			if (this.widgetDeleteProvider.isDeletionAllowed())
+			if (widgetDeleteProvider.isDeletionAllowed())
 			{
-				this.widgetDeleteProvider.deleteSelected();
+				widgetDeleteProvider.deleteSelected();
 			}
 		}
 		return State.REJECTED;
 	}
-
+	
 }

@@ -5,19 +5,19 @@ import java.util.Hashtable;
 public abstract class GrammarFactory
 {
 	private static Hashtable<String, GrammarComponent> gramComponents;
-
-	public static void addGramComponent(GrammarComponent gramComponent, String file)
+	
+	public static void addGramComponent(final GrammarComponent gramComponent, final String file)
 	{
-		if (gramComponents == null)
+		if (GrammarFactory.gramComponents == null)
 		{
-			gramComponents = new Hashtable<String, GrammarComponent>();
+			GrammarFactory.gramComponents = new Hashtable<String, GrammarComponent>();
 		}
-		gramComponents.put(file, gramComponent);
+		GrammarFactory.gramComponents.put(file, gramComponent);
 	}
-
-	public static GrammarComponent getGrammarComponent(String file)
+	
+	public static GrammarComponent getGrammarComponent(final String file)
 	{
-		return gramComponents.get(file);
+		return GrammarFactory.gramComponents.get(file);
 	}
-
+	
 }

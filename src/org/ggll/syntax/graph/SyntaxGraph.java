@@ -61,205 +61,123 @@ public class SyntaxGraph extends GraphScene.StringGraph implements PropertyChang
 {
 	private static final double MIN_ZOOM = 0.5;
 	private static final double MAX_ZOOM = 1.5;
-
+	
 	// Canvas States
 	private State canvasState;
 	private StateHistory canvasStateHistory;
-
+	
 	private final ExtendedActionFactory actionFactory = new ExtendedActionFactory(this);
-
+	
 	// Monitors
 	private PropertyChangeSupport monitor;
-
+	
 	private boolean showingGrid;
 	private boolean showingLines;
-
+	
 	private Router activeRouter;
 	private final LayerWidget backgroundLayer = new LayerWidget(this);
 	private final LayerWidget connectionLayer = new LayerWidget(this);
 	private final LayerWidget interractionLayer = new LayerWidget(this);
 	private final LayerWidget mainLayer = new LayerWidget(this);
-
+	
 	private String connectionStrategy;
 	private String moveStrategy;
-
+	
 	private final AbstractMap<String, Cursor> cursors = new HashMap<String, Cursor>();
-
+	
 	// Decorator
 	private final ConnectorFactory connectorFactory = new ConnectorFactory(this);
-
+	
 	// Components
 	private final ExtendedList<String> alternatives = new ExtendedList<String>();
 	private final ExtendedList<String> successors = new ExtendedList<String>();
-
+	
 	private final ExtendedList<String> labels = new ExtendedList<String>();
 	private final ExtendedList<String> lambdas = new ExtendedList<String>();
 	private final ExtendedList<String> leftSides = new ExtendedList<String>();
 	private final ExtendedList<String> nterminals = new ExtendedList<String>();
 	private final ExtendedList<String> start = new ExtendedList<String>();
-
+	
 	private final ExtendedList<String> terminals = new ExtendedList<String>();
-
-	public SyntaxGraph(String cursor, String connectionStrategy, String movementStrategy, String file)
+	
+	public SyntaxGraph(final String cursor, final String connectionStrategy, final String movementStrategy, final String file)
 	{
 		try
 		{
 			this.connectionStrategy = connectionStrategy;
-			this.moveStrategy = movementStrategy;
-			this.canvasState = State.read(file);
-			this.canvasStateHistory = new StateHistory(this);
-
-			this.monitor = new PropertyChangeSupport(this);
-
+			moveStrategy = movementStrategy;
+			canvasState = State.read(file);
+			canvasStateHistory = new StateHistory(this);
+			
+			monitor = new PropertyChangeSupport(this);
+			
 			createCursors();
-			addChild(this.backgroundLayer);
-			addChild(this.mainLayer);
-			addChild(this.connectionLayer);
-			addChild(this.interractionLayer);
-
-			getActions().addAction(this.actionFactory.getAction(ExtendedActionFactory.SELECT));
-			getActions().addAction(this.actionFactory.getAction(ExtendedActionFactory.SELECT_LABEL));
-			getActions().addAction(this.actionFactory.getAction(ExtendedActionFactory.CREATE_NODE));
-			getActions().addAction(this.actionFactory.getAction(ExtendedActionFactory.POPUP_MENU_MAIN));
-			getActions().addAction(this.actionFactory.getAction(ExtendedActionFactory.NODE_HOVER));
-			getActions().addAction(this.actionFactory.getAction(ExtendedActionFactory.LABEL_HOVER));
-			getActions().addAction(this.actionFactory.getAction(ExtendedActionFactory.MOUSE_CENTERED_ZOOM));
-			getActions().addAction(this.actionFactory.getAction(ExtendedActionFactory.PAN));
-			getActions().addAction(this.actionFactory.getAction(ExtendedActionFactory.RECTANGULAR_SELECT));
-			getActions().addAction(this.actionFactory.getAction(ExtendedActionFactory.DELETE));
+			addChild(backgroundLayer);
+			addChild(mainLayer);
+			addChild(connectionLayer);
+			addChild(interractionLayer);
+			
+			getActions().addAction(actionFactory.getAction(ExtendedActionFactory.SELECT));
+			getActions().addAction(actionFactory.getAction(ExtendedActionFactory.SELECT_LABEL));
+			getActions().addAction(actionFactory.getAction(ExtendedActionFactory.CREATE_NODE));
+			getActions().addAction(actionFactory.getAction(ExtendedActionFactory.POPUP_MENU_MAIN));
+			getActions().addAction(actionFactory.getAction(ExtendedActionFactory.NODE_HOVER));
+			getActions().addAction(actionFactory.getAction(ExtendedActionFactory.LABEL_HOVER));
+			getActions().addAction(actionFactory.getAction(ExtendedActionFactory.MOUSE_CENTERED_ZOOM));
+			getActions().addAction(actionFactory.getAction(ExtendedActionFactory.PAN));
+			getActions().addAction(actionFactory.getAction(ExtendedActionFactory.RECTANGULAR_SELECT));
+			getActions().addAction(actionFactory.getAction(ExtendedActionFactory.DELETE));
 			setActiveTool(cursor);
-
-			if (this.canvasState.getPreferences().getConnectionStrategy() != null)
+			
+			if (canvasState.getPreferences().getConnectionStrategy() != null)
 			{
-				setConnectionStrategy(this.canvasState.getPreferences().getConnectionStrategy());
+				setConnectionStrategy(canvasState.getPreferences().getConnectionStrategy());
 			}
 			else
 			{
 				setConnectionStrategy(connectionStrategy);
 			}
-			if (this.canvasState.getPreferences().getMoveStrategy() != null)
+			if (canvasState.getPreferences().getMoveStrategy() != null)
 			{
-				setMoveStrategy(this.canvasState.getPreferences().getMoveStrategy());
+				setMoveStrategy(canvasState.getPreferences().getMoveStrategy());
 			}
 			else
 			{
-				setMoveStrategy(this.moveStrategy);
+				setMoveStrategy(moveStrategy);
 			}
-
-			updateState(this.canvasState);
+			
+			updateState(canvasState);
 		}
 		catch (final Exception e)
 		{
 			e.printStackTrace();
 		}
 	}
-
-	private void appendNode(String node, String activeTool)
+	
+	private void appendNode(final String node, final String activeTool)
 	{
 		switch (activeTool)
 		{
 			case CanvasResource.LEFT_SIDE:
-				this.leftSides.append(node);
+				leftSides.append(node);
 				break;
 			case CanvasResource.TERMINAL:
-				this.terminals.append(node);
+				terminals.append(node);
 				break;
 			case CanvasResource.N_TERMINAL:
-				this.nterminals.append(node);
+				nterminals.append(node);
 				break;
 			case CanvasResource.LAMBDA:
-				this.lambdas.append(node);
+				lambdas.append(node);
 				break;
 			case CanvasResource.START:
-				this.start.append(node);
+				start.append(node);
 				break;
 		}
 	}
-
-	private void clearWidgets()
-	{
-		final Object[] edges = getEdges().toArray();
-		for (final Object edge : edges)
-		{
-			removeEdgeSafely((String) edge);
-		}
-
-		final Object[] nodes = getNodes().toArray();
-		for (final Object node : nodes)
-		{
-			removeNodeSafely((String) node);
-		}
-
-		getTerminals().removeAll();
-		getNterminals().removeAll();
-		getLeftSides().removeAll();
-		getLambdas().removeAll();
-		getStart().removeAll();
-		getSuccessors().removeAll();
-		getAlternatives().removeAll();
-	}
-
-	private Widget createGridWidget()
-	{
-		final GridWidget widget = new GridWidget(this);
-		this.backgroundLayer.addChild(widget);
-		setShowingGrid(true);
-		this.canvasState.getPreferences().setShowGrid(true);
-		return widget;
-	}
-
-	private Widget createLineWidget()
-	{
-		final LineWidget widget = new LineWidget(this);
-		this.backgroundLayer.addChild(widget);
-		setShowingLines(true);
-		this.canvasState.getPreferences().setShowLines(true);
-		return widget;
-	}
-
-	private Widget createNodeWidget(String node, String activeTool)
-	{
-		Widget widget = null;
-		if (activeTool.equals(CanvasResource.N_TERMINAL) || activeTool.equals(CanvasResource.TERMINAL) || activeTool.equals(CanvasResource.LEFT_SIDE) || activeTool.equals(CanvasResource.LAMBDA) || activeTool.equals(CanvasResource.START))
-		{
-
-			widget = this.connectorFactory.drawIcon(activeTool, this, node);
-			widget.createActions(CanvasResource.SELECT);
-			widget.getActions(CanvasResource.SELECT).addAction(this.actionFactory.getAction(ExtendedActionFactory.SELECT));
-			widget.getActions(CanvasResource.SELECT).addAction(this.actionFactory.getAction(ExtendedActionFactory.MOVE));
-			widget.createActions(CanvasResource.SUCCESSOR).addAction(this.actionFactory.getAction(ExtendedActionFactory.SUCCESSOR));
-
-			if (!activeTool.equals(CanvasResource.LAMBDA))
-			{
-				widget.getActions(CanvasResource.SELECT).addAction(this.actionFactory.getAction(ExtendedActionFactory.NODE_HOVER));
-				widget.getActions(CanvasResource.SELECT).addAction(this.actionFactory.getAction(ExtendedActionFactory.EDITOR));
-				widget.createActions(CanvasResource.ALTERNATIVE).addAction(this.actionFactory.getAction(ExtendedActionFactory.ALTERNATIVE));
-			}
-			this.mainLayer.addChild(widget);
-			appendNode(node, activeTool);
-		}
-		else if (activeTool.equals(CanvasResource.LABEL))
-		{
-			widget = new LabelWidgetExt(this.mainLayer.getScene(), "Double Click Here to Edit");
-			widget.createActions(CanvasResource.SELECT).addAction(this.actionFactory.getAction(ExtendedActionFactory.LABEL_HOVER));
-			widget.getActions(CanvasResource.SELECT).addAction(this.actionFactory.getAction(ExtendedActionFactory.SELECT_LABEL));
-			widget.getActions(CanvasResource.SELECT).addAction(this.actionFactory.getAction(ExtendedActionFactory.EDITOR));
-			widget.getActions(CanvasResource.SELECT).addAction(this.actionFactory.getAction(ExtendedActionFactory.MOVE));
-			this.labels.append(node);
-			this.mainLayer.addChild(widget);
-		}
-		if (widget != null)
-		{
-			if (widget instanceof TypedWidget)
-			{
-				((TypedWidget) widget).setType(activeTool);
-			}
-		}
-		return widget;
-	}
-
+	
 	@Override
-	protected void attachEdgeSourceAnchor(String edge, String oldSourceNode, String sourceNode)
+	protected void attachEdgeSourceAnchor(final String edge, final String oldSourceNode, final String sourceNode)
 	{
 		final Widget widget = sourceNode != null ? findWidget(sourceNode) : null;
 		final ConnectionWidget conn = (ConnectionWidget) findWidget(edge);
@@ -276,9 +194,9 @@ public class SyntaxGraph extends GraphScene.StringGraph implements PropertyChang
 			conn.setSourceAnchor(AnchorFactory.createRectangularAnchor(widget));
 		}
 	}
-
+	
 	@Override
-	protected void attachEdgeTargetAnchor(String edge, String oldTargetNode, String targetNode)
+	protected void attachEdgeTargetAnchor(final String edge, final String oldTargetNode, final String targetNode)
 	{
 		final Widget widget = targetNode != null ? findWidget(targetNode) : null;
 		final ConnectionWidget conn = (ConnectionWidget) findWidget(edge);
@@ -295,23 +213,23 @@ public class SyntaxGraph extends GraphScene.StringGraph implements PropertyChang
 			conn.setTargetAnchor(AnchorFactory.createRectangularAnchor(widget));
 		}
 	}
-
+	
 	@Override
-	protected Widget attachEdgeWidget(String edge)
+	protected Widget attachEdgeWidget(final String edge)
 	{
 		ConnectionWidget connection = null;
 		final String activeTool = getCanvasActiveTool();
-
+		
 		if (activeTool.equals(CanvasResource.SUCCESSOR) || activeTool.equals(CanvasResource.ALTERNATIVE))
 		{
-			connection = this.connectorFactory.drawConnection(activeTool, this, edge);
+			connection = connectorFactory.drawConnection(activeTool, this, edge);
 			connection.setRouter(getActiveRouter());
-			connection.createActions(CanvasResource.SELECT).addAction(this.actionFactory.getAction(ExtendedActionFactory.CONN_SELECT));
-			connection.getActions(CanvasResource.SELECT).addAction(this.actionFactory.getAction(ExtendedActionFactory.RECONNECT));
-
-			connection.getActions(CanvasResource.SELECT).addAction(this.actionFactory.getAction(ExtendedActionFactory.FREE_MOVE_CP));
-			connection.getActions(CanvasResource.SELECT).addAction(this.actionFactory.getAction(ExtendedActionFactory.ADD_REMOVE_CP));
-			this.connectionLayer.addChild(connection);
+			connection.createActions(CanvasResource.SELECT).addAction(actionFactory.getAction(ExtendedActionFactory.CONN_SELECT));
+			connection.getActions(CanvasResource.SELECT).addAction(actionFactory.getAction(ExtendedActionFactory.RECONNECT));
+			
+			connection.getActions(CanvasResource.SELECT).addAction(actionFactory.getAction(ExtendedActionFactory.FREE_MOVE_CP));
+			connection.getActions(CanvasResource.SELECT).addAction(actionFactory.getAction(ExtendedActionFactory.ADD_REMOVE_CP));
+			connectionLayer.addChild(connection);
 			if (activeTool.equals(CanvasResource.SUCCESSOR))
 			{
 				if (!isSuccessor(edge))
@@ -329,12 +247,12 @@ public class SyntaxGraph extends GraphScene.StringGraph implements PropertyChang
 		}
 		return connection;
 	}
-
+	
 	@Override
-	protected Widget attachNodeWidget(String node)
+	protected Widget attachNodeWidget(final String node)
 	{
 		final String activeTool = getCanvasActiveTool();
-
+		
 		if (node.startsWith(LineWidget.class.getCanonicalName()))
 		{
 			return createLineWidget();
@@ -343,52 +261,131 @@ public class SyntaxGraph extends GraphScene.StringGraph implements PropertyChang
 		{
 			return createGridWidget();
 		}
-		else if (!activeTool.equals(CanvasResource.SELECT))
-		{
-			return createNodeWidget(node, activeTool);
-		}
+		else if (!activeTool.equals(CanvasResource.SELECT)) { return createNodeWidget(node, activeTool); }
 		return null;
 	}
-
+	
 	public boolean canZoomIn()
 	{
-		return getZoomFactor() < MAX_ZOOM;
+		return getZoomFactor() < SyntaxGraph.MAX_ZOOM;
 	}
-
+	
 	public boolean canZoomOut()
 	{
-		return getZoomFactor() > MIN_ZOOM;
+		return getZoomFactor() > SyntaxGraph.MIN_ZOOM;
 	}
-
+	
+	private void clearWidgets()
+	{
+		final Object[] edges = getEdges().toArray();
+		for (final Object edge : edges)
+		{
+			removeEdgeSafely((String) edge);
+		}
+		
+		final Object[] nodes = getNodes().toArray();
+		for (final Object node : nodes)
+		{
+			removeNodeSafely((String) node);
+		}
+		
+		getTerminals().removeAll();
+		getNterminals().removeAll();
+		getLeftSides().removeAll();
+		getLambdas().removeAll();
+		getStart().removeAll();
+		getSuccessors().removeAll();
+		getAlternatives().removeAll();
+	}
+	
 	public void createCursors()
 	{
 		final Toolkit toolkit = Toolkit.getDefaultToolkit();
-
+		
 		Image image = toolkit.getImage(GGLLImages.CURSOS_LEFT_SIDE_ENABLED);
-		this.cursors.put(CanvasResource.LEFT_SIDE, toolkit.createCustomCursor(image, new Point(0, 0), "Left Side"));
-
+		cursors.put(CanvasResource.LEFT_SIDE, toolkit.createCustomCursor(image, new Point(0, 0), "Left Side"));
+		
 		image = toolkit.getImage(GGLLImages.CURSOS_TERMINAL_ENABLED);
-		this.cursors.put(CanvasResource.TERMINAL, toolkit.createCustomCursor(image, new Point(0, 0), "Terminal"));
-
+		cursors.put(CanvasResource.TERMINAL, toolkit.createCustomCursor(image, new Point(0, 0), "Terminal"));
+		
 		image = toolkit.getImage(GGLLImages.CURSOS_N_TERMINAL_ENABLED);
-		this.cursors.put(CanvasResource.N_TERMINAL, toolkit.createCustomCursor(image, new Point(0, 0), "Non-Terminal"));
-
+		cursors.put(CanvasResource.N_TERMINAL, toolkit.createCustomCursor(image, new Point(0, 0), "Non-Terminal"));
+		
 		image = toolkit.getImage(GGLLImages.CURSOS_LAMBDA_ENABLED);
-		this.cursors.put(CanvasResource.LAMBDA, toolkit.createCustomCursor(image, new Point(0, 0), "Lambda Alternative"));
-
+		cursors.put(CanvasResource.LAMBDA, toolkit.createCustomCursor(image, new Point(0, 0), "Lambda Alternative"));
+		
 		image = toolkit.getImage(GGLLImages.CURSOS_SUCCESSOR_ENABLED);
-		this.cursors.put(CanvasResource.SUCCESSOR, toolkit.createCustomCursor(image, new Point(0, 0), "Successor"));
-
+		cursors.put(CanvasResource.SUCCESSOR, toolkit.createCustomCursor(image, new Point(0, 0), "Successor"));
+		
 		image = toolkit.getImage(GGLLImages.CURSOS_ALTERNATIVE_ENABLED);
-		this.cursors.put(CanvasResource.ALTERNATIVE, toolkit.createCustomCursor(image, new Point(0, 0), "Alternative"));
-
+		cursors.put(CanvasResource.ALTERNATIVE, toolkit.createCustomCursor(image, new Point(0, 0), "Alternative"));
+		
 		image = toolkit.getImage(GGLLImages.CURSOS_LABEL_ENABLED);
-		this.cursors.put(CanvasResource.LABEL, toolkit.createCustomCursor(image, new Point(0, 0), "Label"));
-
+		cursors.put(CanvasResource.LABEL, toolkit.createCustomCursor(image, new Point(0, 0), "Label"));
+		
 		image = toolkit.getImage(GGLLImages.CURSOS_START_ENABLED);
-		this.cursors.put(CanvasResource.START, toolkit.createCustomCursor(image, new Point(0, 0), "Start"));
+		cursors.put(CanvasResource.START, toolkit.createCustomCursor(image, new Point(0, 0), "Start"));
 	}
-
+	
+	private Widget createGridWidget()
+	{
+		final GridWidget widget = new GridWidget(this);
+		backgroundLayer.addChild(widget);
+		setShowingGrid(true);
+		canvasState.getPreferences().setShowGrid(true);
+		return widget;
+	}
+	
+	private Widget createLineWidget()
+	{
+		final LineWidget widget = new LineWidget(this);
+		backgroundLayer.addChild(widget);
+		setShowingLines(true);
+		canvasState.getPreferences().setShowLines(true);
+		return widget;
+	}
+	
+	private Widget createNodeWidget(final String node, final String activeTool)
+	{
+		Widget widget = null;
+		if (activeTool.equals(CanvasResource.N_TERMINAL) || activeTool.equals(CanvasResource.TERMINAL) || activeTool.equals(CanvasResource.LEFT_SIDE) || activeTool.equals(CanvasResource.LAMBDA) || activeTool.equals(CanvasResource.START))
+		{
+			
+			widget = connectorFactory.drawIcon(activeTool, this, node);
+			widget.createActions(CanvasResource.SELECT);
+			widget.getActions(CanvasResource.SELECT).addAction(actionFactory.getAction(ExtendedActionFactory.SELECT));
+			widget.getActions(CanvasResource.SELECT).addAction(actionFactory.getAction(ExtendedActionFactory.MOVE));
+			widget.createActions(CanvasResource.SUCCESSOR).addAction(actionFactory.getAction(ExtendedActionFactory.SUCCESSOR));
+			
+			if (!activeTool.equals(CanvasResource.LAMBDA))
+			{
+				widget.getActions(CanvasResource.SELECT).addAction(actionFactory.getAction(ExtendedActionFactory.NODE_HOVER));
+				widget.getActions(CanvasResource.SELECT).addAction(actionFactory.getAction(ExtendedActionFactory.EDITOR));
+				widget.createActions(CanvasResource.ALTERNATIVE).addAction(actionFactory.getAction(ExtendedActionFactory.ALTERNATIVE));
+			}
+			mainLayer.addChild(widget);
+			appendNode(node, activeTool);
+		}
+		else if (activeTool.equals(CanvasResource.LABEL))
+		{
+			widget = new LabelWidgetExt(mainLayer.getScene(), "Double Click Here to Edit");
+			widget.createActions(CanvasResource.SELECT).addAction(actionFactory.getAction(ExtendedActionFactory.LABEL_HOVER));
+			widget.getActions(CanvasResource.SELECT).addAction(actionFactory.getAction(ExtendedActionFactory.SELECT_LABEL));
+			widget.getActions(CanvasResource.SELECT).addAction(actionFactory.getAction(ExtendedActionFactory.EDITOR));
+			widget.getActions(CanvasResource.SELECT).addAction(actionFactory.getAction(ExtendedActionFactory.MOVE));
+			labels.append(node);
+			mainLayer.addChild(widget);
+		}
+		if (widget != null)
+		{
+			if (widget instanceof TypedWidget)
+			{
+				((TypedWidget) widget).setType(activeTool);
+			}
+		}
+		return widget;
+	}
+	
 	@Override
 	public JComponent createView()
 	{
@@ -396,34 +393,34 @@ public class SyntaxGraph extends GraphScene.StringGraph implements PropertyChang
 		component.addMouseListener(new MouseAdapter()
 		{
 			@Override
-			public void mousePressed(MouseEvent e)
+			public void mousePressed(final MouseEvent e)
 			{
 				setFocused();
 			}
 		});
 		return component;
 	}
-
+	
 	public ExtendedActionFactory getActionFactory()
 	{
-		return this.actionFactory;
+		return actionFactory;
 	}
-
+	
 	public Router getActiveRouter()
 	{
-		return this.activeRouter;
+		return activeRouter;
 	}
-
+	
 	public ExtendedList<String> getAlternatives()
 	{
-		return this.alternatives;
+		return alternatives;
 	}
-
+	
 	public LayerWidget getBackgroundLayer()
 	{
-		return this.backgroundLayer;
+		return backgroundLayer;
 	}
-
+	
 	public String getCanvasActiveTool()
 	{
 		String tool = super.getActiveTool();
@@ -433,90 +430,87 @@ public class SyntaxGraph extends GraphScene.StringGraph implements PropertyChang
 		}
 		return tool;
 	}
-
-	public ConnectorFactory getConnectorFactory()
-	{
-		return this.connectorFactory;
-	}
-
+	
 	public State getCanvasState()
 	{
-		return this.canvasState;
+		return canvasState;
 	}
-
+	
 	public StateHistory getCanvasStateHistory()
 	{
-		return this.canvasStateHistory;
+		return canvasStateHistory;
 	}
-
+	
 	public LayerWidget getConnectionLayer()
 	{
-		return this.connectionLayer;
+		return connectionLayer;
 	}
-
+	
 	public String getConnectionStrategy()
 	{
-		return this.connectionStrategy;
+		return connectionStrategy;
 	}
-
+	
+	public ConnectorFactory getConnectorFactory()
+	{
+		return connectorFactory;
+	}
+	
 	public String getFile()
 	{
-		return this.canvasState.getFile();
+		return canvasState.getFile();
 	}
-
+	
 	public LayerWidget getInterractionLayer()
 	{
-		return this.interractionLayer;
+		return interractionLayer;
 	}
-
+	
 	public Collection<?> getLabels()
 	{
-		return this.labels.getAll();
+		return labels.getAll();
 	}
-
+	
 	public ExtendedList<String> getLambdas()
 	{
-		return this.lambdas;
+		return lambdas;
 	}
-
+	
 	public ExtendedList<String> getLeftSides()
 	{
-		return this.leftSides;
+		return leftSides;
 	}
-
+	
 	public LayerWidget getMainLayer()
 	{
-		return this.mainLayer;
+		return mainLayer;
 	}
-
+	
 	public PropertyChangeSupport getMonitor()
 	{
-		return this.monitor;
+		return monitor;
 	}
-
+	
 	public String getMoveStrategy()
 	{
-		return this.moveStrategy;
+		return moveStrategy;
 	}
-
-	public String getNodeType(Object node)
+	
+	public String getNodeType(final Object node)
 	{
 		final Widget w = findWidget(node);
 		if (w != null)
 		{
-			if (w instanceof LabelWidgetExt)
-			{
-				return ((LabelWidgetExt) w).getType();
-			}
+			if (w instanceof LabelWidgetExt) { return ((LabelWidgetExt) w).getType(); }
 		}
 		return null;
 	}
-
+	
 	public ExtendedList<String> getNterminals()
 	{
-		return this.nterminals;
+		return nterminals;
 	}
-
+	
 	public BufferedImage getScreenshot()
 	{
 		final BufferedImage bi = new BufferedImage(getPreferredSize().width, getPreferredSize().height, BufferedImage.TYPE_4BYTE_ABGR);
@@ -525,119 +519,116 @@ public class SyntaxGraph extends GraphScene.StringGraph implements PropertyChang
 		graphics.dispose();
 		return bi;
 	}
-
+	
 	public ExtendedList<String> getStart()
 	{
-		return this.start;
+		return start;
 	}
-
+	
 	public ExtendedList<String> getSuccessors()
 	{
-		return this.successors;
+		return successors;
 	}
-
+	
 	public ExtendedList<String> getTerminals()
 	{
-		return this.terminals;
+		return terminals;
 	}
-
-	public boolean isAlternative(String edge)
+	
+	public boolean isAlternative(final String edge)
 	{
-		return this.alternatives.contains(edge);
+		return alternatives.contains(edge);
 	}
-
-	public boolean isLabel(Object o)
+	
+	public boolean isLabel(final Object o)
 	{
-		return this.labels.contains((String) o);
+		return labels.contains((String) o);
 	}
-
-	public boolean isLambda(Object o)
+	
+	public boolean isLambda(final Object o)
 	{
-		return this.lambdas.contains((String) o);
+		return lambdas.contains((String) o);
 	}
-
-	public boolean isLeftSide(Object o)
+	
+	public boolean isLeftSide(final Object o)
 	{
-		return this.leftSides.contains((String) o);
+		return leftSides.contains((String) o);
 	}
-
+	
 	@Override
-	public boolean isNode(Object o)
+	public boolean isNode(final Object o)
 	{
-		if (!isLabel(o) && (isTerminal(o) || isNonTerminal(o) || isLambda(o) || isLeftSide(o) || isStart(o)))
-		{
-			return super.isNode(o);
-		}
+		if (!isLabel(o) && (isTerminal(o) || isNonTerminal(o) || isLambda(o) || isLeftSide(o) || isStart(o))) { return super.isNode(o); }
 		return false;
 	}
-
-	public boolean isNonTerminal(Object o)
+	
+	public boolean isNonTerminal(final Object o)
 	{
-		return this.nterminals.contains((String) o);
+		return nterminals.contains((String) o);
 	}
-
+	
 	public boolean isShowingGrid()
 	{
-		return this.showingGrid;
+		return showingGrid;
 	}
-
+	
 	public boolean isShowingLines()
 	{
-		return this.showingLines;
+		return showingLines;
 	}
-
-	public boolean isStart(Object o)
+	
+	public boolean isStart(final Object o)
 	{
-		return this.start.contains((String) o);
+		return start.contains((String) o);
 	}
-
-	public boolean isSuccessor(String edge)
+	
+	public boolean isSuccessor(final String edge)
 	{
-		return this.successors.contains(edge);
+		return successors.contains(edge);
 	}
-
-	public boolean isTerminal(Object o)
+	
+	public boolean isTerminal(final Object o)
 	{
-		return this.terminals.contains((String) o);
+		return terminals.contains((String) o);
 	}
-
+	
 	@Override
 	public void paintChildren()
 	{
 		final Object anti = getGraphics().getRenderingHint(RenderingHints.KEY_ANTIALIASING);
 		final Object textAnti = getGraphics().getRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING);
-
+		
 		getGraphics().setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		getGraphics().setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-
+		
 		super.paintChildren();
-
+		
 		getGraphics().setRenderingHint(RenderingHints.KEY_ANTIALIASING, anti);
 		getGraphics().setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, textAnti);
 	}
-
+	
 	@Override
-	public void propertyChange(PropertyChangeEvent event)
+	public void propertyChange(final PropertyChangeEvent event)
 	{
 		if (event.getSource() instanceof StateHistory)
 		{
 			switch (event.getPropertyName())
 			{
 				case "object_state":
-					this.canvasState = (State) event.getNewValue();
-					updateState(this.canvasState);
+					canvasState = (State) event.getNewValue();
+					updateState(canvasState);
 					this.revalidate();
 					break;
-
+				
 				case "writing":
-					this.canvasState.refresh(this);
+					canvasState.refresh(this);
 					break;
 			}
 		}
-		this.monitor.firePropertyChange(event);
+		monitor.firePropertyChange(event);
 	}
-
-	public void removeEdgeSafely(String edge)
+	
+	public void removeEdgeSafely(final String edge)
 	{
 		if (isEdge(edge))
 		{
@@ -652,12 +643,12 @@ public class SyntaxGraph extends GraphScene.StringGraph implements PropertyChang
 			super.removeEdge(edge);
 		}
 	}
-
-	public void removeNodeSafely(String node)
+	
+	public void removeNodeSafely(final String node)
 	{
 		if (isLabel(node))
 		{
-			this.labels.remove(node);
+			labels.remove(node);
 		}
 		super.removeNode(node);
 		if (node.startsWith(GridWidget.class.getCanonicalName()))
@@ -669,10 +660,10 @@ public class SyntaxGraph extends GraphScene.StringGraph implements PropertyChang
 			setShowingLines(false);
 		}
 	}
-
-	public void select(String target)
+	
+	public void select(final String target)
 	{
-		String[] array = target.split("\\|");
+		final String[] array = target.split("\\|");
 		if (array.length > 1)
 		{
 			if (array[0].equals("Id"))
@@ -688,22 +679,22 @@ public class SyntaxGraph extends GraphScene.StringGraph implements PropertyChang
 		{
 			selectById(target);
 		}
-
+		
 	}
-
-	public void selectById(String label)
+	
+	public void selectById(final String label)
 	{
-		this.setFocused();
-		Set<String> selectedObjects = new HashSet<String>();
-		for (String node : getNodes())
+		setFocused();
+		final Set<String> selectedObjects = new HashSet<String>();
+		for (final String node : getNodes())
 		{
-			Widget widget = findWidget(node);
+			final Widget widget = findWidget(node);
 			if (widget instanceof LabelWidgetExt)
 			{
 				if (node.equals(label))
 				{
 					selectedObjects.add(node);
-					this.setFocusedObject(node);
+					setFocusedObject(node);
 					widget.setBackground(Color.BLUE);
 					widget.setForeground(Color.WHITE);
 					continue;
@@ -714,21 +705,21 @@ public class SyntaxGraph extends GraphScene.StringGraph implements PropertyChang
 		}
 		setSelectedObjects(selectedObjects);
 	}
-
-	public void selectByLabel(String label)
+	
+	public void selectByLabel(final String label)
 	{
-		this.setFocused();
-		Set<String> selectedObjects = new HashSet<String>();
-		for (String node : getNodes())
+		setFocused();
+		final Set<String> selectedObjects = new HashSet<String>();
+		for (final String node : getNodes())
 		{
-			Widget widget = findWidget(node);
+			final Widget widget = findWidget(node);
 			if (widget instanceof LabelWidgetExt)
 			{
-				LabelWidgetExt labelWidgetExt = (LabelWidgetExt) widget;
+				final LabelWidgetExt labelWidgetExt = (LabelWidgetExt) widget;
 				if (labelWidgetExt.getLabel().equals(label))
 				{
 					selectedObjects.add(node);
-					this.setFocusedObject(node);
+					setFocusedObject(node);
 					widget.setBackground(Color.BLUE);
 					widget.setForeground(Color.WHITE);
 					continue;
@@ -739,9 +730,9 @@ public class SyntaxGraph extends GraphScene.StringGraph implements PropertyChang
 		}
 		setSelectedObjects(selectedObjects);
 	}
-
+	
 	@Override
-	public void setActiveTool(String activeTool)
+	public void setActiveTool(final String activeTool)
 	{
 		super.setActiveTool(activeTool);
 		if (activeTool.equals(CanvasResource.SELECT))
@@ -750,37 +741,37 @@ public class SyntaxGraph extends GraphScene.StringGraph implements PropertyChang
 		}
 		else
 		{
-			setCursor(this.cursors.get(activeTool));
+			setCursor(cursors.get(activeTool));
 		}
 	}
-
-	public void setConnectionStrategy(String strategy)
+	
+	public void setConnectionStrategy(final String strategy)
 	{
 		if (strategy != null)
 		{
-			this.canvasState.getPreferences().setConnectionStrategy(strategy);
+			canvasState.getPreferences().setConnectionStrategy(strategy);
 			if (strategy.equals(CanvasResource.R_ORTHOGONAL) || strategy.equals(CanvasResource.R_FREE) || strategy.equals(CanvasResource.R_DIRECT))
 			{
-				if (!strategy.equals(this.connectionStrategy) || this.activeRouter == null)
+				if (!strategy.equals(connectionStrategy) || activeRouter == null)
 				{
-					this.connectionStrategy = strategy;
+					connectionStrategy = strategy;
 					if (strategy.equals(CanvasResource.R_ORTHOGONAL))
 					{
-						this.activeRouter = RouterFactory.createOrthogonalSearchRouter(this.mainLayer);
+						activeRouter = RouterFactory.createOrthogonalSearchRouter(mainLayer);
 					}
 					else if (strategy.equals(CanvasResource.R_DIRECT))
 					{
-						this.activeRouter = RouterFactory.createDirectRouter();
+						activeRouter = RouterFactory.createDirectRouter();
 					}
 					else if (strategy.equals(CanvasResource.R_FREE))
 					{
-						this.activeRouter = RouterFactory.createFreeRouter();
+						activeRouter = RouterFactory.createFreeRouter();
 					}
 				}
 			}
 		}
 	}
-
+	
 	public void setFocused()
 	{
 		getView().grabFocus();
@@ -791,27 +782,27 @@ public class SyntaxGraph extends GraphScene.StringGraph implements PropertyChang
 			{
 				component.addKeyListener(new KeyListener()
 				{
-
+					
 					@Override
-					public void keyPressed(KeyEvent e)
+					public void keyPressed(final KeyEvent e)
 					{
 						for (final KeyListener keyListener : getView().getKeyListeners())
 						{
 							keyListener.keyPressed(e);
 						}
 					}
-
+					
 					@Override
-					public void keyReleased(KeyEvent e)
+					public void keyReleased(final KeyEvent e)
 					{
 						for (final KeyListener keyListener : getView().getKeyListeners())
 						{
 							keyListener.keyReleased(e);
 						}
 					}
-
+					
 					@Override
-					public void keyTyped(KeyEvent e)
+					public void keyTyped(final KeyEvent e)
 					{
 						for (final KeyListener keyListener : getView().getKeyListeners())
 						{
@@ -822,40 +813,40 @@ public class SyntaxGraph extends GraphScene.StringGraph implements PropertyChang
 			}
 		}
 	}
-
-	public void setMoveStrategy(String strategy)
+	
+	public void setMoveStrategy(final String strategy)
 	{
 		final MoveTracker moveTracker = new MoveTracker(this);
 		if (strategy != null)
 		{
-			this.canvasState.getPreferences().setMoveStrategy(strategy);
+			canvasState.getPreferences().setMoveStrategy(strategy);
 			if (strategy.equals(CanvasResource.M_ALIGN) || strategy.equals(CanvasResource.M_SNAP) || strategy.equals(CanvasResource.M_FREE) || strategy.equals(CanvasResource.M_LINES))
 			{
-				this.moveStrategy = strategy;
+				moveStrategy = strategy;
 				moveTracker.notifyObservers(strategy);
 			}
 		}
 	}
-
-	public void setShowingGrid(boolean showingGrid)
+	
+	public void setShowingGrid(final boolean showingGrid)
 	{
 		this.showingGrid = showingGrid;
 		getCanvasState().getPreferences().setShowGrid(showingGrid);
 	}
-
-	public void setShowingLines(boolean showingLines)
+	
+	public void setShowingLines(final boolean showingLines)
 	{
 		this.showingLines = showingLines;
 		getCanvasState().getPreferences().setShowLines(showingLines);
 	}
-
-	public void updateState(State state)
+	
+	public void updateState(final State state)
 	{
 		clearWidgets();
-		this.canvasState = state;
+		canvasState = state;
 		setConnectionStrategy(state.getPreferences().getConnectionStrategy());
 		setMoveStrategy(state.getPreferences().getMoveStrategy());
-
+		
 		for (final String element : state.getNodes())
 		{
 			final StateNode node = state.findNode(element);
@@ -878,20 +869,20 @@ public class SyntaxGraph extends GraphScene.StringGraph implements PropertyChang
 				((TypedWidget) widget).setType(node.getType());
 			}
 		}
-
+		
 		for (final String element : state.getConnections())
 		{
 			final StateConnection connection = state.findConnection(element);
 			setActiveTool(state.getType(element));
 			final ConnectionWidget connectionWidget = (ConnectionWidget) addEdge(element);
-			connectionWidget.setRouter(this.activeRouter);
+			connectionWidget.setRouter(activeRouter);
 			connectionWidget.setRoutingPolicy(RoutingPolicy.DISABLE_ROUTING_UNTIL_END_POINT_IS_MOVED);
 			connectionWidget.setControlPoints(connection.getPoints(), true);
-
+			
 			setEdgeSource(element, connection.getSource());
 			setEdgeTarget(element, connection.getTarget());
 		}
-
+		
 		if (state.getPreferences().isShowGrid())
 		{
 			GridProvider.getInstance(this).setVisible(true);
@@ -900,7 +891,7 @@ public class SyntaxGraph extends GraphScene.StringGraph implements PropertyChang
 		{
 			LineProvider.getInstance(this).populateCanvas();
 		}
-
+		
 		setActiveTool(CanvasResource.SELECT);
 		validate();
 	}

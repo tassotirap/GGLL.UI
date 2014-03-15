@@ -23,22 +23,24 @@ import org.netbeans.api.visual.widget.Widget;
 public class ConnectorFactory
 {
 	protected AlternativeConnector connectAlternative;
-
+	
 	protected SuccessorConnector connectSuccessor;
-
-	private final String[] iconName = new String[]{ CanvasResource.N_TERMINAL, CanvasResource.TERMINAL, CanvasResource.LEFT_SIDE, CanvasResource.LAMBDA, CanvasResource.START };
-
-	private final String[] icons = new String[]{ GGLLImages.ICON_N_TERMINAL, GGLLImages.ICON_TERMINAL, GGLLImages.ICON_LEFT_SIDE, GGLLImages.ICON_LAMBDA, GGLLImages.ICON_START };
-
-	public ConnectorFactory(SyntaxGraph canvas)
+	
+	private final String[] iconName = new String[]
+	{ CanvasResource.N_TERMINAL, CanvasResource.TERMINAL, CanvasResource.LEFT_SIDE, CanvasResource.LAMBDA, CanvasResource.START };
+	
+	private final String[] icons = new String[]
+	{ GGLLImages.ICON_N_TERMINAL, GGLLImages.ICON_TERMINAL, GGLLImages.ICON_LEFT_SIDE, GGLLImages.ICON_LAMBDA, GGLLImages.ICON_START };
+	
+	public ConnectorFactory(final SyntaxGraph canvas)
 	{
-		this.connectAlternative = new AlternativeConnector(canvas);
-		this.connectSuccessor = new SuccessorConnector(canvas);
+		connectAlternative = new AlternativeConnector(canvas);
+		connectSuccessor = new SuccessorConnector(canvas);
 	}
-
-	public ConnectionWidget drawConnection(String type, SyntaxGraph canvas, String label)
+	
+	public ConnectionWidget drawConnection(final String type, final SyntaxGraph canvas, final String label)
 	{
-		ConnectionWidget connection = getConnector(type).createConnectionWidget(canvas.getMainLayer().getScene());
+		final ConnectionWidget connection = getConnector(type).createConnectionWidget(canvas.getMainLayer().getScene());
 		connection.setTargetAnchorShape(AnchorShape.TRIANGLE_FILLED);
 		connection.setEndPointShape(PointShape.SQUARE_FILLED_BIG);
 		connection.setControlPointShape(PointShape.SQUARE_FILLED_BIG);
@@ -46,8 +48,8 @@ public class ConnectorFactory
 		connection.getActions();
 		return connection;
 	}
-
-	public Widget drawIcon(String type, SyntaxGraph canvas, String text)
+	
+	public Widget drawIcon(final String type, final SyntaxGraph canvas, final String text)
 	{
 		Widget widget;
 		if (type.equals(CanvasResource.LAMBDA))
@@ -67,48 +69,45 @@ public class ConnectorFactory
 			lwidget.setVerticalAlignment(LabelWidgetExt.VerticalAlignment.CENTER);
 			lwidget.repaint();
 			widget = lwidget;
-
+			
 		}
 		return widget;
 	}
-
-	public void drawSelected(Widget widget)
+	
+	public void drawSelected(final Widget widget)
 	{
 		widget.setBackground(Color.GRAY);
 		widget.setForeground(Color.BLACK);
 	}
-
-	public void drawUnselected(Widget widget)
+	
+	public void drawUnselected(final Widget widget)
 	{
 		widget.setBackground(Color.BLUE);
 		widget.setForeground(Color.WHITE);
 	}
-
-	public String findIconPath(String type)
+	
+	public String findIconPath(final String type)
 	{
-		for (int i = 0; i < this.icons.length && i < this.iconName.length; i++)
+		for (int i = 0; i < icons.length && i < iconName.length; i++)
 		{
-			if (this.iconName[i].equals(type))
-			{
-				return this.icons[i];
-			}
+			if (iconName[i].equals(type)) { return icons[i]; }
 		}
 		return null;
 	}
-
-	public ConnectDecorator getConnector(String type)
+	
+	public ConnectDecorator getConnector(final String type)
 	{
 		switch (type)
 		{
 			case CanvasResource.SUCCESSOR:
-				return this.connectSuccessor;
+				return connectSuccessor;
 			case CanvasResource.ALTERNATIVE:
-				return this.connectAlternative;
+				return connectAlternative;
 		}
 		return null;
 	}
-
-	public Border getIconBorder(String type)
+	
+	public Border getIconBorder(final String type)
 	{
 		Insets insets = null;
 		if (type.equals(CanvasResource.START))
@@ -123,8 +122,8 @@ public class ConnectorFactory
 		{
 			insets = new Insets(6, 20, 6, 8);
 		}
-
+		
 		return BorderFactory.createImageBorder(insets, new ImageIcon(findIconPath(type)).getImage());
 	}
-
+	
 }

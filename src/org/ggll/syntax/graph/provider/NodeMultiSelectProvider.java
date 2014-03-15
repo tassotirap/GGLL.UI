@@ -10,29 +10,29 @@ import org.netbeans.api.visual.widget.Widget;
 public final class NodeMultiSelectProvider implements SelectProvider
 {
 	private final SyntaxGraph canvas;
-
-	public NodeMultiSelectProvider(SyntaxGraph canvas)
+	
+	public NodeMultiSelectProvider(final SyntaxGraph canvas)
 	{
 		this.canvas = canvas;
 	}
-
+	
 	@Override
-	public boolean isAimingAllowed(Widget widget, Point localLocation, boolean invertSelection)
+	public boolean isAimingAllowed(final Widget widget, final Point localLocation, final boolean invertSelection)
 	{
 		return false;
 	}
-
+	
 	@Override
-	public boolean isSelectionAllowed(Widget widget, Point localLocation, boolean invertSelection)
+	public boolean isSelectionAllowed(final Widget widget, final Point localLocation, final boolean invertSelection)
 	{
-		return this.canvas.findObject(widget) != null;
+		return canvas.findObject(widget) != null;
 	}
-
+	
 	@Override
-	public void select(Widget widget, Point localLocation, boolean invertSelection)
+	public void select(final Widget widget, final Point localLocation, final boolean invertSelection)
 	{
-		final Object object = this.canvas.findObject(widget);
-		this.canvas.setFocusedObject(object);
+		final Object object = canvas.findObject(widget);
+		canvas.setFocusedObject(object);
 		if (object != null)
 		{
 			if (!invertSelection)
@@ -48,6 +48,6 @@ public final class NodeMultiSelectProvider implements SelectProvider
 				return;
 			}
 		}
-		this.canvas.repaint();
+		canvas.repaint();
 	}
 }

@@ -9,7 +9,7 @@ import javax.swing.JTextArea;
 
 public class SimpleTextAreaComponent extends AbstractComponent
 {
-	public SimpleTextAreaComponent(String fileName)
+	public SimpleTextAreaComponent(final String fileName)
 	{
 		final StringBuffer sb = new StringBuffer();
 		final File f = new File(fileName);
@@ -28,9 +28,9 @@ public class SimpleTextAreaComponent extends AbstractComponent
 		{
 			e.printStackTrace();
 		}
-		this.jComponent = new JScrollPane(new JTextArea(sb.toString()));
+		jComponent = new JScrollPane(new JTextArea(sb.toString()));
 	}
-
+	
 	@Override
 	public void fireContentChanged()
 	{

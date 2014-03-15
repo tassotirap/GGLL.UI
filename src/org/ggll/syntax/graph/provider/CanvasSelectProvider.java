@@ -9,16 +9,16 @@ import org.netbeans.api.visual.widget.Widget;
 public abstract class CanvasSelectProvider implements SelectProvider
 {
 	private final SyntaxGraph canvas;
-
-	public CanvasSelectProvider(SyntaxGraph canvas)
+	
+	public CanvasSelectProvider(final SyntaxGraph canvas)
 	{
 		this.canvas = canvas;
 	}
-
+	
 	@Override
-	public void select(Widget arg0, Point arg1, boolean arg2)
+	public void select(final Widget arg0, final Point arg1, final boolean arg2)
 	{
-		this.canvas.setFocused();
+		canvas.setFocused();
 	}
-
+	
 }

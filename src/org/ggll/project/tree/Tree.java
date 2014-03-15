@@ -16,7 +16,7 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
-import org.ggll.director.GGLLDirector;
+import org.ggll.facade.GGLLFacade;
 import org.ggll.images.IconFactory;
 import org.ggll.images.IconFactory.IconType;
 
@@ -28,202 +28,198 @@ import org.ggll.images.IconFactory.IconType;
  */
 public class Tree implements TreeModelListener
 {
-
+	
 	private class CustomTreeCellRenderer extends DefaultTreeCellRenderer
 	{
-
+		
 		private static final long serialVersionUID = 1L;
-
+		
 		@Override
-		public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded, boolean leaf, int row, boolean hasFocus)
+		public Component getTreeCellRendererComponent(final JTree tree, final Object value, final boolean sel, final boolean expanded, final boolean leaf, final int row, final boolean hasFocus)
 		{
-
+			
 			super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
-			final IconFactory iconFactory = new IconFactory();
 			if (leaf)
 			{
 				if (!value.toString().startsWith("."))
 				{
-
-					setIcon(iconFactory.getIcon(value.toString()));
+					
+					setIcon(IconFactory.getIcon(value.toString()));
 				}
 			}
 			else
 			{
-				setIcon(iconFactory.getIcon(IconType.DIR_ICON));
+				setIcon(IconFactory.getIcon(IconType.DIR_ICON));
 			}
-
+			
 			return this;
 		}
 	}
-
+	
 	private class FileTreeMouseListener implements MouseListener
 	{
-
+		
 		@Override
-		public void mouseClicked(MouseEvent evt)
+		public void mouseClicked(final MouseEvent evt)
 		{
 			if (evt.getClickCount() == 2)
 			{
-				open(Tree.this.selectedNode);
+				open(selectedNode);
 			}
 		}
-
+		
 		@Override
-		public void mouseEntered(MouseEvent e)
+		public void mouseEntered(final MouseEvent e)
 		{
-
+			
 		}
-
+		
 		@Override
-		public void mouseExited(MouseEvent e)
+		public void mouseExited(final MouseEvent e)
 		{
-
+			
 		}
-
+		
 		@Override
-		public void mousePressed(MouseEvent e)
+		public void mousePressed(final MouseEvent e)
 		{
 			if (e.isPopupTrigger())
 			{
 				// new JTreePopupMenu(instance).show((Component) e.getSource(),
 				// e.getX(), e.getY());
 			}
-
+			
 		}
-
+		
 		@Override
-		public void mouseReleased(MouseEvent e)
+		public void mouseReleased(final MouseEvent e)
 		{
 			if (e.isPopupTrigger())
 			{
 				// new JTreePopupMenu(instance).show((Component) e.getSource(),
 				// e.getX(), e.getY());
 			}
-
+			
 		}
-
+		
 	}
-
+	
 	private class FileTreeSelectionListener implements TreeSelectionListener
 	{
-
+		
 		@Override
-		public void valueChanged(TreeSelectionEvent e)
+		public void valueChanged(final TreeSelectionEvent e)
 		{
-			instance.selectedNode = e.getPath();
+			Tree.instance.selectedNode = e.getPath();
 		}
-
+		
 	}
-
+	
 	private static TreeFileModel fsmInstances;
-
+	
 	private static Tree instance;
-
-	private TreePath selectedNode;
-
-	private final JTree tree;
-
-	public Tree()
+	
+	private static TreeFileModel getFileSystemModel(final String rootPath)
 	{
-		instance = this;
-		this.tree = new JTree();
-		final CustomTreeCellRenderer renderer = new CustomTreeCellRenderer();
-		this.tree.setCellRenderer(renderer);
-		this.tree.setEditable(true);
-		this.tree.setModel(getFileSystemModel(GGLLDirector.getProject().getProjectDir().getAbsolutePath()));
-		this.tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
-		this.tree.addTreeSelectionListener(new FileTreeSelectionListener());
-		this.tree.addMouseListener(new FileTreeMouseListener());
-		getFileSystemModel(GGLLDirector.getProject().getProjectDir().getAbsolutePath()).addTreeModelListener(this);
-	}
-
-	private static TreeFileModel getFileSystemModel(String rootPath)
-	{
-		if (instance == null)
+		if (Tree.instance == null) { return null; }
+		if (Tree.fsmInstances == null)
 		{
-			return null;
+			Tree.fsmInstances = new TreeFileModel(new File(rootPath));
 		}
-		if (fsmInstances == null)
-		{
-			fsmInstances = new TreeFileModel(new File(rootPath));
-		}
-		return fsmInstances;
+		return Tree.fsmInstances;
 	}
-
-	public static void reload(String rootPath)
+	
+	public static void reload(final String rootPath)
 	{
-		getFileSystemModel(rootPath).fireTreeStructureChanged(getFileSystemModel(rootPath), new TreePath(rootPath));
+		Tree.getFileSystemModel(rootPath).fireTreeStructureChanged(Tree.getFileSystemModel(rootPath), new TreePath(rootPath));
 	}
-
-	public static void update(String rootPath, Object[] changedObjects)
+	
+	public static void update(final String rootPath, final Object[] changedObjects)
 	{
 		final int[] indices = new int[changedObjects.length];
 		int i = 0;
 		final File root = new File(rootPath);
 		for (final Object o : changedObjects)
 		{
-			indices[i++] = getFileSystemModel(rootPath).getIndexOfChild(root, o);
+			indices[i++] = Tree.getFileSystemModel(rootPath).getIndexOfChild(root, o);
 		}
-		getFileSystemModel(rootPath).fireTreeNodesChanged(new TreePath(rootPath), indices, changedObjects);
+		Tree.getFileSystemModel(rootPath).fireTreeNodesChanged(new TreePath(rootPath), indices, changedObjects);
 	}
-
+	
+	private TreePath selectedNode;
+	
+	private final JTree tree;
+	
+	public Tree()
+	{
+		Tree.instance = this;
+		tree = new JTree();
+		final CustomTreeCellRenderer renderer = new CustomTreeCellRenderer();
+		tree.setCellRenderer(renderer);
+		tree.setEditable(true);
+		tree.setModel(Tree.getFileSystemModel(GGLLFacade.getInstance().getProjectDir().getAbsolutePath()));
+		tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+		tree.addTreeSelectionListener(new FileTreeSelectionListener());
+		tree.addMouseListener(new FileTreeMouseListener());
+		Tree.getFileSystemModel(GGLLFacade.getInstance().getProjectDir().getAbsolutePath()).addTreeModelListener(this);
+	}
+	
 	public Dimension getMinimumSize()
 	{
 		return new Dimension(200, 400);
 	}
-
+	
 	public Dimension getPreferredSize()
 	{
 		return new Dimension(200, 400);
 	}
-
+	
 	public TreePath getSelectedNode()
 	{
-		return this.selectedNode;
+		return selectedNode;
 	}
-
+	
 	public JTree getTree()
 	{
-		return this.tree;
+		return tree;
 	}
-
+	
 	public JComponent getView()
 	{
-		return this.tree;
+		return tree;
 	}
-
-	public void open(TreePath treePath)
+	
+	public void open(final TreePath treePath)
 	{
 		final TreeFile node = (TreeFile) treePath.getLastPathComponent();
 		if (node.isFile())
 		{
 			final String path = node.getAbsolutePath();
-			GGLLDirector.openFile(path);
+			GGLLFacade.getInstance().openFile(path);
 		}
 	}
-
+	
 	@Override
-	public void treeNodesChanged(TreeModelEvent e)
+	public void treeNodesChanged(final TreeModelEvent e)
 	{
-		this.tree.validate();
+		tree.validate();
 	}
-
+	
 	@Override
-	public void treeNodesInserted(TreeModelEvent e)
+	public void treeNodesInserted(final TreeModelEvent e)
 	{
-		this.tree.validate();
+		tree.validate();
 	}
-
+	
 	@Override
-	public void treeNodesRemoved(TreeModelEvent e)
+	public void treeNodesRemoved(final TreeModelEvent e)
 	{
-		this.tree.validate();
+		tree.validate();
 	}
-
+	
 	@Override
-	public void treeStructureChanged(TreeModelEvent e)
+	public void treeStructureChanged(final TreeModelEvent e)
 	{
-		this.tree.validate();
+		tree.validate();
 	}
 }

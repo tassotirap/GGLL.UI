@@ -8,7 +8,7 @@ import org.ggll.resource.CanvasResource;
 
 public class SyntacticLoader
 {
-
+	
 	TableGraphNode TableNodes[];
 	TableNode TableNTerminal[];
 	TableNode TableTerminal[];
@@ -16,28 +16,28 @@ public class SyntacticLoader
 	int maxTerminal = 0;
 	int maxNTerminal = 0;
 	int maxNodes = 0;
-
+	
 	public SyntacticLoader()
 	{
 		final GrammarFactory grammarFactory = new GrammarFactory();
 		final String table[][] = grammarFactory.createTable();
 		
-		this.TableTerminal = new TableNode[table.length];
-		this.TableNTerminal = new TableNode[table.length];
-		this.TableNodes = new TableGraphNode[table.length];
+		TableTerminal = new TableNode[table.length];
+		TableNTerminal = new TableNode[table.length];
+		TableNodes = new TableGraphNode[table.length];
 		
-		int line;		
+		int line;
 		int firstIndex = 1;
 		for (line = 0; line < table.length; line++)
 		{
-			String flag = table[line][0];
-			char type = table[line][1].toCharArray()[0];
-			String syntaticSymbol = table[line][2];
-			int nodeNumber = Integer.parseInt(table[line][3]);
-			int alternativeNumber = Integer.parseInt(table[line][4]);
-			int sucessorNumer = Integer.parseInt(table[line][5]);
-			String semanticRoutine = table[line][6];			
-
+			final String flag = table[line][0];
+			final char type = table[line][1].toCharArray()[0];
+			final String syntaticSymbol = table[line][2];
+			final int nodeNumber = Integer.parseInt(table[line][3]);
+			final int alternativeNumber = Integer.parseInt(table[line][4]);
+			final int sucessorNumer = Integer.parseInt(table[line][5]);
+			final String semanticRoutine = table[line][6];
+			
 			if (type == 'H')
 			{
 				firstIndex = header(firstIndex, table, flag, syntaticSymbol);
@@ -45,7 +45,7 @@ public class SyntacticLoader
 			else
 			{
 				final int I = firstIndex + nodeNumber - 1;
-				this.TableNodes[I] = new TableGraphNode();
+				TableNodes[I] = new TableGraphNode();
 				int index = -1;
 				if (type == 'T')
 				{
@@ -59,7 +59,7 @@ public class SyntacticLoader
 				setAlternative(firstIndex, alternativeNumber, I);
 				setSucessor(firstIndex, sucessorNumer, I);
 				setSemanticRoutine(semanticRoutine, I);
-
+				
 				if (maxNodes < nodeNumber)
 				{
 					maxNodes = nodeNumber;
@@ -67,100 +67,23 @@ public class SyntacticLoader
 			}
 		}
 	}
-
-	private void setSemanticRoutine(String semanticRoutine, final int I)
+	
+	public TableNode[] getNTerminalTable()
 	{
-		this.TableNodes[I].setSemanticRoutine(semanticRoutine);
+		return TableNTerminal;
 	}
-
-	private void setSucessor(int firstIndex, int sucessorNumer, final int I)
+	
+	public TableGraphNode[] getTableNodes()
 	{
-		if (sucessorNumer != 0)
-		{
-			this.TableNodes[I].setSucessorIndex(firstIndex + sucessorNumer - 1);
-		}
-		else
-		{
-			this.TableNodes[I].setSucessorIndex(0);
-		}
+		return TableNodes;
 	}
-
-	private void setAlternative(int firstIndex, int alternativeNumber, final int I)
+	
+	public TableNode[] getTerminalTable()
 	{
-		if (alternativeNumber != 0)
-		{
-			this.TableNodes[I].setAlternativeIndex(firstIndex + alternativeNumber - 1);
-		}
-		else
-		{
-			this.TableNodes[I].setAlternativeIndex(0);
-		}
+		return TableTerminal;
 	}
-
-	private void setReferenceNode(int index, String syntaticSymbol, final int I)
-	{
-		if (syntaticSymbol.equals("-1") || syntaticSymbol.equals(CanvasResource.EMPTY_NODE_LABEL))
-		{
-			this.TableNodes[I].setNodeReference(0);
-		}
-		else
-		{
-			this.TableNodes[I].setNodeReference(index);
-		}
-	}
-
-	private int nTerminal(String flag, String syntaticSymbol, final int I)
-	{
-		int iterator;
-		int index = -1;
-		iterator = 1;		
-		while (this.TableNTerminal[iterator] != null)
-		{
-			if (this.TableNTerminal[iterator].getName().equals(syntaticSymbol))
-			{
-				index = iterator;
-				break;
-			}
-			iterator = iterator + 1;
-		}
-		if (index == -1)
-		{
-			maxNTerminal = maxNTerminal + 1;
-			this.TableNTerminal[maxNTerminal] = new TableNode(flag, syntaticSymbol, 0);
-			index = maxNTerminal;
-		}
-		this.TableNodes[I].setIsTerminal(false);
-		return index;
-	}
-
-	private int terminal(String flag, String syntaticSymbol, final int I)
-	{
-		int iterator = 1;
-		int index = -1;
-		this.TableNodes[I].setIsTerminal(true);
-
-		if (!syntaticSymbol.equals(new String("-1")) && !syntaticSymbol.equals(CanvasResource.EMPTY_NODE_LABEL))
-		{
-			while (this.TableTerminal[iterator] != null)
-			{
-				if (this.TableTerminal[iterator].getName().equals(syntaticSymbol))
-				{
-					index = iterator;
-					break;
-				}
-				iterator = iterator + 1;
-			}
-			if (index == -1)
-			{
-				maxTerminal = maxTerminal + 1;
-				this.TableTerminal[maxTerminal] = new TableNode(flag, syntaticSymbol);
-				index = maxTerminal;
-			}
-		}
-		return index;
-	}
-
-	private Integer header(Integer firstIndex, final String[][] table, String flag, String syntaticSymbol)
+	
+	private Integer header(Integer firstIndex, final String[][] table, final String flag, final String syntaticSymbol)
 	{
 		int iterator = 1;
 		firstIndex = firstIndex + maxNodes;
@@ -173,20 +96,20 @@ public class SyntacticLoader
 			nTerminalIndex[i] = -1;
 		}
 		
-		while (this.TableNTerminal[iterator] != null)
+		while (TableNTerminal[iterator] != null)
 		{
-			if (this.TableNTerminal[iterator].getName().equals(syntaticSymbol))
+			if (TableNTerminal[iterator].getName().equals(syntaticSymbol))
 			{
 				nTerminalIndex[aux] = iterator;
 				aux = aux + 1;
 			}
 			iterator = iterator + 1;
 		}
-
+		
 		if (nTerminalIndex[0] == -1)
 		{
 			maxNTerminal = maxNTerminal + 1;
-			this.TableNTerminal[maxNTerminal] = new TableNode(flag, syntaticSymbol, firstIndex);
+			TableNTerminal[maxNTerminal] = new TableNode(flag, syntaticSymbol, firstIndex);
 		}
 		else
 		{
@@ -194,28 +117,105 @@ public class SyntacticLoader
 			{
 				if (nTerminalIndex[j] != -1)
 				{
-					if (this.TableNTerminal[nTerminalIndex[j]].getFirstNode() == 0)
+					if (TableNTerminal[nTerminalIndex[j]].getFirstNode() == 0)
 					{
-						this.TableNTerminal[nTerminalIndex[j]].setFirstNode(firstIndex);
+						TableNTerminal[nTerminalIndex[j]].setFirstNode(firstIndex);
 					}
 				}
 			}
 		}
 		return firstIndex;
 	}
-
-	public TableGraphNode[] getTableNodes()
+	
+	private int nTerminal(final String flag, final String syntaticSymbol, final int I)
 	{
-		return this.TableNodes;
+		int iterator;
+		int index = -1;
+		iterator = 1;
+		while (TableNTerminal[iterator] != null)
+		{
+			if (TableNTerminal[iterator].getName().equals(syntaticSymbol))
+			{
+				index = iterator;
+				break;
+			}
+			iterator = iterator + 1;
+		}
+		if (index == -1)
+		{
+			maxNTerminal = maxNTerminal + 1;
+			TableNTerminal[maxNTerminal] = new TableNode(flag, syntaticSymbol, 0);
+			index = maxNTerminal;
+		}
+		TableNodes[I].setIsTerminal(false);
+		return index;
 	}
-
-	public TableNode[] getNTerminalTable()
+	
+	private void setAlternative(final int firstIndex, final int alternativeNumber, final int I)
 	{
-		return this.TableNTerminal;
+		if (alternativeNumber != 0)
+		{
+			TableNodes[I].setAlternativeIndex(firstIndex + alternativeNumber - 1);
+		}
+		else
+		{
+			TableNodes[I].setAlternativeIndex(0);
+		}
 	}
-
-	public TableNode[] getTerminalTable()
+	
+	private void setReferenceNode(final int index, final String syntaticSymbol, final int I)
 	{
-		return this.TableTerminal;
+		if (syntaticSymbol.equals("-1") || syntaticSymbol.equals(CanvasResource.EMPTY_NODE_LABEL))
+		{
+			TableNodes[I].setNodeReference(0);
+		}
+		else
+		{
+			TableNodes[I].setNodeReference(index);
+		}
+	}
+	
+	private void setSemanticRoutine(final String semanticRoutine, final int I)
+	{
+		TableNodes[I].setSemanticRoutine(semanticRoutine);
+	}
+	
+	private void setSucessor(final int firstIndex, final int sucessorNumer, final int I)
+	{
+		if (sucessorNumer != 0)
+		{
+			TableNodes[I].setSucessorIndex(firstIndex + sucessorNumer - 1);
+		}
+		else
+		{
+			TableNodes[I].setSucessorIndex(0);
+		}
+	}
+	
+	private int terminal(final String flag, final String syntaticSymbol, final int I)
+	{
+		int iterator = 1;
+		int index = -1;
+		TableNodes[I].setIsTerminal(true);
+		
+		if (!syntaticSymbol.equals(new String("-1")) && !syntaticSymbol.equals(CanvasResource.EMPTY_NODE_LABEL))
+		{
+			while (TableTerminal[iterator] != null)
+			{
+				if (TableTerminal[iterator].getName().equals(syntaticSymbol))
+				{
+					index = iterator;
+					break;
+				}
+				iterator = iterator + 1;
+			}
+			if (index == -1)
+			{
+				maxTerminal = maxTerminal + 1;
+				TableTerminal[maxTerminal] = new TableNode(flag, syntaticSymbol);
+				index = maxTerminal;
+			}
+		}
+		return index;
 	}
 }

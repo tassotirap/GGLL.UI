@@ -7,14 +7,12 @@ import java.io.IOException;
 import java.util.InvalidPropertiesFormatException;
 import java.util.Properties;
 
-import javax.swing.JTextArea;
-
 import org.ggll.util.Log;
 import org.ggll.util.io.IOHelper;
 
 public class PropertiesHelper
 {
-
+	
 	/**
 	 * Loads properties from a file
 	 * 
@@ -23,7 +21,7 @@ public class PropertiesHelper
 	 * @param isXML
 	 *            whether is a XML file or not
 	 * **/
-	public static Properties loadProperties(String fileName, boolean isXML)
+	public static Properties loadProperties(final String fileName, final boolean isXML)
 	{
 		final Properties props = new Properties();
 		FileInputStream in = null;
@@ -37,16 +35,16 @@ public class PropertiesHelper
 			else
 			{
 				props.loadFromXML(in);
-
+				
 			}
 		}
 		catch (final InvalidPropertiesFormatException e)
 		{
-
+			
 		}
 		catch (final IOException e)
 		{
-			Log.log(Log.ERROR, JTextArea.class, e);
+			Log.Write(e.getMessage());
 		}
 		finally
 		{
@@ -54,7 +52,7 @@ public class PropertiesHelper
 		}
 		return props;
 	}
-
+	
 	/**
 	 * Store properties in a file
 	 * 
@@ -67,9 +65,9 @@ public class PropertiesHelper
 	 * @param isXML
 	 *            whether is a XML file or not
 	 */
-	public static void storeProperties(String fileName, Properties properties, String comments, boolean isXML)
+	public static void storeProperties(final String fileName, final Properties properties, final String comments, final boolean isXML)
 	{
-
+		
 		FileOutputStream out = null;
 		try
 		{
@@ -85,16 +83,16 @@ public class PropertiesHelper
 		}
 		catch (final IOException e)
 		{
-			Log.log(Log.ERROR, JTextArea.class, e);
+			Log.Write(e.getMessage());
 		}
 		catch (final Exception e)
 		{
-
+			
 		}
 		finally
 		{
 			IOHelper.closeQuietly(out);
 		}
 	}
-
+	
 }

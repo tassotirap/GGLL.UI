@@ -29,46 +29,13 @@ public class TextPrinter implements Printable
 	 * Default type name, Serif
 	 */
 	public static final String DEFAULT_FONT_NAME = "Serif";
-
+	
 	/**
 	 * Default font size, 12 point
 	 */
 	public static final int DEFAULT_FONT_SIZE = 12;
-
-	private String[] body;
-	private String[] header;
-	private PrinterJob job;
-	private final Font typeFont;
-	private final Font typeFontBold;
-	private final String typeName;
-	private final int typeSize;
-
-	/**
-	 * Create a TextPrinter object with the default type font and size.
-	 */
-	public TextPrinter()
-	{
-		this(DEFAULT_FONT_NAME, DEFAULT_FONT_SIZE);
-	}
-
-	/**
-	 * Create a TextPrinter object ready to print text with a given font and
-	 * type size.
-	 */
-	public TextPrinter(String name, int size)
-	{
-		if (size < 3 || size > 127)
-		{
-			throw new IllegalArgumentException("Type size out of range");
-		}
-		this.typeName = name;
-		this.typeSize = size;
-		this.typeFont = new Font(this.typeName, Font.PLAIN, this.typeSize);
-		this.typeFontBold = new Font(this.typeName, Font.BOLD, this.typeSize);
-		this.job = null;
-	}
-
-	public static void printText(String text)
+	
+	public static void printText(final String text)
 	{
 		TextPrinter tp;
 		tp = new TextPrinter();
@@ -83,15 +50,38 @@ public class TextPrinter implements Printable
 			e.printStackTrace();
 		}
 	}
-
+	
+	private String[] body;
+	private String[] header;
+	private PrinterJob job;
+	private final Font typeFont;
+	private final Font typeFontBold;
+	private final String typeName;
+	
+	private final int typeSize;
+	
 	/**
-	 * Initialize the printer job.
+	 * Create a TextPrinter object with the default type font and size.
 	 */
-	protected void init()
+	public TextPrinter()
 	{
-		this.job = PrinterJob.getPrinterJob();
+		this(TextPrinter.DEFAULT_FONT_NAME, TextPrinter.DEFAULT_FONT_SIZE);
 	}
-
+	
+	/**
+	 * Create a TextPrinter object ready to print text with a given font and
+	 * type size.
+	 */
+	public TextPrinter(final String name, final int size)
+	{
+		if (size < 3 || size > 127) { throw new IllegalArgumentException("Type size out of range"); }
+		typeName = name;
+		typeSize = size;
+		typeFont = new Font(typeName, Font.PLAIN, typeSize);
+		typeFontBold = new Font(typeName, Font.BOLD, typeSize);
+		job = null;
+	}
+	
 	/**
 	 * Print some text. Headers are printed first, in bold, followed by the body
 	 * text, in plain style. If the boolean argument interactive is set to true,
@@ -103,9 +93,9 @@ public class TextPrinter implements Printable
 	 * cancelled printer. This method may throw PrinterException if printing
 	 * could not be started.
 	 */
-	public boolean doPrint(String[] header, String[] body, boolean interactive) throws PrinterException
+	public boolean doPrint(final String[] header, final String[] body, final boolean interactive) throws PrinterException
 	{
-		if (this.job == null)
+		if (job == null)
 		{
 			init();
 		}
@@ -113,7 +103,7 @@ public class TextPrinter implements Printable
 		{
 			try
 			{
-				if (this.job.printDialog())
+				if (job.printDialog())
 				{
 					// we are going to print
 				}
@@ -129,15 +119,15 @@ public class TextPrinter implements Printable
 				// assume user wants to print anyway...
 			}
 		}
-
-		this.job.setPrintable(this);
+		
+		job.setPrintable(this);
 		this.header = header;
 		this.body = body;
-		this.job.print();
-		this.job = null; // we are no longer initialized
+		job.print();
+		job = null; // we are no longer initialized
 		return true;
 	}
-
+	
 	/**
 	 * Initialize the print job, and return the base number of characters per
 	 * line with the established font size and font. This is really just a
@@ -145,64 +135,69 @@ public class TextPrinter implements Printable
 	 */
 	public int getCharsPerLine()
 	{
-		if (this.job == null)
+		if (job == null)
 		{
 			init();
 		}
 		PageFormat pf;
-		pf = this.job.defaultPage();
+		pf = job.defaultPage();
 		final double width = pf.getImageableWidth(); // in 72nd of a pt
-		final double ptsize = this.typeFont.getSize();
+		final double ptsize = typeFont.getSize();
 		final double ptwid = ptsize * 3 / 4;
 		final double cnt = width / ptwid;
 		return (int) Math.round(cnt);
 	}
-
+	
+	/**
+	 * Initialize the printer job.
+	 */
+	protected void init()
+	{
+		job = PrinterJob.getPrinterJob();
+	}
+	
 	/**
 	 * Perform printing according to the Java printing model. NEVER CALL THIS
 	 * DIRECTLY! It will be called by the PrinterJob as necessary. This method
 	 * always returns Printable.NO_SUCH_PAGE for any page number greater than 0.
 	 */
 	@Override
-	public int print(Graphics graphics, PageFormat pageFormat, int pageIndex) throws PrinterException
+	public int print(final Graphics graphics, final PageFormat pageFormat, final int pageIndex) throws PrinterException
 	{
-		if (pageIndex != 0)
-		{
-			return NO_SUCH_PAGE;
-		}
+		if (pageIndex != 0) { return Printable.NO_SUCH_PAGE; }
 		FontMetrics fm;
-		graphics.setFont(this.typeFont);
+		graphics.setFont(typeFont);
 		graphics.setColor(Color.black);
 		fm = graphics.getFontMetrics();
-
+		
 		// fill in geometric and rendering guts here
 		int i;
 		double x, y;
 		x = pageFormat.getImageableX();
 		y = pageFormat.getImageableY() + fm.getMaxAscent();
-
+		
 		// do the headings
-		if (this.header != null)
+		if (header != null)
 		{
-			graphics.setFont(this.typeFontBold);
-			for (i = 0; i < this.header.length; i++)
+			graphics.setFont(typeFontBold);
+			for (i = 0; i < header.length; i++)
 			{
-				graphics.drawString(this.header[i], (int) x, (int) y);
+				graphics.drawString(header[i], (int) x, (int) y);
 				y += fm.getHeight();
 			}
 		}
-
+		
 		// do the body
-		if (this.body != null)
+		if (body != null)
 		{
-			graphics.setFont(this.typeFont);
-			for (i = 0; i < this.body.length; i++)
+			graphics.setFont(typeFont);
+			for (i = 0; i < body.length; i++)
 			{
-				graphics.drawString(this.body[i], (int) x, (int) y);
+				graphics.drawString(body[i], (int) x, (int) y);
 				y += fm.getHeight();
 			}
 		}
-
-		return PAGE_EXISTS;
+		
+		return Printable.PAGE_EXISTS;
 	}
 }

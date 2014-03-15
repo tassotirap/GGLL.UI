@@ -17,23 +17,23 @@ import org.htmlparser.util.SimpleNodeIterator;
 public class Output extends HtmlViewer
 {
 	private static Output instance;
-
+	
+	public static Output getInstance()
+	{
+		if (Output.instance == null)
+		{
+			Output.instance = new Output();
+		}
+		return Output.instance;
+	}
+	
 	protected Output()
 	{
 		super();
 	}
-
-	public static Output getInstance()
-	{
-		if (instance == null)
-		{
-			instance = new Output();
-		}
-		return instance;
-	}
-
+	
 	@Override
-	public void displayTextExt(String input, String font, String size, String cssClass, TOPIC topic)
+	public void displayTextExt(final String input, final String font, final String size, final String cssClass, final TOPIC topic)
 	{
 		final EditorKit eKit = getEditorPane().getEditorKit();
 		final Document doc = getEditorPane().getDocument();
@@ -84,14 +84,14 @@ public class Output extends HtmlViewer
 			e.printStackTrace();
 		}
 	}
-
+	
 	@Override
-	public void displayTextExt(String st, TOPIC topic)
+	public void displayTextExt(final String st, final TOPIC topic)
 	{
-		displayTextExt(st, DEFAULT_FONT, DEFAULT_SIZE, null, topic);
+		displayTextExt(st, HtmlViewer.DEFAULT_FONT, HtmlViewer.DEFAULT_SIZE, null, topic);
 	}
-
-	public JComponent getView(SyntaxGraph canvas)
+	
+	public JComponent getView(final SyntaxGraph canvas)
 	{
 		setActiveScene(canvas);
 		return getEditorPane();

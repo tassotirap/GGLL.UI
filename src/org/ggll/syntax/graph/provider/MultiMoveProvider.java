@@ -15,73 +15,73 @@ public class MultiMoveProvider implements MoveProvider
 	private final SyntaxGraph canvas;
 	private Point originalLocation;
 	private final HashMap<Widget, Point> targets = new HashMap<Widget, Point>();
-
-	public MultiMoveProvider(SyntaxGraph canvas)
+	
+	public MultiMoveProvider(final SyntaxGraph canvas)
 	{
 		this.canvas = canvas;
 	}
-
+	
 	@Override
-	public Point getOriginalLocation(Widget widget)
+	public Point getOriginalLocation(final Widget widget)
 	{
-		this.originalLocation = widget.getPreferredLocation();
-		return this.originalLocation;
+		originalLocation = widget.getPreferredLocation();
+		return originalLocation;
 	}
-
+	
 	@Override
-	public void movementFinished(Widget widget)
+	public void movementFinished(final Widget widget)
 	{
 		String context = null;
-		if (this.targets.entrySet().size() > 1)
+		if (targets.entrySet().size() > 1)
 		{
 			context = CanvasResource.SET;
 		}
-		else if (this.targets.entrySet().size() == 1)
+		else if (targets.entrySet().size() == 1)
 		{
 			context = CanvasResource.NODE;
 		}
-		this.targets.clear();
-		this.originalLocation = null;
+		targets.clear();
+		originalLocation = null;
 		if (context != null)
 		{
-			this.canvas.getCanvasStateHistory().propertyChange(new PropertyChangeEvent(this, "undoable", null, "Move"));
+			canvas.getCanvasStateHistory().propertyChange(new PropertyChangeEvent(this, "undoable", null, "Move"));
 		}
 	}
-
+	
 	@Override
-	public void movementStarted(Widget widget)
+	public void movementStarted(final Widget widget)
 	{
-		final Object object = this.canvas.findObject(widget);
-		if (this.canvas.isNode(object) || this.canvas.isLabel(object))
+		final Object object = canvas.findObject(widget);
+		if (canvas.isNode(object) || canvas.isLabel(object))
 		{
-			for (final Object o : this.canvas.getSelectedObjects())
+			for (final Object o : canvas.getSelectedObjects())
 			{
-				if (this.canvas.isNode(o) || this.canvas.isLabel(object))
+				if (canvas.isNode(o) || canvas.isLabel(object))
 				{
-					final Widget w = this.canvas.findWidget(o);
+					final Widget w = canvas.findWidget(o);
 					if (w != null)
 					{
-						this.targets.put(w, w.getPreferredLocation());
+						targets.put(w, w.getPreferredLocation());
 					}
 				}
 			}
 		}
 		else
 		{
-			this.targets.put(widget, widget.getPreferredLocation());
+			targets.put(widget, widget.getPreferredLocation());
 		}
 	}
-
+	
 	@Override
-	public void setNewLocation(Widget widget, Point location)
+	public void setNewLocation(final Widget widget, final Point location)
 	{
-		final int dx = location.x - this.originalLocation.x;
-		final int dy = location.y - this.originalLocation.y;
-		for (final Map.Entry<Widget, Point> entry : this.targets.entrySet())
+		final int dx = location.x - originalLocation.x;
+		final int dy = location.y - originalLocation.y;
+		for (final Map.Entry<Widget, Point> entry : targets.entrySet())
 		{
 			final Point point = entry.getValue();
 			entry.getKey().setPreferredLocation(new Point(point.x + dx, point.y + dy));
 		}
 	}
-
+	
 }

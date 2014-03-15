@@ -9,7 +9,7 @@ public interface LangResource
 	String follow = "Follow Non Terminal";
 	String help = "Help";
 	String home = "First Left Hand";
-
+	
 	String label = "Text";
 	String lambda_alternative = "Lambda Alternative";
 	String last = "Last Node";
@@ -30,29 +30,29 @@ public interface LangResource
 	String new_txt_desc = "A plain text file.";
 	String next_alt = "Next Alternative";
 	String next_suc = "Next Successor";
-
+	
 	String open_file = "Open File";
 	String open_project = "Open Project";
 	String options = "Options";
-
+	
 	String paste = "Paste";
 	String print = "Print";
 	String redo = "Redo";
 	String save = "Save";
 	String save_all = "Save All";
-
+	
 	String save_as = "Save As";
 	String select = "Select";
 	String split_horizontal = "Split Horizontally";
-
+	
 	String split_vertival = "Split Vertical";
 	String start = "Initial Non Terminal";
-
+	
 	String successor = "Successor";
 	String terminal = "Terminal";
 	String undo = "Undo";
 	String unsplit = "Unsplit All";
 	String zoom_minus = "Zoom -";
 	String zoom_plus = "Zoom +";
-
+	
 }

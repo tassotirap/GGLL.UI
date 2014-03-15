@@ -15,24 +15,34 @@ public class ToolBarFactory
 {
 	private final HashMap<AbstractComponent, JComponent> toolBars = new HashMap<AbstractComponent, JComponent>();
 	private JComponent defaultToolBar;
-
+	
 	public ToolBarFactory()
 	{
 	}
-
+	
+	public JComponent createToolBar(final AbstractComponent component, final boolean enableToolBarFile, final boolean enableToolBarCanvas)
+	{
+		final ToolBarFactory toolBarFactory = new ToolBarFactory();
+		if (component == null) { return getDefaultToolBar(component, toolBarFactory); }
+		if (!toolBars.containsKey(component))
+		{
+			toolBars.put(component, toolBarFactory.createToolBarExt(component));
+		}
+		return toolBars.get(component);
+	}
+	
 	private ToolBarCanvas createToolBarCanvas(final SyntaxGraph canvas)
 	{
 		final ToolBarCanvas toolBarCanvas = new ToolBarCanvas(canvas);
 		toolBarCanvas.setLayout(new BoxLayout(toolBarCanvas, BoxLayout.LINE_AXIS));
 		return toolBarCanvas;
 	}
-
-	@SuppressWarnings("rawtypes")
+	
 	private JComponent createToolBarExt(final AbstractComponent component)
 	{
 		final JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.LINE_AXIS));
-
+		
 		if (component instanceof TextAreaComponent || component instanceof GrammarComponent)
 		{
 			final ToolBarDefault toolBarFile = createToolBarFile(component);
@@ -45,37 +55,22 @@ public class ToolBarFactory
 			panel.add(toolBarCanvas);
 		}
 		return panel;
-
+		
 	}
-
+	
 	private ToolBarDefault createToolBarFile(final Object ref)
 	{
 		final ToolBarDefault toolBarFile = new ToolBarDefault(ref);
 		toolBarFile.setLayout(new BoxLayout(toolBarFile, BoxLayout.LINE_AXIS));
 		return toolBarFile;
 	}
-
-	private JComponent getDefaultToolBar(final AbstractComponent reference, ToolBarFactory toolBarFactory)
+	
+	private JComponent getDefaultToolBar(final AbstractComponent reference, final ToolBarFactory toolBarFactory)
 	{
-		if (this.defaultToolBar == null)
+		if (defaultToolBar == null)
 		{
-			this.defaultToolBar = toolBarFactory.createToolBarExt(reference);
+			defaultToolBar = toolBarFactory.createToolBarExt(reference);
 		}
-		return this.defaultToolBar;
-	}
-
-	@SuppressWarnings("rawtypes")
-	public JComponent createToolBar(final AbstractComponent component, boolean enableToolBarFile, boolean enableToolBarCanvas)
-	{
-		final ToolBarFactory toolBarFactory = new ToolBarFactory();
-		if (component == null)
-		{
-			return getDefaultToolBar(component, toolBarFactory);
-		}
-		if (!this.toolBars.containsKey(component))
-		{
-			this.toolBars.put(component, toolBarFactory.createToolBarExt(component));
-		}
-		return this.toolBars.get(component);
+		return defaultToolBar;
 	}
 }

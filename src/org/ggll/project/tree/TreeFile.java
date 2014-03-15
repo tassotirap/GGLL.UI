@@ -8,12 +8,12 @@ public class TreeFile extends File
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
-	public TreeFile(File parent, String child)
+	
+	public TreeFile(final File parent, final String child)
 	{
 		super(parent, child);
 	}
-
+	
 	@Override
 	public String toString()
 	{

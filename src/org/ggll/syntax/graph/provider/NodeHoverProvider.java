@@ -10,14 +10,14 @@ import org.netbeans.api.visual.widget.Widget;
 public class NodeHoverProvider implements TwoStateHoverProvider
 {
 	SyntaxGraph canvas;
-
-	public NodeHoverProvider(SyntaxGraph canvas)
+	
+	public NodeHoverProvider(final SyntaxGraph canvas)
 	{
 		this.canvas = canvas;
 	}
-
+	
 	@Override
-	public void setHovering(Widget widget)
+	public void setHovering(final Widget widget)
 	{
 		if (widget != null)
 		{
@@ -25,13 +25,13 @@ public class NodeHoverProvider implements TwoStateHoverProvider
 			widget.setForeground(Color.WHITE);
 		}
 	}
-
+	
 	@Override
-	public void unsetHovering(Widget widget)
+	public void unsetHovering(final Widget widget)
 	{
-		final Object object = this.canvas.findObject(widget);
-
-		if (object != null & widget != null && !this.canvas.getSelectedObjects().contains(object))
+		final Object object = canvas.findObject(widget);
+		
+		if (object != null & widget != null && !canvas.getSelectedObjects().contains(object))
 		{
 			if (widget instanceof MarkedWidget)
 			{
@@ -42,5 +42,5 @@ public class NodeHoverProvider implements TwoStateHoverProvider
 			widget.setForeground(Color.BLACK);
 		}
 	}
-
+	
 }

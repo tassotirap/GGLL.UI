@@ -21,7 +21,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 
-import org.ggll.director.GGLLDirector;
+import org.ggll.facade.GGLLFacade;
 import org.ggll.semantics.SemanticFileManager;
 import org.ggll.syntax.graph.SyntaxGraph;
 import org.ggll.syntax.graph.widget.MarkedWidget;
@@ -30,9 +30,9 @@ import org.ggll.window.component.TextAreaComponent;
 public class RoutineWindow extends JFrame
 {
 	private static final long serialVersionUID = 1L;
-
+	
 	private static final String INSERT_CODE_HERE = "/* insert code here */";
-
+	
 	private JButton btnCanvel = null;
 	private JButton btnInsert = null;
 	private JPanel pnlContent = null;
@@ -40,33 +40,33 @@ public class RoutineWindow extends JFrame
 	private JLabel lblName = null;
 	private JTextField txtName = null;
 	private TextAreaComponent txtCode = null;
-
+	
 	private final String widgetName;
 	private final MarkedWidget widget;
 	private final String routineName;
 	private final SemanticFileManager semFileManager;
-
+	
 	private final SyntaxGraph canvas;
-
-	public RoutineWindow(String widgetName, MarkedWidget widget, String routineName, SyntaxGraph canvas)
+	
+	public RoutineWindow(final String widgetName, final MarkedWidget widget, final String routineName, final SyntaxGraph canvas)
 	{
 		super();
 		this.widgetName = widgetName;
 		this.widget = widget;
 		this.routineName = routineName;
 		this.canvas = canvas;
-		this.semFileManager = new SemanticFileManager(GGLLDirector.getProject().getSemanticFile());
+		semFileManager = new SemanticFileManager(GGLLFacade.getInstance().getSemanticFile());
 		initialize();
 		addListener();
-
+		
 		if (routineName != null)
 		{
 			setTitle("Edit " + routineName);
-			this.btnInsert.setText("Edit");
-			this.txtName.setEditable(false);
-			if (this.semFileManager.getCleanCode(routineName, null) != null)
+			btnInsert.setText("Edit");
+			txtName.setEditable(false);
+			if (semFileManager.getCleanCode(routineName, null) != null)
 			{
-				this.txtCode.getTextArea().setText(this.semFileManager.getCleanCode(routineName, null));
+				txtCode.getTextArea().setText(semFileManager.getCleanCode(routineName, null));
 			}
 			getNameTextField().setText(routineName);
 		}
@@ -77,42 +77,39 @@ public class RoutineWindow extends JFrame
 		setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 		setVisible(true);
 	}
-
+	
 	private void addListener()
 	{
-		this.btnInsert.addActionListener(new ActionListener()
+		btnInsert.addActionListener(new ActionListener()
 		{
-
+			
 			@Override
-			public void actionPerformed(ActionEvent e)
+			public void actionPerformed(final ActionEvent e)
 			{
-				final String name = RoutineWindow.this.txtName.getText();
-				final String code = RoutineWindow.this.txtCode.getText();
-
-				if (name.equals("") || code.equals(""))
+				final String name = txtName.getText();
+				final String code = txtCode.getText();
+				
+				if (name.equals("") || code.equals("")) { return; }
+				
+				if (routineName != null || semFileManager.canInsert(name))
 				{
-					return;
-				}
-
-				if (RoutineWindow.this.routineName != null || RoutineWindow.this.semFileManager.canInsert(name))
-				{
-
-					if (RoutineWindow.this.routineName != null)
+					
+					if (routineName != null)
 					{
-						RoutineWindow.this.semFileManager.editRoutine(name, code);
-						RoutineWindow.this.widget.setMark(name);
+						semFileManager.editRoutine(name, code);
+						widget.setMark(name);
 					}
-					else if (RoutineWindow.this.semFileManager.insertRoutine(name, code, RoutineWindow.this.widgetName))
+					else if (semFileManager.insertRoutine(name, code, widgetName))
 					{
-						RoutineWindow.this.widget.setMark(name);
-						RoutineWindow.this.canvas.propertyChange(new PropertyChangeEvent(this, "undoable", null, "AddRoutine"));
+						widget.setMark(name);
+						canvas.propertyChange(new PropertyChangeEvent(this, "undoable", null, "AddRoutine"));
 					}
 					else
 					{
 						JOptionPane.showMessageDialog(null, "Could not create semantic routine.", "An Erro Occurred", JOptionPane.ERROR_MESSAGE);
 					}
 				}
-				else if (!RoutineWindow.this.semFileManager.canInsert(name))
+				else if (!semFileManager.canInsert(name))
 				{
 					JOptionPane.showMessageDialog(null, "This semantic routine alrealdy existis in the file.", "An Erro Occurred", JOptionPane.ERROR_MESSAGE);
 				}
@@ -123,105 +120,105 @@ public class RoutineWindow extends JFrame
 				setVisible(false);
 			}
 		});
-
-		this.btnCanvel.addActionListener(new ActionListener()
+		
+		btnCanvel.addActionListener(new ActionListener()
 		{
-
+			
 			@Override
-			public void actionPerformed(ActionEvent e)
+			public void actionPerformed(final ActionEvent e)
 			{
 				setVisible(false);
 			}
 		});
-
-		this.txtCode.getTextArea().addFocusListener(new FocusListener()
+		
+		txtCode.getTextArea().addFocusListener(new FocusListener()
 		{
 			@Override
-			public void focusGained(FocusEvent arg0)
+			public void focusGained(final FocusEvent arg0)
 			{
-				if (RoutineWindow.this.txtCode.getText().equals(INSERT_CODE_HERE))
+				if (txtCode.getText().equals(RoutineWindow.INSERT_CODE_HERE))
 				{
-					RoutineWindow.this.txtCode.setText("", false);
+					txtCode.setText("", false);
 				}
 			}
-
+			
 			@Override
-			public void focusLost(FocusEvent arg0)
+			public void focusLost(final FocusEvent arg0)
 			{
-				if (RoutineWindow.this.txtCode.getText().equals(""))
+				if (txtCode.getText().equals(""))
 				{
-					RoutineWindow.this.txtCode.setText(INSERT_CODE_HERE, false);
+					txtCode.setText(RoutineWindow.INSERT_CODE_HERE, false);
 				}
 			}
 		});
 	}
-
+	
 	private JPanel getButtonsPanel()
 	{
-		if (this.pnlButtons == null)
+		if (pnlButtons == null)
 		{
-			this.pnlButtons = new JPanel();
-			this.pnlButtons.setLayout(new FlowLayout(FlowLayout.RIGHT, 10, 0));
-			this.pnlButtons.add(getCancelButton());
-			this.pnlButtons.add(getInsertButton());
+			pnlButtons = new JPanel();
+			pnlButtons.setLayout(new FlowLayout(FlowLayout.RIGHT, 10, 0));
+			pnlButtons.add(getCancelButton());
+			pnlButtons.add(getInsertButton());
 		}
-		return this.pnlButtons;
+		return pnlButtons;
 	}
-
+	
 	private JButton getCancelButton()
 	{
-		if (this.btnCanvel == null)
+		if (btnCanvel == null)
 		{
-			this.btnCanvel = new JButton();
-			this.btnCanvel.setText("Cancel");
+			btnCanvel = new JButton();
+			btnCanvel.setText("Cancel");
 		}
-		return this.btnCanvel;
+		return btnCanvel;
 	}
-
+	
 	private JTextArea getCodeTextArea()
 	{
-		if (this.txtCode == null)
+		if (txtCode == null)
 		{
-			this.txtCode = new TextAreaComponent();
-			this.txtCode.setText(INSERT_CODE_HERE, false);
-
-			this.txtCode.getTextArea().addFocusListener(new FocusListener()
+			txtCode = new TextAreaComponent();
+			txtCode.setText(RoutineWindow.INSERT_CODE_HERE, false);
+			
+			txtCode.getTextArea().addFocusListener(new FocusListener()
 			{
 				@Override
-				public void focusGained(FocusEvent arg0)
+				public void focusGained(final FocusEvent arg0)
 				{
-					if (RoutineWindow.this.txtCode.getText().equals(INSERT_CODE_HERE))
+					if (txtCode.getText().equals(RoutineWindow.INSERT_CODE_HERE))
 					{
-						RoutineWindow.this.txtCode.setText("", false);
+						txtCode.setText("", false);
 					}
 				}
-
+				
 				@Override
-				public void focusLost(FocusEvent arg0)
+				public void focusLost(final FocusEvent arg0)
 				{
-					if (RoutineWindow.this.txtCode.getText().equals(""))
+					if (txtCode.getText().equals(""))
 					{
-						RoutineWindow.this.txtCode.setText(INSERT_CODE_HERE, false);
+						txtCode.setText(RoutineWindow.INSERT_CODE_HERE, false);
 					}
 				}
 			});
 		}
-		return this.txtCode.getTextArea();
+		return txtCode.getTextArea();
 	}
-
+	
 	private JButton getInsertButton()
 	{
-		if (this.btnInsert == null)
+		if (btnInsert == null)
 		{
-			this.btnInsert = new JButton();
-			this.btnInsert.setText("Insert");
+			btnInsert = new JButton();
+			btnInsert.setText("Insert");
 		}
-		return this.btnInsert;
+		return btnInsert;
 	}
-
+	
 	private JPanel getJContentPane()
 	{
-		if (this.pnlContent == null)
+		if (pnlContent == null)
 		{
 			final GridBagConstraints gridBagConstraints4 = new GridBagConstraints();
 			gridBagConstraints4.gridx = 1;
@@ -246,27 +243,27 @@ public class RoutineWindow extends JFrame
 			gridBagConstraints.gridx = 0;
 			gridBagConstraints.gridy = 0;
 			gridBagConstraints.insets = new Insets(10, 10, 0, 0);
-			this.lblName = new JLabel();
-			this.lblName.setText("Routine name:");
-			this.pnlContent = new JPanel();
-			this.pnlContent.setLayout(new GridBagLayout());
-			this.pnlContent.add(this.lblName, gridBagConstraints);
-			this.pnlContent.add(getNameTextField(), gridBagConstraints1);
-			this.pnlContent.add(getCodeTextArea(), gridBagConstraints2);
-			this.pnlContent.add(getButtonsPanel(), gridBagConstraints4);
+			lblName = new JLabel();
+			lblName.setText("Routine name:");
+			pnlContent = new JPanel();
+			pnlContent.setLayout(new GridBagLayout());
+			pnlContent.add(lblName, gridBagConstraints);
+			pnlContent.add(getNameTextField(), gridBagConstraints1);
+			pnlContent.add(getCodeTextArea(), gridBagConstraints2);
+			pnlContent.add(getButtonsPanel(), gridBagConstraints4);
 		}
-		return this.pnlContent;
+		return pnlContent;
 	}
-
+	
 	private JTextField getNameTextField()
 	{
-		if (this.txtName == null)
+		if (txtName == null)
 		{
-			this.txtName = new JTextField();
+			txtName = new JTextField();
 		}
-		return this.txtName;
+		return txtName;
 	}
-
+	
 	private void initialize()
 	{
 		this.setSize(550, 500);
@@ -274,5 +271,5 @@ public class RoutineWindow extends JFrame
 		this.setLocation((dimension.width - 550) / 2, (dimension.height - 500) / 2);
 		setContentPane(getJContentPane());
 	}
-
+	
 }

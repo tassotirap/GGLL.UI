@@ -7,14 +7,14 @@ import org.ggll.syntax.graph.SyntaxGraph;
 
 public class GeneratedGrammarComponent extends AbstractComponent
 {
-	public GeneratedGrammarComponent(SyntaxGraph canvas)
+	public GeneratedGrammarComponent(final SyntaxGraph canvas)
 	{
-		this.jComponent = new JScrollPane(GeneratedGrammar.getInstance().getView(canvas));
+		jComponent = new JScrollPane(GeneratedGrammar.getInstance().getView(canvas));
 	}
-
+	
 	@Override
 	public void fireContentChanged()
 	{
 	}
-
+	
 }

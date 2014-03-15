@@ -10,34 +10,31 @@ import org.netbeans.api.visual.widget.Widget;
 
 public class LabelTextFieldEditor implements TextFieldInplaceEditor
 {
-
+	
 	private final SyntaxGraph canvas;
-
-	public LabelTextFieldEditor(SyntaxGraph canvas)
+	
+	public LabelTextFieldEditor(final SyntaxGraph canvas)
 	{
 		this.canvas = canvas;
 	}
-
+	
 	@Override
-	public String getText(Widget widget)
+	public String getText(final Widget widget)
 	{
 		return ((LabelWidget) widget).getLabel();
 	}
-
+	
 	@Override
-	public boolean isEnabled(Widget widget)
+	public boolean isEnabled(final Widget widget)
 	{
-		if (this.canvas.getActiveTool().equals(CanvasResource.SELECT))
-		{
-			return true;
-		}
+		if (canvas.getActiveTool().equals(CanvasResource.SELECT)) { return true; }
 		return false;
 	}
-
+	
 	@Override
-	public void setText(Widget widget, String text)
+	public void setText(final Widget widget, final String text)
 	{
 		((LabelWidget) widget).setLabel(text);
-		this.canvas.getCanvasStateHistory().propertyChange(new PropertyChangeEvent(this, "undoable", null, "Rename"));
+		canvas.getCanvasStateHistory().propertyChange(new PropertyChangeEvent(this, "undoable", null, "Rename"));
 	}
 }

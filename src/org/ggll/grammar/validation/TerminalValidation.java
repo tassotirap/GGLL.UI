@@ -8,20 +8,20 @@ import java.util.Set;
 
 import org.ggll.resource.CanvasResource;
 import org.ggll.syntax.graph.state.StateConnection;
-import org.ggll.syntax.graph.state.StateNode;
 import org.ggll.syntax.graph.state.StateHelper;
+import org.ggll.syntax.graph.state.StateNode;
 
 public class TerminalValidation extends GrammarValidation
 {
-
-	private void alternativeNodes(StateNode node, ExtendedList<String> first, ExtendedList<StateNode> nodes)
+	
+	private void alternativeNodes(final StateNode node, final ExtendedList<String> first, final ExtendedList<StateNode> nodes)
 	{
 		StateNode alternative = StateHelper.findAlternativeNode(node);
 		while (alternative != null)
 		{
 			if (alternative.getType().equals(CanvasResource.N_TERMINAL))
 			{
-				StateNode leftSide = StateHelper.findLeftSide(alternative);
+				final StateNode leftSide = StateHelper.findLeftSide(alternative);
 				walkGraph(leftSide, first, nodes);
 			}
 			else if (alternative.getType().equals(CanvasResource.TERMINAL))
@@ -31,15 +31,15 @@ public class TerminalValidation extends GrammarValidation
 			alternative = StateHelper.findAlternativeNode(alternative);
 		}
 	}
-
-	private void sucessorNodes(StateNode node, ExtendedList<String> first, ExtendedList<StateNode> nodes)
+	
+	private void sucessorNodes(final StateNode node, final ExtendedList<String> first, final ExtendedList<StateNode> nodes)
 	{
-		StateNode sucessor = StateHelper.findSucessorNode(node);
+		final StateNode sucessor = StateHelper.findSucessorNode(node);
 		if (sucessor != null)
 		{
 			if (sucessor.getType().equals(CanvasResource.N_TERMINAL))
 			{
-				StateNode leftSide = StateHelper.findLeftSide(sucessor);
+				final StateNode leftSide = StateHelper.findLeftSide(sucessor);
 				walkGraph(leftSide, first, nodes);
 			}
 			else if (sucessor.getType().equals(CanvasResource.TERMINAL))
@@ -48,32 +48,18 @@ public class TerminalValidation extends GrammarValidation
 			}
 		}
 	}
-
-	private void walkGraph(StateNode node, ExtendedList<String> first, ExtendedList<StateNode> nodes)
-	{
-		if (node == null)
-		{
-			return;
-		}
-		if (!nodes.contains(node))
-		{
-			nodes.append(node);
-			sucessorNodes(node, first, nodes);
-			alternativeNodes(StateHelper.findSucessorNode(node), first, nodes);
-		}
-	}
-
+	
 	@Override
 	public void validate()
 	{
 		for (final StateConnection connection : StateHelper.getSucessors().getAll())
 		{
-			StateNode node = StateHelper.findNode(connection.getSource());
-			ExtendedList<String> first = new ExtendedList<String>();
-			ExtendedList<StateNode> nodes = new ExtendedList<StateNode>();
+			final StateNode node = StateHelper.findNode(connection.getSource());
+			final ExtendedList<String> first = new ExtendedList<String>();
+			final ExtendedList<StateNode> nodes = new ExtendedList<StateNode>();
 			walkGraph(node, first, nodes);
-			Set<String> unique = new HashSet<String>(first.getAll());
-			for (String key : unique)
+			final Set<String> unique = new HashSet<String>(first.getAll());
+			for (final String key : unique)
 			{
 				if (Collections.frequency(first.getAll(), key) > 1)
 				{
@@ -81,7 +67,18 @@ public class TerminalValidation extends GrammarValidation
 				}
 			}
 		}
-
+		
 	}
-
+	
+	private void walkGraph(final StateNode node, final ExtendedList<String> first, final ExtendedList<StateNode> nodes)
+	{
+		if (node == null) { return; }
+		if (!nodes.contains(node))
+		{
+			nodes.append(node);
+			sucessorNodes(node, first, nodes);
+			alternativeNodes(StateHelper.findSucessorNode(node), first, nodes);
+		}
+	}
+	
 }

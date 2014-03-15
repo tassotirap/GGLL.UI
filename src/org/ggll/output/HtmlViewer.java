@@ -17,126 +17,126 @@ import org.ggll.util.html.CustomHTMLEditorKit;
 
 public abstract class HtmlViewer implements HyperlinkListener
 {
-
+	
 	protected class Page
 	{
 		final static String HEAD = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">" + "<html>" + "<head>" + "<meta http-equiv=\"Content-Type\" content=\"text/html\">" + "<title>Gr View gerenerated page</title>" + "</head>";
 		final static String TAIL = "</body></html>";
-		StringBuffer content = new StringBuffer(HEAD + TAIL);
-
+		StringBuffer content = new StringBuffer(Page.HEAD + Page.TAIL);
+		
 		String getContent()
 		{
-			return this.content.toString();
+			return content.toString();
 		}
-
-		void write(String text)
+		
+		void write(final String text)
 		{
 			final String newText = text;
-			this.content.insert(this.content.length() - TAIL.length(), newText);
+			content.insert(content.length() - Page.TAIL.length(), newText);
 		}
 	}
-
+	
 	public static enum TOPIC
 	{
 		Error, Grammar, Output, Parser, SemanticStack, SyntaxStack, Tokens
 	};
-
+	
 	public static final String ApplicationImagePath = GGLLImages.imagePath;
 	public final static String DEFAULT_FONT = "Arial";
 	public final static String DEFAULT_SIZE = "3";
-
+	
 	public final static String HORIZONTAL_LINE = "<hr width=\"100%\" size=\"1\" color=\"gray\" align=\"center\">";
-
+	
 	public final static boolean USE_CSSFILE = false;
 	private SyntaxGraph activeScene;
 	private final StyleSheet cssSheet = new StyleSheet();
-
+	
 	private final JEditorPane editorPane = new JEditorPane();
-
-	private final HTMLEditorKit kit = new CustomHTMLEditorKit(ApplicationImagePath);
-
+	
+	private final HTMLEditorKit kit = new CustomHTMLEditorKit(HtmlViewer.ApplicationImagePath);
+	
 	public HtmlViewer()
 	{
 		try
 		{
-			this.cssSheet.loadRules(new StringReader(GGLLImages.imagePath + "output.css"), null);
+			cssSheet.loadRules(new StringReader(GGLLImages.imagePath + "output.css"), null);
 		}
 		catch (final IOException e)
 		{
 			e.printStackTrace();
 		}
 		;
-		if (USE_CSSFILE)
+		if (HtmlViewer.USE_CSSFILE)
 		{
-			this.kit.setStyleSheet(this.cssSheet);
+			kit.setStyleSheet(cssSheet);
 		}
-		this.kit.setLinkCursor(new Cursor(Cursor.HAND_CURSOR));
-		this.editorPane.setEditorKit(this.kit);
-		final Document doc = this.editorPane.getDocument();
+		kit.setLinkCursor(new Cursor(Cursor.HAND_CURSOR));
+		editorPane.setEditorKit(kit);
+		final Document doc = editorPane.getDocument();
 		final StringReader reader = new StringReader(new Page().getContent());
 		try
 		{
-			this.kit.read(reader, doc, 0);
+			kit.read(reader, doc, 0);
 		}
 		catch (final Exception e)
 		{
 			e.printStackTrace();
 		}
-		this.editorPane.setDoubleBuffered(true);
-		this.editorPane.setEditable(false);
-		this.editorPane.setContentType("text/html");
-		this.editorPane.addHyperlinkListener(this);
+		editorPane.setDoubleBuffered(true);
+		editorPane.setEditable(false);
+		editorPane.setContentType("text/html");
+		editorPane.addHyperlinkListener(this);
 	}
-
-	void displayTextExt(String st, String font, String size, String cssClass, TOPIC topic)
-	{
-	}
-
+	
 	public void clear()
 	{
-		this.editorPane.setText("");
+		editorPane.setText("");
 	}
-
-	public void displayHorizontalLineExt(TOPIC topic)
+	
+	public void displayHorizontalLineExt(final TOPIC topic)
 	{
-		displayTextExt(HORIZONTAL_LINE, topic);
+		displayTextExt(HtmlViewer.HORIZONTAL_LINE, topic);
 	}
-
-	public void displayTextExt(String st, TOPIC topic)
+	
+	void displayTextExt(final String st, final String font, final String size, final String cssClass, final TOPIC topic)
 	{
 	}
-
+	
+	public void displayTextExt(final String st, final TOPIC topic)
+	{
+	}
+	
 	public SyntaxGraph getActiveScene()
 	{
-		return this.activeScene;
+		return activeScene;
 	}
-
+	
 	public StyleSheet getCssSheet()
 	{
-		return this.cssSheet;
+		return cssSheet;
 	}
-
+	
 	public JEditorPane getEditorPane()
 	{
-		return this.editorPane;
+		return editorPane;
 	}
-
+	
 	public HTMLEditorKit getKit()
 	{
-		return this.kit;
+		return kit;
 	}
-
+	
 	@Override
-	public void hyperlinkUpdate(HyperlinkEvent e)
+	public void hyperlinkUpdate(final HyperlinkEvent e)
 	{
 		if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED)
 		{
-			this.activeScene.select(e.getDescription());
+			activeScene.select(e.getDescription());
 		}
 	}
-
-	public void setActiveScene(SyntaxGraph canvas)
+	
+	public void setActiveScene(final SyntaxGraph canvas)
 	{
-		this.activeScene = canvas;
+		activeScene = canvas;
 	}
 }

@@ -12,37 +12,34 @@ import org.netbeans.api.visual.widget.Widget;
 
 public class NodeReconnectProvider implements ReconnectProvider
 {
-
+	
 	private String edge;
 	private String originalNode;
 	private String replacementNode;
 	private final SyntaxGraph canvas;
-
-	public NodeReconnectProvider(SyntaxGraph canvas)
+	
+	public NodeReconnectProvider(final SyntaxGraph canvas)
 	{
 		this.canvas = canvas;
 	}
-
+	
 	@Override
-	public boolean hasCustomReplacementWidgetResolver(Scene scene)
+	public boolean hasCustomReplacementWidgetResolver(final Scene scene)
 	{
 		return false;
 	}
-
+	
 	@Override
-	public ConnectorState isReplacementWidget(ConnectionWidget connectionWidget, Widget replacementWidget, boolean reconnectingSource)
+	public ConnectorState isReplacementWidget(final ConnectionWidget connectionWidget, final Widget replacementWidget, final boolean reconnectingSource)
 	{
-		final Object object = this.canvas.findObject(replacementWidget);
-		this.replacementNode = this.canvas.isNode(object) ? (String) object : null;
-		if (this.replacementNode != null && this.edge != null)
-		{
-			return ConnectorState.ACCEPT;
-		}
+		final Object object = canvas.findObject(replacementWidget);
+		replacementNode = canvas.isNode(object) ? (String) object : null;
+		if (replacementNode != null && edge != null) { return ConnectorState.ACCEPT; }
 		return ConnectorState.REJECT;
 	}
-
+	
 	@Override
-	public boolean isSourceReconnectable(ConnectionWidget connectionWidget)
+	public boolean isSourceReconnectable(final ConnectionWidget connectionWidget)
 	{
 		/*
 		 * Canvas canvas = CanvasFactory.getCanvas(canvasID); Object object =
@@ -53,54 +50,54 @@ public class NodeReconnectProvider implements ReconnectProvider
 		// Actually I prefer to avoid this
 		return false;
 	}
-
+	
 	@Override
-	public boolean isTargetReconnectable(ConnectionWidget connectionWidget)
+	public boolean isTargetReconnectable(final ConnectionWidget connectionWidget)
 	{
-		final Object object = this.canvas.findObject(connectionWidget);
-		this.edge = this.canvas.isEdge(object) ? (String) object : null;
-		this.originalNode = this.edge != null ? this.canvas.getEdgeTarget(this.edge) : null;
-		return this.originalNode != null;
+		final Object object = canvas.findObject(connectionWidget);
+		edge = canvas.isEdge(object) ? (String) object : null;
+		originalNode = edge != null ? canvas.getEdgeTarget(edge) : null;
+		return originalNode != null;
 	}
-
+	
 	@Override
-	public void reconnect(ConnectionWidget connectionWidget, Widget replacementWidget, boolean reconnectingSource)
+	public void reconnect(final ConnectionWidget connectionWidget, final Widget replacementWidget, final boolean reconnectingSource)
 	{
 		if (replacementWidget == null)
 		{
-			this.canvas.removeEdge(this.edge);
-			this.canvas.getCanvasStateHistory().propertyChange(new PropertyChangeEvent(this, "undoable", null, "Disconnect"));
+			canvas.removeEdge(edge);
+			canvas.getCanvasStateHistory().propertyChange(new PropertyChangeEvent(this, "undoable", null, "Disconnect"));
 		}
 		else if (reconnectingSource)
 		{
-
-			this.canvas.setEdgeSource(this.edge, this.replacementNode);
-			this.canvas.getCanvasStateHistory().propertyChange(new PropertyChangeEvent(this, "undoable", null, "Connection"));
-
+			
+			canvas.setEdgeSource(edge, replacementNode);
+			canvas.getCanvasStateHistory().propertyChange(new PropertyChangeEvent(this, "undoable", null, "Connection"));
+			
 		}
 		else
 		{
-
-			this.canvas.setEdgeTarget(this.edge, this.replacementNode);
-			this.canvas.getCanvasStateHistory().propertyChange(new PropertyChangeEvent(this, "undoable", null, "Connection"));
-
+			
+			canvas.setEdgeTarget(edge, replacementNode);
+			canvas.getCanvasStateHistory().propertyChange(new PropertyChangeEvent(this, "undoable", null, "Connection"));
+			
 		}
 	}
-
+	
 	@Override
-	public void reconnectingFinished(ConnectionWidget connectionWidget, boolean reconnectingSource)
+	public void reconnectingFinished(final ConnectionWidget connectionWidget, final boolean reconnectingSource)
 	{
 	}
-
+	
 	@Override
-	public void reconnectingStarted(ConnectionWidget connectionWidget, boolean reconnectingSource)
+	public void reconnectingStarted(final ConnectionWidget connectionWidget, final boolean reconnectingSource)
 	{
 	}
-
+	
 	@Override
-	public Widget resolveReplacementWidget(Scene scene, Point sceneLocation)
+	public Widget resolveReplacementWidget(final Scene scene, final Point sceneLocation)
 	{
 		return null;
 	}
-
+	
 }
