@@ -1,8 +1,7 @@
 package org.ggll.file;
 
 public class FileNames
-{
-	
+{	
 	public final static String GRAM_EXTENSION = ".gram";
 	public final static String JAVA_EXTENSION = ".java";
 	public final static String LEX_EXTENSION = ".lex";

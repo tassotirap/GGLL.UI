@@ -7,7 +7,7 @@ import java.util.Date;
 
 public class Log
 {
-	public static void Write(final String message)
+	public static void write(final String message)
 	{
 		try
 		{

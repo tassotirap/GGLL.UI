@@ -11,7 +11,7 @@ import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
-import org.ggll.images.GGLLImages;
+import org.ggll.images.ImageResource;
 import org.ggll.resource.CanvasResource;
 import org.ggll.resource.LangResource;
 import org.ggll.syntax.graph.SyntaxGraph;
@@ -146,15 +146,15 @@ public class ToolBarGrammar extends BaseToolBar
 	@Override
 	protected void initComponets()
 	{
-		btnSelect = new JButton(new ImageIcon(GGLLImages.imagePath + "select.png"));
-		btnSucessor = new JButton(new ImageIcon(GGLLImages.imagePath + "successor.png"));
-		btnAlternative = new JButton(new ImageIcon(GGLLImages.imagePath + "alternative.png"));
-		btnLeftHand = new JButton(new ImageIcon(GGLLImages.imagePath + "left_hand.png"));
-		btnNTerminal = new JButton(new ImageIcon(GGLLImages.imagePath + "icon_nt.png"));
-		btnTerminal = new JButton(new ImageIcon(GGLLImages.imagePath + "icon_t.png"));
-		btnLambdaAlternative = new JButton(new ImageIcon(GGLLImages.imagePath + "icon_l.png"));
-		btnLabel = new JButton(new ImageIcon(GGLLImages.imagePath + "label.png"));
-		btnStart = new JButton(new ImageIcon(GGLLImages.imagePath + "icon_s.png"));
+		btnSelect = new JButton(new ImageIcon(ImageResource.imagePath + "select.png"));
+		btnSucessor = new JButton(new ImageIcon(ImageResource.imagePath + "successor.png"));
+		btnAlternative = new JButton(new ImageIcon(ImageResource.imagePath + "alternative.png"));
+		btnLeftHand = new JButton(new ImageIcon(ImageResource.imagePath + "left_hand.png"));
+		btnNTerminal = new JButton(new ImageIcon(ImageResource.imagePath + "icon_nt.png"));
+		btnTerminal = new JButton(new ImageIcon(ImageResource.imagePath + "icon_t.png"));
+		btnLambdaAlternative = new JButton(new ImageIcon(ImageResource.imagePath + "icon_l.png"));
+		btnLabel = new JButton(new ImageIcon(ImageResource.imagePath + "label.png"));
+		btnStart = new JButton(new ImageIcon(ImageResource.imagePath + "icon_s.png"));
 		
 		buttons = new JButton[]
 		{ btnSelect, btnSucessor, btnAlternative, btnLeftHand, btnNTerminal, btnTerminal, btnLambdaAlternative, btnLabel, btnStart };

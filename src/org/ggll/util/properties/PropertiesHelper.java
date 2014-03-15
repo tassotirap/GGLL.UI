@@ -44,7 +44,7 @@ public class PropertiesHelper
 		}
 		catch (final IOException e)
 		{
-			Log.Write(e.getMessage());
+			Log.write(e.getMessage());
 		}
 		finally
 		{
@@ -83,7 +83,7 @@ public class PropertiesHelper
 		}
 		catch (final IOException e)
 		{
-			Log.Write(e.getMessage());
+			Log.write(e.getMessage());
 		}
 		catch (final Exception e)
 		{

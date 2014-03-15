@@ -14,6 +14,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.ggll.project.Project;
+import org.ggll.util.Log;
 import org.ggll.util.io.IOHelper;
 
 public class SemanticFile extends File
@@ -93,10 +94,12 @@ public class SemanticFile extends File
 		}
 		catch (final FileNotFoundException e)
 		{
+			Log.write(e.getMessage());
 			e.printStackTrace();
 		}
 		catch (final IOException e)
 		{
+			Log.write(e.getMessage());
 			e.printStackTrace();
 		}
 		
@@ -125,6 +128,7 @@ public class SemanticFile extends File
 		}
 		catch (final IOException e)
 		{
+			Log.write(e.getMessage());
 			e.printStackTrace();
 		}
 		return content;

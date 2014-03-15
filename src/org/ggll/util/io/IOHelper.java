@@ -170,7 +170,7 @@ public class IOHelper
 			}
 			catch (final IOException ioe)
 			{
-				Log.Write(ioe.getMessage());
+				Log.write(ioe.getMessage());
 			}
 			finally
 			{
@@ -208,7 +208,7 @@ public class IOHelper
 			}
 			catch (final IOException ioe)
 			{
-				Log.Write(ioe.getMessage());
+				Log.write(ioe.getMessage());
 			}
 			finally
 			{
@@ -237,7 +237,7 @@ public class IOHelper
 			}
 			catch (final IOException ioe)
 			{
-				Log.Write(ioe.getMessage());
+				Log.write(ioe.getMessage());
 			}
 			finally
 			{
@@ -362,7 +362,7 @@ public class IOHelper
 			}
 			catch (final IOException ioe)
 			{
-				Log.Write(ioe.getMessage());
+				Log.write(ioe.getMessage());
 			}
 			finally
 			{

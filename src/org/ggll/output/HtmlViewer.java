@@ -11,7 +11,7 @@ import javax.swing.text.Document;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.StyleSheet;
 
-import org.ggll.images.GGLLImages;
+import org.ggll.images.ImageResource;
 import org.ggll.syntax.graph.SyntaxGraph;
 import org.ggll.util.html.CustomHTMLEditorKit;
 
@@ -41,7 +41,7 @@ public abstract class HtmlViewer implements HyperlinkListener
 		Error, Grammar, Output, Parser, SemanticStack, SyntaxStack, Tokens
 	};
 	
-	public static final String ApplicationImagePath = GGLLImages.imagePath;
+	public static final String ApplicationImagePath = ImageResource.imagePath;
 	public final static String DEFAULT_FONT = "Arial";
 	public final static String DEFAULT_SIZE = "3";
 	
@@ -59,7 +59,7 @@ public abstract class HtmlViewer implements HyperlinkListener
 	{
 		try
 		{
-			cssSheet.loadRules(new StringReader(GGLLImages.imagePath + "output.css"), null);
+			cssSheet.loadRules(new StringReader(ImageResource.imagePath + "output.css"), null);
 		}
 		catch (final IOException e)
 		{

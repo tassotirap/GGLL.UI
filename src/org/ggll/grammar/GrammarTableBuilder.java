@@ -8,17 +8,14 @@ import org.ggll.resource.CanvasResource;
 import org.ggll.syntax.graph.state.StateHelper;
 import org.ggll.syntax.graph.state.StateNode;
 
-public class GrammarFactory
+public class GrammarTableBuilder
 {
-	private int cont;
-	
-	private String htmlOutput;
-	
-	private String table[][];
-	
+	private int cont;	
+	private String htmlOutput;	
+	private String table[][];	
 	private int line;
 	
-	public GrammarFactory()
+	public GrammarTableBuilder()
 	{
 	}
 	

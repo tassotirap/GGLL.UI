@@ -27,7 +27,7 @@ import java.util.Set;
 
 import javax.swing.JComponent;
 
-import org.ggll.images.GGLLImages;
+import org.ggll.images.ImageResource;
 import org.ggll.resource.CanvasResource;
 import org.ggll.syntax.graph.adapter.ExtendedActionFactory;
 import org.ggll.syntax.graph.connector.ConnectorFactory;
@@ -302,28 +302,28 @@ public class SyntaxGraph extends GraphScene.StringGraph implements PropertyChang
 	{
 		final Toolkit toolkit = Toolkit.getDefaultToolkit();
 		
-		Image image = toolkit.getImage(GGLLImages.CURSOS_LEFT_SIDE_ENABLED);
+		Image image = toolkit.getImage(ImageResource.CURSOS_LEFT_SIDE_ENABLED);
 		cursors.put(CanvasResource.LEFT_SIDE, toolkit.createCustomCursor(image, new Point(0, 0), "Left Side"));
 		
-		image = toolkit.getImage(GGLLImages.CURSOS_TERMINAL_ENABLED);
+		image = toolkit.getImage(ImageResource.CURSOS_TERMINAL_ENABLED);
 		cursors.put(CanvasResource.TERMINAL, toolkit.createCustomCursor(image, new Point(0, 0), "Terminal"));
 		
-		image = toolkit.getImage(GGLLImages.CURSOS_N_TERMINAL_ENABLED);
+		image = toolkit.getImage(ImageResource.CURSOS_N_TERMINAL_ENABLED);
 		cursors.put(CanvasResource.N_TERMINAL, toolkit.createCustomCursor(image, new Point(0, 0), "Non-Terminal"));
 		
-		image = toolkit.getImage(GGLLImages.CURSOS_LAMBDA_ENABLED);
+		image = toolkit.getImage(ImageResource.CURSOS_LAMBDA_ENABLED);
 		cursors.put(CanvasResource.LAMBDA, toolkit.createCustomCursor(image, new Point(0, 0), "Lambda Alternative"));
 		
-		image = toolkit.getImage(GGLLImages.CURSOS_SUCCESSOR_ENABLED);
+		image = toolkit.getImage(ImageResource.CURSOS_SUCCESSOR_ENABLED);
 		cursors.put(CanvasResource.SUCCESSOR, toolkit.createCustomCursor(image, new Point(0, 0), "Successor"));
 		
-		image = toolkit.getImage(GGLLImages.CURSOS_ALTERNATIVE_ENABLED);
+		image = toolkit.getImage(ImageResource.CURSOS_ALTERNATIVE_ENABLED);
 		cursors.put(CanvasResource.ALTERNATIVE, toolkit.createCustomCursor(image, new Point(0, 0), "Alternative"));
 		
-		image = toolkit.getImage(GGLLImages.CURSOS_LABEL_ENABLED);
+		image = toolkit.getImage(ImageResource.CURSOS_LABEL_ENABLED);
 		cursors.put(CanvasResource.LABEL, toolkit.createCustomCursor(image, new Point(0, 0), "Label"));
 		
-		image = toolkit.getImage(GGLLImages.CURSOS_START_ENABLED);
+		image = toolkit.getImage(ImageResource.CURSOS_START_ENABLED);
 		cursors.put(CanvasResource.START, toolkit.createCustomCursor(image, new Point(0, 0), "Start"));
 	}
 	

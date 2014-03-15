@@ -14,7 +14,7 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 import org.ggll.facade.GGLLFacade;
-import org.ggll.images.GGLLImages;
+import org.ggll.images.ImageResource;
 import org.ggll.resource.LangResource;
 import org.ggll.syntax.graph.state.StateHistory;
 import org.ggll.window.component.AbstractComponent;
@@ -76,12 +76,12 @@ public class ToolBarDefault extends BaseToolBar implements PropertyChangeListene
 	@Override
 	protected void initComponets()
 	{
-		btnSave = new JButton(new ImageIcon(GGLLImages.imagePath + "document-save.png"));
-		btnSaveAll = new JButton(new ImageIcon(GGLLImages.imagePath + "document-save-all.png"));
-		btnPrint = new JButton(new ImageIcon(GGLLImages.imagePath + "document-print.png"));
-		btnUndo = new JButton(new ImageIcon(GGLLImages.imagePath + "edit-undo.png"));
+		btnSave = new JButton(new ImageIcon(ImageResource.imagePath + "document-save.png"));
+		btnSaveAll = new JButton(new ImageIcon(ImageResource.imagePath + "document-save-all.png"));
+		btnPrint = new JButton(new ImageIcon(ImageResource.imagePath + "document-print.png"));
+		btnUndo = new JButton(new ImageIcon(ImageResource.imagePath + "edit-undo.png"));
 		btnUndo.setEnabled(false);
-		btnRedo = new JButton(new ImageIcon(GGLLImages.imagePath + "edit-redo.png"));
+		btnRedo = new JButton(new ImageIcon(ImageResource.imagePath + "edit-redo.png"));
 		btnRedo.setEnabled(false);
 		buttons = new JButton[]
 		{ btnSave, btnSaveAll, btnPrint, btnUndo, btnRedo };

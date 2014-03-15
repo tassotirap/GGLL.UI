@@ -45,7 +45,7 @@ public class SemanticFileManager
 		}
 		catch (final Exception e)
 		{
-			Log.Write("Could not create new routine");
+			Log.write("Could not create new routine");
 			return false;
 		}
 		return true;
@@ -98,7 +98,7 @@ public class SemanticFileManager
 		}
 		catch (final Exception e)
 		{
-			Log.Write("Could not create new routine");
+			Log.write("Could not create new routine");
 		}
 	}
 	

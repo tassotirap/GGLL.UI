@@ -157,7 +157,7 @@ public class ParsingEditor
 		}
 		catch (final IOException e1)
 		{
-			Log.Write("An internal error has occurred!");
+			Log.write("An internal error has occurred!");
 		}
 		
 		try

@@ -131,7 +131,7 @@ public class TextAreaComponent extends AbstractFileComponent implements Hyperlin
 		}
 		catch (final IOException e)
 		{
-			Log.Write("Could not save file!");
+			Log.write("Could not save file!");
 		}
 		return getPath();
 	}

@@ -17,7 +17,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 import org.ggll.exceptions.WarningException;
-import org.ggll.images.GGLLImages;
+import org.ggll.images.ImageResource;
 import org.ggll.project.ProjectHelper;
 import org.ggll.util.Log;
 import org.jdesktop.layout.GroupLayout;
@@ -85,7 +85,7 @@ public class WorkspaceChooser extends JFrame
 		}
 		catch (final IOException e)
 		{
-			Log.Write("Could not load workspace list!");
+			Log.write("Could not load workspace list!");
 		}
 	}
 	
@@ -178,7 +178,7 @@ public class WorkspaceChooser extends JFrame
 		btnCancel = new JButton();
 		btnOk = new javax.swing.JButton();
 		
-		imgWorkspace.setIcon(new ImageIcon(GGLLImages.imagePath + WorkspaceChooser.PROJECTS_SCREEN_PNG)); // NOI18N
+		imgWorkspace.setIcon(new ImageIcon(ImageResource.imagePath + WorkspaceChooser.PROJECTS_SCREEN_PNG)); // NOI18N
 		lblWorkspace.setText("Please inform a workspace to continue:");
 		btnBrowse.setText("Browse");
 		
@@ -253,7 +253,7 @@ public class WorkspaceChooser extends JFrame
 		}
 		catch (final IOException e)
 		{
-			Log.Write("Could not load workspace list!");
+			Log.write("Could not load workspace list!");
 		}
 	}
 	

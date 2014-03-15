@@ -4,9 +4,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics;
 
-/**
- * Custom view button icon.
- */
 public class IconButton extends Icon
 {
 	

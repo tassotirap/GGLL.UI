@@ -13,7 +13,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import org.ggll.images.GGLLImages;
+import org.ggll.images.ImageResource;
 import org.ggll.parser.ParsingEditor;
 
 public class ParserComponent extends AbstractComponent
@@ -83,7 +83,7 @@ public class ParserComponent extends AbstractComponent
 	
 	private void createNextStepButton()
 	{
-		parseNextStep = new JButton(new ImageIcon(GGLLImages.ICON_PARSER_STEP));
+		parseNextStep = new JButton(new ImageIcon(ImageResource.ICON_PARSER_STEP));
 		parseNextStep.setOpaque(false);
 		parseNextStep.setBorder(new EmptyBorder(0, 0, 0, 0));
 		parseNextStep.setRolloverEnabled(true);
@@ -93,7 +93,7 @@ public class ParserComponent extends AbstractComponent
 	
 	private void createOpenButton()
 	{
-		open = new JButton(new ImageIcon(GGLLImages.ICON_PARSER_OPEN));
+		open = new JButton(new ImageIcon(ImageResource.ICON_PARSER_OPEN));
 		open.setOpaque(false);
 		open.setBorder(new EmptyBorder(0, 0, 0, 0));
 		open.setRolloverEnabled(true);
@@ -103,7 +103,7 @@ public class ParserComponent extends AbstractComponent
 	
 	private void createParseButton()
 	{
-		parse = new JButton(new ImageIcon(GGLLImages.ICON_PARSER_PARSE));
+		parse = new JButton(new ImageIcon(ImageResource.ICON_PARSER_PARSE));
 		parse.setOpaque(false);
 		parse.setBorder(new EmptyBorder(0, 0, 0, 0));
 		parse.setRolloverEnabled(true);

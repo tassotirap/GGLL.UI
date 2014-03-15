@@ -21,35 +21,35 @@ public class IconFactory
 		switch (type)
 		{
 			case ACTIVE_OUTPUT_ICON:
-				return new ImageIcon(GGLLImages.ICON_ACTIVE_OUTPUT);
+				return new ImageIcon(ImageResource.ICON_ACTIVE_OUTPUT);
 			case DIR_ICON:
-				return new ImageIcon(GGLLImages.ICON_PROJECT);
+				return new ImageIcon(ImageResource.ICON_PROJECT);
 			case GRAM_ICON:
-				return new ImageIcon(GGLLImages.ICON_GRAM);
+				return new ImageIcon(ImageResource.ICON_GRAM);
 			case GRAMMAR_ICON:
-				return new ImageIcon(GGLLImages.ICON_GRAMMAR);
+				return new ImageIcon(ImageResource.ICON_GRAMMAR);
 			case JAVA_ICON:
-				return new ImageIcon(GGLLImages.ICON_JAVA);
+				return new ImageIcon(ImageResource.ICON_JAVA);
 			case LEX_ICON:
-				return new ImageIcon(GGLLImages.ICON_LEX);
+				return new ImageIcon(ImageResource.ICON_LEX);
 			case OVERVIEW_CON:
-				return new ImageIcon(GGLLImages.ICON_OVERVIEW);
+				return new ImageIcon(ImageResource.ICON_OVERVIEW);
 			case PARSER_ICON:
-				return new ImageIcon(GGLLImages.ICON_PARSER);
+				return new ImageIcon(ImageResource.ICON_PARSER);
 			case PROJECT_ICON:
-				return new ImageIcon(GGLLImages.ICON_PROJECT);
+				return new ImageIcon(ImageResource.ICON_PROJECT);
 			case PROPERTIES_ICON:
-				return new ImageIcon(GGLLImages.ICON_PROPERTIES);
+				return new ImageIcon(ImageResource.ICON_PROPERTIES);
 			case SEM_ICON:
-				return new ImageIcon(GGLLImages.ICON_SEM);
+				return new ImageIcon(ImageResource.ICON_SEM);
 			case SEMANTIC_STACK_ICON:
-				return new ImageIcon(GGLLImages.ICON_SEMANTIC_STACK);
+				return new ImageIcon(ImageResource.ICON_SEMANTIC_STACK);
 			case SYNTACTIC_STACK_ICON:
-				return new ImageIcon(GGLLImages.ICON_SYNTACTIC_STACK);
+				return new ImageIcon(ImageResource.ICON_SYNTACTIC_STACK);
 			case TXT_ICON:
-				return new ImageIcon(GGLLImages.ICON_TXT);
+				return new ImageIcon(ImageResource.ICON_TXT);
 			case XML_ICON:
-				return new ImageIcon(GGLLImages.ICON_XML);
+				return new ImageIcon(ImageResource.ICON_XML);
 			default:
 				return null;
 		}

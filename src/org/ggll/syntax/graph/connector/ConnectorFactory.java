@@ -6,7 +6,7 @@ import java.awt.Insets;
 
 import javax.swing.ImageIcon;
 
-import org.ggll.images.GGLLImages;
+import org.ggll.images.ImageResource;
 import org.ggll.resource.CanvasResource;
 import org.ggll.syntax.graph.SyntaxGraph;
 import org.ggll.syntax.graph.widget.IconNodeWidgetExt;
@@ -30,7 +30,7 @@ public class ConnectorFactory
 	{ CanvasResource.N_TERMINAL, CanvasResource.TERMINAL, CanvasResource.LEFT_SIDE, CanvasResource.LAMBDA, CanvasResource.START };
 	
 	private final String[] icons = new String[]
-	{ GGLLImages.ICON_N_TERMINAL, GGLLImages.ICON_TERMINAL, GGLLImages.ICON_LEFT_SIDE, GGLLImages.ICON_LAMBDA, GGLLImages.ICON_START };
+	{ ImageResource.ICON_N_TERMINAL, ImageResource.ICON_TERMINAL, ImageResource.ICON_LEFT_SIDE, ImageResource.ICON_LAMBDA, ImageResource.ICON_START };
 	
 	public ConnectorFactory(final SyntaxGraph canvas)
 	{

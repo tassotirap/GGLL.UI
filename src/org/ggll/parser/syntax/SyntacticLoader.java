@@ -3,7 +3,7 @@ package org.ggll.parser.syntax;
 import ggll.core.syntax.model.TableGraphNode;
 import ggll.core.syntax.model.TableNode;
 
-import org.ggll.grammar.GrammarFactory;
+import org.ggll.grammar.GrammarTableBuilder;
 import org.ggll.resource.CanvasResource;
 
 public class SyntacticLoader
@@ -19,7 +19,7 @@ public class SyntacticLoader
 	
 	public SyntacticLoader()
 	{
-		final GrammarFactory grammarFactory = new GrammarFactory();
+		final GrammarTableBuilder grammarFactory = new GrammarTableBuilder();
 		final String table[][] = grammarFactory.createTable();
 		
 		TableTerminal = new TableNode[table.length];

@@ -21,6 +21,7 @@ import org.ggll.output.HtmlViewer.TOPIC;
 import org.ggll.output.Output;
 import org.ggll.parser.ParsingEditor;
 import org.ggll.parser.syntax.SyntacticLoader;
+import org.ggll.util.Log;
 import org.ggll.util.io.IOHelper;
 
 public class GrammarParser
@@ -36,6 +37,7 @@ public class GrammarParser
 		}
 		catch (final Exception e)
 		{
+			Log.write(e.getMessage());
 			e.printStackTrace();
 			return null;
 		}

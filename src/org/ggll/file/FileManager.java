@@ -10,6 +10,7 @@ import javax.swing.JOptionPane;
 
 import org.ggll.facade.GGLLFacade;
 import org.ggll.images.IconFactory;
+import org.ggll.util.Log;
 import org.ggll.window.component.AbstractComponent;
 import org.ggll.window.component.AbstractFileComponent;
 import org.ggll.window.component.ComponentFactory;
@@ -119,6 +120,7 @@ public class FileManager
 			}
 			catch (final Exception ex)
 			{
+				Log.write(ex.getMessage());
 				ex.printStackTrace();
 			}
 		}
