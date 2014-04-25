@@ -1,4 +1,4 @@
-package org.ggll.file;
+package org.ggll.file.filter;
 
 import java.io.File;
 import java.util.Enumeration;

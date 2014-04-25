@@ -4,8 +4,7 @@ import org.ggll.syntax.graph.state.StateNode;
 
 public class GrammarError
 {
-	private StateNode node;
-	
+	private StateNode node;	
 	private final String error;
 	
 	public GrammarError(final String error)

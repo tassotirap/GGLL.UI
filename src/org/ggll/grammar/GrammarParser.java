@@ -28,7 +28,7 @@ public class GrammarParser
 {
 	private Yylex createLexFile()
 	{
-		final String outputDir = GGLLFacade.getInstance().getLexicalFile().getParent() + "/export";
+		final String outputDir = GGLLFacade.getInstance().getProjectsRootPath() + "/export";
 		final YyFactory yyFactory = new YyFactory();
 		try
 		{
@@ -70,10 +70,9 @@ public class GrammarParser
 			parsingEditor.setSyntacticLoader(syntacticLoader);
 			
 			final GGLLTable analyzer = new GGLLTable(syntacticLoader.getTableNodes(), syntacticLoader.getNTerminalTable(), syntacticLoader.getTerminalTable());
-			analyzer.serialize(GGLLFacade.getInstance().getProjectDir().getAbsolutePath() + "\\export\\data.ggll");
-			
-			final File semanticIn = new File(GGLLFacade.getInstance().getProjectDir().getAbsolutePath() + "\\" + GGLLFacade.getInstance().getProjectDir().getName() + FileNames.SEM_EXTENSION);
-			final File semanticOut = new File(GGLLFacade.getInstance().getProjectDir().getAbsolutePath() + "\\export\\" + GGLLFacade.getInstance().getProjectDir().getName() + FileNames.SEM_EXTENSION);
+			analyzer.serialize(GGLLFacade.getInstance().getProjectsRootPath() + "/export/data.ggll");
+			final File semanticIn = new File(GGLLFacade.getInstance().getProjectsRootPath() + "/" + GGLLFacade.getInstance().getProjectDir().getName() + FileNames.SEM_EXTENSION);
+			final File semanticOut = new File(GGLLFacade.getInstance().getProjectsRootPath() + "/export/" + GGLLFacade.getInstance().getProjectDir().getName() + FileNames.SEM_EXTENSION);
 			IOHelper.copyFile(semanticIn, semanticOut);
 			
 			AppOutput.displayText("<font color='green'>Grammar successfully generated.</font>", TOPIC.Output);

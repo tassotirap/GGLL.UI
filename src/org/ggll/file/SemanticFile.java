@@ -117,7 +117,7 @@ public class SemanticFile extends File
 	private String readFile(final String filename)
 	{
 		String content = null;
-		final File file = new File(filename); // for ex foo.txt
+		final File file = new File(filename);
 		try
 		{
 			final FileReader reader = new FileReader(file);

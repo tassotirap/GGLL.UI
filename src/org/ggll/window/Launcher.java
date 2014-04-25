@@ -16,7 +16,7 @@ import org.ggll.window.splash.SplashWindow;
  *         WorkspaceChooser followed by MainWindow Refactory: OK
  * 
  */
-public class GuiLauncher
+public class Launcher
 {
 	private final static String SPLASH_SCREEN_PNG = "splash_screen.png";
 	
@@ -49,19 +49,17 @@ public class GuiLauncher
 		final WorkspaceChooser workspaceChooser = startWorkspaceChooser();
 		if (workspaceChooser.isDone())
 		{
-			SplashWindow.splash(ImageResource.imagePath + GuiLauncher.SPLASH_SCREEN_PNG);
+			SplashWindow.splash(ImageResource.imagePath + Launcher.SPLASH_SCREEN_PNG);
 			startMainWindow(workspaceChooser);
 			SplashWindow.disposeSplash();
 		}
 	}
 	
-	private MainWindow startMainWindow(final WorkspaceChooser workspaceChooser)
+	private void startMainWindow(final WorkspaceChooser workspaceChooser)
 	{
-		final MainWindow mainWindow = new MainWindow();
 		final Project project = ProjectHelper.openProject(workspaceChooser.getWorkspaceDir());
-		GGLLFacade.Start(mainWindow, project);
-		showFrame(mainWindow);
-		return mainWindow;
+		GGLLFacade.start(project);
+		showFrame(MainWindow.getInstance());
 	}
 	
 	private WorkspaceChooser startWorkspaceChooser()

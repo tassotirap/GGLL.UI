@@ -17,12 +17,8 @@ import org.ggll.window.view.AbstractView;
 /** An adapter to control how a window should react when changed **/
 public class WindowAdapter extends DockingWindowAdapter
 {
-	
-	private final MainWindow window;
-	
 	public WindowAdapter()
 	{
-		window = GGLLFacade.getInstance().getMainWindow();
 	}
 	
 	@Override
@@ -32,7 +28,7 @@ public class WindowAdapter extends DockingWindowAdapter
 		if (newView instanceof AbstractView)
 		{
 			final AbstractComponent component = ((AbstractView) newView).getComponentModel();
-			window.updateFocusedComponent(component);
+			MainWindow.getInstance().updateFocusedComponent(component);
 		}
 	}
 	
@@ -41,25 +37,25 @@ public class WindowAdapter extends DockingWindowAdapter
 	{
 		if (addedWindow instanceof AbstractView)
 		{
-			window.updateWindow(addedWindow, true);
+			MainWindow.getInstance().updateWindow(addedWindow, true);
 			final AbstractComponent comp = ((AbstractView) addedWindow).getComponentModel();
 			if (!(comp instanceof EmptyComponent))
 			{
-				if (window.getTabs().getCenterLeftTab().getChildWindowIndex(addedWindow) >= 0)
+				if (MainWindow.getInstance().getTabs().getCenterLeftTab().getChildWindowIndex(addedWindow) >= 0)
 				{
-					window.removeEmptyDynamicView();
-					window.getTabs().getCenterLeftTab().setSelectedTab(0);
+					MainWindow.getInstance().removeEmptyDynamicView();
+					MainWindow.getInstance().getTabs().getCenterLeftTab().setSelectedTab(0);
 				}
 			}
 		}
 	}
 	
 	@Override
-	public void windowClosed(final DockingWindow dWindow)
+	public void windowClosed(final DockingWindow dockingWindow)
 	{
-		if (dWindow instanceof AbstractView)
+		if (dockingWindow instanceof AbstractView)
 		{
-			final AbstractView view = (AbstractView) dWindow;
+			final AbstractView view = (AbstractView) dockingWindow;
 			if (view.getComponentModel() instanceof AbstractFileComponent)
 			{
 				GGLLFacade.getInstance().closeFile(view.getFileName());
@@ -75,22 +71,22 @@ public class WindowAdapter extends DockingWindowAdapter
 			final AbstractView dynamicView = (AbstractView) dWindow;
 			if (GGLLFacade.getInstance().hasUnsavedView(dynamicView))
 			{
-				final int option = JOptionPane.showConfirmDialog(window.getFrame(), "Would you like to save '" + dWindow.getTitle().replace(MainWindow.UNSAVED_PREFIX, "") + "' before closing?");
+				final int option = JOptionPane.showConfirmDialog(MainWindow.getInstance().getFrame(), "Would you like to save '" + dWindow.getTitle().replace(MainWindow.UNSAVED_PREFIX, "") + "' before closing?");
 				if (option == JOptionPane.YES_OPTION)
 				{
 					GGLLFacade.getInstance().saveFile(dynamicView.getComponentModel());
 				}
 			}
 		}
-		if (window.getTabs().getCenterLeftTab().getChildWindowIndex(dWindow) >= 0 && window.getTabs().getCenterLeftTab().getChildWindowCount() == 1)
+		if (MainWindow.getInstance().getTabs().getCenterLeftTab().getChildWindowIndex(dWindow) >= 0 && MainWindow.getInstance().getTabs().getCenterLeftTab().getChildWindowCount() == 1)
 		{
-			window.addEmptyDynamicView();
+			MainWindow.getInstance().addEmptyDynamicView();
 		}
 	}
 	
 	@Override
 	public void windowRemoved(final DockingWindow removedFromWindow, final DockingWindow removedWindow)
 	{
-		window.updateWindow(removedWindow, false);
+		MainWindow.getInstance().updateWindow(removedWindow, false);
 	}
 }

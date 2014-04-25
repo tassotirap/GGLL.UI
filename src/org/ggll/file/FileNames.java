@@ -9,17 +9,5 @@ public class FileNames
 	public final static String GGLL_TABLE_EXTENSION = ".ggll";
 	
 	public final static String TXT_EXTENSION = ".txt";
-	public final static String XML_EXTENSION = ".xml";
-	
-	private final String extension;
-	
-	public FileNames(final String extension)
-	{
-		this.extension = extension;
-	}
-	
-	public String getExtension()
-	{
-		return extension;
-	}
+	public final static String XML_EXTENSION = ".xml";	
 }

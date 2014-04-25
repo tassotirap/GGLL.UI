@@ -31,7 +31,7 @@ public class ComponentFactory
 			return new TextAreaComponent(path);
 		}
 	}
-	
+
 	public static AbstractComponent createFileComponentByType(final String type, final String path)
 	{
 		if (type.equalsIgnoreCase(FileNames.GRAM_EXTENSION)) { return new GrammarComponent(path); }

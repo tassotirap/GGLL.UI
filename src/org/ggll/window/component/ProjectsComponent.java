@@ -7,13 +7,12 @@ import org.ggll.project.tree.Tree;
 public class ProjectsComponent extends AbstractComponent
 {
 	Tree fileTree;
-	
+
 	public ProjectsComponent()
 	{
-		fileTree = new Tree();
-		jComponent = new JScrollPane(fileTree.getTree());
+		jComponent = new JScrollPane(Tree.getInstance().getTree());
 	}
-	
+
 	@Override
 	public void fireContentChanged()
 	{

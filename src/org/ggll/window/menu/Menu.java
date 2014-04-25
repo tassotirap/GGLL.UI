@@ -71,7 +71,7 @@ public class Menu extends JMenuBar
 				{
 					try
 					{
-						GGLLFacade.getInstance().createFile(fileName, new FileNames(FileNames.GRAM_EXTENSION));
+						GGLLFacade.getInstance().createFile(fileName, FileNames.GRAM_EXTENSION);
 						Tree.reload(GGLLFacade.getInstance().getProjectsRootPath());
 					}
 					catch (final IOException e1)

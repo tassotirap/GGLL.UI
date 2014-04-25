@@ -1,6 +1,6 @@
 package org.ggll.main;
 
-import org.ggll.window.GuiLauncher;
+import org.ggll.window.Launcher;
 
 public class Main
 {
@@ -10,7 +10,7 @@ public class Main
 	 */
 	public static void main(final String[] args)
 	{
-		final GuiLauncher guiLauncher = new GuiLauncher();
+		final Launcher guiLauncher = new Launcher();
 		guiLauncher.start();
 	}
 	

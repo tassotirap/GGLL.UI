@@ -1,5 +1,7 @@
 package org.ggll.window;
 
+import ggll.core.exceptions.WarningException;
+
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.io.BufferedReader;
@@ -16,7 +18,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
-import org.ggll.exceptions.WarningException;
 import org.ggll.images.ImageResource;
 import org.ggll.project.ProjectHelper;
 import org.ggll.util.Log;
@@ -178,7 +179,7 @@ public class WorkspaceChooser extends JFrame
 		btnCancel = new JButton();
 		btnOk = new javax.swing.JButton();
 		
-		imgWorkspace.setIcon(new ImageIcon(ImageResource.imagePath + WorkspaceChooser.PROJECTS_SCREEN_PNG)); // NOI18N
+		imgWorkspace.setIcon(new ImageIcon(ImageResource.imagePath + WorkspaceChooser.PROJECTS_SCREEN_PNG));
 		lblWorkspace.setText("Please inform a workspace to continue:");
 		btnBrowse.setText("Browse");
 		

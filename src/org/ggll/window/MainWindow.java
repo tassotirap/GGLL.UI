@@ -86,77 +86,19 @@ public class MainWindow implements ComponentListener
 	private ToolBarFactory toolBarFactory;
 	private ViewRepository viewRepository;
 	
-	public MainWindow()
-	{
-	}
+	private static MainWindow instance;
 	
-	public AbstractView addComponent(final AbstractComponent componentModel, final String title, final String fileName, final Icon icon, final TabPlace place)
+	private MainWindow()
 	{
-		if (componentModel != null)
-		{
-			final AbstractView view = new AbstractView(title, icon, componentModel, fileName, 2);
-			if (componentModel instanceof GrammarComponent)
-			{
-				GGLLFacade.getInstance().setActiveSyntaxGraph(SyntaxGraphRepository.getInstance(fileName));
-			}
-			
-			componentModel.addComponentListener(this);
-			getTabWindowList().getTabWindow(place).addTab(view);
-			updateFocusedComponent(componentModel);
-			
-			return view;
-		}
-		return null;
-	}
+	}	
 	
-	public void addEmptyDynamicView()
+	public static MainWindow getInstance()
 	{
-		final EmptyComponent emptyComponent = new EmptyComponent();
-		emptyDynamicView = addComponent(emptyComponent, "Empty Page", null, MainWindow.VIEW_ICON, TabPlace.CENTER_LEFT_TABS);
-	}
-	
-	protected void addMenuBar(final JMenuBar menuBar, final boolean replace, final boolean repaint)
-	{
-		if (currentMenuBar != null)
+		if(instance == null)
 		{
-			frame.setMenuBar(null);
+			instance = new MainWindow();
 		}
-		currentMenuBar = menuBar;
-		frame.setJMenuBar(menuBar);
-		if (repaint)
-		{
-			frame.validate();
-			frame.repaint();
-		}
-	}
-	
-	protected void addToolBar(final JComponent toolBar, final boolean replace, final boolean repaint)
-	{
-		if (replace && currentToolBar != null)
-		{
-			frame.getContentPane().remove(currentToolBar);
-		}
-		currentToolBar = toolBar;
-		frame.getContentPane().add(toolBar, BorderLayout.NORTH);
-		if (repaint)
-		{
-			frame.validate();
-			frame.repaint();
-		}
-	}
-	
-	@Override
-	public void ContentChanged(final AbstractComponent source)
-	{
-		if (viewRepository.containsView(source))
-		{
-			final AbstractView view = viewRepository.getView(source);
-			if (!view.getTitle().startsWith(MainWindow.UNSAVED_PREFIX))
-			{
-				view.getViewProperties().setTitle(MainWindow.UNSAVED_PREFIX + view.getTitle());
-			}
-			GGLLFacade.getInstance().setUnsavedView(((AbstractFileComponent) source).getPath(), view);
-		}
+		return instance;
 	}
 	
 	private void createDefaultViews()
@@ -208,26 +150,6 @@ public class MainWindow implements ComponentListener
 		rootWindow.addTabMouseButtonListener(DockingWindowActionMouseButtonListener.MIDDLE_BUTTON_CLOSE_LISTENER);
 	}
 	
-	public JFrame getFrame()
-	{
-		return frame;
-	}
-	
-	public ViewMap getPerspectiveMap()
-	{
-		return perspectiveMap;
-	}
-	
-	public TabWindowList getTabs()
-	{
-		return tabWindow;
-	}
-	
-	public TabWindowList getTabWindowList()
-	{
-		return tabWindow;
-	}
-	
 	private void init()
 	{
 		init(MainWindow.DEFAULT_TITLE);
@@ -249,15 +171,6 @@ public class MainWindow implements ComponentListener
 		for (int i = 0; i < filesToOpen.size(); i++)
 		{
 			GGLLFacade.getInstance().openFile(filesToOpen.get(i).getAbsolutePath(), false);
-		}
-	}
-	
-	public void removeEmptyDynamicView()
-	{
-		if (emptyDynamicView != null)
-		{
-			emptyDynamicView.close();
-			emptyDynamicView = null;
 		}
 	}
 	
@@ -286,24 +199,33 @@ public class MainWindow implements ComponentListener
 		}
 	}
 	
-	public void setSaved(final String path)
+	protected void addMenuBar(final JMenuBar menuBar, final boolean replace, final boolean repaint)
 	{
-		if (viewRepository.containsView(path))
+		if (currentMenuBar != null)
 		{
-			final AbstractView dynamicView = viewRepository.getView(path);
-			
-			if (GGLLFacade.getInstance().hasUnsavedView(dynamicView))
-			{
-				if (dynamicView.getTitle().startsWith(MainWindow.UNSAVED_PREFIX))
-				{
-					dynamicView.getViewProperties().setTitle(dynamicView.getTitle().replace(MainWindow.UNSAVED_PREFIX, ""));
-				}
-			}
-			
-			while (GGLLFacade.getInstance().hasUnsavedView(dynamicView))
-			{
-				GGLLFacade.getInstance().removeUnsavedView(path);
-			}
+			frame.setMenuBar(null);
+		}
+		currentMenuBar = menuBar;
+		frame.setJMenuBar(menuBar);
+		if (repaint)
+		{
+			frame.validate();
+			frame.repaint();
+		}
+	}
+	
+	protected void addToolBar(final JComponent toolBar, final boolean replace, final boolean repaint)
+	{
+		if (replace && currentToolBar != null)
+		{
+			frame.getContentPane().remove(currentToolBar);
+		}
+		currentToolBar = toolBar;
+		frame.getContentPane().add(toolBar, BorderLayout.NORTH);
+		if (repaint)
+		{
+			frame.validate();
+			frame.repaint();
 		}
 	}
 	
@@ -327,6 +249,95 @@ public class MainWindow implements ComponentListener
 		frame.setLocation((screenDim.width - frame.getWidth()) / 2, (screenDim.height - frame.getHeight()) / 2);
 		frame.setVisible(true);
 		frame.addWindowListener(new WindowClosingAdapter());
+	}
+	
+	public AbstractView addComponent(final AbstractComponent componentModel, final String title, final String fileName, final Icon icon, final TabPlace place)
+	{
+		if (componentModel != null)
+		{
+			final AbstractView view = new AbstractView(title, icon, componentModel, fileName, 2);
+			if (componentModel instanceof GrammarComponent)
+			{
+				GGLLFacade.getInstance().setActiveSyntaxGraph(SyntaxGraphRepository.getInstance(fileName));
+			}
+			
+			componentModel.addComponentListener(this);
+			getTabWindowList().getTabWindow(place).addTab(view);
+			updateFocusedComponent(componentModel);
+			
+			return view;
+		}
+		return null;
+	}
+	
+	public void addEmptyDynamicView()
+	{
+		final EmptyComponent emptyComponent = new EmptyComponent();
+		emptyDynamicView = addComponent(emptyComponent, "Empty Page", null, MainWindow.VIEW_ICON, TabPlace.CENTER_LEFT_TABS);
+	}
+	
+	@Override
+	public void ContentChanged(final AbstractComponent source)
+	{
+		if (viewRepository.containsView(source))
+		{
+			final AbstractView view = viewRepository.getView(source);
+			if (!view.getTitle().startsWith(MainWindow.UNSAVED_PREFIX))
+			{
+				view.getViewProperties().setTitle(MainWindow.UNSAVED_PREFIX + view.getTitle());
+			}
+			GGLLFacade.getInstance().setUnsavedView(((AbstractFileComponent) source).getPath(), view);
+		}
+	}
+	
+	public JFrame getFrame()
+	{
+		return frame;
+	}
+	
+	public ViewMap getPerspectiveMap()
+	{
+		return perspectiveMap;
+	}
+	
+	public TabWindowList getTabs()
+	{
+		return tabWindow;
+	}
+	
+	public TabWindowList getTabWindowList()
+	{
+		return tabWindow;
+	}
+	
+	public void removeEmptyDynamicView()
+	{
+		if (emptyDynamicView != null)
+		{
+			emptyDynamicView.close();
+			emptyDynamicView = null;
+		}
+	}
+	
+	public void setSaved(final String path)
+	{
+		if (viewRepository.containsView(path))
+		{
+			final AbstractView dynamicView = viewRepository.getView(path);
+			
+			if (GGLLFacade.getInstance().hasUnsavedView(dynamicView))
+			{
+				if (dynamicView.getTitle().startsWith(MainWindow.UNSAVED_PREFIX))
+				{
+					dynamicView.getViewProperties().setTitle(dynamicView.getTitle().replace(MainWindow.UNSAVED_PREFIX, ""));
+				}
+			}
+			
+			while (GGLLFacade.getInstance().hasUnsavedView(dynamicView))
+			{
+				GGLLFacade.getInstance().removeUnsavedView(path);
+			}
+		}
 	}
 	
 	public void updateFocusedComponent(final AbstractComponent component)

@@ -5,12 +5,10 @@ import ggll.core.list.ExtendedList;
 import java.io.File;
 import java.io.IOException;
 
-import org.ggll.file.FileNames;
 import org.ggll.file.GrammarFile;
 import org.ggll.file.LexicalFile;
 import org.ggll.file.SemanticFile;
 import org.ggll.syntax.graph.SyntaxGraph;
-import org.ggll.window.MainWindow;
 import org.ggll.window.component.AbstractComponent;
 import org.ggll.window.view.AbstractView;
 
@@ -18,7 +16,7 @@ public interface IGGLLFacade
 {	
 	public abstract void closeFile(String fileName);
 	
-	public abstract void createFile(String name, FileNames extension) throws IOException;
+	public abstract void createFile(String name, String extension) throws IOException;
 	
 	public abstract void exit();
 	
@@ -27,8 +25,6 @@ public interface IGGLLFacade
 	public ExtendedList<GrammarFile> getGrammarFile();
 	
 	public abstract LexicalFile getLexicalFile();
-	
-	public MainWindow getMainWindow();
 	
 	public abstract ExtendedList<File> getOpenedFiles();
 	
@@ -61,8 +57,6 @@ public interface IGGLLFacade
 	public abstract void setActiveSyntaxGraph(SyntaxGraph syntaxGraph);
 	
 	public void setGrammarFile(GrammarFile grammarFile);
-	
-	public void setSaved(String path);
 	
 	public abstract void setUnsavedView(String path, AbstractView view);
 	

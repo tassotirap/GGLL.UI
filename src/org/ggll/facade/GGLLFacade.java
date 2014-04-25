@@ -8,7 +8,6 @@ import java.io.IOException;
 import javax.swing.JOptionPane;
 
 import org.ggll.file.FileManager;
-import org.ggll.file.FileNames;
 import org.ggll.file.GrammarFile;
 import org.ggll.file.LexicalFile;
 import org.ggll.file.SemanticFile;
@@ -30,22 +29,20 @@ public final class GGLLFacade implements IGGLLFacade
 		return GGLLFacade.instance;
 	}
 	
-	public static void Start(final MainWindow mainWindow, final Project project)
+	public static void start(final Project project)
 	{
 		GGLLFacade.instance = new GGLLFacade();
-		GGLLFacade.instance.mainWindow = mainWindow;
 		GGLLFacade.instance.project = project;
 		GGLLFacade.instance.unViewManager = new UnsavedViewRepository();
 		GGLLFacade.instance.fileManager = new FileManager();
 	}
 	
-	private MainWindow mainWindow;
 	private Project project;
 	private FileManager fileManager;
 	
 	private UnsavedViewRepository unViewManager;
 	
-	private SyntaxGraph activeCanvas;
+	
 	
 	private static GGLLFacade instance;
 	
@@ -61,7 +58,7 @@ public final class GGLLFacade implements IGGLLFacade
 	}
 	
 	@Override
-	public void createFile(final String name, final FileNames extension) throws IOException
+	public void createFile(final String name, final String extension) throws IOException
 	{
 		fileManager.createFile(name, extension);
 	}
@@ -73,7 +70,7 @@ public final class GGLLFacade implements IGGLLFacade
 		
 		for (final AbstractView dynamicView : unsavedViews.getAll())
 		{
-			final int option = JOptionPane.showConfirmDialog(mainWindow.getFrame(), "Would you like to save '" + dynamicView.getTitle().replace(MainWindow.UNSAVED_PREFIX, "") + "' before exiting?");
+			final int option = JOptionPane.showConfirmDialog(MainWindow.getInstance().getFrame(), "Would you like to save '" + dynamicView.getTitle().replace(MainWindow.UNSAVED_PREFIX, "") + "' before exiting?");
 			if (option == JOptionPane.CANCEL_OPTION)
 			{
 				return;
@@ -89,7 +86,7 @@ public final class GGLLFacade implements IGGLLFacade
 	@Override
 	public SyntaxGraph getActiveSyntaxGraph()
 	{
-		return activeCanvas;
+		return project.getActiveCanvas();
 	}
 	
 	@Override
@@ -104,11 +101,6 @@ public final class GGLLFacade implements IGGLLFacade
 		return project.getLexicalFile();
 	}
 	
-	@Override
-	public MainWindow getMainWindow()
-	{
-		return mainWindow;
-	}
 	
 	@Override
 	public ExtendedList<File> getOpenedFiles()
@@ -210,7 +202,7 @@ public final class GGLLFacade implements IGGLLFacade
 	@Override
 	public void setActiveSyntaxGraph(final SyntaxGraph syntaxGraph)
 	{
-		activeCanvas = syntaxGraph;
+		project.setActiveCanvas(syntaxGraph);
 	}
 	
 	@Override
@@ -219,13 +211,7 @@ public final class GGLLFacade implements IGGLLFacade
 		project.setGrammarFile(grammarFile);
 		
 	}
-	
-	@Override
-	public void setSaved(final String path)
-	{
-		mainWindow.setSaved(path);
-	}
-	
+		
 	@Override
 	public void setUnsavedView(final String path, final AbstractView view)
 	{

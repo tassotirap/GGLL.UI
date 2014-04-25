@@ -41,7 +41,6 @@
 package org.ggll.syntax.graph.widget;
 
 import java.awt.Point;
-import java.io.Serializable;
 
 import org.netbeans.api.visual.widget.LayerWidget;
 import org.netbeans.api.visual.widget.Scene;
@@ -56,17 +55,15 @@ import org.netbeans.api.visual.widget.Scene;
  * background for widgets on background, main layer for node widgets, connection
  * layer for edge widgets, interraction layer for temporary widgets created/used
  * by actions.
- * 
+ *
  * @author David Kaspar
  */
-public class CanvasLayerWidget extends LayerWidget implements Serializable
+public class CanvasLayerWidget extends LayerWidget
 {
-	
-	private static final long serialVersionUID = 4067199192049261603L;
-	
+
 	/**
 	 * Creates a layer widget.
-	 * 
+	 *
 	 * @param scene
 	 *            the scene
 	 */
@@ -74,10 +71,10 @@ public class CanvasLayerWidget extends LayerWidget implements Serializable
 	{
 		super(scene);
 	}
-	
+
 	/**
 	 * Returns whether a specified local location is part of the layer widget.
-	 * 
+	 *
 	 * @param localLocation
 	 *            the local location
 	 * @return always false
@@ -87,11 +84,11 @@ public class CanvasLayerWidget extends LayerWidget implements Serializable
 	{
 		return false;
 	}
-	
+
 	/**
 	 * Returns whether the layer widget requires to repainted after
 	 * revalidation.
-	 * 
+	 *
 	 * @return always false
 	 */
 	@Override
@@ -99,5 +96,5 @@ public class CanvasLayerWidget extends LayerWidget implements Serializable
 	{
 		return false;
 	}
-	
+
 }
