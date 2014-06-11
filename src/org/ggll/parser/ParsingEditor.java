@@ -5,7 +5,7 @@ import ggll.core.compile.Compiler;
 import ggll.core.exceptions.ErrorRecoveryException;
 import ggll.core.exceptions.LexicalException;
 import ggll.core.exceptions.SemanticException;
-import ggll.core.exceptions.SintaticException;
+import ggll.core.exceptions.SyntacticException;
 import ggll.core.lexical.Yylex;
 import ggll.core.semantics.SemanticRoutineClass;
 import ggll.core.syntax.model.ParseNode;
@@ -57,9 +57,9 @@ public class ParsingEditor
 			AppOutput.displayText("<font color='red'>Expression can't be recognized.</font>", TOPIC.Output);
 			for (final Exception error : analyzer.getErrorList().getAll())
 			{
-				if (error instanceof SintaticException)
+				if (error instanceof SyntacticException)
 				{
-					final SintaticException sintaticException = (SintaticException) error;
+					final SyntacticException sintaticException = (SyntacticException) error;
 					AppOutput.displayText("<font color='red'>" + sintaticException.getMessage() + "</font>", TOPIC.Output);
 				}
 				else if (error instanceof ErrorRecoveryException)
