@@ -1,6 +1,11 @@
 package org.ggll.window;
 
+import ggll.core.compile.Compiler;
+import ggll.core.properties.GGLLProperties;
+
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 import org.ggll.facade.GGLLFacade;
 import org.ggll.images.ImageResource;
@@ -46,13 +51,45 @@ public class Launcher
 	
 	public void start()
 	{
-		final WorkspaceChooser workspaceChooser = startWorkspaceChooser();
-		if (workspaceChooser.isDone())
+		if (sdkPath())
 		{
-			SplashWindow.splash(ImageResource.imagePath + Launcher.SPLASH_SCREEN_PNG);
-			startMainWindow(workspaceChooser);
-			SplashWindow.disposeSplash();
+			final WorkspaceChooser workspaceChooser = startWorkspaceChooser();
+			if (workspaceChooser.isDone())
+			{
+				SplashWindow.splash(ImageResource.imagePath + Launcher.SPLASH_SCREEN_PNG);
+				startMainWindow(workspaceChooser);
+				SplashWindow.disposeSplash();
+			}
 		}
+	}
+	
+	private boolean sdkPath()
+	{
+		Compiler compiler = new Compiler();
+		
+		if(!compiler.validateSDKPath())
+		{
+			JOptionPane.showMessageDialog(null, "Java SDK not found, please download it at http://www.oracle.com/technetwork/pt/java/javase/downloads/jdk7-downloads-1880260.html "
+					+ "and select the folder where it was installed.", "Java SDK not found",JOptionPane.ERROR_MESSAGE);
+		}
+		
+		while (!compiler.validateSDKPath())
+		{
+			JFileChooser jFileChooser = new JFileChooser();
+			jFileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+			int returnVal = jFileChooser.showOpenDialog(null);
+			if (returnVal == JFileChooser.APPROVE_OPTION)
+			{
+				GGLLProperties ggllProperties = new GGLLProperties();
+				ggllProperties.setJavaSDKPath(jFileChooser.getSelectedFile().getAbsolutePath());
+				compiler = new Compiler();
+			}
+			else
+			{
+				return false;
+			}
+		}
+		return true;
 	}
 	
 	private void startMainWindow(final WorkspaceChooser workspaceChooser)
