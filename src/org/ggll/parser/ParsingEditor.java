@@ -50,7 +50,7 @@ public class ParsingEditor
 	{
 		if (analyzer.isSucess())
 		{
-			AppOutput.displayText("<font color='green'>Expression Successfully recognized.</font>", TOPIC.Output);
+			AppOutput.displayText("<font color='green'>Expression successfully recognized.</font>", TOPIC.Output);
 		}
 		else
 		{
@@ -65,7 +65,7 @@ public class ParsingEditor
 				else if (error instanceof ErrorRecoveryException)
 				{
 					final ErrorRecoveryException errorRecoveryException = (ErrorRecoveryException) error;
-					AppOutput.displayText("<font color='red'>Erro Recovery: " + errorRecoveryException.getMessage() + "</font>", TOPIC.Output);
+					AppOutput.displayText("<font color='red'>Erro recovery: " + errorRecoveryException.getMessage() + "</font>", TOPIC.Output);
 				}
 				else if (error instanceof LexicalException)
 				{

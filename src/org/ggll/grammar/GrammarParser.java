@@ -42,17 +42,17 @@ public class GrammarParser
 			return null;
 		}
 	}
-	
+
 	public void parseGrammar()
 	{
 		GGLLFacade.getInstance().saveAllFiles();
 		Output.getInstance().clear();
-		
+
 		AppOutput.clearStacks();
 		AppOutput.clearGeneratedGrammar();
-		
-		AppOutput.displayText("Run grammar generate...", TOPIC.Output);
-		
+
+		AppOutput.displayText("Running grammar generation...", TOPIC.Output);
+
 		if (validateGrammar())
 		{
 			final File dir = new File(GGLLFacade.getInstance().getProjectDir().getAbsolutePath(), "export");
@@ -60,26 +60,26 @@ public class GrammarParser
 			{
 				dir.mkdir();
 			}
-			
+
 			final ParsingEditor parsingEditor = ParsingEditor.getInstance();
-			
+
 			final Yylex yylex = createLexFile();
 			parsingEditor.setYylex(yylex);
-			
+
 			final SyntacticLoader syntacticLoader = new SyntacticLoader();
 			parsingEditor.setSyntacticLoader(syntacticLoader);
-			
+
 			final GGLLTable analyzer = new GGLLTable(syntacticLoader.getTableNodes(), syntacticLoader.getNTerminalTable(), syntacticLoader.getTerminalTable());
 			analyzer.serialize(GGLLFacade.getInstance().getProjectsRootPath() + "/export/data.ggll");
 			final File semanticIn = new File(GGLLFacade.getInstance().getProjectsRootPath() + "/" + GGLLFacade.getInstance().getProjectDir().getName() + FileNames.SEM_EXTENSION);
 			final File semanticOut = new File(GGLLFacade.getInstance().getProjectsRootPath() + "/export/" + GGLLFacade.getInstance().getProjectDir().getName() + FileNames.SEM_EXTENSION);
 			IOHelper.copyFile(semanticIn, semanticOut);
-			
+
 			AppOutput.displayText("<font color='green'>Grammar successfully generated.</font>", TOPIC.Output);
 			AppOutput.displayHorizontalLine(TOPIC.Output);
 		}
 	}
-	
+
 	public boolean validateGrammar()
 	{
 		final ExtendedList<GrammarValidation> rules = new ExtendedList<GrammarValidation>();
@@ -88,12 +88,12 @@ public class GrammarParser
 		rules.append(new NTerminalValidation());
 		rules.append(new TerminalValidation());
 		rules.append(new LeftRecursionValidation());
-		
+
 		for (final GrammarValidation grammarRule : rules.getAll())
 		{
 			grammarRule.validate();
 		}
-		
+
 		int errors = 1;
 		String errorList = "";
 		for (final GrammarValidation grammarRule : rules.getAll())
@@ -111,14 +111,14 @@ public class GrammarParser
 				errors++;
 			}
 		}
-		
+
 		if (!errorList.equals(""))
 		{
 			AppOutput.displayText("<font color='red'>Grammar has some errors: <br/></font>", TOPIC.Output);
 			AppOutput.displayText("<font color='red'>" + errorList + "</font>", TOPIC.Output);
 			return false;
 		}
-		
+
 		return true;
 	}
 }
